@@ -362,7 +362,7 @@ sub _get_metagenotype_identifier
  Usage   : my $metagenotype =
              $genotype_manager->make_metagenotype(host_genotype => $host_genotype,
                                                   pathogen_genotype => $pathogen_genotype);
- Function: Create a meta-genotype from it's parts
+ Function: Create a metagenotype from it's parts
 
 =cut
 
@@ -529,7 +529,7 @@ sub find_and_create_genotype
 
  Usage   : $genotype_manager->find_metagenotype(pathogen_genotype => $pathogen_genotype,
                                                 host_genotype => $host_genotype);
- Function: Find the meta-genotype composed of the given pathogen and host genotypes
+ Function: Find the metagenotype composed of the given pathogen and host genotypes
  Return  : the Metagenotype object from the CursDB or undef
 
 =cut
@@ -575,7 +575,7 @@ sub delete_genotype
   }
 
   if ($genotype->is_part_of_metagenotype()) {
-    return "genotype is part of a meta-genotype - delete failed";
+    return "genotype is part of a metagenotype - delete failed";
   }
 
   $genotype->delete();

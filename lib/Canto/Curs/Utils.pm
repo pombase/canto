@@ -218,12 +218,12 @@ sub make_ontology_annotation
     my @annotation_metagenotypes = $annotation->metagenotypes();
 
     if (@annotation_metagenotypes > 1) {
-      warn "internal error, more than one meta-genotype for annotation: ",
+      warn "internal error, more than one metagenotype for annotation: ",
         $annotation->annotation_id();
     }
 
     if (@annotation_metagenotypes == 0) {
-      die "no meta-genotype for annotation: ", $annotation->annotation_id();
+      die "no metagenotype for annotation: ", $annotation->annotation_id();
     }
 
     my $metagenotype = $annotation_metagenotypes[0];

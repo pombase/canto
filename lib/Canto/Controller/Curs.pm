@@ -1880,7 +1880,7 @@ sub _metagenotype_store
   if (!$host_genotype_id && !$host_taxonid) {
     $c->stash->{json_data} = {
       status => "error",
-      message => "Storing new meta-genotype failed: internal error - " .
+      message => "Storing new metagenotype failed: internal error - " .
         "metagenotype call much have 'host_genotype_id' or 'host_taxonid' param",
     };
 
@@ -1892,7 +1892,7 @@ sub _metagenotype_store
   if ($host_genotype_id && $host_taxonid) {
     $c->stash->{json_data} = {
       status => "error",
-      message => "Storing new meta-genotype failed: internal error - " .
+      message => "Storing new metagenotype failed: internal error - " .
         "metagenotype call has both 'host_genotype_id' and 'host_taxonid' params",
     };
 
@@ -1945,7 +1945,7 @@ sub _metagenotype_store
   } catch {
     $c->stash->{json_data} = {
       status => "error",
-      message => "Storing new meta-genotype failed: internal error - " .
+      message => "Storing new metagenotype failed: internal error - " .
         "please report this to the Canto developers",
     };
     warn $_;

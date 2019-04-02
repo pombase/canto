@@ -4620,7 +4620,7 @@ var genotypeListRowLinksCtrl =
           if (genotype.metagenotype_count) {
             $scope.canDelete = false;
             $scope.deleteTitle =
-              'This genotype is part of a meta-genotype - delete the meta-genotype first';
+              'This genotype is part of a metagenotype - delete the metagenotype first';
           }
         }
 
@@ -7112,7 +7112,7 @@ var metagenotypeManage = function (CantoGlobals, CursGenotypeList, Metagenotype,
           (CantoGlobals.read_only_curs ? '/ro' : '');
       };
 
-      $scope.createMetaGenotype = function () {
+      $scope.createMetagenotype = function () {
         var data = {};
 
         data.pathogen_genotype_id = $scope.pathogenModel;
