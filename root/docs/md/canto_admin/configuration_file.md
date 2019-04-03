@@ -67,6 +67,10 @@ Configuration for the admin view pages.
 The maximum number of lines of results to show in a table on an object
 page.
 
+### alleles_have_expression
+If true, allow editing of the expression of alleles and show the expression
+as a column in the genotype table on the genotype management page.
+
 ### db_initial_data
 Data needed to initialise a Canto instance.
 

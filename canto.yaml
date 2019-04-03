@@ -72,6 +72,10 @@ view_options:
 # publication page - too many will slow the page loading
 max_existing_annotations: 100
 
+# if true, allow editing of the expression of alleles and show the expression
+# as a column in the genotype table on the genotype management page
+alleles_have_expression: true
+
 # from_address - used as the "from" field is all outgoing messages
 # admin_address - the contact address of the admin curators, used to
 #                 alert about completed sessions and problems

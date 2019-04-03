@@ -632,6 +632,7 @@ canto.service('CantoGlobals', function ($window) {
   this.htpPerPub5YearStatsData = $window.htpPerPub5YearStatsData;
   this.multi_organism_mode = $window.multi_organism_mode == 1;
   this.pathogen_host_mode = $window.pathogen_host_mode;
+  this.alleles_have_expression = $window.alleles_have_expression;
   this.organismsAndGenes = $window.organismsAndGenes;
   this.confirmGenes = $window.confirmGenes;
   this.highlightTerms = $window.highlightTerms;
@@ -3049,6 +3050,13 @@ var alleleEditDialogCtrl =
 
     getStrainsFromServer($scope.taxonId);
 
+    $scope.showExpression = function () {
+      return CantoGlobals.alleles_have_expression &&
+        !!$scope.alleleData.type &&
+        $scope.current_type_config != undefined &&
+        $scope.current_type_config.allow_expression_change;
+    };
+
     $scope.strainSelected = function (strain) {
       $scope.strainData.selectedStrain = strain;
     };
@@ -4763,6 +4771,7 @@ var genotypeListRowCtrl =
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.app_static_path = CantoGlobals.app_static_path;
+        $scope.alleles_have_expression = CantoGlobals.alleles_have_expression;
         $scope.closeIconPath = CantoGlobals.app_static_path + '/images/close_icon.png';
         $scope.multi_organism_mode = CantoGlobals.multi_organism_mode;
 
@@ -4825,6 +4834,7 @@ var genotypeListViewCtrl =
       templateUrl: app_static_path + 'ng_templates/genotype_list_view.html',
       controller: function ($scope) {
         $scope.multi_organism_mode = CantoGlobals.multi_organism_mode;
+        $scope.alleles_have_expression = CantoGlobals.alleles_have_expression;
 
         function hasDifferentStrains(genotypes) {
           var firstStrain = genotypes[0].strain_name;
@@ -4855,6 +4865,9 @@ var genotypeListViewCtrl =
               $scope.columnsToHide[key] === true) {
               count += 1;
             }
+          }
+          if (!CantoGlobals.alleles_have_expression) {
+            count += 1;
           }
           return count;
         }
