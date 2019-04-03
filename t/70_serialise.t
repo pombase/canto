@@ -36,6 +36,8 @@ ok ($existing_pombe_genotype);
 my $cerevisiae_genotype =
   $genotype_manager->make_genotype(undef, undef, [], 4932);
 
+$genotype_manager->_remove_unused_alleles();
+
 my $metagenotype =
   $genotype_manager->make_metagenotype(pathogen_genotype => $existing_pombe_genotype,
                                        host_genotype => $cerevisiae_genotype);

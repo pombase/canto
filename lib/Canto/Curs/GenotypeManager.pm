@@ -275,8 +275,6 @@ sub make_genotype
 
   $genotype->update();
 
-  $self->_remove_unused_alleles();
-
   return $genotype;
 }
 
