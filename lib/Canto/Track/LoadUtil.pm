@@ -858,8 +858,11 @@ sub create_sessions_from_json
       die "can't get publication details for $pub_uniquename from PubMed:\n$error_message";
     }
 
+    my @gene_lookup_results = ();
+
     for my $gene_uniquename (@{$session_data->{genes}}) {
       my $lookup_result = $gene_lookup->lookup([$gene_uniquename]);
+      push @gene_lookup_results, $gene_lookup->lookup([$gene_uniquename]);
 
       if (@{$lookup_result->{missing}} != 0) {
         print "no gene found in the database for ID $gene_uniquename from $pub_uniquename\n";
@@ -888,8 +891,15 @@ sub create_sessions_from_json
 
     my %db_genes = ();
 
-    for my $gene_uniquename (@{$session_data->{genes}}) {
-      my $lookup_result = $gene_lookup->lookup([$gene_uniquename]);
+    @gene_lookup_results = sort {
+      my $a_display_name =
+        $a->{found}->[0]->{primary_name} || $a->{found}->[0]->{primary_identifier};
+      my $b_display_name =
+        $b->{found}->[0]->{primary_name} || $b->{found}->[0]->{primary_identifier};
+      $a_display_name cmp $b_display_name;
+    } @gene_lookup_results;
+
+    for my $lookup_result (@gene_lookup_results) {
       my %result = $gene_manager->create_genes_from_lookup($lookup_result);
 
       while (my ($result_uniquename, $result_gene) = each %result) {
@@ -900,6 +910,8 @@ sub create_sessions_from_json
     my $alleles = $session_data->{alleles};
 
     if ($alleles) {
+      my @genotype_details = ();
+
       while (my ($allele_uniquename, $allele_details) = each %$alleles) {
         my $allele_gene_uniquename = $allele_details->{gene};
 
@@ -932,11 +944,35 @@ sub create_sessions_from_json
         my $description = $allele_details->{allele_description} || undef;
         my @args = ($allele_uniquename, $type, $name, $description, $gene);
 
-        my @alleles_for_make_genotype =
-          $allele_manager->create_simple_allele(@args);
+        my $allele_object = $allele_manager->create_simple_allele(@args);
 
-        $genotype_manager->make_genotype(undef, undef, \@alleles_for_make_genotype,
-                                         $taxonid, "genotype-$allele_uniquename");
+        my $gene_display_name;
+
+        if ($allele_object->gene()) {
+          my $gene_proxy =
+            Canto::Curs::GeneProxy->new(config => $config,
+                                        cursdb_gene => $allele_object->gene());
+          $gene_display_name = $gene_proxy->display_name();
+        } else {
+          $gene_display_name = "(aberration)";
+        }
+
+        push @genotype_details, {
+          allele => $allele_object,
+          gene_display_name => $gene_display_name,
+          identifier => "genotype-$allele_uniquename",
+          taxonid => $taxonid,
+        };
+      }
+
+      @genotype_details = sort {
+        $a->{gene_display_name} cmp $b->{gene_display_name};
+      } @genotype_details;
+
+      for my $genotype_details (@genotype_details) {
+        $genotype_manager->make_genotype(undef, undef, [$genotype_details->{allele}],
+                                         $genotype_details->{taxonid},
+                                         $genotype_details->{identifier});
       }
     }
 

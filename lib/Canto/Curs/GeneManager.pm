@@ -74,8 +74,8 @@ sub _filter_existing_genes
  Usage   : my %results = $self->create_genes_from_lookup($lookup_result);
  Function: Create genes in the CursDB from the result of calling lookup().
            Only creates those genes that aren't there already.
- Args    : $lookup_result - the result of a sucessful call to
-           GeneLookup::lookup()
+ Args    : $lookup_result - the result of a sucessful call to GeneLookup::lookup()
+           $sort_by_name - sort the genes by name before storing
  Return  : A hash of the new genes, the keys are the primary_identifiers and
            values are the the Gene objects
 
@@ -85,6 +85,7 @@ sub create_genes_from_lookup
 {
   my $self = shift;
   my $result = shift;
+  my $sort_by_name = shift;
 
   my $schema = $self->curs_schema();
 
