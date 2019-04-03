@@ -5808,6 +5808,7 @@ var annotationTableCtrl =
           genotype_background: true,
           term_suggestion: true,
           gene_product_form_id: true,
+          strain_name: true,
         };
 
         $scope.data = {
