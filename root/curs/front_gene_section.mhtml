@@ -67,7 +67,7 @@ Annotate genotypes
     <a href="<% $host_genotype_manage_url %>"><% $read_only_curs ? 'View host genotypes ...' : 'Host genotype management ...' %></a>
   </div>
   <div class="feature-list-action">
-    <a href="<% $metagenotype_manage_url %>"><% $read_only_curs ? 'View meta-genotypes ...' : 'Meta-genotype management ...' %></a>
+    <a href="<% $metagenotype_manage_url %>"><% $read_only_curs ? 'View metagenotypes ...' : 'Metagenotype management ...' %></a>
   </div>
 %   } else {
   <div class="feature-list-action">

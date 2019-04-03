@@ -305,7 +305,7 @@ __PACKAGE__->many_to_many('alleles' => 'allele_genotypes',
                           'allele');
 
 
-# returns either the meta-genotype(s) that this genotype is part of or
+# returns either the metagenotype(s) that this genotype is part of or
 # empty list
 sub metagenotypes
 {
@@ -318,7 +318,7 @@ sub metagenotypes
   return $self->metagenotype_pathogen_genotypes()->all();
 }
 
-# returns either the count of meta-genotypes that this genotype is part of
+# returns either the count of metagenotypes that this genotype is part of
 sub metagenotype_count
 {
   my $self = shift;

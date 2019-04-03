@@ -30,8 +30,8 @@
 %   if ($current_path =~ /metagenotype_manage/) {
       <div class="breadcrumbs-link">
         <a id="breadcrumbs-metagenotype-management-link"
-           href="<% $st->{curs_root_uri} . '/metagenotype_manage' %>" title="Meta-genotype management">
-           Meta-genotype management
+           href="<% $st->{curs_root_uri} . '/metagenotype_manage' %>" title="Metagenotype management">
+           Metagenotype management
         </a>
       </div>
 %   } else {
