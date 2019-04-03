@@ -858,8 +858,11 @@ sub create_sessions_from_json
       die "can't get publication details for $pub_uniquename from PubMed:\n$error_message";
     }
 
+    my @gene_lookup_results = ();
+
     for my $gene_uniquename (@{$session_data->{genes}}) {
       my $lookup_result = $gene_lookup->lookup([$gene_uniquename]);
+      push @gene_lookup_results, $gene_lookup->lookup([$gene_uniquename]);
 
       if (@{$lookup_result->{missing}} != 0) {
         print "no gene found in the database for ID $gene_uniquename from $pub_uniquename\n";
@@ -888,9 +891,16 @@ sub create_sessions_from_json
 
     my %db_genes = ();
 
-    for my $gene_uniquename (@{$session_data->{genes}}) {
-      my $lookup_result = $gene_lookup->lookup([$gene_uniquename]);
-      my %result = $gene_manager->create_genes_from_lookup($lookup_result, 1);
+    @gene_lookup_results = sort {
+      my $a_display_name =
+        $a->{found}->[0]->{primary_name} || $a->{found}->[0]->{primary_identifier};
+      my $b_display_name =
+        $b->{found}->[0]->{primary_name} || $b->{found}->[0]->{primary_identifier};
+      $a_display_name cmp $b_display_name;
+    } @gene_lookup_results;
+
+    for my $lookup_result (@gene_lookup_results) {
+      my %result = $gene_manager->create_genes_from_lookup($lookup_result);
 
       while (my ($result_uniquename, $result_gene) = each %result) {
         $db_genes{$result_uniquename} = $result_gene;

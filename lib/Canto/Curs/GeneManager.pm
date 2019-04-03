@@ -97,14 +97,6 @@ sub create_genes_from_lookup
 
         @genes = $self->_filter_existing_genes(@genes);
 
-        if ($sort_by_name) {
-          @genes = sort {
-            ($a->{primary_name} || $a->{primary_identifier})
-              cmp
-            ($b->{primary_name} || $b->{primary_identifier});
-          } @genes;
-        }
-
         for my $gene (@genes) {
           my $org_taxonid = $gene->{organism_taxonid};
           my $pathogen_or_host = 'unknown';
