@@ -138,6 +138,14 @@ sub get_organism_resultset
                species => $species });
 }
 
+sub synonyms_of_gene_rs
+{
+  my $self = shift;
+  my $gene = shift;
+
+  return $gene->synonyms()->search({}, { columns => [ 'name' ], distinct => 1 });
+}
+
 with 'Canto::Role::TaxonIDLookup';
 with 'Canto::Role::ChadoLikeGeneLookup';
 with 'Canto::Role::GeneLookupCache';

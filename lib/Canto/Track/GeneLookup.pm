@@ -77,6 +77,14 @@ sub lookup_by_synonym_rs
     ->search_related('gene', {}, { prefetch => 'organism' });
 }
 
+sub synonyms_of_gene_rs
+{
+  my $self = shift;
+  my $gene = shift;
+
+  return $gene->synonyms()
+}
+
 sub get_organism_resultset
 {
   my $self = shift;

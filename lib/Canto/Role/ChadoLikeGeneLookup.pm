@@ -47,6 +47,7 @@ requires 'schema';
 requires 'taxon_id_lookup';
 requires 'config';
 requires 'get_organism_resultset';
+requires 'synonyms_of_gene_rs';
 
 sub build_gene_constraint
 {
@@ -116,10 +117,8 @@ sub _read_genes
 
     my @synonym_identifiers = ();
 
-    my $synonyms_rs =
-      $found_gene->synonyms()->search({}, { columns => [ 'name' ], distinct => 1 });
-    for my $synonym_row ($synonyms_rs->all()) {
-      my $synonym_identifier = $synonym_row->name();
+    for my $synonym ($self->synonyms_of_gene_rs($found_gene)->all()) {
+      my $synonym_identifier = $synonym->name();
       push @synonym_identifiers, $synonym_identifier;
 
       if (exists $search_terms_ref->{lc $synonym_identifier}) {
