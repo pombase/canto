@@ -51,6 +51,16 @@ function countKeys(o) {
   return size;
 }
 
+function arrayContains(array, predicate) {
+  var i, len = array.length;
+  for (i = 0; i < len; i += 1) {
+    if (predicate(array[i]) === true) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function arrayRemoveOne(array, item) {
   var i = array.indexOf(item);
   if (i >= 0) {
@@ -170,6 +180,20 @@ function getGenotypeManagePath(organismMode) {
   return paths.normal;
 }
 
+function filterOrganisms(organisms, genotypeType) {
+  if (genotypeType !== 'host' && genotypeType !== 'pathogen') {
+    return organisms;
+  }
+  var byOrganismType = buildOrganismFilter(genotypeType);
+  return organisms.filter(byOrganismType);
+
+  function buildOrganismFilter(type) {
+    return function (organism) {
+      return organism.pathogen_or_host === type;
+    };
+  }
+}
+
 function filterStrainsByTaxonId(strains, taxonId) {
   var taxonIdNum = parseInt(taxonId, 10);
   return $.grep(strains, function (strain) {
@@ -243,6 +267,15 @@ canto.filter('featureChooserFilter', function () {
       ret += ")";
     }
     return ret;
+  };
+});
+
+canto.filter('renameGenotypeType', function () {
+  return function (type) {
+    if (type === 'pathogen' || type === 'host') {
+      return capitalizeFirstLetter(type);
+    }
+    return 'Organism';
   };
 });
 
@@ -3936,6 +3969,44 @@ canto.directive('organismSelector', [
   organismSelector
 ]);
 
+var organismSelectorNew = function () {
+  return {
+    scope: {
+      organismSelected: '&',
+      organisms: '<',
+      label: '@'
+    },
+    restrict: 'E',
+    templateUrl: app_static_path + 'ng_templates/organism_selector_new.html',
+    controller: organismSelectorNewCtrl,
+  };
+};
+
+var organismSelectorNewCtrl = function ($scope, CantoGlobals) {
+
+  $scope.app_static_path = CantoGlobals.app_static_path;
+
+  $scope.data = {
+    selectedOrganism: null
+  };
+
+  $scope.organismChanged = function () {
+    $scope.organismSelected({
+      organism: $scope.data.selectedOrganism
+    });
+  };
+
+  $scope.$watch('organisms', function () {
+    if ($scope.organisms && $scope.organisms.length === 1) {
+      $scope.organismSelected({
+        organism: $scope.organisms[0]
+      });
+    }
+  });
+};
+
+canto.directive('organismSelectorNew', organismSelectorNew);
+
 var strainSelector = function () {
   return {
     scope: {
@@ -3978,46 +4049,27 @@ var GenotypeGeneListCtrl =
     return {
       scope: {
         genotypes: '=',
-        multiOrganismMode: '=',
-        label: '@',
-        genotypeType: '<',
-        lastAddedGene: '<',
-        onOrganismSelect: '&'
+        selectedOrganism: '<',
+        genotypeType: '<'
       },
       restrict: 'E',
       replace: true,
       templateUrl: app_static_path + 'ng_templates/genotype_gene_list.html',
       controller: function ($scope) {
-        $scope.data = {
-          selectedOrganism: {}
-        };
 
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
+        $scope.multiOrganismMode = CantoGlobals.multi_organism_mode;
 
         $scope.hasDeletionHash = {};
-
-        if (!$scope.multiOrganismMode) {
-          Curs.list('organism')
-            .then(function (organisms) {
-              $scope.organismUpdated(organisms.data[0]);
-            });
-        }
 
         $scope.$watch('genotypes',
           function () {
             $scope.makeHasDeletionHash();
           }, true);
 
-        $scope.organismUpdated = function (organism) {
-          $scope.data.selectedOrganism = organism;
-          $scope.onOrganismSelect({
-            organism: organism
-          });
-        };
-
         $scope.getSelectedOrganism = function () {
-          return $scope.data.selectedOrganism;
+          return $scope.selectedOrganism;
         };
 
         $scope.hasDeletionGenotype = function(gene_id) {
@@ -4069,7 +4121,7 @@ var GenotypeGeneListCtrl =
         $scope.selectedStrain = '';
 
         $scope.deleteSelectStrainPicker = function (gene_id) {
-          var deleteInstance = selectStrainPicker($uibModal, $scope.data.selectedOrganism.taxonid);
+          var deleteInstance = selectStrainPicker($uibModal, $scope.getSelectedOrganism().taxonid);
 
           deleteInstance.result.then(function (strain) {
             $scope.selectedStrain = strain.strain.strain_name;
@@ -4103,8 +4155,8 @@ var GenotypeGeneListCtrl =
           };
 
           var storePromise =
-            CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined, [deletionAllele],
-              $scope.data.selectedOrganism.taxonid, $scope.selectedStrain, undefined);
+          CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined, [deletionAllele],
+              $scope.getSelectedOrganism().taxonid, $scope.selectedStrain, undefined);
 
           storePromise.then(function (result) {
             if (result.data.status === "existing") {
@@ -4146,11 +4198,7 @@ var GenotypeGenesPanelCtrl =
 
     return {
       scope: {
-        genotypes: '=',
-        multiOrganismMode: '=',
-        genotypeType: '<',
-        lastAddedGene: '<',
-        onOrganismSelect: '&',
+        multiOrganismMode: '='
       },
       restrict: 'E',
       replace: true,
@@ -4161,15 +4209,6 @@ var GenotypeGenesPanelCtrl =
 
         $scope.openSingleGeneAddDialog = function () {
           var modal = openSingleGeneAddDialog($uibModal);
-          modal.result.then(function (geneObj) {
-            $scope.lastAddedGene = geneObj.new_gene_id;
-          });
-        };
-
-        $scope.organismUpdated = function (organism) {
-          $scope.onOrganismSelect({
-            organism: organism
-          });
         };
       }
     };
@@ -4201,6 +4240,7 @@ var genotypeManageCtrl =
         $scope.metagenotypeUrl = CantoGlobals.curs_root_uri + '/metagenotype_manage';
 
         $scope.data = {
+          organisms: [],
           genotypeMap: {},
           singleAlleleGenotypes: [],
           multiAlleleGenotypes: [],
@@ -4210,7 +4250,9 @@ var genotypeManageCtrl =
           editingGenotype: false,
           editGenotypeId: null,
           multiOrganismMode: false,
-          showMetagenotypeButton: true,
+          hostOrganismExists: false,
+          pathogenGenotypeExists: false,
+          isMetagenotypeLinkDisabled: true,
           showNoGenotypeNotice: true
         };
 
@@ -4223,6 +4265,19 @@ var genotypeManageCtrl =
         $scope.organismUpdated = function (organism) {
           $scope.data.selectedOrganism = organism;
           updateGenotypeLists();
+        };
+
+        var readOrganisms = function () {
+          Curs.list('organism').then(function (response) {
+            var organisms = response.data;
+            $scope.data.hostOrganismExists = arrayContains(organisms, function (org) {
+              return org.pathogen_or_host === 'host';
+            });
+            $scope.data.organisms = filterOrganisms(organisms, $scope.genotypeType);
+          }).catch(function () {
+            toaster.pop('error', "couldn't read the organism list from the server");
+            $scope.data.waitingForServer = false;
+          });
         };
 
         function hashChangedHandler() {
@@ -4272,7 +4327,8 @@ var genotypeManageCtrl =
           }).then(function (results) {
             setGenotypes(results);
             $scope.data.waitingForServer = false;
-            $scope.data.showMetagenotypeButton = ($scope.data.genotypeMap.length >= 1);
+            $scope.data.pathogenGenotypeExists = findPathogenGenotype(results);
+            $scope.data.isMetagenotypeLinkDisabled = getMetagenotypeLinkState();
             CursGenotypeList.onListChange($scope.readGenotypesCallback);
           }).catch(function () {
             toaster.pop('error', "couldn't read the genotype list from the server");
@@ -4346,6 +4402,21 @@ var genotypeManageCtrl =
           return genotypeMap;
         };
 
+        function findPathogenGenotype(genotypes) {
+          return arrayContains(genotypes, function (g) {
+            return g.organism.pathogen_or_host === 'pathogen';
+          });
+        }
+
+        function getMetagenotypeLinkState() {
+          var DISABLED = true, ENABLED = false;
+          if ($scope.data.pathogenGenotypeExists && $scope.data.hostOrganismExists) {
+            return ENABLED;
+          }
+          return DISABLED;
+        }
+
+        readOrganisms();
         $scope.readGenotypes();
 
       },

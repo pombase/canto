@@ -32,11 +32,20 @@
             <div class="row">
                 <div ng-if="!read_only_curs">
                     <div class="col-sm-3 col-md-3">
-                        <genotype-genes-panel
-                          on-organism-select="organismUpdated(organism)"
+                        <organism-selector-new
+                          ng-if="data.multiOrganismMode"
+                          organisms="data.organisms"
+                          organism-selected="organismUpdated(organism)"
+                          label="{{genotypeType | renameGenotypeType}}">
+                        </organism-selector-new>
+                        <genotype-gene-list
                           genotypes="data.singleAlleleGenotypes"
-                          multi-organism-mode="data.multiOrganismMode"
-                          genotype-type="genotypeType" />
+                          selected-organism="data.selectedOrganism"
+                          genotype-type="genotypeType">
+                        </genotype-gene-list>
+                        <genotype-genes-panel
+                          multi-organism-mode="data.multiOrganismMode">
+                        </genotype-genes-panel>
                     </div>
                 </div>
 
@@ -88,8 +97,9 @@
                 &lt;-- Back to summary
             </button>
             <span ng-if="pathogen_host_mode">
-            <button ng-click="toMetagenotype()" type="button" class="btn btn-primary curs-back-button">
-                Metagenotype management --&gt;
+            <button ng-click="toMetagenotype()" type="button" class="btn btn-primary curs-back-button"
+                    ng-disabled="data.isMetagenotypeLinkDisabled">
+                Meta-genotype management --&gt;
             </button>
             </span>
         </div>

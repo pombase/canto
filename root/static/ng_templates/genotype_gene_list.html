@@ -1,11 +1,4 @@
 <div class="curs-genotype-gene-list">
-  <organism-selector
-    ng-show="multiOrganismMode"
-    label="Organism"
-    organism-selected="organismUpdated(organism)"
-    genotype-type="genotypeType"
-    last-added-gene="lastAddedGene">
-  </organism-selector>
   <div class="curs-genotype-edit-gene-list"
        ng-if="getSelectedOrganism()">
     <table class="list" ng-if="selectedOrganismGenes().length > 0">
