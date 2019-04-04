@@ -17,6 +17,7 @@ var annotation_type_config = <% $annotation_type_config_js |n %>;
 var curs_session_state = '<% $curs_session_state |n %>';
 var multi_organism_mode = '<% $multi_organism_mode %>';
 var pathogen_host_mode = '<% $pathogen_host_mode %>';
+var alleles_have_expression = <% $alleles_have_expression ? 'true' : 'false' %>;
 </script>
 
 <div id="disabled-overlay"></div>
@@ -64,4 +65,5 @@ my $annotation_type_config_js = Data::JavaScript::Anon->anon_dump($annotation_ty
 
 my $multi_organism_mode = $st->{multi_organism_mode} || 0;
 my $pathogen_host_mode = $st->{pathogen_host_mode} || 0;
+my $alleles_have_expression = $c->config()->{alleles_have_expression} || 0;
 </%init>
