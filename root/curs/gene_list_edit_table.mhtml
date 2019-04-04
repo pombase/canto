@@ -11,7 +11,7 @@
           <% $col_name %>
         </th>
 %     }
-%     if ($multi_organism_mode) {
+%     if ($strains_mode) {
         <th>
           Strains
         </th>
@@ -29,7 +29,7 @@
         <% $gene->{$col_name} |n %>
       </td>
 %     }
-%     if ($multi_organism_mode) {
+%     if ($strains_mode) {
       <td>
         <strain-picker taxon-id="<% $gene->{'taxonid'} %>"></strain-picker>
       </td>
@@ -48,7 +48,7 @@
   </table>
 
 <%init>
-my $multi_organism_mode = $c->stash()->{multi_organism_mode} || 0;
+my $strains_mode = $c->config()->{strains_mode} || 0;
 
 sub _has_annotations
 {

@@ -30,8 +30,8 @@ app_version: v1282
 schema_version: 26
 
 ## Set this to create a Canto instance for a particular organism.  If not set,
-## all gene lookups with match genes from any organism (and will return the
-## organism).
+## Canto will be in multi-organism mode and the multi_organism_mode will be set.
+## In multi-organism mode all gene lookups with match genes from any organism.
 #instance_organism:
 #  taxonid: 4896
 
@@ -40,6 +40,9 @@ schema_version: 26
 ## see also: Canto::Role::TaxonIDLookup
 # organism_taxon_id:
 #   'Schizosaccharomyces pombe': 4896
+
+## set to 1 to enable strains for genotypes
+strains_mode: 0
 
 # the path that the home link goes to
 instance_front_path: /docs/instance_front

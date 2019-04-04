@@ -163,6 +163,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
   $st->{instance_organism} = $config->{instance_organism};
   $st->{multi_organism_mode} = !defined $st->{instance_organism};
+  $st->{strains_mode} = $config->{strains_mode};
   $st->{pathogen_host_mode} = $config->{pathogen_host_mode};
 
   my $with_gene_evidence_codes =
