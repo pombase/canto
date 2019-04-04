@@ -116,8 +116,10 @@ sub _read_genes
 
     my @synonym_identifiers = ();
 
-    for my $synonym ($found_gene->synonyms()) {
-      my $synonym_identifier = $synonym->name();
+    my $synonyms_rs =
+      $found_gene->synonyms()->search({}, { columns => [ 'name' ], distinct => 1 });
+    for my $synonym_row ($synonyms_rs->all()) {
+      my $synonym_identifier = $synonym_row->name();
       push @synonym_identifiers, $synonym_identifier;
 
       if (exists $search_terms_ref->{lc $synonym_identifier}) {
