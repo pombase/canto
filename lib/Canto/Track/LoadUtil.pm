@@ -893,9 +893,9 @@ sub create_sessions_from_json
 
     @gene_lookup_results = sort {
       my $a_display_name =
-        $a->{found}->[0]->{primary_name} || $a->{found}->[0]->{primary_identifier};
+        lc $a->{found}->[0]->{primary_name} || $a->{found}->[0]->{primary_identifier};
       my $b_display_name =
-        $b->{found}->[0]->{primary_name} || $b->{found}->[0]->{primary_identifier};
+        lc $b->{found}->[0]->{primary_name} || $b->{found}->[0]->{primary_identifier};
       $a_display_name cmp $b_display_name;
     } @gene_lookup_results;
 
@@ -966,7 +966,7 @@ sub create_sessions_from_json
       }
 
       @genotype_details = sort {
-        $a->{gene_display_name} cmp $b->{gene_display_name};
+        lc $a->{gene_display_name} cmp lc $b->{gene_display_name};
       } @genotype_details;
 
       for my $genotype_details (@genotype_details) {
