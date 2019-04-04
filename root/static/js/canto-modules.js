@@ -2730,6 +2730,11 @@ var ontologyWorkflowCtrl =
       .then(function (annotationType) {
         $scope.annotationType = annotationType;
 
+        if (annotationType.evidence_codes.length == 0) {
+          // skip the evidence selection state if there are no evidence codes
+          $scope.states = ['searching', 'buildExtension', 'commenting'];
+        }
+
         if (annotationType.feature_type == 'genotype') {
           CursGenotypeList.getGenotypeById(Number($attrs.featureId))
             .then(function (genotype) {
@@ -5415,6 +5420,7 @@ var annotationEditDialogCtrl =
     $scope.status = {
       validEvidence: false,
       showConditions: false,
+      showEvidence: true,
     };
 
     copyObject(args.annotation, $scope.annotation);
@@ -5589,6 +5595,8 @@ var annotationEditDialogCtrl =
         $scope.annotationType = annotationType;
         $scope.displayAnnotationFeatureType = capitalizeFirstLetter(annotationType.feature_type);
         $scope.annotation.feature_type = annotationType.feature_type;
+
+        $scope.status.showEvidence = annotationType.evidence_codes.length > 0;
 
         if (annotationType.can_have_conditions &&
           !$scope.annotation['conditions']) {
@@ -5803,6 +5811,7 @@ var annotationTableCtrl =
           submitter_comment: true,
           extension: true,
           curator: true,
+          evidence_code: true,
           conditions: true,
           genotype_name: true,
           genotype_background: true,

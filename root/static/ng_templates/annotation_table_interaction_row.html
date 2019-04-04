@@ -10,7 +10,7 @@
   <td ng-if="multiOrganismMode">
     {{annotation.gene_taxonid}}
   </td>
-  <td>
+  <td ng-if="!data.hideColumns.evidence_code">
     {{displayEvidence}}
   </td>
   <td>

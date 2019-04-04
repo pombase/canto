@@ -75,7 +75,7 @@
   <td ng-class="{ 'term-warning': annotation.is_obsolete_term }">
     {{annotation.term_name}}
   </td>
-  <td>
+  <td ng-if="!data.hideColumns.evidence_code">
     {{annotation.evidence_code}}
   </td>
   <td ng-if="annotationType.can_have_with && !data.hideColumns.with_or_from_identifier">

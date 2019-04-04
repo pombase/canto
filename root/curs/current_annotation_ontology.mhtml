@@ -31,9 +31,11 @@ $pub
       <th>
         Term name
       </th>
+% if ($show_evidence) {
       <th>
         Evidence code
       </th>
+% }
 % if ($feature_type eq 'genotype') {
       <th>
         Conditions
@@ -79,9 +81,11 @@ $pub
     <td>
       <% $row->{term_name} %>
     </td>
+% if ($show_evidence) {
     <td>
      <% $row->{evidence_code} %>
     </td>
+% }
 % if ($feature_type eq 'genotype') {
     <td>
       <% join ", ", map { $_->{name} } @{$row->{conditions} // []} %>
@@ -123,6 +127,8 @@ use HTML::Mason::Escapes;
 my $annotation_type_display_name = $annotation_type->{display_name};
 
 my $needs_with_or_from = $annotation_type->{needs_with_or_from};
+
+my $show_evidence = @{$annotation_type->{evidence_codes}} > 0;
 
 my $some_row_has_term_suggestion = grep { $_->{term_suggestion} } @annotations;
 my $some_row_has_comment = grep { $_->{comment} } @annotations;
