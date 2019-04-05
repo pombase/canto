@@ -16,6 +16,7 @@ var with_gene_evidence_codes = <% $with_gene_evidence_codes_js |n %>;
 var annotation_type_config = <% $annotation_type_config_js |n %>;
 var curs_session_state = '<% $curs_session_state |n %>';
 var multi_organism_mode = '<% $multi_organism_mode %>';
+var split_genotypes_by_organism = <% $split_genotypes_by_organism ? 'true' : 'false' %>;
 var strains_mode = '<% $strains_mode %>';
 var pathogen_host_mode = '<% $pathogen_host_mode %>';
 var alleles_have_expression = <% $alleles_have_expression ? 'true' : 'false' %>;
@@ -65,6 +66,7 @@ my $annotation_type_config = $st->{annotation_type_config};
 my $annotation_type_config_js = Data::JavaScript::Anon->anon_dump($annotation_type_config);
 
 my $multi_organism_mode = $st->{multi_organism_mode} || 0;
+my $split_genotypes_by_organism = $st->{split_genotypes_by_organism} || 0;
 my $strains_mode = $st->{strains_mode} || 0;
 my $pathogen_host_mode = $st->{pathogen_host_mode} || 0;
 my $alleles_have_expression = $c->config()->{alleles_have_expression} || 0;

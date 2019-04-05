@@ -664,6 +664,7 @@ canto.service('CantoGlobals', function ($window) {
   this.perPub5YearStatsData = $window.perPub5YearStatsData;
   this.htpPerPub5YearStatsData = $window.htpPerPub5YearStatsData;
   this.multi_organism_mode = $window.multi_organism_mode == 1;
+  this.split_genotypes_by_organism = $window.split_genotypes_by_organism == 1;
   this.strains_mode = $window.strains_mode == 1;
   this.pathogen_host_mode = $window.pathogen_host_mode;
   this.alleles_have_expression = $window.alleles_have_expression;
@@ -4066,7 +4067,7 @@ var GenotypeGeneListCtrl =
     return {
       scope: {
         genotypes: '=',
-        selectedOrganism: '<',
+        genes: '<',
         genotypeType: '<'
       },
       restrict: 'E',
@@ -4085,10 +4086,6 @@ var GenotypeGeneListCtrl =
             $scope.makeHasDeletionHash();
           }, true);
 
-        $scope.getSelectedOrganism = function () {
-          return $scope.selectedOrganism;
-        };
-
         $scope.hasDeletionGenotype = function(gene_id) {
           return !$scope.multiOrganismMode && !!$scope.hasDeletionHash[gene_id];
         };
@@ -4106,12 +4103,14 @@ var GenotypeGeneListCtrl =
             });
         };
 
-        $scope.selectedOrganismGenes = function () {
-          return $scope.getSelectedOrganism().genes;
-        };
-
         $scope.singleAlleleQuick = function (gene_display_name, gene_systematic_id, gene_id) {
-          var taxonId = $scope.getSelectedOrganism().taxonid;
+          var gene = $scope.geneById(geneId);
+
+          if (!gene) {
+            return;
+          }
+
+          var taxonId = gene.organism.taxonid;
           var editInstance = makeAlleleEditInstance($uibModal, {
               gene_display_name: gene_display_name,
               gene_systematic_id: gene_systematic_id,
@@ -4146,17 +4145,24 @@ var GenotypeGeneListCtrl =
           });
         };
 
-        $scope.makeDeletionAllele = function (gene_id) {
-          if (!$scope.getSelectedOrganism()) {
+        $scope.geneById = function (geneId) {
+          if ($scope.genes) {
+            for (var i=0, len=$scope.genes.length; i < len; i++) {
+              // find gene by ID
+              if ($scope.genes[i].gene_id == geneId) {
+                return $scope.genes[i];
+              }
+            }
+          }
+          return null;
+        };
+
+        $scope.makeDeletionAllele = function (geneId) {
+          var gene = $scope.geneById(geneId);
+
+          if (!gene) {
             return;
           }
-
-          var genes = $scope.selectedOrganismGenes();
-
-          var gene = ($.grep(genes, function (gene) {
-            // find gene by ID
-            return gene.gene_id == gene_id;
-          }))[0];
 
           var displayName = gene.primary_name || gene.primary_identifier;
 
@@ -4223,6 +4229,7 @@ var GenotypeGenesPanelCtrl =
       controller: function ($scope) {
 
         $scope.app_static_path = CantoGlobals.app_static_path;
+        $scope.splitGenotypesByOrganism = CantoGlobals.split_genotypes_by_organism;
 
         $scope.openSingleGeneAddDialog = function () {
           var modal = openSingleGeneAddDialog($uibModal);
@@ -4239,7 +4246,7 @@ canto.directive('genotypeGenesPanel',
 
 var genotypeManageCtrl =
   function ($uibModal, $location, $http, Curs, CursGenotypeList, CantoGlobals,
-    CantoConfig, toaster) {
+            CantoConfig, CursGeneList, toaster) {
     return {
       scope: {
         genotypeType: '@',
@@ -4248,8 +4255,6 @@ var genotypeManageCtrl =
       restrict: 'E',
       templateUrl: app_static_path + 'ng_templates/genotype_manage.html',
       controller: function ($scope) {
-
-
         $scope.app_static_path = CantoGlobals.app_static_path;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
@@ -4258,9 +4263,10 @@ var genotypeManageCtrl =
 
         $scope.data = {
           organisms: [],
-          genotypeMap: {},
           singleAlleleGenotypes: [],
           multiAlleleGenotypes: [],
+          allGenes: [],
+          visibleGenes: [],
           waitingForServer: true,
           selectedOrganism: null,
           selectedGenotypeId: null,
@@ -4270,18 +4276,24 @@ var genotypeManageCtrl =
           hostOrganismExists: false,
           pathogenGenotypeExists: false,
           isMetagenotypeLinkDisabled: true,
-          showNoGenotypeNotice: true
         };
 
-        CantoConfig.get('instance_organism').success(function (results) {
-          if (!results.taxonid) {
-            $scope.data.multiOrganismMode = true;
+        $scope.data.multiOrganismMode = CantoGlobals.multi_organism_mode;
+        $scope.data.splitGenotypesByOrganism = CantoGlobals.split_genotypes_by_organism;
+
+        CursGeneList.geneList().then(function (results) {
+          $scope.data.allGenes = results;
+          if (!$scope.data.splitGenotypesByOrganism) {
+            $scope.data.visibleGenes = results;
           }
+        }).catch(function () {
+          toaster.pop('note', "couldn't read the gene list from the server");
         });
 
         $scope.organismUpdated = function (organism) {
           $scope.data.selectedOrganism = organism;
-          updateGenotypeLists();
+          $scope.updateGenotypeLists();
+          $scope.updateVisibleGenes();
         };
 
         var readOrganisms = function () {
@@ -4342,7 +4354,8 @@ var genotypeManageCtrl =
           CursGenotypeList.cursGenotypeList({
             include_allele: 1
           }).then(function (results) {
-            setGenotypes(results);
+            $scope.data.allGenotypes = results;
+            $scope.updateGenotypeLists();
             $scope.data.waitingForServer = false;
             $scope.data.pathogenGenotypeExists = findPathogenGenotype(results);
             $scope.data.isMetagenotypeLinkDisabled = getMetagenotypeLinkState();
@@ -4353,41 +4366,46 @@ var genotypeManageCtrl =
           });
         };
 
-        var setGenotypes = function (genotypes) {
-          $scope.data.genotypeMap = mapGenotypes(genotypes);
-          updateGenotypeLists();
-        };
-
-        var updateGenotypeLists = function () {
-          var organismHasNoGenotypes = function (taxonId) {
-            return !$scope.data.genotypeMap.hasOwnProperty(taxonId);
-          };
-          var selectedOrganism = $scope.data.selectedOrganism;
-          if (!selectedOrganism) {
-            $scope.data.singleAlleleGenotypes = [];
-            $scope.data.multiAlleleGenotypes = [];
-          } else {
-            var selectedOrganismId = $scope.data.selectedOrganism.taxonid;
-            if (organismHasNoGenotypes(selectedOrganismId)) {
-              $scope.data.singleAlleleGenotypes = [];
-              $scope.data.multiAlleleGenotypes = [];
-            } else {
-              var currentGenotypes = $scope.data.genotypeMap[selectedOrganismId];
-              $scope.data.singleAlleleGenotypes = currentGenotypes['singleAlleleGenotypes'];
-              $scope.data.multiAlleleGenotypes = currentGenotypes['multiAlleleGenotypes'];
-            }
+        $scope.updateVisibleGenes = function() {
+          // genes that should be shown in the genotype-gene-list
+          if ($scope.data.selectedOrganism) {
+            $scope.data.visibleGenes.length = 0;
+            [].push.apply($scope.data.visibleGenes, $scope.data.selectedOrganism.genes);
           }
-          updateNoGenotypeNotice();
         };
 
-        var updateNoGenotypeNotice = function () {
-          $scope.data.showNoGenotypeNotice = (
-            $scope.data.selectedOrganism &&
-            (
-              $scope.data.singleAlleleGenotypes.length === 0 &&
-              $scope.data.multiAlleleGenotypes.length === 0
-            )
-          );
+        $scope.updateGenotypeLists = function () {
+          var selectedOrganism = $scope.data.selectedOrganism;
+          var allGenotypes = $scope.data.allGenotypes;
+
+          $scope.data.singleAlleleGenotypes = [];
+          $scope.data.multiAlleleGenotypes = [];
+
+          if (allGenotypes) {
+            $.map(allGenotypes,
+                  function (genotype) {
+                    if ($scope.data.splitGenotypesByOrganism) {
+                      if (!selectedOrganism) {
+                        return;
+                      }
+                      if (genotype.organism.taxonid !== selectedOrganism.taxonid) {
+                        return;
+                      }
+                    }
+
+                    if (isSingleAlleleGenotype(genotype)) {
+                      $scope.data.singleAlleleGenotypes.push(genotype);
+                    } else {
+                      $scope.data.multiAlleleGenotypes.push(genotype);
+                    }
+                  });
+          }
+        };
+
+        var showNoGenotypeNotice = function () {
+          return $scope.data.selectedOrganism &&
+            $scope.data.singleAlleleGenotypes.length === 0 &&
+            $scope.data.multiAlleleGenotypes.length === 0
         };
 
         $scope.backToSummary = function () {
@@ -4398,25 +4416,6 @@ var genotypeManageCtrl =
         $scope.toMetagenotype = function () {
           window.location.href = $scope.metagenotypeUrl +
             (CantoGlobals.read_only_curs ? '/ro' : '');
-        };
-
-        var mapGenotypes = function (genotypes) {
-          var genotypeMap = {};
-          var addToGenotypeMap = function (index, genotype) {
-            var taxonId = genotype.organism.taxonid;
-            if (!(taxonId in genotypeMap)) {
-              genotypeMap[taxonId] = {
-                singleAlleleGenotypes: [],
-                multiAlleleGenotypes: []
-              };
-            }
-            var genotypeType = isSingleAlleleGenotype(genotype) ?
-              'singleAlleleGenotypes' :
-              'multiAlleleGenotypes';
-            genotypeMap[taxonId][genotypeType].push(genotype);
-          };
-          $.each(genotypes, addToGenotypeMap);
-          return genotypeMap;
         };
 
         function findPathogenGenotype(genotypes) {
@@ -4440,10 +4439,9 @@ var genotypeManageCtrl =
     };
   };
 
-
 canto.directive('genotypeManage',
   ['$uibModal', '$location', '$http', 'Curs', 'CursGenotypeList',
-    'CantoGlobals', 'CantoConfig', 'toaster',
+    'CantoGlobals', 'CantoConfig', 'CursGeneList', 'toaster',
     genotypeManageCtrl
   ]);
 

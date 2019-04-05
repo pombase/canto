@@ -1,7 +1,6 @@
 <div class="curs-genotype-gene-list">
-  <div class="curs-genotype-edit-gene-list"
-       ng-if="getSelectedOrganism()">
-    <table class="list" ng-if="selectedOrganismGenes().length > 0">
+  <div class="curs-genotype-edit-gene-list">
+    <table class="list" ng-if="genes.length > 0">
       <thead>
         <tr>
           <th>Gene</th>
@@ -9,7 +8,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="gene in selectedOrganismGenes()">
+        <tr ng-repeat="gene in genes">
           <td ng-if="gene.primary_name" title="{{gene.primary_name}} ({{gene.primary_identifier}})">
             <a href="{{curs_root_uri + '/feature/gene/view/' + gene.gene_id + (read_only_curs ? '/ro' : '')}}">{{gene.primary_name}}</a>
           </td>
@@ -30,9 +29,5 @@
         </tr>
       </tbody>
     </table>
-    <p class="curs-genotype-no-gene-notice"
-       ng-if="selectedOrganismGenes().length === 0">
-      No genes have been added for this organism.
-    </p>
   </div>
 </div>

@@ -33,18 +33,22 @@
                 <div ng-if="!read_only_curs">
                     <div class="col-sm-3 col-md-3">
                         <organism-selector-new
-                          ng-if="data.multiOrganismMode"
+                          ng-if="data.multiOrganismMode && data.splitGenotypesByOrganism"
                           organisms="data.organisms"
                           organism-selected="organismUpdated(organism)"
                           label="{{genotypeType | renameGenotypeType}}">
                         </organism-selector-new>
                         <genotype-gene-list
                           genotypes="data.singleAlleleGenotypes"
-                          selected-organism="data.selectedOrganism"
+                          genes="data.visibleGenes"
                           genotype-type="genotypeType">
                         </genotype-gene-list>
+                        <p class="curs-genotype-no-gene-notice"
+                           ng-if="data.selectedOrganism && data.genes.length === 0">
+                          No genes have been added for this organism.
+                        </p>
                         <genotype-genes-panel
-                          multi-organism-mode="data.multiOrganismMode">
+                          split-genotypes-by-organism="data.splitGenotypesByOrganism">
                         </genotype-genes-panel>
                     </div>
                 </div>
@@ -82,7 +86,7 @@
                                 />
                             </div>
 
-                            <div ng-if="!readOnlyCurs" ng-show="data.showNoGenotypeNotice">
+                            <div ng-if="!readOnlyCurs" ng-show="showNoGenotypeNotice()">
                                 No genotypes in this session.  Try adding one.
                             </div>
                         </div>
