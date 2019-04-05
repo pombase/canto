@@ -71,6 +71,10 @@ page.
 If 1, allow editing of the expression of alleles and show the expression
 as a column in the genotype table on the genotype management page.
 
+### split_genotypes_by_organism
+If 1, show the organism in a selector on the genotype management pages
+and only show genes and genotypes for the selected organism.
+
 ### db_initial_data
 Data needed to initialise a Canto instance.
 
