@@ -79,6 +79,10 @@ max_existing_annotations: 100
 # as a column in the genotype table on the genotype management page
 alleles_have_expression: 1
 
+# if 1, show the organism in a selector on the genotype management pages
+# and only show genes and genotypes for the selected organism
+split_genotypes_by_organism: 1
+
 # from_address - used as the "from" field is all outgoing messages
 # admin_address - the contact address of the admin curators, used to
 #                 alert about completed sessions and problems
