@@ -435,13 +435,13 @@ canto.service('CursGenotypeList', function ($q, Curs) {
   };
 
   this.setGenotypeBackground = function (toaster, $http, genotype, newBackground) {
-    return this.storeGenotype(toaster, $http, genotype.genotype_id, genotype.genotype_name,
+    return this.storeGenotype(toaster, $http, genotype.genotype_id, genotype.name,
                               newBackground, genotype.alleles, genotype.organism.taxonid,
                               genotype.strain_name, genotype.comment);
   };
 
   this.setGenotypeComment = function (toaster, $http, genotype, newComment) {
-    return this.storeGenotype(toaster, $http, genotype.genotype_id, genotype.genotype_name,
+    return this.storeGenotype(toaster, $http, genotype.genotype_id, genotype.name,
                               genotype.background, genotype.alleles,
                               genotype.organism.taxonid,
                               genotype.strain_name, newComment);
