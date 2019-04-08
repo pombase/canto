@@ -4283,7 +4283,7 @@ var genotypeManageCtrl =
 
         CursGeneList.geneList().then(function (results) {
           $scope.data.allGenes = results;
-          if (!$scope.data.splitGenotypesByOrganism) {
+          if (!$scope.data.multiOrganismMode || !$scope.data.splitGenotypesByOrganism) {
             $scope.data.visibleGenes = results;
           }
         }).catch(function () {
@@ -4384,7 +4384,7 @@ var genotypeManageCtrl =
           if (allGenotypes) {
             $.map(allGenotypes,
                   function (genotype) {
-                    if ($scope.data.splitGenotypesByOrganism) {
+                    if ($scope.data.multiOrganismMode && $scope.data.splitGenotypesByOrganism) {
                       if (!selectedOrganism) {
                         return;
                       }
