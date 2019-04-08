@@ -557,6 +557,29 @@ EOF
 
     Canto::Track::curs_map($config, $track_schema, $update_proc);
   },
+
+  27 => sub {
+    my $config = shift;
+    my $track_schema = shift;
+
+    my $update_proc = sub {
+      my $curs = shift;
+      my $curs_schema = shift;
+
+      my $curs_dbh = $curs_schema->storage()->dbh();
+
+      $curs_dbh->do("
+CREATE TABLE allelesynonym (
+       allelesynonym integer PRIMARY KEY,
+       allele integer REFERENCES allele(allele_id),
+       edit_status text NOT NULL, -- 'existing', 'new', 'deleted'
+       synonym text NOT NULL
+);
+      ");
+    };
+
+    Canto::Track::curs_map($config, $track_schema, $update_proc);
+  },
 );
 
 sub upgrade_to

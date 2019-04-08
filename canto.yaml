@@ -27,7 +27,7 @@ canto_url: http://curation.pombase.org/
 
 app_version: v1286
 
-schema_version: 26
+schema_version: 27
 
 ## Set this to create a Canto instance for a particular organism.  If not set,
 ## Canto will be in multi-organism mode and the multi_organism_mode will be set.

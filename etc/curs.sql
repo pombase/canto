@@ -21,6 +21,13 @@ CREATE TABLE allele (
        gene integer REFERENCES gene(gene_id)
 );
 
+CREATE TABLE allelesynonym (
+       allelesynonym integer PRIMARY KEY,
+       allele integer REFERENCES allele(allele_id),
+       edit_status text NOT NULL, -- 'existing', 'new', 'deleted'
+       synonym text NOT NULL
+);
+
 CREATE TABLE annotation (
        annotation_id integer PRIMARY KEY,
        status text NOT NULL,  -- "new", "deleted"

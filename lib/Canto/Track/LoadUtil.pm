@@ -942,7 +942,8 @@ sub create_sessions_from_json
         my $type = $allele_details->{allele_type} || 'other';
         my $name = $allele_details->{allele_name} || undef;
         my $description = $allele_details->{allele_description} || undef;
-        my @args = ($allele_uniquename, $type, $name, $description, $gene);
+        my $synonyms = $allele_details->{synonyms};
+        my @args = ($allele_uniquename, $type, $name, $description, $gene, $synonyms);
 
         my $allele_object = $allele_manager->create_simple_allele(@args);
 

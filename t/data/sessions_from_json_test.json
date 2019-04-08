@@ -8,13 +8,15 @@
         "gene": "FBgn0004107",
         "allele_type": "other",
         "allele_name": "Dmel\\Cdk2_UAS.Tag:MYC",
-        "allele_description": "description of FBal0119310"
+        "allele_description": "description of FBal0119310",
+        "synonyms": ["UAS-Cdk2-myc", "UAS-Cdk2"]
       },
       "FBal0064432": {
         "gene": "FBgn0016131",
         "allele_type": "other",
         "allele_name": "Dmel\\Cdk4_k06503",
-        "allele_description": null
+        "allele_description": null,
+        "synonyms": ["l(2)k06503"]
       },
       "FBab0037918" : {
         "allele_description" : "Df(2L)Exel7046",

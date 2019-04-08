@@ -125,6 +125,21 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 allelesynonyms
+
+Type: has_many
+
+Related object: L<Canto::CursDB::Allelesynonym>
+
+=cut
+
+__PACKAGE__->has_many(
+  "allelesynonyms",
+  "Canto::CursDB::Allelesynonym",
+  { "foreign.allele" => "self.allele_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 gene
 
 Type: belongs_to
@@ -146,8 +161,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2019-03-14 17:06:18
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mKCGcWHcOCb+vkjns4MMPQ
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2019-04-05 22:18:11
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:yO/XKAOo0oooqqk9R8z9QQ
 
 __PACKAGE__->many_to_many('genotypes' => 'allele_genotypes',
                           'genotype');

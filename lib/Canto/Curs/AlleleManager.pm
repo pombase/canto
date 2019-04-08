@@ -233,6 +233,7 @@ sub allele_from_json
            $description
            $expression
            $gene - a Gene object
+           $synonyms
  Returns : the new Allele
 
 =cut
@@ -246,6 +247,7 @@ sub create_simple_allele
   my $name = shift;
   my $description = shift;
   my $gene = shift;
+  my $synonyms = shift;
 
   my %create_args = (
     primary_identifier => $primary_identifier,
@@ -258,7 +260,22 @@ sub create_simple_allele
     $create_args{gene} = $gene->gene_id();
   }
 
-  return $self->curs_schema()->create_with_type('Allele', \%create_args);
+  my $allele = $self->curs_schema()->create_with_type('Allele', \%create_args);
+
+  if ($synonyms) {
+    for my $synonym (@$synonyms) {
+      my %synonym_create_args = (
+        allele => $allele->allele_id(),
+        synonym => $synonym,
+        edit_status => 'existing'
+      );
+
+      $self->curs_schema()->create_with_type('Allelesynonym', \%synonym_create_args);
+
+    }
+  }
+
+  return $allele;
 }
 
 1;

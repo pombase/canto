@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 11;
+use Test::More tests => 15;
 use Test::Exception;
 
 use Canto::TestUtil;
@@ -52,9 +52,21 @@ is($FBal0119310_allele->description(), 'description of FBal0119310');
 my $genotype_FBal0119310 =
   $created_cursdb->resultset('Genotype')->find({ identifier => "genotype-FBal0119310" });
 
-is(($genotype_FBal0119310->alleles()->all())[0]->name(), 'Dmel\Cdk2_UAS.Tag:MYC');
+my $FBal0119310_genotype_allele = ($genotype_FBal0119310->alleles()->all())[0];
+is ($FBal0119310_genotype_allele->allele_id(), $FBal0119310_allele->allele_id());
+
+is($FBal0119310_allele->name(), 'Dmel\Cdk2_UAS.Tag:MYC');
+
+my @FBal0119310_allelesynonyms = sort map { $_->synonym() } $FBal0119310_allele->allelesynonyms()->all();
+is (@FBal0119310_allelesynonyms, 2);
+is ($FBal0119310_allelesynonyms[0], "UAS-Cdk2");
+is ($FBal0119310_allelesynonyms[1], "UAS-Cdk2-myc");
 
 my $genotype_FBab0037918 =
   $created_cursdb->resultset('Genotype')->find({ identifier => "genotype-FBab0037918" });
 
-is(($genotype_FBab0037918->alleles()->all())[0]->name(), 'Df(2L)Exel7046');
+my $FBab0037918_allele = ($genotype_FBab0037918->alleles()->all())[0];
+
+is($FBab0037918_allele->name(), 'Df(2L)Exel7046');
+
+
