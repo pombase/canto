@@ -7277,11 +7277,7 @@ var metagenotypeManage = function (CantoGlobals, Curs, CursGenotypeList, Metagen
       $scope.genotypeUrl = CantoGlobals.curs_root_uri;
       $scope.makeInvalid = true;
       $scope.display = (!CantoGlobals.read_only_curs);
-      $scope.organismPicker = {
-        host: false,
-        pathogen: false
-      };
-
+      $scope.isPickerSet = ($scope.selectedPathogen && $scope.selectedHost);
 
       $scope.onPathogenSelected = function (organism) {
         var taxonId = organism.taxonid;
