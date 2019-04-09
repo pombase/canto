@@ -7327,7 +7327,13 @@ var metagenotypeManage = function (CantoGlobals, Curs, CursGenotypeList, Metagen
         }
       };
 
-      StrainsService.getAllSessionStrains();
+      onInit();
+
+      function onInit() {
+        loadOrganisms();
+        loadGenotypes();
+        StrainsService.getAllSessionStrains();
+      }
 
       function loadOrganisms() {
         Curs.list('organism').then(function (response) {
@@ -7356,7 +7362,7 @@ var metagenotypeManage = function (CantoGlobals, Curs, CursGenotypeList, Metagen
   };
 };
 
-canto.directive('metagenotypeManage', ['CantoGlobals', 'CursGenotypeList', 'Metagenotype', 'StrainsService', metagenotypeManage]);
+canto.directive('metagenotypeManage', ['CantoGlobals', 'Curs', 'CursGenotypeList', 'Metagenotype', 'StrainsService', metagenotypeManage]);
 
 
 canto.service('StrainsService', function (CantoService, Curs, $q, toaster) {
