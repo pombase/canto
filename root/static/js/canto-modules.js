@@ -7329,6 +7329,22 @@ var metagenotypeManage = function (CantoGlobals, Curs, CursGenotypeList, Metagen
 
       StrainsService.getAllSessionStrains();
 
+      function loadOrganisms() {
+        Curs.list('organism').then(function (response) {
+          var organisms = response.data;
+          $scope.pathogenOrganisms = filterOrganisms(organisms, 'pathogen');
+          $scope.hostOrganisms = filterOrganisms(organisms, 'host');
+        });
+      }
+
+      function loadGenotypes() {
+        CursGenotypeList.cursGenotypeList({
+          include_allele: 1
+        }).then(function (genotypes) {
+          $scope.taxonGenotypeMap = makeTaxonGenotypeMap(genotypes);
+        });
+      }
+
       function makeTaxonGenotypeMap(genotypes) {
         var getGenotypeTaxonId = function (genotype) {
           return genotype.organism.taxonid;
