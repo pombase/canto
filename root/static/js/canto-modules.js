@@ -7282,17 +7282,18 @@ var metagenotypeManage = function (CantoGlobals, Curs, CursGenotypeList, Metagen
         pathogen: false
       };
 
-      $scope.$on('pathogen selected', function (event, selectedPathogen) {
-        $scope.pathogenModel = selectedPathogen.genotype_id;
-        $scope.selectedPathogen = selectedPathogen;
-      });
 
-      $scope.$on('host selected', function (event, selectedHost) {
-        $scope.hostModel = selectedHost.genotype_id;
-        $scope.selectedHost = selectedHost;
-      });
+      $scope.onPathogenSelected = function (organism) {
+        var taxonId = organism.taxonid;
+        $scope.selectedPathogen = organism;
+        $scope.selectedPathogenGenotypes = $scope.taxonGenotypeMap[taxonId];
+      };
 
-      $scope.isPickerSet = Metagenotype.isPickerSet;
+      $scope.onHostSelected = function (organism) {
+        var taxonId = organism.taxonid;
+        $scope.selectedHost = organism;
+        $scope.selectedHostGenotypes = $scope.taxonGenotypeMap[taxonId];
+      };
 
       $scope.toGenotype = function () {
         window.location.href = $scope.genotypeUrl +
