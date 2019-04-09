@@ -7328,6 +7328,14 @@ var metagenotypeManage = function (CantoGlobals, Curs, CursGenotypeList, Metagen
       };
 
       StrainsService.getAllSessionStrains();
+
+      function makeTaxonGenotypeMap(genotypes) {
+        var getGenotypeTaxonId = function (genotype) {
+          return genotype.organism.taxonid;
+        };
+        return indexArray(genotypes, getGenotypeTaxonId);
+      }
+
     }
   };
 };
