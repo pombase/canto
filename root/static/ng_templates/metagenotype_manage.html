@@ -1,6 +1,10 @@
 <div id="curs-genotype-manage" class="genotype-list ng-cloak container">
     <div class="row" ng-if="display">
         <div class="col-md-6">
+            <organism-selector-new
+                organisms="pathogenOrganisms"
+                organism-selected="onPathogenSelected(organism)">
+            </organism-selector-new>
             <metagenotype-genotype-picker
                 is-pathogen="true"
                 genotype-model="pathogenModel"
@@ -8,6 +12,10 @@
             </metagenotype-genotype-picker>
         </div>
         <div class="col-md-6">
+            <organism-selector-new
+                organisms="hostOrganisms"
+                organism-selected="onHostSelected(organism)">
+            </organism-selector-new>
             <metagenotype-genotype-picker
                 is-pathogen="false"
                 genotype-model="hostModel"
