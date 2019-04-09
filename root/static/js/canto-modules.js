@@ -7263,8 +7263,17 @@ var metagenotypeManage = function (CantoGlobals, Curs, CursGenotypeList, Metagen
     replace: true,
     templateUrl: app_static_path + 'ng_templates/metagenotype_manage.html',
     controller: function ($scope) {
+
+      $scope.pathogenOrganisms = null;
       $scope.selectedPathogen = null;
+      $scope.selectedPathogenGenotypes = null;
+
+      $scope.hostOrganisms = null;
       $scope.selectedHost = null;
+      $scope.selectedHostGenotypes = null;
+
+      $scope.taxonGenotypeMap = null;
+
       $scope.genotypeUrl = CantoGlobals.curs_root_uri;
       $scope.makeInvalid = true;
       $scope.display = (!CantoGlobals.read_only_curs);
