@@ -7070,8 +7070,6 @@ var metagenotypeGenotypePicker =
       controller: function ($scope) {
 
         $scope.data = {
-          singleAlleleGenotypes: [],
-          multiAlleleGenotypes: [],
           wildType: [],
           typeLabel: 'Host',
           genotypeType: 'host',
@@ -7084,32 +7082,6 @@ var metagenotypeGenotypePicker =
             organismType.toLowerCase() +
             '_genotype_manage';
         }
-
-        $scope.setSingleAlleleGenotypes = function () {
-          if ($scope.data.selectedOrganism == null) {
-            $scope.data.singleAlleleGenotypes = [];
-          } else {
-            $scope.data.singleAlleleGenotypes = $scope.data.genotypes.filter(function (e) {
-              return (
-                (e.organism.taxonid === $scope.data.selectedOrganism.taxonid) &&
-                (e.alleles.length === 1)
-              );
-            });
-          }
-        };
-
-        $scope.setMultiAlleleGenotypes = function () {
-          if ($scope.data.selectedOrganism == null) {
-            $scope.data.multiAlleleGenotypes = [];
-          } else {
-            $scope.data.multiAlleleGenotypes = $scope.data.genotypes.filter(function (e) {
-              return (
-                (e.organism.taxonid === $scope.data.selectedOrganism.taxonid) &&
-                (e.alleles.length > 1)
-              );
-            });
-          }
-        };
 
         $scope.setWildtypeOrganism = function () {
           StrainsService.getSessionStrains($scope.data.selectedOrganism.taxonid)
@@ -7135,8 +7107,6 @@ var metagenotypeGenotypePicker =
         };
 
         $scope.setFilters = function () {
-          $scope.setSingleAlleleGenotypes();
-          $scope.setMultiAlleleGenotypes();
           $scope.setDefaultGenotype();
         };
 
@@ -7332,7 +7302,35 @@ var metagenotypeManage = function (CantoGlobals, Curs, CursGenotypeList, Metagen
         var getGenotypeTaxonId = function (genotype) {
           return genotype.organism.taxonid;
         };
-        return indexArray(genotypes, getGenotypeTaxonId);
+        var taxonGenotypeMap = indexArray(genotypes, getGenotypeTaxonId);
+        return splitGenotypeMapByAlleleCount(taxonGenotypeMap);
+      }
+
+      function splitGenotypeMapByAlleleCount(genotypeMap) {
+      	var newMap = {};
+      	var genotypes, taxonId;
+      	for (taxonId in genotypeMap) {
+      		if (genotypeMap.hasOwnProperty(taxonId)) {
+      			genotypes = genotypeMap[taxonId];
+      			newMap[taxonId] = splitGenotypesByAlleleCount(genotypes);
+      		}
+      	}
+      	return newMap;
+      }
+
+      function splitGenotypesByAlleleCount(genotypes) {
+      	var splitObject = {
+      		'single': [],
+      		'multi': []
+      	};
+      	genotypes.forEach(function (g) {
+      		if (isSingleAlleleGenotype(g)) {
+      			splitObject['single'].push(g);
+      		} else {
+      			splitObject['multi'].push(g);
+      		}
+      	});
+      	return splitObject;
       }
 
     }
