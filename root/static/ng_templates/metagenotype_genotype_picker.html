@@ -1,8 +1,8 @@
 <div>
-    <div class="curs-box-title" style="margin-bottom: 10px;">{{data.typeLabel}} Genotypes</div>
+    <div class="curs-box-title" style="margin-bottom: 10px;">{{organismLabel}} Genotypes</div>
     <div>
         <p class="metagenotype-genotype-shortcut">
-          <a href="{{data.genotypeShortcutUrl}}">Create a new {{data.genotypeType}} genotype...</a>
+          <a href="{{genotypeShortcutUrl}}">Create a new {{organismType}} genotype...</a>
         </p>
         <div ng-if="genotypes.single.length > 0 || genotypes.multi.length > 0">
             <div class="curs-box-title">Single allele genotypes</div>
@@ -29,7 +29,7 @@
                 </genotype-simple-list-view>
             </div>
 
-            <div ng-if="data.isHost">
+            <div ng-if="isHost">
                 <div class="curs-box-title">Wildtype genotype</div>
                 <wild-genotype-view
                     wild-type="data.wildType"
