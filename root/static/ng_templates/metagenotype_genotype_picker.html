@@ -4,26 +4,26 @@
         <p class="metagenotype-genotype-shortcut">
           <a href="{{data.genotypeShortcutUrl}}">Create a new {{data.genotypeType}} genotype...</a>
         </p>
-        <div ng-if="data.selectedOrganism">
+        <div ng-if="genotypes.single.length > 0 || genotypes.multi.length > 0">
             <div class="curs-box-title">Single allele genotypes</div>
-            <div ng-show="data.singleAllele.length == 0">
+            <div ng-show="genotypes.single.length === 0">
                 <p>No Single allele genotypes created</p>
             </div>
-            <div ng-if="data.singleAllele.length > 0">
+            <div ng-if="genotypes.single.length > 0">
                 <genotype-simple-list-view
-                    genotype-list="data.singleAllele"
+                    genotype-list="genotypes.single"
                     show-check-box-actions="true"
                     genotype-model="genotypeModel">
                 </genotype-simple-list-view>
             </div>
 
             <div class="curs-box-title">Multi-allele genotypes</div>
-            <div ng-show="data.multiAllele.length == 0">
+            <div ng-show="genotypes.multi.length === 0">
                 <p>No Multi-allele genotypes created</p>
             </div>
-            <div ng-show="data.multiAllele.length > 0">
+            <div ng-show="genotypes.multi.length > 0">
                 <genotype-simple-list-view
-                    genotype-list="data.multiAllele"
+                    genotype-list="genotypes.multi"
                     show-check-box-actions="true"
                     genotype-model="genotypeModel">
                 </genotype-simple-list-view>
