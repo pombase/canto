@@ -33,9 +33,9 @@
             <div ng-if="isHost">
                 <div class="curs-box-title">Wildtype genotype</div>
                 <wild-genotype-view
-                    wild-type="data.wildType"
+                    strains="data.wildTypeStrains"
                     show-check-box-actions="true"
-                    genotype-model="genotypeModel">
+                    on-strain-select="onStrainChange(strain)">
                 </wild-genotype-view>
             </div>
         </div>
