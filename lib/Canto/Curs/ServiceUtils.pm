@@ -625,6 +625,18 @@ sub _get_metagenotypes
   return @res;
 }
 
+sub _make_allelesynonym_hashes
+{
+  my $allele = shift;
+
+  return map {
+    {
+      synonym => $_->synonym(),
+      edit_status => $_->edit_status(),
+    }
+  } $allele->allelesynonyms()->all();
+}
+
 sub _allele_details_hash
 {
   my $self = shift;
@@ -639,6 +651,8 @@ sub _allele_details_hash
                                                  $allele->description(),
                                                  $allele->type());
 
+  my @synonyms_list = _make_allelesynonym_hashes($allele);
+
   my %result = (
     uniquename => $allele->primary_identifier(),
     name => $allele->name(),
@@ -647,6 +661,7 @@ sub _allele_details_hash
     expression => $allele->expression(),
     display_name => $display_name,
     allele_id => $allele->allele_id(),
+    synonyms => \@synonyms_list,
   );
 
   if ($allele->type() ne 'aberration') {

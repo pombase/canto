@@ -3082,6 +3082,18 @@ var alleleEditDialogCtrl =
     $scope.alleleData.type = $scope.alleleData.type || '';
     $scope.alleleData.expression = $scope.alleleData.expression || '';
     $scope.alleleData.evidence = $scope.alleleData.evidence || '';
+    $scope.alleleData.existingSynonyms = [];
+    $scope.alleleData.newSynonyms = [];
+
+    $.map($scope.alleleData.synonyms || [],
+          function(synonymDetails) {
+            if (synonymDetails.edit_status === 'existing') {
+              $scope.alleleData.existingSynonyms.push(synonymDetails.synonym);
+            } else {
+              $scope.alleleData.newSynonyms.push(synonymDetails.synonym);
+            }
+          });
+
     $scope.strainData = {
       selectedStrain: null,
       showStrainPicker: CantoGlobals.strains_mode && $scope.taxonId,

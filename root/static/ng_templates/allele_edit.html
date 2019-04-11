@@ -37,6 +37,28 @@
           </td>
         </tr>
 
+        <tr ng-if="alleleData.existingSynonyms.length != 0">
+          <td>
+            Synonyms:
+          </td>
+          <td>
+            <span ng-repeat="synonym in alleleData.existingSynonyms">
+              <span>{{synonym}}</span>
+            </span>
+          </td>
+        </tr>
+
+        <tr ng-if="alleleData.newSynonyms.length != 0">
+          <td>
+            New synonyms:
+          </td>
+          <td>
+            <span ng-repeat="synonym in alleleData.newSynonyms">
+              <span>{{synonym}}</span>
+            </span>
+          </td>
+        </tr>
+
         <tr ng-if="strainData.showStrainPicker" class="curs-allele-type-select">
           <td>Strain used</td>
           <td>
