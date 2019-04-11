@@ -7319,20 +7319,12 @@ var metagenotypeManage = function (CantoGlobals, Curs, CursGenotypeList, Metagen
       };
 
       $scope.createMetagenotype = function () {
-        var data = {};
+        var wildTypeGenotypeExists = !! $scope.selectedHostStrain;
 
-        data.pathogen_genotype_id = $scope.pathogenModel;
-        if ($scope.hostModel < 0) {
-          var strain_id = ($scope.hostModel * -1);
-          var strainPromise = StrainsService.getStrainById(strain_id);
-          strainPromise.then(function(strain) {
-            data.host_taxon_id = strain.taxon_id;
-            data.host_strain_name = strain.strain_name;
-            Metagenotype.create(data);
-          });
+        if (wildTypeGenotypeExists) {
+          createWildTypeMetagenotype();
         } else {
-          data.host_genotype_id = $scope.hostModel;
-          Metagenotype.create(data);
+          createNormalMetagenotype();
         }
       };
 
@@ -7393,6 +7385,26 @@ var metagenotypeManage = function (CantoGlobals, Curs, CursGenotypeList, Metagen
       		}
       	});
       	return splitObject;
+      }
+
+      function createNormalMetagenotype() {
+        var pathogenGenotypeId = $scope.selectedGenotypePathogen.genotype_id;
+        var hostGenotypeId = $scope.selectedGenotypeHost.genotype_id;
+        Metagenotype.create({
+          pathogen_genotype_id: pathogenGenotypeId,
+          host_genotype_id: hostGenotypeId
+        });
+      }
+
+      function createWildTypeMetagenotype() {
+        var pathogenGenotypeId = $scope.selectedGenotypePathogen.genotype_id;
+        var hostStrainTaxonId = $scope.selectedHostStrain.taxon_id;
+        var hostStrainName = $scope.selectedHostStrain.strain_name;
+        Metagenotype.create({
+          pathogen_genotype_id: pathogenGenotypeId,
+          host_taxon_id: hostStrainTaxonId,
+          host_strain_name: hostStrainName
+        });
       }
 
     }
