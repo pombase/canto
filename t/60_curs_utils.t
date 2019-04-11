@@ -156,6 +156,7 @@ sub check_new_annotations
                      'allele_id' => 1,
                      'long_display_name' => 'ssm4delta',
                      'gene_display_name' => 'ssm4',
+                     'synonyms' => [],
                    },
                    {
                      'gene_id' => 4,
@@ -167,6 +168,7 @@ sub check_new_annotations
                      'primary_identifier' => 'SPCC63.05:aaaa0007-1',
                      'long_display_name' => 'SPCC63.05delta',
                      'gene_display_name' => 'SPCC63.05',
+                     'synonyms' => [],
                    }
                  ],
                  checked => 'no',
@@ -225,6 +227,7 @@ sub check_new_annotations
                      'gene_id' => 2,
                      'long_display_name' => 'ssm4-D4(del_100-200)[Knockdown]',
                      'gene_display_name' => 'ssm4',
+                     'synonyms' => [],
                    }
                  ],
                  checked => 'no',

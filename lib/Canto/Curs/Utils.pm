@@ -49,6 +49,18 @@ use Canto::Curs::ConditionUtil;
 use Canto::Curs::MetadataStorer;
 use Canto::Track::StrainLookup;
 
+sub _make_allelesynonym_hashes
+{
+  my $allele = shift;
+
+  return map {
+    {
+      synonym => $_->synonym(),
+      edit_status => $_->edit_status(),
+    }
+  } $allele->allelesynonyms()->all();
+}
+
 sub _make_genotype_details
 {
   my $genotype = shift;
@@ -66,6 +78,8 @@ sub _make_genotype_details
   my @alleles = map {
     my $gene_proxy = Canto::Curs::GeneProxy->new(config => $config,
                                                  cursdb_gene => $_->gene());
+    my @synonyms_list = _make_allelesynonym_hashes($_);
+
     {
       allele_id => $_->allele_id(),
         primary_identifier => $_->primary_identifier(),
@@ -76,9 +90,10 @@ sub _make_genotype_details
         gene_id => $_->gene()->gene_id(),
         gene_display_name => $gene_proxy->display_name(),
         long_display_name => $_->long_identifier(),
+        synonyms => \@synonyms_list,
       }
     ;
-  } $genotype->alleles()->search({}, { prefetch => 'gene' });
+  } $genotype->alleles()->search({}, { prefetch => ['gene', 'allelesynonyms'] });
 
   @alleles = sort {
     my $a_gene = $a->{gene_display_name};
