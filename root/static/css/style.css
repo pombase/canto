@@ -435,6 +435,10 @@ table.curs-genotype-list tbody {
   margin-left: 5px;
 }
 
+.curs-genotype-view-allele-synonym {
+  color: #666;
+}
+
 /* override Bootstrap */
 .genotype-alleles ul {
   padding: 2px;

@@ -14,6 +14,12 @@
   </td>
   <td>
     <span ng-bind-html="firstAllele.display_name | encodeAlleleSymbols | toTrusted"></span>
+    <span ng-if="firstAllele.synonyms">
+      <span ng-repeat="synonym in firstAllele.synonyms" class="curs-genotype-view-allele-synonym">
+        {{synonym.synonym}}
+      </span>
+    </span>
+
   </td>
   <td ng-if="alleles_have_expression">
     <span ng-bind-html="firstAllele.expression | formatExpression | toTrusted"></span>
@@ -53,6 +59,11 @@
     </td>
     <td>
       <span ng-bind-html="currentAllele.display_name | encodeAlleleSymbols | toTrusted"></span>
+      <span ng-if="currentAllele.synonyms">
+        <span ng-repeat="synonym in currentAllele.synonyms" class="curs-genotype-view-allele-synonym">
+          {{synonym.synonym}}
+        </span>
+      </span>
     </td>
     <td ng-if="alleles_have_expression">
       <span ng-bind-html="currentAllele.expression | formatExpression | toTrusted"></span>
