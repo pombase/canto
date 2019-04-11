@@ -35,4 +35,5 @@ cmp_deeply($id_res,
             'name' => 'ste20-c2',
             'uniquename' => 'SPBC12C2.02c:allele-3',
             'gene_uniquename' => 'SPBC12C2.02c',
+            'synonyms' => [],
           });

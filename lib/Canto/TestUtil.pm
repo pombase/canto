@@ -69,6 +69,7 @@ our %shared_test_results = (
           'name' => 'ste20-c1',
           'type' => 'amino acid substitution(s)',
           'uniquename' => 'SPBC12C2.02c:allele-2',
+          'synonyms' => [],
         },
         {
           'description' => 'K132A,K144A',
@@ -76,6 +77,7 @@ our %shared_test_results = (
           'name' => 'ste20-c2',
           'type' => 'amino acid substitution(s)',
           'uniquename' => 'SPBC12C2.02c:allele-3',
+          'synonyms' => [],
         },
         {
           'description' => 'del_x1',
@@ -83,6 +85,7 @@ our %shared_test_results = (
           'name' => 'ste20delta',
           'type' => 'deletion',
           'uniquename' => 'SPBC12C2.02c:allele-1',
+          'synonyms' => [],
         }
       ],
   },

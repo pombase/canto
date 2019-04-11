@@ -166,6 +166,8 @@ sub lookup
       Canto::Curs::Utils::canto_allele_type($self->config(),
                                             $_->{allele_type},
                                             $_->{description});
+    $_->{synonyms} = [];
+
     delete $_->{allele_type};
     $_;
   } @res ];
@@ -240,6 +242,7 @@ sub lookup_by_uniquename
       description => $props{description},
       type => $allele_type,
       gene_uniquename => $gene_uniquename,
+      synonyms => [],
     }
   }
 

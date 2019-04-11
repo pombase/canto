@@ -117,6 +117,8 @@ test_config:
                  name: ssm4KE
                  description: G40A,K43E
                  type: 'amino acid substitution(s)'
+                 synonyms:
+                   - ssm4KE-a1
                - primary_identifier: 'SPAC27D7.13c:aaaa0007-3'
                  name: ssm4-D4
                  description: 'del_100-200'
