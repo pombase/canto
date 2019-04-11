@@ -14,7 +14,7 @@
                 <genotype-simple-list-view
                     genotype-list="genotypes.single"
                     show-check-box-actions="true"
-                    genotype-model="genotypeModel">
+                    on-genotype-select="onGenotypeChangeSingle(genotype)">
                 </genotype-simple-list-view>
             </div>
 
@@ -26,7 +26,7 @@
                 <genotype-simple-list-view
                     genotype-list="genotypes.multi"
                     show-check-box-actions="true"
-                    genotype-model="genotypeModel">
+                    on-genotype-select="onGenotypeChangeMulti(genotype)">
                 </genotype-simple-list-view>
             </div>
 

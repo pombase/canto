@@ -9,6 +9,7 @@
                 is-host="false"
                 selected-organism="selectedPathogen"
                 genotypes="selectedPathogenGenotypes"
+                on-genotype-select="onPathogenGenotypeSelect(genotype)"
             </metagenotype-genotype-picker>
         </div>
         <div class="col-md-6">
@@ -20,6 +21,7 @@
                 is-host="true"
                 selected-organism="selectedHost"
                 genotypes="selectedHostGenotypes"
+                on-genotype-select="onHostGenotypeSelect(genotype)"
             </metagenotype-genotype-picker>
         </div>
     </div>
