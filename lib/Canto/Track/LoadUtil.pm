@@ -960,14 +960,17 @@ sub create_sessions_from_json
 
         push @genotype_details, {
           allele => $allele_object,
-          gene_display_name => $gene_display_name,
+          allele_display_name => lc $allele_object->display_name(),
+          gene_display_name => lc $gene_display_name,
           identifier => "genotype-$allele_uniquename",
           taxonid => $taxonid,
         };
       }
 
       @genotype_details = sort {
-        lc $a->{gene_display_name} cmp lc $b->{gene_display_name};
+        $a->{gene_display_name} cmp $b->{gene_display_name}
+          ||
+        $a->{allele_display_name} cmp $b->{allele_display_name};
       } @genotype_details;
 
       for my $genotype_details (@genotype_details) {
