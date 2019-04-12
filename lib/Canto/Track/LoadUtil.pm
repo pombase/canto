@@ -932,7 +932,7 @@ sub create_sessions_from_json
 
           $gene = $db_genes{$allele_gene_uniquename};
           if (!defined $gene) {
-            print qq|gene $allele_gene_uniquename (from allele $allele_uniquename missing from data for $pub_uniquename\n|;
+            print qq|gene $allele_gene_uniquename (from allele $allele_uniquename) missing from data for $pub_uniquename\n|;
             next PUB;
           }
 
