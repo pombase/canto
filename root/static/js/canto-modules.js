@@ -4116,7 +4116,7 @@ var GenotypeGeneListCtrl =
         };
 
         $scope.singleAlleleQuick = function (gene_display_name, gene_systematic_id, gene_id) {
-          var gene = $scope.geneById(geneId);
+          var gene = $scope.geneById(gene_id);
 
           if (!gene) {
             return;
@@ -4149,7 +4149,9 @@ var GenotypeGeneListCtrl =
         $scope.selectedStrain = '';
 
         $scope.deleteSelectStrainPicker = function (gene_id) {
-          var deleteInstance = selectStrainPicker($uibModal, $scope.getSelectedOrganism().taxonid);
+          var gene = $scope.geneById(gene_id);
+          var taxonId = gene.organism.taxonid;
+          var deleteInstance = selectStrainPicker($uibModal, taxonId);
 
           deleteInstance.result.then(function (strain) {
             $scope.selectedStrain = strain.strain.strain_name;
@@ -4182,16 +4184,17 @@ var GenotypeGeneListCtrl =
             description: "",
             expression: "",
             gene_display_name: displayName,
-            gene_id: gene_id,
+            gene_id: geneId,
             gene_systematic_id: gene.primary_identifier,
             name: displayName + "delta",
             primary_identifier: "",
             type: "deletion",
           };
 
+          var taxonId = gene.organism.taxonid;
           var storePromise =
-          CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined, [deletionAllele],
-              $scope.getSelectedOrganism().taxonid, $scope.selectedStrain, undefined);
+              CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined, [deletionAllele],
+                                             taxonId, $scope.selectedStrain, undefined);
 
           storePromise.then(function (result) {
             if (result.data.status === "existing") {
