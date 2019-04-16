@@ -5451,6 +5451,9 @@ var annotationEditDialogCtrl =
     };
 
     $scope.isValidEvidence = function () {
+      if (!$scope.status.showEvidence) {
+        return true;
+      }
       return $scope.status.validEvidence;
     };
 
