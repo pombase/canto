@@ -247,12 +247,78 @@ canto.filter('formatExpression', function () {
   };
 });
 
+// from: https://stackoverflow.com/questions/15604140/replace-multiple-strings-with-multiple-other-strings
+function multiReplaceAll(str,mapObj){
+  var re = new RegExp(Object.keys(mapObj).join("|"),"gi");
+
+  return str.replace(re, function(matched){
+    return mapObj[matched.toLowerCase()];
+  });
+}
+
+var greekCharMap = {
+  "&agr;": "α",
+  "&bgr;": "β",
+  "&ggr;": "γ",
+  "&dgr;": "δ",
+  "&egr;": "ε",
+  "&zgr;": "ζ",
+  "&eegr;": "η",
+  "&thgr;": "θ",
+  "&igr;": "ι",
+  "&kgr;": "κ",
+  "&lgr;": "λ",
+  "&mgr;": "μ",
+  "&ngr;": "ν",
+  "&xgr;": "ξ",
+  "&ogr;": "ο",
+  "&pgr;": "π",
+  "&rgr;": "ρ",
+  "&sgr;": "σ",
+  "&tgr;": "τ",
+  "&ugr;": "υ",
+  "&phgr;": "φ",
+  "&khgr;": "χ",
+  "&psgr;": "ψ",
+  "&ohgr;": "ω",
+  "&Agr;": "Α",
+  "&Bgr;": "Β",
+  "&Ggr;": "Γ",
+  "&Dgr;": "Δ",
+  "&Egr;": "Ε",
+  "&Zgr;": "Ζ",
+  "&EEgr;": "Η",
+  "&THgr;": "Θ",
+  "&Igr;": "Ι",
+  "&Kgr;": "Κ",
+  "&Lgr;": "Λ",
+  "&Mgr;": "Μ",
+  "&Ngr;": "Ν",
+  "&Xgr;": "Ξ",
+  "&Ogr;": "Ο",
+  "&Pgr;": "Π",
+  "&Rgr;": "Ρ",
+  "&Sgr;": "Σ",
+  "&Tgr;": "Τ",
+  "&Ugr;": "Υ",
+  "&PHgr;": "Φ",
+  "&KHgr;": "Χ",
+  "&PSgr;": "Ψ",
+  "&OHgr;": "Ω",
+};
+
 canto.filter('encodeAlleleSymbols', function () {
   return function (item) {
     if (item == null) {
       return null;
     }
-    return item.replace(/delta/g, '&Delta;');
+    item = item.replace(/delta/g, '&Delta;');
+
+    if (item.indexOf('&') >= 0) {
+      item = multiReplaceAll(item, greekCharMap);
+    }
+
+    return item;
   };
 });
 
