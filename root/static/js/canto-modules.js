@@ -7267,7 +7267,7 @@ var metagenotypeListView = function (Metagenotype) {
 canto.directive('metagenotypeListView', ['Metagenotype', metagenotypeListView]);
 
 
-var metagenotypeManage = function (CantoGlobals, Curs, CursGenotypeList, Metagenotype, StrainsService) {
+var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Metagenotype, StrainsService) {
   return {
     scope: {},
     restrict: 'E',
@@ -7349,33 +7349,50 @@ var metagenotypeManage = function (CantoGlobals, Curs, CursGenotypeList, Metagen
       onInit();
 
       function onInit() {
-        loadOrganisms();
-        loadGenotypes();
+        var promises = {
+          genotypes: loadGenotypes(),
+          organisms: loadOrganisms()
+        };
+        $q.all(promises).then(function (results) {
+          var organisms = results.organisms.data;
+          var genotypes = results.genotypes;
+
+          $scope.pathogenOrganisms = filterOrganisms(organisms, 'pathogen');
+          $scope.hostOrganisms = filterOrganisms(organisms, 'host');
+          $scope.taxonGenotypeMap = makeTaxonGenotypeMap(genotypes, organisms);
+        });
         StrainsService.getAllSessionStrains();
       }
 
       function loadOrganisms() {
-        Curs.list('organism').then(function (response) {
-          var organisms = response.data;
-          $scope.pathogenOrganisms = filterOrganisms(organisms, 'pathogen');
-          $scope.hostOrganisms = filterOrganisms(organisms, 'host');
-        });
+        return Curs.list('organism');
       }
 
       function loadGenotypes() {
-        CursGenotypeList.cursGenotypeList({
-          include_allele: 1
-        }).then(function (genotypes) {
-          $scope.taxonGenotypeMap = makeTaxonGenotypeMap(genotypes);
-        });
+        return CursGenotypeList.cursGenotypeList({include_allele: 1});
       }
 
-      function makeTaxonGenotypeMap(genotypes) {
+      function makeTaxonGenotypeMap(genotypes, organisms) {
+        var taxonGenotypeMap;
         var getGenotypeTaxonId = function (genotype) {
           return genotype.organism.taxonid;
         };
-        var taxonGenotypeMap = indexArray(genotypes, getGenotypeTaxonId);
+        taxonGenotypeMap = indexArray(genotypes, getGenotypeTaxonId);
+        taxonGenotypeMap = addTaxonsWithNoGenotypes(taxonGenotypeMap, organisms);
         return splitGenotypeMapByAlleleCount(taxonGenotypeMap);
+      }
+
+      function addTaxonsWithNoGenotypes(genotypeMap, organisms) {
+        var newMap = angular.copy(genotypeMap);
+        var i, org, taxonId;
+        for (i = 0; i < organisms.length; i += 1) {
+          org = organisms[i];
+          taxonId = org.taxonid;
+          if (! (taxonId in newMap)) {
+            newMap[taxonId] = [];
+          }
+        }
+        return newMap;
       }
 
       function splitGenotypeMapByAlleleCount(genotypeMap) {
@@ -7429,7 +7446,7 @@ var metagenotypeManage = function (CantoGlobals, Curs, CursGenotypeList, Metagen
   };
 };
 
-canto.directive('metagenotypeManage', ['CantoGlobals', 'Curs', 'CursGenotypeList', 'Metagenotype', 'StrainsService', metagenotypeManage]);
+canto.directive('metagenotypeManage', ['$q', 'CantoGlobals', 'Curs', 'CursGenotypeList', 'Metagenotype', 'StrainsService', metagenotypeManage]);
 
 
 canto.service('StrainsService', function (CantoService, Curs, $q, toaster) {
