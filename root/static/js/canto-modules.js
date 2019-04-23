@@ -69,16 +69,16 @@ function arrayRemoveOne(array, item) {
 }
 
 function indexArray(array, keyFunction) {
-	var indexObject = {};
-	var i, key;
-	for (i = 0; i < array.length; i += 1) {
-		key = keyFunction(array[i]);
-		if (indexObject.hasOwnProperty(key) === false) {
-			indexObject[key] = [];
-		}
-		indexObject[key].push(array[i]);
-	}
-	return indexObject;
+  var indexObject = {};
+  var i, key;
+  for (i = 0; i < array.length; i += 1) {
+    key = keyFunction(array[i]);
+    if (indexObject.hasOwnProperty(key) === false) {
+      indexObject[key] = [];
+    }
+    indexObject[key].push(array[i]);
+  }
+  return indexObject;
 }
 
 function copyObject(src, dest, keysFilter) {
@@ -7396,30 +7396,30 @@ var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Met
       }
 
       function splitGenotypeMapByAlleleCount(genotypeMap) {
-      	var newMap = {};
-      	var genotypes, taxonId;
-      	for (taxonId in genotypeMap) {
-      		if (genotypeMap.hasOwnProperty(taxonId)) {
-      			genotypes = genotypeMap[taxonId];
-      			newMap[taxonId] = splitGenotypesByAlleleCount(genotypes);
-      		}
-      	}
-      	return newMap;
+        var newMap = {};
+        var genotypes, taxonId;
+        for (taxonId in genotypeMap) {
+          if (genotypeMap.hasOwnProperty(taxonId)) {
+            genotypes = genotypeMap[taxonId];
+            newMap[taxonId] = splitGenotypesByAlleleCount(genotypes);
+          }
+        }
+        return newMap;
       }
 
       function splitGenotypesByAlleleCount(genotypes) {
-      	var splitObject = {
-      		'single': [],
-      		'multi': []
-      	};
-      	genotypes.forEach(function (g) {
-      		if (isSingleAlleleGenotype(g)) {
-      			splitObject['single'].push(g);
-      		} else {
-      			splitObject['multi'].push(g);
-      		}
-      	});
-      	return splitObject;
+        var splitObject = {
+          'single': [],
+          'multi': []
+        };
+        genotypes.forEach(function (g) {
+          if (isSingleAlleleGenotype(g)) {
+            splitObject['single'].push(g);
+          } else {
+            splitObject['multi'].push(g);
+          }
+        });
+        return splitObject;
       }
 
       function createNormalMetagenotype() {
