@@ -7296,6 +7296,7 @@ var metagenotypeManage = function (CantoGlobals, Curs, CursGenotypeList, Metagen
       $scope.onPathogenSelected = function (organism) {
         var taxonId = organism.taxonid;
         $scope.selectedPathogen = organism;
+        $scope.selectedGenotypePathogen = null;
         $scope.selectedPathogenGenotypes = $scope.taxonGenotypeMap[taxonId];
       };
 
@@ -7306,6 +7307,8 @@ var metagenotypeManage = function (CantoGlobals, Curs, CursGenotypeList, Metagen
       $scope.onHostSelected = function (organism) {
         var taxonId = organism.taxonid;
         $scope.selectedHost = organism;
+        $scope.selectedGenotypeHost = null;
+        $scope.selectedHostStrain = null;
         $scope.selectedHostGenotypes = taxonId in $scope.taxonGenotypeMap
           ? $scope.taxonGenotypeMap[taxonId]
           : {'single': [], 'multi': []}
@@ -7313,10 +7316,12 @@ var metagenotypeManage = function (CantoGlobals, Curs, CursGenotypeList, Metagen
 
       $scope.onHostGenotypeSelect = function (genotype) {
         $scope.selectedGenotypeHost = genotype;
+        $scope.selectedHostStrain = null;
       };
 
       $scope.onHostStrainSelect = function (strain) {
         $scope.selectedHostStrain = strain;
+        $scope.selectedGenotypeHost = null;
       };
 
       $scope.toGenotype = function () {
