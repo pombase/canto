@@ -12,6 +12,7 @@
             <div ng-if="genotypes.single.length > 0">
                 <genotype-simple-list-view
                     genotype-list="genotypes.single"
+                    is-host="isHost"
                     show-check-box-actions="true"
                     on-genotype-select="onGenotypeChangeSingle(genotype)">
                 </genotype-simple-list-view>
@@ -24,6 +25,7 @@
             <div ng-show="genotypes.multi.length > 0">
                 <genotype-simple-list-view
                     genotype-list="genotypes.multi"
+                    is-host="isHost"
                     show-check-box-actions="true"
                     on-genotype-select="onGenotypeChangeMulti(genotype)">
                 </genotype-simple-list-view>

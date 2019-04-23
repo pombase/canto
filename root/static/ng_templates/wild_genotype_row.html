@@ -1,7 +1,7 @@
 <tbody>
   <tr>
       <td ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column">
-          <input type="radio" ng-model="data.selectedStrain" ng-click="strainSelected(strain)" value="{{strain}}" />
+          <input type="radio" name="{{inputNameValue}}" ng-model="data.selectedStrain" ng-click="strainSelected(strain)" value="{{strain}}" />
       </td>
       <td>
           {{strain.strain_name}}

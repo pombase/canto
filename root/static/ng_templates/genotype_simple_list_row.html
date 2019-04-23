@@ -3,7 +3,7 @@
         <td ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column" rowspan="{{genotype.alleles.length}}">
             <input
               type="radio"
-              name="genotype"
+              name="{{inputNameValue}}"
               ng-model="data.selectedGenotype"
               ng-click="genotypeSelected(genotype)"
               value="{{genotype}}" />

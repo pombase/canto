@@ -6976,6 +6976,7 @@ var genotypeSimpleListRowCtrl =
       restrict: 'A',
       scope: {
         genotype: '<',
+        isHost: '<',
         showCheckBoxActions: '<',
         onGenotypeSelect: '&'
       },
@@ -6984,6 +6985,8 @@ var genotypeSimpleListRowCtrl =
       controller: function ($scope) {
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
+
+        $scope.inputNameValue = ($scope.isHost ? 'host' : 'pathogen') + '_genotype';
 
         $scope.genotype.alleles = $scope.genotype.alleles || [];
         $scope.firstAllele = $scope.genotype.alleles[0];
@@ -7010,6 +7013,7 @@ var genotypeSimpleListViewCtrl =
     return {
       scope: {
         genotypeList: '=',
+        isHost: '<',
         showCheckBoxActions: '=',
         genotypeModel: '=',
         onGenotypeSelect: '&'
@@ -7044,6 +7048,8 @@ var wildGenotypeRow =
       replace: true,
       templateUrl: CantoGlobals.app_static_path + 'ng_templates/wild_genotype_row.html',
       controller: function ($scope) {
+
+        $scope.inputNameValue = 'host_genotype';
 
         $scope.data = {
           selectedStrain: null
