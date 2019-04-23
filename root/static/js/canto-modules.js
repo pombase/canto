@@ -593,35 +593,6 @@ canto.service('Metagenotype', function ($rootScope, $http, toaster, Curs) {
   var vm = this;
   vm.list = [];
 
-  vm.pickerSet = {
-    host: false,
-    pathogen: false,
-  };
-
-  vm.isPickerSet = function () {
-    return (vm.pickerSet.host && vm.pickerSet.pathogen);
-  };
-
-  vm.pickerOrganismCallbacks = {
-    host: null,
-    pathogen: null,
-  };
-
-  vm.pickerOrganismSelectors = {
-    host: function (organism) {
-      vm.pickerOrganismCallbacks.host(organism);
-      if (organism) {
-        vm.pickerSet.host = true;
-      }
-    },
-    pathogen: function (organism) {
-      vm.pickerOrganismCallbacks.pathogen(organism);
-      if (organism) {
-        vm.pickerSet.pathogen = true;
-      }
-    },
-  };
-
   vm.create = function (data) {
     var storePromise = vm.store(data);
 
