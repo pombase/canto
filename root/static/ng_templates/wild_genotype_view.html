@@ -11,7 +11,7 @@
       </thead>
       <tbody
         wild-genotype-row
-        ng-repeat="strain in strains track by strain.genotype_id"
+        ng-repeat="strain in strains track by strain.strain_name"
         show-check-box-actions="showCheckBoxActions"
         strain="strain"
         on-strain-select="onStrainChange(strain)"
