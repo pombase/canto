@@ -587,14 +587,13 @@ canto.service('CursGenotypeList', function ($q, Curs) {
   };
 });
 
-
 canto.service('Metagenotype', function ($rootScope, $http, toaster, Curs) {
 
-  var vm = this;
-  vm.list = [];
+  var svc = this;
+  svc.list = [];
 
-  vm.create = function (data) {
-    var storePromise = vm.store(data);
+  svc.create = function (data) {
+    var storePromise = svc.store(data);
 
     storePromise.then(function successCallback(response) {
       switch (response.data.status) {
@@ -608,7 +607,7 @@ canto.service('Metagenotype', function ($rootScope, $http, toaster, Curs) {
 
         case 'success':
           toaster.pop('success', 'This metagenotype has been created');
-          vm.load();
+          svc.load();
           break;
       }
     }, function errorCallback() {
@@ -617,7 +616,7 @@ canto.service('Metagenotype', function ($rootScope, $http, toaster, Curs) {
 
   };
 
-  vm.store = function (data) {
+  svc.store = function (data) {
     var url = curs_root_uri + '/feature/metagenotype/store';
 
     return $http({
@@ -627,13 +626,13 @@ canto.service('Metagenotype', function ($rootScope, $http, toaster, Curs) {
     });
   };
 
-  vm.delete = function (id) {
+  svc.delete = function (id) {
     loadingStart();
 
     Curs.delete('metagenotype', id)
       .then(function () {
         toaster.pop('success', 'The metagenotype has been deleted');
-        vm.load();
+        svc.load();
 
       }).catch(function (message) {
         if (message.match('metagenotype .* has annotations')) {
@@ -647,19 +646,18 @@ canto.service('Metagenotype', function ($rootScope, $http, toaster, Curs) {
       });
   };
 
-  vm.load = function () {
+  svc.load = function () {
     var options = {
       include_allele: 1,
     };
 
     Curs.list('metagenotype', [options])
       .then(function (res) {
-        vm.list = res.data;
-        $rootScope.$broadcast('metagenotype:updated', vm.list);
+        svc.list = res.data;
+        $rootScope.$broadcast('metagenotype:updated', svc.list);
       });
   };
 });
-
 
 canto.service('CursAlleleList', function ($q, Curs) {
   this.alleleList = function (genePrimaryIdentifier, searchTerm) {
