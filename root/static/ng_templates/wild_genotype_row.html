@@ -1,7 +1,7 @@
-<tbody ng-class="{ selected: ($parent.genotypeModel === strain.genotype_id) }">
+<tbody>
   <tr>
       <td ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column">
-          <input type="radio" ng-model="$parent.genotypeModel" ng-change="isSelected()" value="{{strain.genotype_id}}" />
+          <input type="radio" name="{{inputNameValue}}" ng-model="data.selectedStrain" ng-click="strainSelected(strain)" value="{{strain}}" />
       </td>
       <td>
           {{strain.strain_name}}

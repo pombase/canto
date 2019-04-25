@@ -1,17 +1,30 @@
 <div id="curs-genotype-manage" class="genotype-list ng-cloak container">
     <div class="row" ng-if="display">
         <div class="col-md-6">
+            <div class="curs-box-title" style="margin-bottom: 10px;">Pathogen Genotypes</div>
+            <organism-selector-new
+                organisms="pathogenOrganisms"
+                organism-selected="onPathogenSelected(organism)">
+            </organism-selector-new>
             <metagenotype-genotype-picker
-                is-pathogen="true"
-                genotype-model="pathogenModel"
-                selected-organism="pathogenSelectedOrganism">
+                is-host="false"
+                selected-organism="selectedPathogen"
+                genotypes="selectedPathogenGenotypes"
+                on-genotype-select="onPathogenGenotypeSelect(genotype)"
             </metagenotype-genotype-picker>
         </div>
         <div class="col-md-6">
+            <div class="curs-box-title" style="margin-bottom: 10px;">Host Genotypes</div>
+            <organism-selector-new
+                organisms="hostOrganisms"
+                organism-selected="onHostSelected(organism)">
+            </organism-selector-new>
             <metagenotype-genotype-picker
-                is-pathogen="false"
-                genotype-model="hostModel"
-                selected-organism="hostSelectedOrganism">
+                is-host="true"
+                selected-organism="selectedHost"
+                genotypes="selectedHostGenotypes"
+                on-genotype-select="onHostGenotypeSelect(genotype)"
+                on-strain-select="onHostStrainSelect(strain)"
             </metagenotype-genotype-picker>
         </div>
     </div>
@@ -23,7 +36,7 @@
             ng-click="createMetagenotype()"
             type="button"
             class="btn btn-primary curs-back-button"
-            ng-disabled="isPickerSet() == false"
+            ng-disabled="isMetagenotypeInvalid()"
             ng-if="display">
             Make metagenotype --&gt;
         </button>

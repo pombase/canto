@@ -16,9 +16,10 @@
       <tbody
         genotype-simple-list-row
         ng-repeat="currentGenotype in genotypeList track by currentGenotype.id_or_identifier"
+        is-host="isHost"
         show-check-box-actions="showCheckBoxActions"
         genotype="currentGenotype"
-        genotype-model="genotypeModel">
+        on-genotype-select="onGenotypeChange(genotype)"
       </tbody>
     </table>
   </div>

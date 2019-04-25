@@ -1,5 +1,5 @@
 <div class="curs-genotype-list-view">
-  <div ng-if="(wildType.length > 0)">
+  <div ng-if="(strains.length > 0)">
     <table class="curs-genotype-list">
       <thead>
         <tr>
@@ -11,10 +11,10 @@
       </thead>
       <tbody
         wild-genotype-row
-        ng-repeat="strain in wildType track by strain.genotype_id"
+        ng-repeat="strain in strains track by strain.strain_name"
         show-check-box-actions="showCheckBoxActions"
         strain="strain"
-        genotype-model="genotypeModel">
+        on-strain-select="onStrainChange(strain)"
       </tbody>
     </table>
   </div>
