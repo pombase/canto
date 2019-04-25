@@ -4433,7 +4433,13 @@ var genotypeManageCtrl =
           // genes that should be shown in the genotype-gene-list
           if ($scope.data.selectedOrganism) {
             $scope.data.visibleGenes.length = 0;
-            [].push.apply($scope.data.visibleGenes, $scope.data.selectedOrganism.genes);
+            $.map($scope.data.selectedOrganism.genes,
+              function(gene) {
+                var geneCopy = {};
+                copyObject(gene, geneCopy);
+                geneCopy.organism = $scope.data.selectedOrganism;
+                $scope.data.visibleGenes.push(geneCopy)
+              });
           }
         };
 
