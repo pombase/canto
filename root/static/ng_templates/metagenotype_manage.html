@@ -2,10 +2,10 @@
     <div class="row" ng-if="display">
         <div class="col-md-6">
             <div class="curs-box-title" style="margin-bottom: 10px;">Pathogen Genotypes</div>
-            <organism-selector-new
+            <organism-selector
                 organisms="pathogenOrganisms"
                 organism-selected="onPathogenSelected(organism)">
-            </organism-selector-new>
+            </organism-selector>
             <metagenotype-genotype-picker
                 is-host="false"
                 selected-organism="selectedPathogen"
@@ -15,10 +15,10 @@
         </div>
         <div class="col-md-6">
             <div class="curs-box-title" style="margin-bottom: 10px;">Host Genotypes</div>
-            <organism-selector-new
+            <organism-selector
                 organisms="hostOrganisms"
                 organism-selected="onHostSelected(organism)">
-            </organism-selector-new>
+            </organism-selector>
             <metagenotype-genotype-picker
                 is-host="true"
                 selected-organism="selectedHost"
