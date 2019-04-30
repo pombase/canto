@@ -716,6 +716,7 @@ canto.service('CantoGlobals', function ($window) {
   this.strains_mode = $window.strains_mode == 1;
   this.pathogen_host_mode = $window.pathogen_host_mode;
   this.alleles_have_expression = $window.alleles_have_expression;
+  this.allow_single_wildtype_allele = $window.allow_single_wildtype_allele;
   this.organismsAndGenes = $window.organismsAndGenes;
   this.confirmGenes = $window.confirmGenes;
   this.highlightTerms = $window.highlightTerms;
@@ -3525,6 +3526,7 @@ var genotypeEdit =
         $scope.app_static_path = CantoGlobals.app_static_path;
         $scope.multi_organism_mode = CantoGlobals.multi_organism_mode;
         $scope.strains_mode = CantoGlobals.strains_mode;
+        $scope.allow_single_wildtype_allele = CantoGlobals.allow_single_wildtype_allele;
 
         $scope.strainSelected = function (strain) {
           $scope.data.selectedStrainName = strain ?
@@ -3646,6 +3648,10 @@ var genotypeEdit =
         // allele of the same gene
         // See: https://github.com/pombase/canto/issues/797
         $scope.checkWildtypeExpression = function () {
+          if ($scope.allow_single_wildtype_allele) {
+            return true;
+          }
+
           var wildTypeStates = {};
 
           $.map($scope.alleles,

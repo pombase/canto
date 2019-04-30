@@ -83,6 +83,10 @@ alleles_have_expression: 1
 # and only show genes and genotypes for the selected organism
 split_genotypes_by_organism: 1
 
+# if 0, a wildtype allele is allowed only if there is another non-wildtype or
+# non-wildtype expression allele from the same gene
+allow_single_wildtype_allele: 0
+
 # from_address - used as the "from" field is all outgoing messages
 # admin_address - the contact address of the admin curators, used to
 #                 alert about completed sessions and problems
