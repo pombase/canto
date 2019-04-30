@@ -4410,7 +4410,7 @@ var genotypeManageCtrl =
             $scope.updateGenotypeLists();
             $scope.data.waitingForServer = false;
             $scope.data.pathogenGenotypeExists = findPathogenGenotype(results);
-            $scope.data.isMetagenotypeLinkDisabled = getMetagenotypeLinkState();
+            $scope.data.isMetagenotypeLinkDisabled = isMetagenotypeLinkDisabled();
             CursGenotypeList.onListChange($scope.readGenotypesCallback);
           }).catch(function () {
             toaster.pop('error', "couldn't read the genotype list from the server");
@@ -4482,12 +4482,8 @@ var genotypeManageCtrl =
           });
         }
 
-        function getMetagenotypeLinkState() {
-          var DISABLED = true, ENABLED = false;
-          if ($scope.data.pathogenGenotypeExists && $scope.data.hostOrganismExists) {
-            return ENABLED;
-          }
-          return DISABLED;
+        function isMetagenotypeLinkDisabled() {
+          return ! ($scope.data.pathogenGenotypeExists && $scope.data.hostOrganismExists);
         }
 
         readOrganisms();
