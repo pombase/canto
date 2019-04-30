@@ -4278,35 +4278,6 @@ canto.directive('genotypeGeneList',
     GenotypeGeneListCtrl
   ]);
 
-
-var GenotypeGenesPanelCtrl =
-  function ($uibModal, $http, Curs, CantoGlobals) {
-
-    return {
-      scope: {
-        multiOrganismMode: '='
-      },
-      restrict: 'E',
-      replace: true,
-      templateUrl: app_static_path + 'ng_templates/genotype_genes_panel.html',
-      controller: function ($scope) {
-
-        $scope.app_static_path = CantoGlobals.app_static_path;
-        $scope.splitGenotypesByOrganism = CantoGlobals.split_genotypes_by_organism;
-
-        $scope.openSingleGeneAddDialog = function () {
-          var modal = openSingleGeneAddDialog($uibModal);
-        };
-      }
-    };
-  };
-
-canto.directive('genotypeGenesPanel',
-  ['$uibModal', '$http', 'Curs',
-    'CantoGlobals',
-    GenotypeGenesPanelCtrl
-  ]);
-
 var genotypeManageCtrl =
   function ($uibModal, $location, $http, Curs, CursGenotypeList, CantoGlobals,
             CantoConfig, CursGeneList, toaster) {
@@ -4344,14 +4315,26 @@ var genotypeManageCtrl =
         $scope.data.multiOrganismMode = CantoGlobals.multi_organism_mode;
         $scope.data.splitGenotypesByOrganism = CantoGlobals.split_genotypes_by_organism;
 
-        CursGeneList.geneList().then(function (results) {
-          $scope.data.allGenes = results;
-          if (!$scope.data.multiOrganismMode || !$scope.data.splitGenotypesByOrganism) {
-            $scope.data.visibleGenes = results;
-          }
-        }).catch(function () {
-          toaster.pop('note', "couldn't read the gene list from the server");
-        });
+        $scope.updateGenes = function() {
+          CursGeneList.geneList().then(function (results) {
+            $scope.data.allGenes = results;
+            if (!$scope.data.multiOrganismMode || !$scope.data.splitGenotypesByOrganism) {
+              $scope.data.visibleGenes = results;
+            }
+          }).catch(function () {
+            toaster.pop('note', "couldn't read the gene list from the server");
+          });
+        };
+
+        $scope.updateGenes();
+
+        $scope.openSingleGeneAddDialog = function () {
+          var modal = openSingleGeneAddDialog($uibModal);
+          modal.result.then(function() {
+            $scope.updateVisibleGenes();
+            $scope.updateGenes();
+          });
+        };
 
         $scope.organismUpdated = function (organism) {
           $scope.data.selectedOrganism = organism;
