@@ -3241,11 +3241,22 @@ var alleleEditDialogCtrl =
       return !!$scope.alleleData.primary_identifier;
     };
 
+    $scope.isValidStrain = function () {
+      if ($scope.strainData.showStrainPicker) {
+        return $scope.strainData.selectedStrain;
+      } else {
+        return true;
+      }
+    };
+
     $scope.isValid = function () {
       return $scope.isValidExpression() &&
-        ($scope.isExistingAllele() ||
+        (
+          $scope.isExistingAllele() ||
           $scope.isValidType() && $scope.isValidName() &&
-          $scope.isValidDescription());
+          $scope.isValidDescription()
+        ) &&
+        $scope.isValidStrain();
     };
 
     $scope.ok = function () {
