@@ -7191,10 +7191,6 @@ var metagenotypeListRow = function (CantoGlobals, Metagenotype, AnnotationTypeCo
               return false;
             }
 
-            if ($scope.pathogen_host_mode && genotypePathogenOrHost !== annotationType.feature_subtype) {
-              return false;
-            }
-
             return true;
           });
       });
