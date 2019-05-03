@@ -7187,11 +7187,7 @@ var metagenotypeListRow = function (CantoGlobals, Metagenotype, AnnotationTypeCo
       AnnotationTypeConfig.getAll().then(function (response) {
         $scope.matchingAnnotationTypes =
           $.grep(response.data, function (annotationType) {
-            if (annotationType.feature_type !== 'metagenotype') {
-              return false;
-            }
-
-            return true;
+            return annotationType.feature_type === 'metagenotype';
           });
       });
 
