@@ -3866,9 +3866,8 @@ var organismSelector = function () {
   return {
     scope: {
       organismSelected: '&',
-      genotypeType: '<',
-      lastAddedGene: '<',
-      hideLabel: '=',
+      organisms: '<',
+      label: '@'
     },
     restrict: 'E',
     templateUrl: app_static_path + 'ng_templates/organism_selector.html',
@@ -3876,208 +3875,7 @@ var organismSelector = function () {
   };
 };
 
-var organismSelectorCtrl = function ($scope, Curs, toaster, CantoGlobals) {
-
-  $scope.app_static_path = CantoGlobals.app_static_path;
-
-  $scope.data = {
-    selectedOrganism: null,
-    organisms: null,
-    defaultOrganism: null
-  };
-
-  $scope.$watch('lastAddedGene', function () {
-    if ($scope.lastAddedGene) {
-      reloadOrganisms(
-        $scope.data.selectedOrganism,
-        $scope.genotypeType,
-        $scope.lastAddedGene
-      );
-    }
-  });
-
-  $scope.organismChanged = function () {
-    $scope.organismSelected({
-      organism: $scope.data.selectedOrganism
-    });
-  };
-
-  var onInit = function () {
-    $scope.data.hideLabel = $scope.hideLabel || false;
-    reloadOrganisms(
-      $scope.data.selectedOrganism,
-      $scope.genotypeType,
-      $scope.lastAddedGene
-    );
-    setLabelText($scope.genotypeType);
-  };
-
-  var setLabelText = function (genotypeType) {
-    var calculateLabelText = function (genotypeType) {
-      return genotypeType === 'host' || genotypeType === 'pathogen' ?
-        capitalizeFirstLetter(genotypeType) :
-        'Organism';
-    };
-    $scope.label = calculateLabelText(genotypeType);
-  };
-
-  var filterOrganisms = function (organisms, genotypeType) {
-    if (genotypeType !== 'host' && genotypeType !== 'pathogen') {
-      return organisms;
-    }
-    var buildOrganismFilter = function (type) {
-      return function (organism) {
-        return organism['pathogen_or_host'] === type;
-      };
-    };
-    var byOrganismType = buildOrganismFilter(genotypeType);
-    return organisms.filter(byOrganismType);
-  };
-
-  var getOrganisms = function () {
-    return Curs.list('organism');
-  };
-
-  var setOrganisms = function (organisms) {
-    $scope.data.organisms = organisms;
-  };
-
-  var reloadSelectedOrganism = function (previousOrganism, organisms, lastAddedGene) {
-    var selectedOrganism;
-    // if lastAddedGene is undefined, then the page has just been loaded,
-    // so no organism should be selected.
-    if (lastAddedGene === undefined) {
-      selectedOrganism = null;
-    } else {
-      selectedOrganism = getNewSelectedOrganism(
-        previousOrganism, organisms, lastAddedGene
-      );
-    }
-    $scope.data.selectedOrganism = selectedOrganism;
-    $scope.organismSelected({
-      organism: $scope.data.selectedOrganism
-    });
-  };
-
-  var reloadOrganisms = function (oldSelectedOrganism, genotypeType, lastAddedGene) {
-    getOrganisms().success(function (organisms) {
-      var filteredOrganisms = filterOrganisms(organisms, genotypeType);
-      var defaultOrganism = getDefaultOrganism(filteredOrganisms);
-      setOrganisms(filteredOrganisms);
-      if (defaultOrganism) {
-        setDefaultOrganism(defaultOrganism);
-      } else {
-        reloadSelectedOrganism(
-          oldSelectedOrganism,
-          filteredOrganisms,
-          lastAddedGene
-        );
-      }
-    }).error(function () {
-      toaster.pop('error', 'failed to get organism list from server');
-    });
-  };
-
-  var getNewSelectedOrganism = function (previousOrganism, organisms, lastAddedGene) {
-    var newOrganism = null;
-
-    var refreshPreviousOrganism = function (previousOrganism, organisms) {
-      var finder = function (key, value) {
-        return function (obj) {
-          return obj[key] === value;
-        };
-      };
-      var previousTaxonId = previousOrganism.taxonid;
-      var newSelectedOrganism = $.grep(
-        organisms,
-        finder('taxonid', previousTaxonId)
-      )[0];
-      return newSelectedOrganism;
-    };
-
-    var findOrganismWithLastAddedGene = function (organisms, geneId) {
-      var i, j, organism, genes, gene;
-
-      // simple 'for' loops are helpful here: we can break out of the
-      // loop as soon as the gene is found, since the gene ID is unique.
-      for (i = 0; i < organisms.length; i += 1) {
-        organism = organisms[i];
-        genes = organism.genes;
-        for (j = 0; j < genes.length; j += 1) {
-          gene = genes[j];
-          if (gene.gene_id === geneId) {
-            return organism;
-          }
-        }
-      }
-      return null;
-    };
-
-    var excluding = function (previousOrganism) {
-      return function (organism) {
-        return organism.taxonid !== previousOrganism.taxonid;
-      };
-    };
-
-    if (previousOrganism) {
-      // check the previously selected organism first, assuming the user is
-      // more likely to add genes for the selected organism.
-      var newPreviousOrganism = refreshPreviousOrganism(
-        previousOrganism,
-        organisms
-      );
-      newOrganism = findOrganismWithLastAddedGene(
-        [newPreviousOrganism],
-        lastAddedGene
-      );
-    }
-    if (!newOrganism) {
-      var remainingOrganisms = previousOrganism ?
-        organisms.filter(excluding(previousOrganism)) :
-        organisms;
-      newOrganism = findOrganismWithLastAddedGene(
-        remainingOrganisms,
-        lastAddedGene
-      );
-    }
-    return newOrganism;
-  };
-
-  var getDefaultOrganism = function (organisms) {
-    return organisms.length === 1 ? organisms[0] : null;
-  };
-
-  var setDefaultOrganism = function (defaultOrganism) {
-    $scope.data.defaultOrganism = defaultOrganism;
-    // we must check for null, or the default organism will always be set
-    if (defaultOrganism) {
-      $scope.organismSelected({
-        organism: defaultOrganism
-      });
-    }
-  };
-
-  onInit();
-};
-
-canto.directive('organismSelector', [
-  organismSelector
-]);
-
-var organismSelectorNew = function () {
-  return {
-    scope: {
-      organismSelected: '&',
-      organisms: '<',
-      label: '@'
-    },
-    restrict: 'E',
-    templateUrl: app_static_path + 'ng_templates/organism_selector_new.html',
-    controller: organismSelectorNewCtrl,
-  };
-};
-
-var organismSelectorNewCtrl = function ($scope, CantoGlobals) {
+var organismSelectorCtrl = function ($scope, CantoGlobals) {
 
   $scope.app_static_path = CantoGlobals.app_static_path;
 
@@ -4100,7 +3898,7 @@ var organismSelectorNewCtrl = function ($scope, CantoGlobals) {
   });
 };
 
-canto.directive('organismSelectorNew', organismSelectorNew);
+canto.directive('organismSelector', organismSelector);
 
 var strainSelector = function () {
   return {
