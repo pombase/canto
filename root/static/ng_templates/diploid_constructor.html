@@ -1,0 +1,22 @@
+<div class="curs-diploid-constructor">
+  <form name="cursDiploidConstructor" class="curs-diploid-constructor-dialog modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">
+        <span>
+          Create diploid
+        </span>
+      </h4>
+    </div>
+
+    <div class="modal-body">
+      {{startAllele.display_name}} / <allele-selector selected-allele="selectedAlleleId" alleles="selectorAlleles">
+      </allele-selector>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+      <button class="btn btn-primary" ng-click="ok()" ng-alt-enter="ok()"
+              ng-disabled="!isValid()">OK</button>
+    </div>
+  </form>
+</div>

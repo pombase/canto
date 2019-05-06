@@ -22,6 +22,7 @@ var strains_mode = '<% $strains_mode %>';
 var pathogen_host_mode = '<% $pathogen_host_mode %>';
 var alleles_have_expression = <% $alleles_have_expression ? 'true' : 'false' %>;
 var allow_single_wildtype_allele = <% $allow_single_wildtype_allele ? 'true' : 'false' %>;
+var diploid_mode = <% $diploid_mode ? 'true' : 'false' %>;
 </script>
 
 <div id="disabled-overlay"></div>
@@ -74,4 +75,5 @@ my $strains_mode = $st->{strains_mode} || 0;
 my $pathogen_host_mode = $st->{pathogen_host_mode} || 0;
 my $alleles_have_expression = $c->config()->{alleles_have_expression} || 0;
 my $allow_single_wildtype_allele = $c->config()->{allow_single_wildtype_allele} || 0;
+my $diploid_mode = $c->config()->{diploid_mode} || 0;
 </%init>

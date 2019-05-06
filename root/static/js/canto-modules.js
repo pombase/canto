@@ -722,6 +722,7 @@ canto.service('CantoGlobals', function ($window) {
   this.pathogen_host_mode = $window.pathogen_host_mode;
   this.alleles_have_expression = $window.alleles_have_expression;
   this.allow_single_wildtype_allele = $window.allow_single_wildtype_allele;
+  this.diploid_mode = $window.diploid_mode;
   this.organismsAndGenes = $window.organismsAndGenes;
   this.confirmGenes = $window.confirmGenes;
   this.highlightTerms = $window.highlightTerms;
@@ -4831,8 +4832,86 @@ canto.directive('genotypeListRow',
   ]);
 
 
+var alleleSelectorCtrl =
+  function ($uibModal, toaster) {
+    return {
+      scope: {
+        alleles: '=',
+        selectedAllele: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/allele_selector.html',
+      controller: function ($scope) {
+
+      },
+    };
+  };
+
+canto.directive('alleleSelector',
+                ['$uibModal', 'toaster',
+                 alleleSelectorCtrl
+                ]);
+
+
+var diploidConstructorDialogCtrl =
+    function ($scope, $uibModalInstance, toaster, args) {
+      $scope.startAllele = args.startAllele;
+      $scope.selectorAlleles =
+        [{ display_name: 'Wild type', allele_id: 'wild-type' }];
+
+      $.map(args.alleles,
+            function(allele) {
+              $scope.selectorAlleles.push({
+                allele_id: allele.allele_id,
+                display_name: allele.display_name,
+              });
+            });
+
+      $scope.selectedAlleleId = $scope.startAllele.allele_id;
+
+      $scope.isValid = function() {
+        return $scope.selectedAlleleId !== null;
+      };
+
+      $scope.ok = function () {
+        $uibModalInstance.close({
+
+        });
+      };
+
+      $scope.cancel = function () {
+        $uibModalInstance.dismiss('cancel');
+      };
+    };
+
+canto.controller('DiploidConstructorDialogCtrl',
+                 ['$scope', '$uibModalInstance', 'toaster', 'args',
+                  diploidConstructorDialogCtrl
+                 ]);
+
+function makeDiploidConstructorInstance($uibModal, startAllele, alleles) {
+  return $uibModal.open({
+    templateUrl: app_static_path + 'ng_templates/diploid_constructor.html',
+    controller: 'DiploidConstructorDialogCtrl',
+    title: 'Create a diploid genotype',
+    animate: false,
+    windowClass: "modal",
+    resolve: {
+      args: function () {
+        return {
+          startAllele: startAllele,
+          alleles: alleles,
+        };
+      }
+    },
+    backdrop: 'static',
+  });
+}
+
+
 var genotypeListViewCtrl =
-  function ($compile, $http, toaster, CursGenotypeList, CantoGlobals) {
+  function ($compile, $http, $uibModal, toaster, CursGenotypeList, CantoGlobals) {
     return {
       scope: {
         genotypeList: '=',
@@ -4846,6 +4925,7 @@ var genotypeListViewCtrl =
       controller: function ($scope) {
         $scope.multi_organism_mode = CantoGlobals.multi_organism_mode;
         $scope.alleles_have_expression = CantoGlobals.alleles_have_expression;
+        $scope.diploid_mode = CantoGlobals.diploid_mode;
 
         function hasDifferentStrains(genotypes) {
           var firstStrain = genotypes[0].strain_name;
@@ -4974,6 +5054,47 @@ var genotypeListViewCtrl =
           });
         };
 
+        $scope.createDiploid = function () {
+          var selectedGenotypes =
+            $.grep($scope.genotypeList, function (genotype) {
+              return !!$scope.checkBoxChecked[genotype.genotype_id];
+            });
+
+          var selectedAlleles =
+            $.map(selectedGenotypes, function (genotype) {
+              return genotype.alleles[0];
+            });
+
+          var strain = $scope.genotypeList[0].strain_name;
+          var taxonid = $scope.genotypeList[0].organism.taxonid;
+
+          var startAllele = selectedGenotypes[0].alleles[0];
+
+          var sameGeneGenotypes =
+              $.grep($scope.genotypeList,
+                     function(genotype) {
+                       if (genotype.alleles.length !== 1) {
+                         return false;}
+
+                       var allele = genotype.alleles[0];
+
+                       return allele.gene_id === startAllele.gene_id;
+                     });
+
+          var sameGeneAlleles =
+              $.map(sameGeneGenotypes,
+                    function(genotype) {
+                      return genotype.alleles[0];
+                    });
+
+          var diploidPromise =
+              makeDiploidConstructorInstance($uibModal, selectedAlleles[0], sameGeneAlleles);
+
+          diploidPromise.result.then(function (result) {
+            $scope.checkBoxChecked = {};
+          });
+        };
+
         $scope.setSelectedGenotypeId = function (genotypeId) {
           $scope.selectedGenotypeId = genotypeId;
         };
@@ -5004,9 +5125,10 @@ var genotypeListViewCtrl =
   };
 
 canto.directive('genotypeListView',
-  ['$compile', '$http', 'toaster', 'CursGenotypeList', 'CantoGlobals',
-    genotypeListViewCtrl
-  ]);
+                ['$compile', '$http', '$uibModal',
+                 'toaster', 'CursGenotypeList', 'CantoGlobals',
+                 genotypeListViewCtrl
+                ]);
 
 
 var singleGeneGenotypeList =

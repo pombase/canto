@@ -83,6 +83,9 @@ genotype management page.
 If 0, a wildtype allele is allowed only if there is another non-wildtype or
 non-wildtype expression allele from the same gene.
 
+### diploid_mode
+If 1, allow diploids to be created and used in genotypes.
+
 ### db_initial_data
 Data needed to initialise a Canto instance.
 
