@@ -198,10 +198,28 @@ sub _remove_unused_alleles
   $alleles_with_no_genotype_rs->delete();
 }
 
+sub _remove_unused_diploids
+{
+  my $self = shift;
+
+  my $where = "diploid_id NOT IN (SELECT diploid FROM allele_genotype " .
+    "where diploid is not null)";
+
+  my $diploids_with_no_genotype_rs =
+    $self->curs_schema()->resultset('Diploid')
+         ->search({},
+                  {
+                    where => \$where,
+                  });
+
+  $diploids_with_no_genotype_rs->delete();
+}
+
 =head2 make_genotype
 
  Usage   : $genotype_manager->make_genotype($name, $background, \@allele_objects,
-                                            $genotype_taxonid, $identifier, $strain_name);
+                                            $genotype_taxonid, $identifier, $strain_name,
+                                            $comment, \@diploid_groups);
  Function: Create a Genotype object in the CursDB
  Args    : $name - the name for the new object
            \@allele_objects - a list of Allele objects to attach to the new
@@ -215,6 +233,9 @@ sub _remove_unused_alleles
            $strain_name - the name of the strain of this genotype which must
                           already be added to the session (optional)
            $comment - an optional comment field
+           \@diploid_groups - an array of array of Alleles (from @allele_objects)
+                              that group alleles together into diploids. Each
+                              allele should appear in at most one group.
  Return  : the new Genotype
 
 =cut
@@ -230,6 +251,7 @@ sub make_genotype
   my $identifier = shift;  # defined if this genotype is from Chado
   my $strain_name = shift;
   my $comment = shift;
+  my $diploid_groups = shift;
 
   if (!defined $genotype_taxonid) {
     croak "no taxon ID passed to GenotypeManager::make_genotype()\n";
@@ -269,6 +291,41 @@ sub make_genotype
   }
 
   $genotype->set_alleles($alleles);
+
+  if ($diploid_groups) {
+    my @diploid_groups = @$diploid_groups;
+
+    for my $group (@diploid_groups) {
+      my @group_alleles = @$group;
+      my $diploid_name = join "--",
+        sort map {
+          my $allele = $_;
+          $allele->primary_identifier();
+        } @group_alleles;
+
+      my $diploid = $schema->create_with_type('Diploid',
+                                              {
+                                                name => $diploid_name,
+                                              });
+
+      map {
+        my $allele = $_;
+
+        my %search_args = (
+          allele => $allele->allele_id(),
+          genotype => $genotype->genotype_id(),
+        );
+
+        my $genotype_allele_rs = $schema->resultset('AlleleGenotype')->search(\%search_args);
+
+        while (defined (my $genotype_allele = $genotype_allele_rs->next())) {
+          $genotype_allele->diploid($diploid);
+          $genotype_allele->update();
+        }
+
+      } @group_alleles;
+    }
+  }
 
   if ($strain_name) {
     my $strain = $self->strain_manager()->find_strain_by_name($genotype_taxonid, $strain_name);
@@ -581,6 +638,7 @@ sub delete_genotype
   $genotype->delete();
 
   $self->_remove_unused_alleles();
+  $self->_remove_unused_diploids();
 
   return 0;
 }

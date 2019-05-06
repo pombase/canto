@@ -44,6 +44,12 @@ __PACKAGE__->table("allele_genotype");
   is_foreign_key: 1
   is_nullable: 1
 
+=head2 diploid
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -52,6 +58,8 @@ __PACKAGE__->add_columns(
   "allele",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "genotype",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  "diploid",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
 
@@ -89,6 +97,26 @@ __PACKAGE__->belongs_to(
   },
 );
 
+=head2 diploid
+
+Type: belongs_to
+
+Related object: L<Canto::CursDB::Diploid>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "diploid",
+  "Canto::CursDB::Diploid",
+  { diploid_id => "diploid" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
+
 =head2 genotype
 
 Type: belongs_to
@@ -110,8 +138,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-11-24 19:46:37
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RrHYTE3dIRzeLsVSv7jNZw
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2019-05-06 22:50:40
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2JNhcac8botP9gwA2wtMGA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

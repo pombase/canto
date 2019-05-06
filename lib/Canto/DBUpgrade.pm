@@ -580,6 +580,31 @@ CREATE TABLE allelesynonym (
 
     Canto::Track::curs_map($config, $track_schema, $update_proc);
   },
+
+  28 => sub {
+    my $config = shift;
+    my $track_schema = shift;
+
+    my $dbh = $track_schema->storage()->dbh();
+
+    my $update_proc = sub {
+      my $curs = shift;
+      my $curs_schema = shift;
+
+      my $curs_dbh = $curs_schema->storage()->dbh();
+
+      $curs_dbh->do("
+CREATE TABLE diploid (
+       diploid_id integer PRIMARY KEY,
+       name text UNIQUE
+);
+       ");
+
+      $curs_dbh->do("ALTER TABLE allele_genotype ADD COLUMN diploid_id text REFERENCES diploid(diploid_id);");
+    };
+
+    Canto::Track::curs_map($config, $track_schema, $update_proc);
+  },
 );
 
 sub upgrade_to

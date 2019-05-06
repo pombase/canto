@@ -83,10 +83,18 @@ CREATE TABLE metagenotype_annotation (
        annotation integer REFERENCES annotation(annotation_id)
 );
 
+
+CREATE TABLE diploid (
+       diploid_id integer PRIMARY KEY,
+       name text UNIQUE
+);
+
 CREATE TABLE allele_genotype (
        allele_genotype_id integer PRIMARY KEY,
        allele integer REFERENCES allele(allele_id),
-       genotype integer REFERENCES genotype(genotype_id)
+       genotype integer REFERENCES genotype(genotype_id),
+       -- used to group alleles together:
+       diploid integer REFERENCES diploid(diploid_id)
 );
 
 CREATE TABLE pub (

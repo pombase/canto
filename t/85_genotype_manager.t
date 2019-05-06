@@ -1,11 +1,12 @@
 use strict;
 use warnings;
-use Test::More tests => 17;
+use Test::More tests => 20;
 
 use Try::Tiny;
 
 use Canto::TestUtil;
 use Canto::Curs::GenotypeManager;
+use Canto::Curs::AlleleManager;
 
 my $test_util = Canto::TestUtil->new('t/chado_test_config.yaml');
 $test_util->init_test('curs_annotations_2');
@@ -28,6 +29,9 @@ is ($curs_schema->resultset('Allele')->count(), 5);
 
 my $genotype_manager = Canto::Curs::GenotypeManager->new(config => $config,
                                                          curs_schema => $curs_schema);
+
+my $allele_manager = Canto::Curs::AlleleManager->new(config => $config,
+                                                     curs_schema => $curs_schema);
 
 $genotype_manager->_remove_unused_alleles();
 is ($curs_schema->resultset('Allele')->count(), 3);
@@ -55,6 +59,8 @@ is ($curs_schema->resultset('Genotype')->find({ identifier => $created_genotype_
 my $cdc11_allele =
   $curs_schema->resultset('Allele')->find({ name => 'cdc11-33' });
 ok($cdc11_allele);
+
+my $cdc11_gene = $cdc11_allele->gene();
 
 my $ssm4_allele =
   $curs_schema->resultset('Allele')->find({ name => 'ssm4delta' });
@@ -87,3 +93,42 @@ try {
 my $deleted_genotype = $curs_schema->resultset('Genotype')->find({ identifier => $created_genotype_identifier });
 
 ok(!defined($deleted_genotype));
+
+
+# test diploids
+
+my $cdc11_wt_allele_details = {
+  gene_id => $cdc11_gene->gene_id(),
+  type => 'wild type',
+};
+
+my $cdc11_wt_allele = $allele_manager->allele_from_json($cdc11_wt_allele_details, 'aaaa0007');
+
+my $cdc11_delta_details = {
+  gene_id => $cdc11_gene->gene_id(),
+  type => 'deletion',
+  name => 'cdc11delta',
+};
+
+my $cdc11_delta = $allele_manager->allele_from_json($cdc11_delta_details, 'aaaa0007');
+
+my $diploid_genotype =
+  $genotype_manager->make_genotype(undef, undef,
+                                   [$cdc11_delta, $cdc11_wt_allele], $pombe_taxonid,
+                                   undef, undef, undef, [[$cdc11_wt_allele, $cdc11_delta]]);
+
+is($curs_schema->resultset('Diploid')->count(), 1);
+
+ok(defined $diploid_genotype);
+
+my $cdc11_diploid = $curs_schema->resultset('Diploid')
+  ->find({ name => 'SPCC1739.11c:aaaa0007-1--SPCC1739.11c:aaaa0007-2' });
+
+ok(defined $cdc11_diploid);
+
+is($cdc11_diploid->allele_genotypes()->count(), 2);
+
+# deleting a genotype should delete unused Allele and Diploid objects
+$genotype_manager->delete_genotype($diploid_genotype->genotype_id());
+
+is($curs_schema->resultset('Diploid')->count(), 0);
