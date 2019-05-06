@@ -600,7 +600,7 @@ CREATE TABLE diploid (
 );
        ");
 
-      $curs_dbh->do("ALTER TABLE allele_genotype ADD COLUMN diploid_id text REFERENCES diploid(diploid_id);");
+      $curs_dbh->do("ALTER TABLE allele_genotype ADD COLUMN diploid integer REFERENCES diploid(diploid_id);");
     };
 
     Canto::Track::curs_map($config, $track_schema, $update_proc);
