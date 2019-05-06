@@ -489,8 +489,8 @@ canto.service('CursGenotypeList', function ($q, Curs) {
   };
 
   this.storeGenotype =
-    function (toaster, $http, genotype_id, genotype_name, genotype_background, alleles, taxonid, strain_name, comment) {
-      var promise = storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotype_background, alleles, taxonid, strain_name, comment);
+    function (toaster, $http, genotype_id, genotype_name, genotype_background, alleles, taxonid, strain_name, comment, diploidGroups) {
+      var promise = storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotype_background, alleles, taxonid, strain_name, comment, diploidGroups);
 
       promise.then(function () {
         service.sendChangeEvent();
@@ -3394,7 +3394,7 @@ canto.controller('TermSuggestDialogCtrl',
   ]);
 
 
-function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotype_background, alleles, taxonid, strain_name, comment) {
+function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotype_background, alleles, taxonid, strain_name, comment, diploidGroups) {
 
   var url = curs_root_uri + '/feature/genotype';
 
@@ -3411,6 +3411,7 @@ function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotyp
     alleles: alleles,
     taxonid: taxonid,
     strain_name: strain_name,
+    diploid_groups: diploidGroups,
   };
 
   loadingStart();
@@ -4858,7 +4859,7 @@ var diploidConstructorDialogCtrl =
     function ($scope, $uibModalInstance, toaster, args) {
       $scope.startAllele = args.startAllele;
       $scope.selectorAlleles =
-        [{ display_name: 'Wild type', allele_id: 'wild-type' }];
+        [{ display_name: 'wild type', allele_id: 'wild type' }];
 
       $.map(args.alleles,
             function(allele) {
@@ -4875,8 +4876,23 @@ var diploidConstructorDialogCtrl =
       };
 
       $scope.ok = function () {
-        $uibModalInstance.close({
+        var otherAllele;
 
+        if ($scope.selectedAlleleId === 'wild type') {
+          otherAllele = {
+            expression: "Wild type product level",
+            gene_id: $scope.startAllele.gene_id,
+            type: "wild type",
+          };
+        } else {
+          otherAllele = $.grep(args.alleles,
+                               function(allele) {
+                                 allele.allele_id = $scope.selectedAlleleId;
+                               })[0];
+        }
+
+        $uibModalInstance.close({
+          diploidAlleles: [$scope.startAllele, otherAllele],
         });
       };
 
@@ -5074,7 +5090,8 @@ var genotypeListViewCtrl =
               $.grep($scope.genotypeList,
                      function(genotype) {
                        if (genotype.alleles.length !== 1) {
-                         return false;}
+                         return false;
+                       }
 
                        var allele = genotype.alleles[0];
 
@@ -5091,7 +5108,29 @@ var genotypeListViewCtrl =
               makeDiploidConstructorInstance($uibModal, selectedAlleles[0], sameGeneAlleles);
 
           diploidPromise.result.then(function (result) {
-            $scope.checkBoxChecked = {};
+            var diploidAlleles = result.diploidAlleles;
+            var diploidGroups = [$.map(diploidAlleles,
+                                       function(allele) {
+                                         if (allele.type === 'wild type') {
+                                           return {
+                                             type: allele.type,
+                                             gene_id: allele.gene_id,
+                                           };
+                                         } else {
+                                           return {
+                                             allele_id: allele.allele_id,
+                                           };
+                                         }
+                                       })];
+
+            var storePromise =
+              CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined,
+                                             undefined, diploidAlleles, taxonid,
+                                             strain, undefined, diploidGroups);
+
+            storePromise.then(function (result) {
+              $scope.checkBoxChecked = {};
+            });
           });
         };
 
