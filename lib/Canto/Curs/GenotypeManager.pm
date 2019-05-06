@@ -203,7 +203,7 @@ sub _remove_unused_diploids
   my $self = shift;
 
   my $where = "diploid_id NOT IN (SELECT diploid FROM allele_genotype " .
-    "where diploid is not null)";
+    "where allele_genotype.diploid is not null)";
 
   my $diploids_with_no_genotype_rs =
     $self->curs_schema()->resultset('Diploid')
