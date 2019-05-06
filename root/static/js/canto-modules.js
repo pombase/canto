@@ -4887,7 +4887,7 @@ var diploidConstructorDialogCtrl =
         } else {
           otherAllele = $.grep(args.alleles,
                                function(allele) {
-                                 allele.allele_id = $scope.selectedAlleleId;
+                                 return allele.allele_id === $scope.selectedAlleleId;
                                })[0];
         }
 
