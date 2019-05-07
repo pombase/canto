@@ -4858,13 +4858,19 @@ var diploidConstructorDialogCtrl =
     function ($scope, $uibModalInstance, toaster, args) {
       $scope.startAllele = args.startAllele;
       $scope.selectorAlleles =
-        [{ display_name: 'wild type', allele_id: 'wild type' }];
+        [{ displayName: 'homozygous', alleleId: $scope.startAllele.allele_id },
+         { displayName: 'wild type', alleleId: 'wild type' }];
 
       $.map(args.alleles,
             function(allele) {
+              var displayName = allele.display_name;
+              if (allele.allele_id === $scope.startAllele.allele_id) {
+                return;
+              }
+
               $scope.selectorAlleles.push({
-                allele_id: allele.allele_id,
-                display_name: allele.display_name,
+                alleleId: allele.allele_id,
+                displayName: displayName,
               });
             });
 
@@ -4912,6 +4918,7 @@ function makeDiploidConstructorInstance($uibModal, startAllele, alleles) {
     title: 'Create a diploid genotype',
     animate: false,
     windowClass: "modal",
+    size: 'lg',
     resolve: {
       args: function () {
         return {
