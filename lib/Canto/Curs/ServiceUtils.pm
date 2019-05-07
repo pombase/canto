@@ -439,9 +439,31 @@ sub _genotype_details_hash
   );
 
   if ($include_allele) {
+    my %diploid_names = ();
+
+    my $curs_schema = $self->curs_schema();
+    my $allele_genotype_rs = $curs_schema->resultset('AlleleGenotype')
+      ->search({ genotype => $genotype->genotype_id() },
+               { prefetch => qw[diploid allele] });
+
+    while (defined (my $row = $allele_genotype_rs->next())) {
+      my $diploid = $row->diploid();
+      if ($diploid) {
+        $diploid_names{$row->allele()->allele_id()} = $diploid->name();
+      }
+    }
+
     my @alleles = $genotype->alleles()->all();
 
-    $ret{alleles} = [map { $self->_allele_details_hash($_); } @alleles];
+    my @allele_hashes = map { $self->_allele_details_hash($_); } @alleles;
+
+    map {
+      if ($diploid_names{$_->{allele_id}}) {
+        $_->{diploid_name} = $diploid_names{$_->{allele_id}};
+      }
+    } @allele_hashes;
+
+    $ret{alleles} = [@allele_hashes];
   }
 
   return \%ret;
