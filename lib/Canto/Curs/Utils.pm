@@ -1088,6 +1088,10 @@ sub make_allele_display_name
     }
   }
 
+  if ($type eq 'other' && $name eq $description) {
+    return $name;
+  }
+
   return "$name($description)";
 }
 
