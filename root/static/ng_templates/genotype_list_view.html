@@ -54,8 +54,8 @@ Annotations
                     ng-click="combineGenotypes()">Combine selected genotypes</button>
     <span ng-if="diploid_mode">
       Action: <button class="btn btn-primary btn-xs"
-                      ng-disabled="checkedGenotypeCount() != 1"
-                      title="{{checkedGenotypeCount() < 1 ? 'Select a genotype' : 'Create a diploid genotype the includes the selected allele'}}"
+                      ng-disabled="!validForDiploid()"
+                      title="{{checkedGenotypeCount() < 1 ? 'Select a single allele genotype' : 'Create a diploid genotype the includes the selected allele'}}"
                       ng-click="createDiploid()">Create diploid ...</button>
     </span>
   </div>
