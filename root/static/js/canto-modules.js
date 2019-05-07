@@ -5057,7 +5057,7 @@ var genotypeListViewCtrl =
 
         $scope.hiddenColumnsCount = Object.keys($scope.columnsToHide).length;
 
-        $scope.checkedGenotypeIds = function () {
+        $scope.selectedGenotypes = function () {
           var retVal = [];
           $.map($scope.genotypeList, function (genotype) {
             if ($scope.checkBoxChecked[genotype.genotype_id]) {
@@ -5068,7 +5068,26 @@ var genotypeListViewCtrl =
         };
 
         $scope.checkedGenotypeCount = function () {
-          return $scope.checkedGenotypeIds().length;
+          return $scope.selectedGenotypes().length;
+        };
+
+        $scope.validForDiploid = function() {
+          var selectedGenotypes = $scope.selectedGenotypes()
+          if (selectedGenotypes.length !== 1) {
+            return false;
+          }
+
+          var selectedGenotype = selectedGenotypes[0];
+
+          if (selectedGenotype.alleles.length > 1) {
+            return false;
+          }
+
+          if (selectedGenotype.alleles[0].diploid_name) {
+            return false;
+          }
+
+          return true;
         };
 
         $scope.combineGenotypes = function () {
