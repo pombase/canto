@@ -4902,6 +4902,7 @@ var diploidConstructorDialogCtrl =
           otherAllele = {
             expression: "Wild type product level",
             gene_id: $scope.startAllele.gene_id,
+            name: $scope.startAllele.gene_display_name + '+',
             type: "wild type",
           };
         } else {
