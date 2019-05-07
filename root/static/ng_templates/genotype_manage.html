@@ -29,9 +29,8 @@
             Add, view and edit genotypes
         </div>
         <div class="curs-box-body">
-            <div class="row curs-gm-container">
-                <div ng-if="!read_only_curs">
-                    <div class="curs-gm-gene-col">
+            <div class="curs-gm-container">
+                    <div class="curs-gm-gene-col" ng-if="!read_only_curs">
                         <organism-selector
                           ng-if="data.multiOrganismMode && data.splitGenotypesByOrganism"
                           organisms="data.organisms"
@@ -52,7 +51,6 @@
                         <a ng-if="!data.splitGenotypesByOrganism"
                            ng-click="openSingleGeneAddDialog()">Add another gene ...</a>
                     </div>
-                </div>
 
                 <div class="curs-gm-genotype-col">
                     <div class="ng-cloak">
