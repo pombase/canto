@@ -5104,10 +5104,15 @@ var genotypeListViewCtrl =
             return;
           }
 
-          var allelesForGenotype =
-            $.map(checkedGenotypes, function (genotype) {
-              return genotype.alleles[0];
-            });
+          var allelesForGenotype = [];
+
+          $.map(checkedGenotypes,
+                function (genotype) {
+                  $.map(genotype.alleles,
+                        function(allele) {
+                          allelesForGenotype.push(allele);
+                        });
+                });
 
           var newBackgroundParts = [];
 

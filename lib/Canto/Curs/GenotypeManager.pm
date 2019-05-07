@@ -297,7 +297,7 @@ sub make_genotype
 
     for my $group (@diploid_groups) {
       my @group_alleles = @$group;
-      my $diploid_name = join "--",
+      my $diploid_name = $new_identifier . '-' . join "--",
         sort map {
           my $allele = $_;
           $allele->primary_identifier();

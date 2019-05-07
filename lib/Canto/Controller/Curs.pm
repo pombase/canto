@@ -1793,7 +1793,7 @@ sub _genotype_store
                                                                \@alleles);
 
         if ($allele_data->{diploid_name}) {
-          push @{$diploid_groups{$allele->{diploid_name}}}, $allele;
+          push @{$diploid_groups{$allele_data->{diploid_name}}}, $allele;
         }
 
         push @alleles, $allele;
