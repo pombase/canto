@@ -444,7 +444,7 @@ sub _genotype_details_hash
     my $curs_schema = $self->curs_schema();
     my $allele_genotype_rs = $curs_schema->resultset('AlleleGenotype')
       ->search({ genotype => $genotype->genotype_id() },
-               { prefetch => qw[diploid allele] });
+               { prefetch => [qw[diploid allele]] });
 
     while (defined (my $row = $allele_genotype_rs->next())) {
       my $diploid = $row->diploid();
