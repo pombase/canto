@@ -180,6 +180,21 @@ function isSingleAlleleGenotype(genotype) {
   return genotype.alleles.length === 1;
 }
 
+function isSingleLocusDiploid(genotype) {
+  var diploidNames = {};
+
+  for (var i = 0; i < genotype.alleles.length; i++) {
+    var allele = genotype.alleles[i];
+    if (!allele.diploid_name) {
+      return;
+    }
+
+    diploidNames[allele.diploid_name] = true;
+  }
+
+  return Object.keys(diploidNames).length === 1;
+}
+
 function getGenotypeManagePath(organismMode) {
   var paths = {
     'unknown': 'genotype_manage',
@@ -4322,7 +4337,7 @@ var genotypeManageCtrl =
                       }
                     }
 
-                    if (isSingleAlleleGenotype(genotype)) {
+                    if (isSingleAlleleGenotype(genotype) || isSingleLocusDiploid(genotype)) {
                       $scope.data.singleAlleleGenotypes.push(genotype);
                     } else {
                       $scope.data.multiAlleleGenotypes.push(genotype);
