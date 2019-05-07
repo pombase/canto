@@ -1566,8 +1566,10 @@ a:not([href]) {
   flex-wrap: wrap;
 }
 .curs-gm-gene-col {
+  flex-grow: 1;
   margin-left: 3px;
 }
 .curs-gm-genotype-col {
+  flex-grow: 3;
   margin-left: 30px;
 }
