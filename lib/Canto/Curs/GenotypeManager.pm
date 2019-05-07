@@ -308,6 +308,12 @@ sub make_genotype
                                                 name => $diploid_name,
                                               });
 
+      my %allele_counts = ();
+
+      map {
+        $allele_counts{$_->allele_id()}++;
+      } @group_alleles;
+
       map {
         my $allele = $_;
 
@@ -319,8 +325,19 @@ sub make_genotype
         my $genotype_allele_rs = $schema->resultset('AlleleGenotype')->search(\%search_args);
 
         while (defined (my $genotype_allele = $genotype_allele_rs->next())) {
+          if ($allele_counts{$allele->allele_id()} == 0) {
+            # (rare special case) if an allele is part of diploid and
+            # also part of genotype as a single copy (hemizygous) make
+            # sure that the non-diploid copy doesn't have the diploid
+            # added to it - we keep count so we know when we've added
+            # the Diploid enough
+            next;
+          }
+
           $genotype_allele->diploid($diploid);
           $genotype_allele->update();
+
+          $allele_counts{$allele->allele_id()}--;
         }
 
       } @group_alleles;

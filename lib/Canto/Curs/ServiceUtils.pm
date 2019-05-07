@@ -449,7 +449,7 @@ sub _genotype_details_hash
     while (defined (my $row = $allele_genotype_rs->next())) {
       my $diploid = $row->diploid();
       if ($diploid) {
-        $diploid_names{$row->allele()->allele_id()} = $diploid->name();
+        push @{$diploid_names{$row->allele()->allele_id()}}, $diploid->name();
       }
     }
 
@@ -459,7 +459,10 @@ sub _genotype_details_hash
 
     map {
       if ($diploid_names{$_->{allele_id}}) {
-        $_->{diploid_name} = $diploid_names{$_->{allele_id}};
+        my $diploid_name = pop(@{$diploid_names{$_->{allele_id}}});
+        if ($diploid_name) {
+          $_->{diploid_name} = $diploid_name;
+        }
       }
     } @allele_hashes;
 
