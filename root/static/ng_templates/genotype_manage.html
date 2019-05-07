@@ -29,9 +29,9 @@
             Add, view and edit genotypes
         </div>
         <div class="curs-box-body">
-            <div class="row">
+            <div class="row curs-gm-container">
                 <div ng-if="!read_only_curs">
-                    <div class="col-sm-3 col-md-3">
+                    <div class="curs-gm-gene-col">
                         <organism-selector
                           ng-if="data.multiOrganismMode && data.splitGenotypesByOrganism"
                           organisms="data.organisms"
@@ -54,7 +54,7 @@
                     </div>
                 </div>
 
-                <div class="col-sm-9 col-md-9">
+                <div class="curs-gm-genotype-col">
                     <div class="ng-cloak">
                         <div ng-show="data.waitingForServer">
                             <img ng-src="{{app_static_path + '/images/spinner.gif'}}" />
