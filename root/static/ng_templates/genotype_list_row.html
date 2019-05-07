@@ -9,15 +9,15 @@
     <span ng-bind-html="genotype.name | wrapAtSpaces | encodeAlleleSymbols | toTrusted"></span>
   </td>
   <td>
-    <a ng-if="firstAllele.type != 'aberration'" href="{{curs_root_uri + '/feature/gene/view/' + firstAllele.gene_id + (read_only_curs ? '/ro' : '')}}">
-      <span ng-bind-html="firstAllele.gene_display_name | wrapAtSpaces | encodeGeneSymbols | toTrusted"></span>
+    <a ng-if="firstLocus.type != 'aberration'" href="{{curs_root_uri + '/feature/gene/view/' + firstLocus.gene_id + (read_only_curs ? '/ro' : '')}}">
+      <span ng-bind-html="firstLocus.gene_display_name | wrapAtSpaces | encodeGeneSymbols | toTrusted"></span>
     </a>
-    <span ng-if="firstAllele.type == 'aberration'">(aberration)</span>
+    <span ng-if="firstLocus.type == 'aberration'">(aberration)</span>
   </td>
   <td>
-    <span ng-bind-html="firstAllele.display_name | encodeAlleleSymbols | toTrusted"></span>
-    <span ng-if="firstAllele.synonyms && genotype.alleles.length == 1">
-      <span ng-repeat="synonym in firstAllele.synonyms" class="curs-genotype-view-allele-synonym">
+    <span ng-bind-html="firstLocus.display_name | encodeAlleleSymbols | toTrusted"></span>
+    <span ng-if="firstLocus.synonyms && genotype.alleles.length == 1">
+      <span ng-repeat="synonym in firstLocus.synonyms" class="curs-genotype-view-allele-synonym">
         {{synonym.synonym}}
       </span>
     </span>
@@ -27,7 +27,7 @@
     </span>
   </td>
   <td ng-if="alleles_have_expression">
-    <span ng-bind-html="firstAllele.expression | formatExpression | toTrusted"></span>
+    <span ng-bind-html="firstLocus.expression | formatExpression | toTrusted"></span>
   </td>
   <td rowspan="{{genotype.alleles.length}}" ng-hide="columnsToHide.strain">{{ strain }}</td>
   <td rowspan="{{genotype.alleles.length}}" ng-hide="columnsToHide.background">
@@ -57,7 +57,7 @@
     </div>
   </td>
   </tr>
-  <tr ng-repeat="currentAllele in otherAlleles">
+  <tr ng-repeat="currentAllele in otherLoci">
     <td>
       <a ng-if="currentAllele.type != 'aberration'" href="{{curs_root_uri + '/feature/gene/view/' + currentAllele.gene_id + (read_only_curs ? '/ro' : '')}}">
         <span ng-bind-html="currentAllele.gene_display_name | wrapAtSpaces | encodeGeneSymbols | toTrusted"></span>
