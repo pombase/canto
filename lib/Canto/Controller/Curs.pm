@@ -1786,11 +1786,23 @@ sub _genotype_store
         Canto::Curs::AlleleManager->new(config => $c->config(),
                                         curs_schema => $schema);
 
+      my %diploid_groups = ();
+
       for my $allele_data (@alleles_data) {
         my $allele = $allele_manager->allele_from_json($allele_data, $curs_key,
                                                                \@alleles);
 
+        if ($allele_data->{diploid_name}) {
+          push @{$diploid_groups{$allele->{diploid_name}}}, $allele;
+        }
+
         push @alleles, $allele;
+      }
+
+      my @diploid_groups = ();
+
+      while (my ($diploid_name, $diploid_alleles) = each %diploid_groups) {
+        push @diploid_groups, $diploid_alleles;
       }
 
       if (!$genotype_taxonid) {
@@ -1837,7 +1849,8 @@ sub _genotype_store
         my $genotype =
           $genotype_manager->make_genotype($genotype_name, $genotype_background,
                                            \@alleles, $genotype_taxonid, undef,
-                                           $strain_name, $genotype_comment);
+                                           $strain_name, $genotype_comment,
+                                           \@diploid_groups);
 
         $guard->commit();
 

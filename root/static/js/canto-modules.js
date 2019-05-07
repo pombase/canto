@@ -489,8 +489,8 @@ canto.service('CursGenotypeList', function ($q, Curs) {
   };
 
   this.storeGenotype =
-    function (toaster, $http, genotype_id, genotype_name, genotype_background, alleles, taxonid, strain_name, comment, diploidGroups) {
-      var promise = storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotype_background, alleles, taxonid, strain_name, comment, diploidGroups);
+    function (toaster, $http, genotype_id, genotype_name, genotype_background, alleles, taxonid, strain_name, comment) {
+      var promise = storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotype_background, alleles, taxonid, strain_name, comment);
 
       promise.then(function () {
         service.sendChangeEvent();
@@ -3394,7 +3394,7 @@ canto.controller('TermSuggestDialogCtrl',
   ]);
 
 
-function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotype_background, alleles, taxonid, strain_name, comment, diploidGroups) {
+function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotype_background, alleles, taxonid, strain_name, comment) {
 
   var url = curs_root_uri + '/feature/genotype';
 
@@ -3411,7 +3411,6 @@ function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotyp
     alleles: alleles,
     taxonid: taxonid,
     strain_name: strain_name,
-    diploid_groups: diploidGroups,
   };
 
   loadingStart();
@@ -5084,7 +5083,8 @@ var genotypeListViewCtrl =
           var strain = $scope.genotypeList[0].strain_name;
           var taxonid = $scope.genotypeList[0].organism.taxonid;
 
-          var startAllele = selectedGenotypes[0].alleles[0];
+          var startAllele = {};
+          copyObject(selectedGenotypes[0].alleles[0], startAllele);
 
           var sameGeneGenotypes =
               $.grep($scope.genotypeList,
@@ -5093,7 +5093,8 @@ var genotypeListViewCtrl =
                          return false;
                        }
 
-                       var allele = genotype.alleles[0];
+                       var allele = {};
+                       copyObject(genotype.alleles[0], allele);
 
                        return allele.gene_id === startAllele.gene_id;
                      });
@@ -5109,24 +5110,20 @@ var genotypeListViewCtrl =
 
           diploidPromise.result.then(function (result) {
             var diploidAlleles = result.diploidAlleles;
-            var diploidGroups = [$.map(diploidAlleles,
-                                       function(allele) {
-                                         if (allele.type === 'wild type') {
-                                           return {
-                                             type: allele.type,
-                                             gene_id: allele.gene_id,
-                                           };
-                                         } else {
-                                           return {
-                                             allele_id: allele.allele_id,
-                                           };
-                                         }
-                                       })];
+
+            $.map(diploidAlleles,
+                  function(allele) {
+                    // the diploid_name is used only to group alleles together
+                    // into a Diploid in the DB
+                    // we only have one diploid so we don't have to try hard
+                    // create a unique diploid name
+                    allele.diploid_name = 'diploid-1';
+                  });
 
             var storePromise =
               CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined,
                                              undefined, diploidAlleles, taxonid,
-                                             strain, undefined, diploidGroups);
+                                             strain, undefined);
 
             storePromise.then(function (result) {
               $scope.checkBoxChecked = {};
