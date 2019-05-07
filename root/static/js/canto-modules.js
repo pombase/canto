@@ -4897,6 +4897,7 @@ var alleleSelectorCtrl =
       scope: {
         alleles: '=',
         selectedAllele: '=',
+        disableSelector: '=',
       },
       restrict: 'E',
       replace: true,
@@ -4916,9 +4917,8 @@ canto.directive('alleleSelector',
 var diploidConstructorDialogCtrl =
     function ($scope, $uibModalInstance, toaster, args) {
       $scope.startAllele = args.startAllele;
-      $scope.selectorAlleles =
-        [{ displayName: 'homozygous', alleleId: $scope.startAllele.allele_id },
-         { displayName: 'wild type', alleleId: 'wild type' }];
+      $scope.diploidType = 'homozygous';
+      $scope.selectorAlleles = [];
 
       $.map(args.alleles,
             function(allele) {
@@ -4933,7 +4933,11 @@ var diploidConstructorDialogCtrl =
               });
             });
 
-      $scope.selectedAlleleId = $scope.startAllele.allele_id;
+      $scope.selectedAlleleId = null;
+
+      if ($scope.selectorAlleles.length > 0) {
+        $scope.selectedAlleleId = $scope.selectorAlleles[0].alleleId;
+      }
 
       $scope.isValid = function() {
         return $scope.selectedAlleleId !== null;
@@ -4942,7 +4946,7 @@ var diploidConstructorDialogCtrl =
       $scope.ok = function () {
         var otherAllele;
 
-        if ($scope.selectedAlleleId === 'wild type') {
+        if ($scope.diploidType === 'wild type') {
           otherAllele = {
             expression: "Wild type product level",
             gene_id: $scope.startAllele.gene_id,
@@ -4950,10 +4954,14 @@ var diploidConstructorDialogCtrl =
             type: "wild type",
           };
         } else {
-          otherAllele = $.grep(args.alleles,
-                               function(allele) {
-                                 return allele.allele_id === $scope.selectedAlleleId;
-                               })[0];
+          if ($scope.diploidType === 'homozygous') {
+            otherAllele = $scope.startAllele;
+          } else {
+            otherAllele = $.grep(args.alleles,
+                                 function(allele) {
+                                   return allele.allele_id === $scope.selectedAlleleId;
+                                 })[0];
+          }
         }
 
         $uibModalInstance.close({

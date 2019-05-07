@@ -1,3 +1,5 @@
-<select class="form-control" ng-model="selectedAllele"
-        ng-options="allele.alleleId as allele.displayName for allele in alleles">
+<select ng-disabled="disableSelector" class="form-control" ng-model="selectedAllele">
+  <option ng-repeat="allele in alleles" value="{{allele.alleleId}}"
+          ng-bind-html="allele.displayName | encodeAlleleSymbols | toTrusted">
+  </option>
 </select>

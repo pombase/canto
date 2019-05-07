@@ -1594,3 +1594,7 @@ a:not([href]) {
   border: 1px solid #ddd;
   margin: 0 0.2em 0 1em;
 }
+
+.curs-diploid-constructor-choices {
+  padding: 0.2em;
+}

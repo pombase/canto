@@ -9,8 +9,25 @@
     </div>
 
     <div class="modal-body">
-      {{startAllele.display_name}} / <allele-selector selected-allele="selectedAlleleId" alleles="selectorAlleles">
-      </allele-selector>
+      <div class="curs-diploid-constructor-choices">
+        <input type="radio" value="homozygous" name="homozygous" ng-model="diploidType"/>
+        <label for="homozygous">homozygous
+          <span ng-bind-html="startAllele.display_name | encodeAlleleSymbols | toTrusted"></span>
+        </label>
+      </div>
+      <div class="curs-diploid-constructor-choices">
+        <input type="radio" value="wild type" name="wild-type" ng-model="diploidType"/>
+        <label for="wild-type">
+          <span ng-bind-html="startAllele.display_name | encodeAlleleSymbols | toTrusted"></span> / wild type</label>
+      </div>
+      <div class="curs-diploid-constructor-choices" ng-show="selectorAlleles.length != 0">
+        <input type="radio" value="other" name="other" ng-model="diploidType"/>
+        <span ng-bind-html="startAllele.display_name | encodeAlleleSymbols | toTrusted"></span>
+        /
+        <allele-selector disable-selector="diploidType != 'other'"
+                         selected-allele="selectedAlleleId" alleles="selectorAlleles">
+        </allele-selector>
+      </div>
     </div>
 
     <div class="modal-footer">
