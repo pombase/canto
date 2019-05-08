@@ -3704,7 +3704,7 @@ var genotypeEdit =
             $scope.alleles,
             undefined,
             $scope.data.selectedStrainName,
-            $scope.data.genotypeComment,
+            $scope.data.genotypeComment
          );
 
           result.success(function (data) {
@@ -4236,7 +4236,7 @@ var genotypeManageCtrl =
                 var geneCopy = {};
                 copyObject(gene, geneCopy);
                 geneCopy.organism = $scope.data.selectedOrganism;
-                $scope.data.visibleGenes.push(geneCopy)
+                $scope.data.visibleGenes.push(geneCopy);
               });
           }
         };
@@ -4272,7 +4272,7 @@ var genotypeManageCtrl =
         var showNoGenotypeNotice = function () {
           return $scope.data.selectedOrganism &&
             $scope.data.singleAlleleGenotypes.length === 0 &&
-            $scope.data.multiAlleleGenotypes.length === 0
+            $scope.data.multiAlleleGenotypes.length === 0;
         };
 
         $scope.backToSummary = function () {
@@ -6796,7 +6796,7 @@ var genotypeSimpleListViewCtrl =
           $scope.onGenotypeSelect({
             genotype: genotype
           });
-        }
+        };
 
       }
     };
@@ -6923,13 +6923,13 @@ var metagenotypeGenotypePicker =
           $scope.onGenotypeSelect({
             genotype: genotype
           });
-        }
+        };
 
         $scope.onGenotypeChangeMulti = function (genotype) {
           $scope.onGenotypeSelect({
             genotype: genotype
           });
-        }
+        };
 
         $scope.onStrainChange = function (strain) {
           $scope.onStrainSelect({
@@ -7071,7 +7071,7 @@ var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Met
         $scope.selectedHostStrain = null;
         $scope.selectedHostGenotypes = taxonId in $scope.taxonGenotypeMap
           ? $scope.taxonGenotypeMap[taxonId]
-          : {'single': [], 'multi': []}
+          : {'single': [], 'multi': []};
       };
 
       $scope.onHostGenotypeSelect = function (genotype) {
