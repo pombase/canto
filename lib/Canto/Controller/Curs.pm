@@ -1156,8 +1156,8 @@ sub start_annotation : Chained('annotate') PathPart('start') Args(1)
     $_->display_name();
   } @features;
 
-  $st->{title} = "Curating $annotation_display_name for $display_names\n";
-  $st->{show_title} = 0;
+  $st->{title} = "Create annotation";
+  $st->{show_title} = 1;
 
   my %type_dispatch = (
     ontology => \&annotation_ontology_edit,

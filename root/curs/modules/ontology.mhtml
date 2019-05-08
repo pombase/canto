@@ -6,6 +6,10 @@ $feature
 $pub
 </%args>
 
+<div class="curs-annotate-feature-title">
+    Annotating <% $feature_type %> &ndash; <% $feature->display_name() %>
+</div>
+
 <div ng-controller="OntologyWorkflowCtrl"
      annotation-type-name="<% $annotation_type_name %>"
      feature-id="<% $feature->feature_id %>">

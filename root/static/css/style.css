@@ -941,6 +941,13 @@ table td.curs-genotype-checkbox-column {
   display: inline-block;
 }
 
+.curs-annotate-feature-title {
+  margin-left: 0%;
+  padding: 3px;
+  font-weight: 700;
+  display: inline-block;
+}
+
 .curs-box-body {
   margin: 5px;
   padding: 5px;
