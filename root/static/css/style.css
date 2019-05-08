@@ -1559,3 +1559,17 @@ a:not([href]) {
   resize: vertical;
   min-height: 60px;
 }
+
+.curs-gm-container {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+.curs-gm-gene-col {
+  flex-grow: 1;
+  margin-left: 3px;
+}
+.curs-gm-genotype-col {
+  flex-grow: 3;
+  margin-left: 30px;
+}
