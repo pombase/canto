@@ -362,6 +362,22 @@ sub canto_config : Local
   if ($allowed_keys->{$config_key}) {
     my $key_config = $config->for_json($config_key);
     if (defined $key_config) {
+      if ($config_key eq 'annotation_type_list') {
+        map {
+          if ($_->{admin_evidence_codes} && $_->{evidence_codes}) {
+
+            if ($c->user()) {
+              my $user = $c->user();
+              my $is_admin = $user->is_admin() ? JSON::true : JSON::false;
+
+              if ($is_admin) {
+                push @{$_->{evidence_codes}}, @{$_->{admin_evidence_codes}};
+              }
+            }
+          }
+        } @$key_config;
+      }
+
       if (ref $key_config) {
         $c->stash->{json_data} = $key_config;
       } else {
