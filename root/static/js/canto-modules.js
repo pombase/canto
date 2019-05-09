@@ -3233,7 +3233,8 @@ var alleleEditDialogCtrl =
 
     $scope.isValidExpression = function () {
       return $scope.current_type_config &&
-        (!$scope.current_type_config.expression_required ||
+        (!CantoGlobals.alleles_have_expression ||
+         !$scope.current_type_config.expression_required ||
           $scope.alleleData.expression);
     };
 
