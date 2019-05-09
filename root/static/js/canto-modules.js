@@ -4927,6 +4927,10 @@ var diploidConstructorDialogCtrl =
                 return;
               }
 
+              if (allele.type === 'wild type' && !allele.expresion) {
+                return;
+              }
+
               $scope.selectorAlleles.push({
                 alleleId: allele.allele_id,
                 displayName: displayName,
