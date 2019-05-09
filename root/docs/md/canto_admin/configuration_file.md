@@ -247,6 +247,10 @@ exporting annotation to GAF files.  Required only if GO ontologies are enabled.
 Possible evidence codes for this annotation type.  Each evidence code must
 appear in the [`evidence_types`](#evidence_types) list.  (Required)
 
+### admin_evidence_codes
+Evidence codes that are only available for logged in admin user.  This
+list is added to the `evidence_codes` list.
+
 ### broad_term_suggestions
 A few comma separated high level or broad term names for use in help text.
 eg. for molecular function: "transporter, transferase activity"  (Required
