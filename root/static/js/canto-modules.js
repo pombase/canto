@@ -4990,7 +4990,6 @@ function makeDiploidConstructorInstance($uibModal, startAllele, alleles) {
     title: 'Create a diploid genotype',
     animate: false,
     windowClass: "modal",
-    size: 'lg',
     resolve: {
       args: function () {
         return {
