@@ -1185,10 +1185,16 @@ sub _store_change_hash
 
   my %valid_change_keys;
 
-  if ($self->_category_from_type($annotation->type()) eq 'ontology') {
+  my $category = $self->_category_from_type($annotation->type());
+
+  if ($category eq 'ontology') {
     %valid_change_keys = $self->_ontology_change_keys($annotation, $changes);
   } else {
-    %valid_change_keys = $self->_interaction_change_keys($annotation, $changes);
+    if ($category eq 'interaction') {
+      %valid_change_keys = $self->_interaction_change_keys($annotation, $changes);
+    } else {
+      die "can't find category for ", $annotation->type(), "\n";
+    }
   }
 
   my $data = $annotation->data();
