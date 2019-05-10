@@ -4944,7 +4944,7 @@ var diploidConstructorDialogCtrl =
       }
 
       $scope.isValid = function() {
-        return $scope.selectedAlleleId !== null;
+        return true;
       };
 
       $scope.ok = function () {
