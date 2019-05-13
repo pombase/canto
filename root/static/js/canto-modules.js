@@ -4270,7 +4270,7 @@ var genotypeManageCtrl =
           }
         };
 
-        var showNoGenotypeNotice = function () {
+        $scope.showNoGenotypeNotice = function () {
           return $scope.data.selectedOrganism &&
             $scope.data.singleAlleleGenotypes.length === 0 &&
             $scope.data.multiAlleleGenotypes.length === 0;

@@ -90,8 +90,12 @@
                                 />
                             </div>
 
-                            <div ng-if="!readOnlyCurs" ng-show="showNoGenotypeNotice()">
+                            <div ng-if="!read_only_curs" ng-show="showNoGenotypeNotice()">
                                 No genotypes in this session.  Try adding one.
+                            </div>
+
+                            <div ng-if="read_only_curs" ng-show="showNoGenotypeNotice()">
+                                No genotypes in this session.
                             </div>
                         </div>
                     </div>
