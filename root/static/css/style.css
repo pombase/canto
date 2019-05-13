@@ -395,6 +395,12 @@ table.list tr td,
   border-style: solid;
   border-color: #bbb;
 }
+
+th.curs-genes-and-orgs-edit-gene {
+  border-bottom: 1px solid #888;
+  text-align: center;
+}
+
 table.curs-genotype-list td {
   border: 1px solid #bbb;
   padding: 3px;
