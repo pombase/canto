@@ -25,18 +25,22 @@
     </div>
 
     <div ng-if="!data.editingGenotype" class="ng-cloak curs-box">
-        <div class="curs-box-title">
+        <div ng-if="!read_only_curs" class="curs-box-title">
             Add, view and edit genotypes
+        </div>
+        <div ng-if="read_only_curs" class="curs-box-title">
+            View genotypes
         </div>
         <div class="curs-box-body">
             <div class="curs-gm-container">
-                    <div class="curs-gm-gene-col" ng-if="!read_only_curs">
+                    <div class="curs-gm-gene-col">
                         <organism-selector
                           ng-if="data.multiOrganismMode && data.splitGenotypesByOrganism"
                           organisms="data.organisms"
                           organism-selected="organismUpdated(organism)"
                           label="{{genotypeType | renameGenotypeType}}">
                         </organism-selector>
+                        <div ng-if="!read_only_curs">
                         <genotype-gene-list
                           genotypes="data.singleAlleleGenotypes"
                           genes="data.visibleGenes"
@@ -50,6 +54,7 @@
                            href="confirm_genes">Delete or edit genes and organisms list ...</a>
                         <a ng-if="!data.splitGenotypesByOrganism"
                            ng-click="openSingleGeneAddDialog()">Add another gene ...</a>
+                        </div>
                     </div>
 
                 <div class="curs-gm-genotype-col">
