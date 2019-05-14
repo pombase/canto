@@ -75,6 +75,10 @@ as a column in the genotype table on the genotype management page.
 If 1, show the organism in a selector on the genotype management pages
 and only show genes and genotypes for the selected organism.
 
+If 0, hide the list of genes and actions on the left hand side of the
+genotype management page.
+### show_genotype_management_genes_list
+
 ### allow_single_wildtype_allele
 If 0, a wildtype allele is allowed only if there is another non-wildtype or
 non-wildtype expression allele from the same gene.

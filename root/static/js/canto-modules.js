@@ -713,6 +713,7 @@ canto.service('CantoGlobals', function ($window) {
   this.htpPerPub5YearStatsData = $window.htpPerPub5YearStatsData;
   this.multi_organism_mode = $window.multi_organism_mode == 1;
   this.split_genotypes_by_organism = $window.split_genotypes_by_organism == 1;
+  this.show_genotype_management_genes_list = $window.show_genotype_management_genes_list;
   this.strains_mode = $window.strains_mode == 1;
   this.pathogen_host_mode = $window.pathogen_host_mode;
   this.alleles_have_expression = $window.alleles_have_expression;
@@ -4162,6 +4163,8 @@ var genotypeManageCtrl =
 
         $scope.data.multiOrganismMode = CantoGlobals.multi_organism_mode;
         $scope.data.splitGenotypesByOrganism = CantoGlobals.split_genotypes_by_organism;
+        $scope.data.showGenotypeManagementGenesList =
+          CantoGlobals.show_genotype_management_genes_list;
 
         $scope.updateGenes = function() {
           CursGeneList.geneList().then(function (results) {
