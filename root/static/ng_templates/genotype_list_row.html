@@ -16,7 +16,7 @@
   </td>
   <td>
     <span ng-bind-html="firstAllele.display_name | encodeAlleleSymbols | toTrusted"></span>
-    <span ng-if="firstAllele.synonyms">
+    <span ng-if="firstAllele.synonyms && genotype.alleles.length == 1">
       <span ng-repeat="synonym in firstAllele.synonyms" class="curs-genotype-view-allele-synonym">
         {{synonym.synonym}}
       </span>
