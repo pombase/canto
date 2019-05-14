@@ -320,7 +320,7 @@ var greekCharMap = {
   "&OHgr;": "Ω",
 };
 
-canto.filter('encodeAlleleSymbols', function () {
+function symbolEncoder() {
   return function (item) {
     if (item == null) {
       return null;
@@ -333,7 +333,11 @@ canto.filter('encodeAlleleSymbols', function () {
 
     return item;
   };
-});
+}
+
+canto.filter('encodeAlleleSymbols', symbolEncoder);
+canto.filter('encodeGeneSymbols', symbolEncoder);
+
 
 canto.filter('featureChooserFilter', function () {
   return function (feature) {
