@@ -3379,6 +3379,7 @@ function makeAlleleEditInstance($uibModal, allele, taxonId) {
     controller: 'AlleleEditDialogCtrl',
     title: 'Add an allele for this phenotype',
     animate: false,
+    size: 'lg',
     windowClass: "modal",
     resolve: {
       args: function () {
