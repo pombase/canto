@@ -48,14 +48,21 @@
           </td>
         </tr>
 
-        <tr ng-if="alleleData.newSynonyms.length != 0">
+        <tr ng-if="userIsAdmin && alleleData.existingSynonyms.length == 0">
+          <td>
+            Existing synonyms:
+          </td>
+          <td>
+            (none)
+          </td>
+        </tr>
+
+        <tr ng-if="userIsAdmin">
           <td>
             New synonyms:
           </td>
           <td>
-            <span ng-repeat="synonym in alleleData.newSynonyms">
-              <span>{{synonym}}</span>
-            </span>
+            <input type="text" ng-model="data.newSynonymsString"/>
           </td>
         </tr>
 

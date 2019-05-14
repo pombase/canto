@@ -3133,6 +3133,11 @@ var alleleEditDialogCtrl =
     $scope.alleleData.evidence = $scope.alleleData.evidence || '';
     $scope.alleleData.existingSynonyms = [];
     $scope.alleleData.newSynonyms = [];
+    $scope.data = {
+      newSynonymsString: '',
+    };
+
+    $scope.userIsAdmin = CantoGlobals.current_user_is_admin;
 
     $.map($scope.alleleData.synonyms || [],
           function(synonymDetails) {
@@ -3142,6 +3147,8 @@ var alleleEditDialogCtrl =
               $scope.alleleData.newSynonyms.push(synonymDetails.synonym);
             }
           });
+
+    $scope.data.newSynonymsString = $scope.alleleData.newSynonyms.join(',');
 
     $scope.strainData = {
       selectedStrain: null,
@@ -3260,8 +3267,32 @@ var alleleEditDialogCtrl =
         $scope.isValidStrain();
     };
 
+    function splitSynonymsForStoring(alleleData, newSynonymsString) {
+      alleleData.synonyms =
+        $.map(alleleData.existingSynonyms,
+              function(existingSynonymName) {
+                return {
+                  synonym: existingSynonymName,
+                  edit_status: 'existing',
+                };
+              });
+      $.map(newSynonymsString.split(','),
+            function(newSynonym) {
+              var trimmedSynonym = trim(newSynonym);
+              if (trimmedSynonym.length > 0) {
+                alleleData.synonyms.push({
+                  synonym: trimmedSynonym,
+                  edit_status: 'new',
+                })
+              }
+            });
+      delete alleleData['existingSynonyms'];
+      delete alleleData['newSynonyms'];
+    }
+
     $scope.ok = function () {
       if ($scope.isValid()) {
+        splitSynonymsForStoring($scope.alleleData, $scope.data.newSynonymsString);
         copyObject($scope.alleleData, args.allele);
         var strainName = null;
         if ($scope.strainData.selectedStrain) {

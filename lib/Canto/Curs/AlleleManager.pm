@@ -88,6 +88,26 @@ sub _create_allele_uniquename
    return "$gene_primary_identifier:$curs_key-$new_index";
 }
 
+sub set_allele_synonyms
+{
+  my $schema = shift;
+  my $allele = shift;
+  my $allele_synonyms = shift;
+
+  $allele->allelesynonyms()->search({ edit_status => 'new' })->delete();
+
+  map {
+    my $syn = $_;
+    if ($syn->{edit_status} && $syn->{edit_status} eq 'new') {
+      $schema->create_with_type('Allelesynonym', {
+        allele => $allele->allele_id(),
+        synonym => $syn->{synonym},
+        edit_status => $syn->{edit_status},
+      });
+    }
+  } @$allele_synonyms;
+}
+
 # create a new Allele from the data or return an existing matching allele
 sub allele_from_json
 {
@@ -170,6 +190,8 @@ sub allele_from_json
     }
   }
 
+  my @allele_synonyms = @{$json_allele->{synonyms} // []};
+
   # find existing or make a new allele in the CursDB
 
   my %search_args = (
@@ -187,6 +209,8 @@ sub allele_from_json
     if (($allele->name() // '') eq ($name // '') &&
         ($allele->description() // '') eq ($description // '') &&
         ($allele->expression() // '') eq ($expression // '')) {
+      set_allele_synonyms($schema, $allele, \@allele_synonyms);
+
       return $allele;
     }
   }
@@ -220,7 +244,11 @@ sub allele_from_json
     die "internal error, underscore in allele type in Canto - probably an problem";
   }
 
-  return $schema->create_with_type('Allele', \%create_args);
+  my $allele = $schema->create_with_type('Allele', \%create_args);
+
+  set_allele_synonyms($schema, $allele, \@allele_synonyms);
+
+  return $allele;
 }
 
 =head2 create_simple_allele

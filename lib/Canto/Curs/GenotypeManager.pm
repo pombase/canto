@@ -193,6 +193,8 @@ sub _remove_unused_alleles
                                            where => \"allele_id NOT IN (SELECT allele FROM allele_genotype)",
                                          });
 
+  $alleles_with_no_genotype_rs->search_related('allelesynonyms')->delete();
+
   $alleles_with_no_genotype_rs->delete();
 }
 
