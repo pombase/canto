@@ -5188,6 +5188,8 @@ var genotypeListViewCtrl =
           var startAllele = {};
           copyObject(selectedGenotypes[0].alleles[0], startAllele);
 
+          var aberrations = [];
+
           var sameGeneGenotypes =
               $.grep($scope.genotypeList,
                      function(genotype) {
@@ -5195,20 +5197,28 @@ var genotypeListViewCtrl =
                          return false;
                        }
 
-                       var allele = {};
-                       copyObject(genotype.alleles[0], allele);
+                       var allele = genotype.alleles[0];
+
+                       if (allele.type === 'aberration') {
+                         aberrations.push(allele);
+                       }
 
                        return allele.gene_id === startAllele.gene_id;
                      });
 
-          var sameGeneAlleles =
+          var allelesForDiploid =
               $.map(sameGeneGenotypes,
                     function(genotype) {
                       return genotype.alleles[0];
                     });
 
+          $.map(aberrations,
+                function(aberration) {
+                  allelesForDiploid.push(aberration);
+                });
+
           var diploidPromise =
-              makeDiploidConstructorInstance($uibModal, selectedAlleles[0], sameGeneAlleles);
+              makeDiploidConstructorInstance($uibModal, selectedAlleles[0], allelesForDiploid);
 
           diploidPromise.result.then(function (result) {
             var diploidAlleles = result.diploidAlleles;
