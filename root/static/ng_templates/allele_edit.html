@@ -33,13 +33,13 @@
             </allele-name-complete>
             <input ng-if="alleleData.type == 'aberration'" ng-model="alleleData.name"/>
             <span ng-show="!isValidName()"
-                  class="help-block">required for this allele type</span>
+                  class="help-block">Required for this allele type</span>
           </td>
         </tr>
 
         <tr ng-if="alleleData.existingSynonyms.length != 0">
           <td>
-            Synonyms:
+            Existing synonyms:
           </td>
           <td>
             <span ng-repeat="synonym in alleleData.existingSynonyms">
@@ -59,15 +59,18 @@
           </td>
         </tr>
 
-        <tr ng-if="strainData.showStrainPicker" class="curs-allele-type-select">
+        <tr ng-if="strainData.showStrainPicker"
+            ng-class="{ 'has-error': !isValidStrain() }">
           <td>Strain used</td>
           <td>
               <strain-selector
                 strains="strainData.strains"
                 strain-selected="strainSelected(strain)">
               </strain-selector>
+              <span ng-show="!isValidStrain()"
+                    class="help-block">Required for this allele type</span>
           </td>
-      </tr>
+        </tr>
 
         <tr class="curs-allele-type-select">
           <td>
@@ -98,7 +101,7 @@
                    name="curs-allele-description-input" type="text" value=""
                    class="form-control" />
             <span ng-show="!isValidDescription()"
-                  class="help-block">required for this allele type</span>
+                  class="help-block">Required for this allele type</span>
           </td>
         </tr>
 
@@ -155,7 +158,7 @@
           </td>
           <td ng-class="{ 'has-error': !isValidExpression() }">
             <div ng-show="!isValidExpression()"
-                 class="help-block">required for this allele type</div>
+                 class="help-block">Required for this allele type</div>
             <div>
               <label>Overexpression</label>
               <input ng-model="alleleData.expression" name="curs-allele-expression"
