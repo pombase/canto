@@ -1586,3 +1586,10 @@ a:not([href]) {
 .curs-gm-genotype-col {
   flex-grow: 3;
 }
+
+.curs-genotype-comment-indicator {
+  color: #99f;
+  background: #eee;
+  border: 1px solid #ddd;
+  margin: 0 0.2em 0 1em;
+}

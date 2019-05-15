@@ -1144,8 +1144,29 @@ canto.controller('CursFrontPageCtrl',
   ['$scope', 'CursSettings', 'CursAnnotationDataService', cursFrontPageCtrl]);
 
 
+function openSimpleDialog($uibModal, title, heading, message) {
+  return $uibModal.open({
+    templateUrl: app_static_path + 'ng_templates/simple_dialog.html',
+    controller: 'SimpleDialogCtrl',
+    title: title,
+    resolve: {
+      args: function() {
+        return {
+          heading: heading,
+          message: message,
+        };
+      },
+    },
+    animate: false,
+    windowClass: "modal",
+    backdrop: 'static',
+  });
+}
+
+
 var simpleDialogCtrl =
   function ($scope, $uibModalInstance, args) {
+    $scope.heading = args.heading;
     $scope.message = args.message;
 
     $scope.close = function () {
@@ -4732,7 +4753,7 @@ canto.directive('genotypeListRowLinks',
   ]);
 
 var genotypeListRowCtrl =
-  function ($compile, $timeout, CantoGlobals) {
+  function ($uibModal, CantoGlobals) {
     return {
       restrict: 'A',
       scope: {
@@ -4755,6 +4776,7 @@ var genotypeListRowCtrl =
         $scope.alleles_have_expression = CantoGlobals.alleles_have_expression;
         $scope.closeIconPath = CantoGlobals.app_static_path + '/images/close_icon.png';
         $scope.multi_organism_mode = CantoGlobals.multi_organism_mode;
+        $scope.userIsAdmin = CantoGlobals.current_user_is_admin;
 
         $scope.firstAllele = $scope.genotype.alleles[0];
         $scope.otherAlleles = $scope.genotype.alleles.slice(1);
@@ -4770,6 +4792,12 @@ var genotypeListRowCtrl =
           });
           var links = $('#curs-genotype-list-row-actions');
           links.remove();
+        };
+
+        $scope.showComment = function() {
+          openSimpleDialog($uibModal, 'Genotype comment',
+                           'Genotype comment for ' + $scope.genotype.display_name,
+                           $scope.genotype.comment);
         };
 
         $scope.strain = $scope.genotype.strain_name;
@@ -4796,7 +4824,7 @@ var genotypeListRowCtrl =
   };
 
 canto.directive('genotypeListRow',
-  ['$compile', '$timeout', 'CantoGlobals', 'CursGenotypeList',
+  ['$uibModal', 'CantoGlobals',
     genotypeListRowCtrl
   ]);
 

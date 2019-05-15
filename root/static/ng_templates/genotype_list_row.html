@@ -22,6 +22,9 @@
       </span>
     </span>
 
+    <span class="curs-genotype-comment-indicator" ng-if="genotype.comment">
+      <a ng-click="showComment()">C*</a>
+    </span>
   </td>
   <td ng-if="alleles_have_expression">
     <span ng-bind-html="firstAllele.expression | formatExpression | toTrusted"></span>
