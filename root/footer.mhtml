@@ -8,7 +8,7 @@
 <script src="<% $c->uri_for('/static/js/jquery-v1.9.1.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/jquery-ui-v1.9.2.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/jquery.validate-v1.17.0.js') %>"></script>
-<script src="<% $c->uri_for('/static/js/angular-v1.5.11.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/angular-v1.7.8.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/bootstrap-3.3.7.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/angular-animate-v1.5.11.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/toaster-2.2.0.js') %>"></script>
@@ -19,7 +19,7 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
 <script src="//ajax.microsoft.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.11/angular.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.11/angular-animate.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/2.2.0/toaster.min.js"></script>
