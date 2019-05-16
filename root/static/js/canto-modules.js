@@ -4188,6 +4188,7 @@ var genotypeManageCtrl =
         $scope.data = {
           organisms: [],
           singleAlleleGenotypes: [],
+          singleLocusDiploids: [],
           multiAlleleGenotypes: [],
           allGenes: [],
           visibleGenes: [],
@@ -4323,6 +4324,7 @@ var genotypeManageCtrl =
           var allGenotypes = $scope.data.allGenotypes;
 
           $scope.data.singleAlleleGenotypes = [];
+          $scope.data.singleLocusDiploids = [];
           $scope.data.multiAlleleGenotypes = [];
 
           if (allGenotypes) {
@@ -4337,10 +4339,14 @@ var genotypeManageCtrl =
                       }
                     }
 
-                    if (isSingleAlleleGenotype(genotype) || isSingleLocusDiploid(genotype)) {
-                      $scope.data.singleAlleleGenotypes.push(genotype);
+                    if (isSingleLocusDiploid(genotype)) {
+                      $scope.data.singleLocusDiploids.push(genotype);
                     } else {
-                      $scope.data.multiAlleleGenotypes.push(genotype);
+                      if (isSingleAlleleGenotype(genotype)) {
+                        $scope.data.singleAlleleGenotypes.push(genotype);
+                      } else {
+                        $scope.data.multiAlleleGenotypes.push(genotype);
+                      }
                     }
                   });
           }
@@ -5008,6 +5014,7 @@ var genotypeListViewCtrl =
     return {
       scope: {
         genotypeList: '=',
+        diploidList: '=',
         selectedGenotypeId: '=',
         showCheckBoxActions: '=',
         navigateOnClick: '@'
