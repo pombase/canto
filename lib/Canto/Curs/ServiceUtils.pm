@@ -697,6 +697,7 @@ sub _allele_details_hash
                                   cursdb_gene => $allele->gene());
 
     $result{gene_display_name} = $gene_proxy->display_name();
+    $result{gene_systematic_id} = $gene_proxy->primary_identifier();
   }
 
   return \%result;
