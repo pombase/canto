@@ -88,6 +88,7 @@ test_psgi $app, sub {
                    'expression' => undef,
                    'uniquename' => 'SPAC27D7.13c:aaaa0007-1',
                    'gene_display_name' => 'ssm4',
+                   'gene_systematic_id' => 'SPAC27D7.13c',
                    'synonyms' => [],
                  },
                  {
@@ -100,6 +101,7 @@ test_psgi $app, sub {
                    'allele_id' => 5,
                    'type' => 'deletion',
                    'gene_display_name' => 'SPCC63.05',
+                   'gene_systematic_id' => 'SPCC63.05',
                    'synonyms' => [],
                  }
                ],
