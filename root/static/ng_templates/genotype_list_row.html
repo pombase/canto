@@ -22,7 +22,7 @@
       </span>
     </span>
 
-    <span class="curs-genotype-comment-indicator" ng-if="genotype.comment">
+    <span class="curs-genotype-comment-indicator" ng-if="userIsAdmin && genotype.comment">
       <a title="This genotype has a comment. Click to view." ng-click="showComment()">C*</a>
     </span>
   </td>

@@ -4609,6 +4609,8 @@ var genotypeListRowLinksCtrl =
       replace: true,
       templateUrl: CantoGlobals.app_static_path + 'ng_templates/genotype_list_row_links.html',
       controller: function ($scope) {
+        $scope.userIsAdmin = CantoGlobals.current_user_is_admin;
+
         var genotype =
           $.grep($scope.genotypes, function (genotype) {
             return genotype.genotype_id === $scope.genotypeId;
