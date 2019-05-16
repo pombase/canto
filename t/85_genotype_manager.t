@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 22;
+use Test::More tests => 23;
 
 use Try::Tiny;
 
@@ -117,12 +117,15 @@ my $diploid_genotype =
                                    [$cdc11_delta, $cdc11_wt_allele], $pombe_taxonid,
                                    undef, undef, undef, [[$cdc11_wt_allele, $cdc11_delta]]);
 
+my $diploid_genotype_identifier = $diploid_genotype->identifier();
+
 is($curs_schema->resultset('Diploid')->count(), 1);
 
 ok(defined $diploid_genotype);
 
-my $cdc11_diploid = $curs_schema->resultset('Diploid')
-  ->find({ name => 'SPCC1739.11c:aaaa0007-1--SPCC1739.11c:aaaa0007-2' });
+my $cdc11_diploid = $curs_schema->resultset('Diploid')->next();
+
+ok($cdc11_diploid->name() =~ /canto-genotype-temp-\d+-SPCC1739.11c:aaaa0007-1--SPCC1739.11c:aaaa0007-2/);
 
 ok(defined $cdc11_diploid);
 
