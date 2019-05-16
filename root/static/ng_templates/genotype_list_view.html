@@ -8,7 +8,7 @@
         </th>
         <th style="border-bottom: 1px solid grey"
             colspan="{{6 - hiddenColumnsCount}}">
-Genotype
+Single allele genotype
         </th>
         <th rowspan="2">
 Annotations
@@ -45,16 +45,37 @@ Annotations
           genotypes="genotypeList"
           genotype="currentGenotype">
     </tbody>
-    <thead ng-if="diploidList.length != 0">
+    <thead>
       <tr>
-        <th ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column">
+        <th ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column" rowspan="2">
           &nbsp;
         </th>
-        <th colspan="{{6 - hiddenColumnsCount}}">
-          Diploids
+        <th style="border-bottom: 1px solid grey"
+            colspan="{{6 - hiddenColumnsCount}}">
+Diploid/multiploid genotype
+        </th>
+        <th rowspan="2">
+Annotations
+        </th>
+      </tr>
+      <tr>
+        <th ng-hide="columnsToHide.name">
+          Name
         </th>
         <th>
-          &nbsp;
+          Genes
+        </th>
+        <th>
+          Alleles
+        </th>
+        <th ng-if="alleles_have_expression">
+          Expression
+        </th>
+        <th ng-hide="columnsToHide.strain">
+          Strain
+        </th>
+        <th rowspan="2" ng-hide="columnsToHide.background">
+          Background
         </th>
       </tr>
     </thead>
