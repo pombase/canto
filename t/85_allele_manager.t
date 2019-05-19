@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 16;
+use Test::More tests => 17;
 
 use Canto::TestUtil;
 use Canto::Curs::AlleleManager;
@@ -102,3 +102,14 @@ ok (defined $new_aberration);
 is ($new_aberration->type(), 'aberration');
 is ($new_aberration->description(), 'some_aberration_description');
 ok (!defined($new_aberration->gene()));
+
+
+# check that wildtype alleles are named automatically
+my $no_name_wildtype_check = $allele_manager->allele_from_json(
+  {
+    type => 'wild type',
+    gene_id => $SPBC1826_01c->gene_id()
+  },
+  'aaaa0007');
+
+is ($no_name_wildtype_check->name(), 'mot1+');

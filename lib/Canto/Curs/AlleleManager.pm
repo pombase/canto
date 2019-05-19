@@ -47,6 +47,8 @@ has gene_manager => (is => 'rw', isa => 'Canto::Curs::GeneManager',
 with 'Canto::Role::Configurable';
 with 'Canto::Curs::Role::GeneResultSet';
 
+use Canto::Curs::GeneProxy;
+
 sub _build_gene_manager
 {
   my $self = shift;
@@ -106,6 +108,32 @@ sub set_allele_synonyms
       });
     }
   } @$allele_synonyms;
+}
+
+sub autopopulate_name
+{
+  my $allele_type = shift;
+  my $config = shift;
+  my $gene = shift;
+
+  my $allele_config = $config->{allele_types}->{$allele_type};
+
+  if (!defined $allele_config) {
+    return undef;
+  }
+
+  my $name_template = $allele_config->{autopopulate_name};
+
+  if (!$name_template) {
+    return undef;
+  }
+
+  my $gene_proxy =
+    Canto::Curs::GeneProxy->new(config => $config, cursdb_gene => $gene);
+
+  my $gene_display_name = $gene_proxy->display_name();
+
+  return $name_template =~ s/\@\@gene_display_name\@\@/$gene_display_name/r;
 }
 
 # create a new Allele from the data or return an existing matching allele
@@ -230,6 +258,10 @@ sub allele_from_json
 
     $new_primary_identifier =
       _create_allele_uniquename($gene->primary_identifier(), $schema, $curs_key);
+
+    if (!$name) {
+      $name = autopopulate_name($allele_type, $config, $gene);
+    }
   }
 
   my %create_args = (
