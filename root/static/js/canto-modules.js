@@ -4282,7 +4282,7 @@ var genotypeManageCtrl =
         };
 
         function hashChangedHandler() {
-          var hash = $location.hash();
+          var hash = $location.path();
 
           if (hash) {
             var res = /^\/(select|edit|duplicate)\/(\d+)$/.exec(hash);
@@ -4305,13 +4305,13 @@ var genotypeManageCtrl =
 
         $scope.cancelEdit = function () {
           $scope.data.editingGenotype = false;
-          $location.hash('/select/' + $scope.data.editGenotypeId);
+          $location.path('/select/' + $scope.data.editGenotypeId);
           $scope.data.editGenotypeId = null;
         };
 
         $scope.storedCallback = function () {
           if ($scope.data.editGenotypeId) {
-            $location.hash('/select/' + $scope.data.editGenotypeId);
+            $location.path('/select/' + $scope.data.editGenotypeId);
           }
           $scope.data.editingGenotype = false;
           $scope.data.editGenotypeId = null;
