@@ -28,6 +28,10 @@ canto.config(['ChartJsProvider', function (ChartJsProvider) {
   });
 }]);
 
+canto.config(['$locationProvider', function($locationProvider) {
+  $locationProvider.hashPrefix('');
+}]);
+
 var activeSessionStatuses = ['SESSION_CREATED', 'SESSION_ACCEPTED', 'CURATION_IN_PROGRESS', 'CURATION_PAUSED'];
 
 function isActiveSession(state) {
