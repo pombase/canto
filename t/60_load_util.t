@@ -33,7 +33,7 @@ $gene_load->create_gene('FBgn0016131', 'Dmel\Cdk4', [], 'Cyclin-dependent kinase
 my $test_json_file = $test_util->root_dir() . '/t/data/sessions_from_json_test.json';
 my @created_sessions =
   $load_util->create_sessions_from_json($config, $test_json_file,
-                                        'test.user@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org');
+                                        'test.user@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org', 7227);
 
 is (@created_sessions, 1);
 

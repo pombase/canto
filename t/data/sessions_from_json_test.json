@@ -6,22 +6,22 @@
     "alleles": {
       "FBal0119310": {
         "gene": "FBgn0004107",
-        "allele_type": "other",
-        "allele_name": "Dmel\\Cdk2_UAS.Tag:MYC",
-        "allele_description": "description of FBal0119310",
+        "type": "other",
+        "name": "Dmel\\Cdk2_UAS.Tag:MYC",
+        "description": "description of FBal0119310",
         "synonyms": ["UAS-Cdk2-myc", "UAS-Cdk2"]
       },
       "FBal0064432": {
         "gene": "FBgn0016131",
-        "allele_type": "other",
-        "allele_name": "Dmel\\Cdk4_k06503",
-        "allele_description": null,
+        "type": "other",
+        "name": "Dmel\\Cdk4_k06503",
+        "description": null,
         "synonyms": ["l(2)k06503"]
       },
       "FBab0037918" : {
-        "allele_description" : "Df(2L)Exel7046",
-        "allele_name" : "Df(2L)Exel7046",
-        "allele_type" : "aberration",
+        "description" : "Df(2L)Exel7046",
+        "name" : "Df(2L)Exel7046",
+        "type" : "aberration",
         "taxon_id": 7227
       }
     },

@@ -804,13 +804,16 @@ sub load_pub_from_pubmed
 =head2 create_sessions_from_json
 
  Usage   : my ($curs, $cursdb, $curator) =
-             $load_util->create_sessions_from_json($config, $file_name, $curator_email_address);
+             $load_util->create_sessions_from_json($config, $file_name, $curator_email_address,
+                                                   $default_organism_taxonid);
  Function: Create sessions for the JSON data in the given file and set the curator.
  Args    : $config - the Config object
            $file_name - the JSON file,
                         see: https://github.com/pombase/canto/wiki/JSON-Import-Format
            $curator_email_address - the email address of the user to curate the session,
                                     the user must exist in the database
+           $default_organism_taxonid - the taxon ID of the organism to attach to any
+                                       single allele genotypes that we create
  Return  : The Curs object from the Track database, the CursDB object and the
            Person object for the curator_email_address.
 
@@ -821,6 +824,7 @@ sub create_sessions_from_json
   my $config = shift;
   my $file_name = shift;
   my $curator_email_address = shift;
+  my $default_organism_taxonid = shift;
 
   my $json_text = do {
    open(my $json_fh, "<:encoding(UTF-8)", $file_name)
@@ -916,15 +920,8 @@ sub create_sessions_from_json
         my $allele_gene_uniquename = $allele_details->{gene};
 
         my $gene = undef;
-        my $taxonid = undef;
 
-        if ($allele_details->{allele_type} eq 'aberration') {
-          $taxonid = $allele_details->{taxon_id};
-          if (!defined $taxonid) {
-            print qq|no "taxon_id" field in details for $allele_uniquename in $pub_uniquename\n|;
-            next PUB;
-          }
-        } else {
+        if ($allele_details->{type} ne 'aberration') {
           if (!defined $allele_gene_uniquename) {
             print qq|no "gene" field in details for $allele_uniquename in $pub_uniquename\n|;
             next PUB;
@@ -935,13 +932,11 @@ sub create_sessions_from_json
             print qq|gene $allele_gene_uniquename (from allele $allele_uniquename) missing from data for $pub_uniquename\n|;
             next PUB;
           }
-
-          $taxonid = $gene->organism()->taxonid();
         }
 
-        my $type = $allele_details->{allele_type} || 'other';
-        my $name = $allele_details->{allele_name} || undef;
-        my $description = $allele_details->{allele_description} || undef;
+        my $type = $allele_details->{type} || 'other';
+        my $name = $allele_details->{name} || undef;
+        my $description = $allele_details->{description} || undef;
         my $synonyms = $allele_details->{synonyms};
         my @args = ($allele_uniquename, $type, $name, $description, $gene, $synonyms);
 
@@ -963,7 +958,7 @@ sub create_sessions_from_json
           allele_display_name => lc $allele_object->display_name(),
           gene_display_name => lc $gene_display_name,
           identifier => "genotype-$allele_uniquename",
-          taxonid => $taxonid,
+          taxonid => $default_organism_taxonid,
         };
       }
 

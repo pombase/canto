@@ -154,7 +154,7 @@ if ($add_session && @ARGV != 2) {
   usage("--session needs 2 or 3 arguments");
 }
 
-if ($add_sessions_from_json && @ARGV != 2) {
+if ($add_sessions_from_json && @ARGV != 3) {
   usage("--sessions-from-json needs 2 arguments");
 }
 
@@ -247,9 +247,10 @@ my $proc = sub {
     my $file_name = shift @ARGV;
     # use the Person added by the add_person code
     my $email_address = shift @ARGV;
+    my $taxonid = shift @ARGV;
 
     my @new_sessions =
-      $load_util->create_sessions_from_json($config, $file_name, $email_address);
+      $load_util->create_sessions_from_json($config, $file_name, $email_address, $taxonid);
 
     print "created ", scalar(@new_sessions), " sessions\n";
   }
