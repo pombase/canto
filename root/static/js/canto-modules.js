@@ -7675,7 +7675,6 @@ var strainPicker = function () {
         $scope.data.strains = data;
       });
 
-
       $scope.getSessionStrains = function () {
         StrainsService.getSessionStrains($scope.taxonId)
           .then(function (sessionStrains) {
@@ -7686,7 +7685,7 @@ var strainPicker = function () {
       $scope.getSessionStrains();
 
       $scope.changed = function () {
-        if ($scope.data.strainSelector !== 'Type a new strain') {
+        if ($scope.data.strainSelector && notActionOption()) {
           StrainsService.addSessionStrain($scope.taxonId, $scope.data.strainSelector)
             .then($scope.getSessionStrains);
         }
@@ -7705,6 +7704,13 @@ var strainPicker = function () {
         StrainsService.addSessionStrain($scope.taxonId, $scope.data.newStrain)
           .then($scope.getSessionStrains);
       };
+
+      function notActionOption() {
+        return (
+          $scope.data.strainSelector !== 'Type a new strain' &&
+          $scope.data.strainSelector !== 'Add experimental strains for this organism'
+        );
+      }
     },
   };
 };
