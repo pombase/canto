@@ -103,7 +103,7 @@ or:
 or:
   $0 --session <pubmed_id> <curator_email_address>
 or:
-  $0 --sessions-from-json <json_file_name> <curator_email_address>
+  $0 --sessions-from-json <json_file_name> <curator_email_address> <default_organism_taxonid
 or:
   $0 --organism "<genus> <species>" <taxon_id> [<common_name>]
 
@@ -133,7 +133,13 @@ File formats
 
 --sessions-from-json:
 
-See: https://github.com/pombase/canto/wiki/JSONImportFormat
+For a description of the <json_file_name> argument, see:
+https://github.com/pombase/canto/wiki/JSONImportFormat
+
+<curator_email_address> - each new session will have this user as its curator
+
+<default_organism_taxonid> - this is the organism to use for each genotype will
+                             created for alleles in the JSON file
 |;
 
 }
