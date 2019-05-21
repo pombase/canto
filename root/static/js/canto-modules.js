@@ -7264,8 +7264,8 @@ var metagenotypeGenotypePicker =
         };
 
         if ($scope.isHost) {
-          $scope.$watch('selectedOrganism', function (newVal, oldVal) {
-            if (newVal !== oldVal) {
+          $scope.$watch('selectedOrganism', function () {
+            if ($scope.selectedOrganism) {
               $scope.loadWildTypeStrains();
             }
           });
