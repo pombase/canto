@@ -4895,10 +4895,8 @@ var genotypeListRowCtrl =
           links.remove();
         };
 
-        $scope.showComment = function() {
-          openSimpleDialog($uibModal, 'Genotype comment',
-                           'Genotype comment for ' + $scope.genotype.display_name,
-                           $scope.genotype.comment);
+        $scope.editComment = function() {
+          editCommentDialog($uibModal, $scope.genotype);
         };
 
         $scope.strain = $scope.genotype.strain_name;

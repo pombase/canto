@@ -1595,8 +1595,10 @@ a:not([href]) {
 .curs-genotype-comment-indicator {
   color: #99f;
   background: #eee;
-  border: 1px solid #ddd;
+  border: 1px solid #e0e0e5;
   margin: 0 0.2em 0 1em;
+  padding: 0 0.2em;
+  border-radius: 3px;
 }
 
 .curs-diploid-constructor-choices {
