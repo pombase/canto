@@ -63,8 +63,7 @@ sub _get_data
 
   my $ref_alleles = $ref->{curation_sessions}->{aaaa0007}->{alleles};
 
-  is ($ref_alleles->{"Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-3"}->{synonyms}[0],
-      'ssm4-c1');
+  is ($ref_alleles->{"SPAC27D7.13c:aaaa0007-3"}->{synonyms}[0], 'ssm4-c1');
 
   my $ref_genes = $ref->{curation_sessions}->{aaaa0007}->{genes};
 
