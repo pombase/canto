@@ -76,23 +76,41 @@ sub _make_genotype_details
   }
 
   my @alleles = map {
-    my $gene_proxy = Canto::Curs::GeneProxy->new(config => $config,
-                                                 cursdb_gene => $_->gene());
-    my @synonyms_list = _make_allelesynonym_hashes($_);
+    my $allele = $_;
 
-    {
-      allele_id => $_->allele_id(),
-        primary_identifier => $_->primary_identifier(),
-        type => $_->type(),
-        description => $_->description(),
-        expression => $_->expression(),
-        name => $_->name(),
-        gene_id => $_->gene()->gene_id(),
-        gene_display_name => $gene_proxy->display_name(),
-        long_display_name => $_->long_identifier(),
-        synonyms => \@synonyms_list,
+    my $gene_display_name;
+    my $gene_id;
+
+    if ($allele->gene()) {
+      my $gene_proxy = Canto::Curs::GeneProxy->new(config => $config,
+                                                   cursdb_gene => $allele->gene());
+      $gene_display_name = $gene_proxy->display_name();
+      $gene_id = $allele->gene()->gene_id();
+    } else {
+      if ($allele->type() eq 'aberration') {
+        $gene_display_name = '(aberration)';
+      } else {
+        die 'internal error: no gene for allele: ', $allele->allele_id(), ' ',
+          $allele>primary_identifier(), '\n';
       }
-    ;
+    }
+
+    my @synonyms_list = _make_allelesynonym_hashes($allele);
+
+    my $allele_obj = {
+      allele_id => $allele->allele_id(),
+        primary_identifier => $allele->primary_identifier(),
+        type => $allele->type(),
+        description => $allele->description(),
+        expression => $allele->expression(),
+        name => $allele->name(),
+        gene_id => $gene_id,
+        gene_display_name => $gene_display_name,
+        long_display_name => $allele->long_identifier(),
+        synonyms => \@synonyms_list,
+    };
+
+    $allele_obj;
   } $genotype->alleles()->search({}, { prefetch => ['gene', 'allelesynonyms'] });
 
   @alleles = sort {
