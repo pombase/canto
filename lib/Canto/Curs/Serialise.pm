@@ -272,11 +272,18 @@ sub _get_genes
     my $organism_full_name = $organism_details->{full_name};
 
     my %gene_data = (
-      organism => $organism_full_name,
       uniquename => $gene->primary_identifier(),
     );
-    my $gene_key =
-      $organism_full_name . ' ' . $gene->primary_identifier();
+
+    my $gene_key;
+
+    if ($organism_full_name) {
+      $gene_key = $organism_full_name . ' ' . $gene->primary_identifier();
+      $gene_data{organism} = $organism_full_name;
+    } else {
+      $gene_key = $gene->primary_identifier();
+    }
+
     $ret{$gene_key} = { %gene_data };
   }
 
@@ -358,6 +365,24 @@ sub _get_alleles
       allele_type => $export_type,
       gene => $gene_key,
     );
+
+    if ($gene) {
+      my $taxonid = $gene->organism()->taxonid();
+
+      my $organism_details = $organism_lookup->lookup_by_taxonid($taxonid);
+      my $organism_full_name = $organism_details->{full_name};
+
+      my $gene_key;
+
+      if ($organism_full_name) {
+        $gene_key = "$organism_full_name " . $gene->primary_identifier();
+      } else {
+        $gene_key = $gene->primary_identifier();
+      }
+
+      $allele_data{gene} = $gene_key;
+    }
+
     if (defined $allele->primary_identifier()) {
       $allele_data{primary_identifier} = $allele->primary_identifier();
     }
