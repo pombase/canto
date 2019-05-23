@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 15;
+use Test::More tests => 16;
 use Test::Exception;
 
 use Canto::TestUtil;
@@ -51,6 +51,8 @@ is($FBal0119310_allele->description(), 'description of FBal0119310');
 
 my $genotype_FBal0119310 =
   $created_cursdb->resultset('Genotype')->find({ identifier => "genotype-FBal0119310" });
+
+is($genotype_FBal0119310->comment(), 'comment on FBal0119310');
 
 my $FBal0119310_genotype_allele = ($genotype_FBal0119310->alleles()->all())[0];
 is ($FBal0119310_genotype_allele->allele_id(), $FBal0119310_allele->allele_id());

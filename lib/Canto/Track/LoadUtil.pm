@@ -936,6 +936,7 @@ sub create_sessions_from_json
 
         my $type = $allele_details->{type} || 'other';
         my $name = $allele_details->{name} || undef;
+        my $comment = $allele_details->{comment} || undef;
         my $description = $allele_details->{description} || undef;
         my $synonyms = $allele_details->{synonyms};
         my @args = ($allele_uniquename, $type, $name, $description, $gene, $synonyms);
@@ -958,6 +959,7 @@ sub create_sessions_from_json
           allele_display_name => lc $allele_object->display_name(),
           gene_display_name => lc $gene_display_name,
           identifier => "genotype-$allele_uniquename",
+          comment => $comment,
           taxonid => $default_organism_taxonid,
         };
       }
@@ -971,7 +973,8 @@ sub create_sessions_from_json
       for my $genotype_details (@genotype_details) {
         $genotype_manager->make_genotype(undef, undef, [$genotype_details->{allele}],
                                          $genotype_details->{taxonid},
-                                         $genotype_details->{identifier});
+                                         $genotype_details->{identifier}, undef,
+                                         $genotype_details->{comment});
       }
     }
 

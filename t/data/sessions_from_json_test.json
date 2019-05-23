@@ -9,6 +9,7 @@
         "type": "other",
         "name": "Dmel\\Cdk2_UAS.Tag:MYC",
         "description": "description of FBal0119310",
+        "comment": "comment on FBal0119310",
         "synonyms": ["UAS-Cdk2-myc", "UAS-Cdk2"]
       },
       "FBal0064432": {
