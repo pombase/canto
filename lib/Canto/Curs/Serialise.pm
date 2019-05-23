@@ -393,6 +393,18 @@ sub _get_alleles
       $allele_data{name} = $allele->name();
     }
 
+    my @allelesynonyms = $allele->allelesynonyms();
+
+    my @export_synonyms = ();
+
+    for my $synonym (@allelesynonyms) {
+      if ($synonym->edit_status() eq 'new') {
+        push @export_synonyms, $synonym->synonym();
+      }
+    }
+
+    $allele_data{synonyms} = \@export_synonyms;
+
     $ret{$key} = \%allele_data;
   }
 
