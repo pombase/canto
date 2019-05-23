@@ -12,6 +12,14 @@
     <div class="curs-dialog-body-contents" ng-switch="annotationType.category">
     <table ng-switch-when="ontology" class="curs-definition-table">
 
+      <tr ng-if="showOrganismName">
+        <td class="title">Organism</td>
+        <td>
+          <b>{{annotation.organism.scientific_name}}</b>
+          <span ng-if="showStrainName">({{annotation.strain_name}})</span>
+        </td>
+      </tr>
+
       <tr ng-if="annotationType.feature_type === 'gene'"
           ng-class="{ 'has-error': !isValidFeature() }">
         <td class="title">

@@ -5666,6 +5666,9 @@ var annotationEditDialogCtrl =
       showEvidence: true,
     };
 
+    $scope.showOrganismName = !! CantoGlobals.pathogen_host_mode;
+    $scope.showStrainName = !! CantoGlobals.strains_mode;
+
     copyObject(args.annotation, $scope.annotation);
 
     $scope.isValidFeature = function () {
