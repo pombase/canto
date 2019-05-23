@@ -7127,6 +7127,7 @@ var genotypeSimpleListRowCtrl =
         genotype: '<',
         isHost: '<',
         showCheckBoxActions: '<',
+        showBackground: '<',
         onGenotypeSelect: '&'
       },
       replace: true,
@@ -7171,6 +7172,9 @@ var genotypeSimpleListViewCtrl =
       replace: true,
       templateUrl: app_static_path + 'ng_templates/genotype_simple_list_view.html',
       controller: function ($scope) {
+        $scope.showBackground = false;
+
+        $scope.$watch('genotypeList', updateShowBackground);
 
         $scope.onGenotypeChange = function (genotype) {
           $scope.onGenotypeSelect({
@@ -7178,6 +7182,12 @@ var genotypeSimpleListViewCtrl =
           });
         };
 
+        function updateShowBackground() {
+          function hasBackground(genotype) {
+            return genotype.background !== null;
+          }
+          $scope.showBackground = arrayContains($scope.genotypeList, hasBackground);
+        }
       }
     };
   };

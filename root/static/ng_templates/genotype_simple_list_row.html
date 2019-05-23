@@ -20,6 +20,9 @@
         <td rowspan="{{genotype.alleles.length}}">
             <span ng-bind-html="genotype.strain_name | formatExpression | toTrusted"></span>
         </td>
+        <td rowspan="{{genotype.alleles.length}}" ng-show="showBackground">
+          <span ng-bind-html="genotype.background | wrapAtSpaces | encodeAlleleSymbols | toTrusted"></span>
+        </td>
     </tr>
     <tr ng-repeat="currentAllele in otherAlleles track by $index">
         <td>
