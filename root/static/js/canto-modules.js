@@ -756,7 +756,7 @@ canto.service('CantoGlobals', function ($window) {
   this.split_genotypes_by_organism = $window.split_genotypes_by_organism == 1;
   this.show_genotype_management_genes_list = $window.show_genotype_management_genes_list;
   this.strains_mode = $window.strains_mode == 1;
-  this.pathogen_host_mode = $window.pathogen_host_mode;
+  this.pathogen_host_mode = $window.pathogen_host_mode == 1;
   this.alleles_have_expression = $window.alleles_have_expression;
   this.allow_single_wildtype_allele = $window.allow_single_wildtype_allele;
   this.diploid_mode = $window.diploid_mode;
