@@ -7332,6 +7332,7 @@ var metagenotypeListRow = function (CantoGlobals, Metagenotype, AnnotationTypeCo
   return {
     scope: {
       metagenotype: '=',
+      showBackground: '<'
     },
     restrict: 'A',
     replace: true,
@@ -7392,8 +7393,11 @@ var metagenotypeListView = function (Metagenotype) {
     templateUrl: app_static_path + 'ng_templates/metagenotype_list_view.html',
     controller: function ($scope) {
       $scope.metagenotypes = [];
+      $scope.showBackground = {};
+
       $scope.$on('metagenotype:updated', function (event, data) {
         $scope.metagenotypes = data;
+        $scope.showBackground = getBackgroundColumnSettings($scope.metagenotypes);
       });
 
       $scope.$on('metagenotype list changed', function () {
@@ -7401,6 +7405,23 @@ var metagenotypeListView = function (Metagenotype) {
       });
 
       Metagenotype.load();
+
+      function getBackgroundColumnSettings(metagenotypes) {
+        var backgroundFinder = function (organismType) {
+          return function (mg) {
+            var genotype = mg[organismType + '_genotype'];
+            return (
+              genotype.organism.pathogen_or_host === organismType &&
+              genotype.background !== null
+            );
+          };
+        };
+        return {
+          'pathogen': arrayContains(metagenotypes, backgroundFinder('pathogen')),
+          'host': arrayContains(metagenotypes, backgroundFinder('host')),
+        };
+      }
+
     }
   };
 };
