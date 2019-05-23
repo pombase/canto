@@ -124,6 +124,8 @@ test_config:
                  description: 'del_100-200'
                  type: 'partial deletion, nucleotide'
                  expression: 'Knockdown'
+                 synonyms:
+                   - ssm4-c1
                - primary_identifier: 'SPAC27D7.13c:aaaa0007-4'
                  description: 'del_200-300'
                  type: 'partial deletion, nucleotide'

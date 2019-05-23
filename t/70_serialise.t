@@ -123,7 +123,7 @@ my $full_expected_curation_session =
         'allele_type' => 'partial_nucleotide_deletion',
         'name' => 'ssm4-D4',
         'gene' => 'Schizosaccharomyces pombe SPAC27D7.13c',
-        'synonyms' => [],
+        'synonyms' => ['ssm4-c1'],
         'primary_identifier' => 'SPAC27D7.13c:aaaa0007-3'
       }
     },

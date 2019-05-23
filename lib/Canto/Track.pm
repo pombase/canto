@@ -508,6 +508,8 @@ sub validate_curs
                          where => \"allele_id NOT IN (SELECT allele FROM allele_genotype)",
                        });
 
+  $alleles_with_no_genotype_rs->search_related('allelesynonyms')->delete();
+
   $alleles_with_no_genotype_rs->delete();
 
   $guard->commit();

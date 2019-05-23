@@ -10,8 +10,8 @@
             <Day>01</Day>
         </DateCompleted>
         <DateRevised>
-            <Year>2008</Year>
-            <Month>09</Month>
+            <Year>2019</Year>
+            <Month>05</Month>
             <Day>16</Day>
         </DateRevised>
         <Article PubModel="Print">
@@ -230,6 +230,7 @@
         <PublicationStatus>ppublish</PublicationStatus>
         <ArticleIdList>
             <ArticleId IdType="pubmed">7958849</ArticleId>
+            <ArticleId IdType="doi">10.1101/gad.8.14.1693</ArticleId>
         </ArticleIdList>
     </PubmedData>
 </PubmedArticle>

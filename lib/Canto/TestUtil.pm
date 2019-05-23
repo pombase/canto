@@ -901,6 +901,12 @@ sub _load_curs_db_data
         my $allele_name = $allele_details->{name};
         my $allele_type = $allele_details->{type};
         my $allele_expression = $allele_details->{expression};
+        my @allelesynonyms = map {
+          {
+            edit_status => 'new',
+            synonym => $_,
+          };
+        } @{$allele_details->{synonyms} || []};
 
         my %create_args = (
           primary_identifier => $allele_primary_identifier,
@@ -909,6 +915,7 @@ sub _load_curs_db_data
           name => $allele_name,
           gene => $new_gene->gene_id(),
           expression => $allele_expression,
+          allelesynonyms => \@allelesynonyms,
         );
 
         my $allele = $cursdb_schema->create_with_type('Allele', \%create_args);

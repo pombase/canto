@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 5;
+use Test::More tests => 7;
 
 use Clone qw(clone);
 use JSON;
@@ -60,4 +60,13 @@ sub _get_data
   is ($aaaa0007->{metadata}->{curator_email}, 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org');
 
   is (keys (%{$ref->{curation_sessions}}), 2);
+
+  my $ref_alleles = $ref->{curation_sessions}->{aaaa0007}->{alleles};
+
+  is ($ref_alleles->{"Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-3"}->{synonyms}[0],
+      'ssm4-c1');
+
+  my $ref_genes = $ref->{curation_sessions}->{aaaa0007}->{genes};
+
+  is ($ref_genes->{"Schizosaccharomyces pombe SPBC1826.01c"}->{uniquename}, "SPBC1826.01c");
 }

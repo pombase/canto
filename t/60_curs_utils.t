@@ -227,7 +227,7 @@ sub check_new_annotations
                      'gene_id' => 2,
                      'long_display_name' => 'ssm4-D4(del_100-200)[Knockdown]',
                      'gene_display_name' => 'ssm4',
-                     'synonyms' => [],
+                     'synonyms' => [{ edit_status => 'new', synonym => 'ssm4-c1'}],
                    }
                  ],
                  checked => 'no',
