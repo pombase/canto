@@ -7184,7 +7184,7 @@ var genotypeSimpleListViewCtrl =
 
         function updateShowBackground() {
           function hasBackground(genotype) {
-            return genotype.background !== null;
+            return !! genotype.background;
           }
           $scope.showBackground = arrayContains($scope.genotypeList, hasBackground);
         }
@@ -7422,7 +7422,7 @@ var metagenotypeListView = function (Metagenotype) {
             var genotype = mg[organismType + '_genotype'];
             return (
               genotype.organism.pathogen_or_host === organismType &&
-              genotype.background !== null
+              !! genotype.background
             );
           };
         };
