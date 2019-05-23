@@ -107,6 +107,7 @@ my $full_expected_curation_session =
         'gene' => 'Schizosaccharomyces pombe SPCC63.05',
         'description' => 'deletion',
         'name' => 'SPCC63.05delta',
+        'synonyms' => [],
         'allele_type' => 'deletion'
       },
       'Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-1' => {
@@ -114,6 +115,7 @@ my $full_expected_curation_session =
         'gene' => 'Schizosaccharomyces pombe SPAC27D7.13c',
         'description' => 'deletion',
         'name' => 'ssm4delta',
+        'synonyms' => [],
         'allele_type' => 'deletion'
       },
       'Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-3' => {
@@ -121,6 +123,7 @@ my $full_expected_curation_session =
         'allele_type' => 'partial_nucleotide_deletion',
         'name' => 'ssm4-D4',
         'gene' => 'Schizosaccharomyces pombe SPAC27D7.13c',
+        'synonyms' => [],
         'primary_identifier' => 'SPAC27D7.13c:aaaa0007-3'
       }
     },
