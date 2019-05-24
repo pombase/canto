@@ -24,10 +24,13 @@
         <input type="radio" id="other" value="other" name="other" ng-model="diploidType"/>
         <label for="other">
           <span ng-bind-html="startAllele.display_name | encodeAlleleSymbols | toTrusted"></span>
+          /
+          <span ng-if="selectorAlleles.length == 1">{{selectorAlleles[0].displayName}}</span>
         </label>
-        /
-        <allele-selector disable-selector="diploidType != 'other'"
-                         selected-allele="selectedAlleleId" alleles="selectorAlleles">
+        <allele-selector
+          ng-if="selectorAlleles.length != 1"
+          disable-selector="diploidType != 'other'"
+          selected-allele="selectedAlleleId" alleles="selectorAlleles">
         </allele-selector>
       </div>
     </div>
