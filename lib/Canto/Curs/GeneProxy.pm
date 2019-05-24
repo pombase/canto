@@ -168,7 +168,13 @@ sub _build_organism_details
   if (defined $details) {
     return $details;
   } else {
-    die "can't find organism details for: ", $self->taxonid();
+    return {
+      common_name => undef,
+      full_name => 'Unknown unknown',
+      pathogen_or_host => 'unknown',
+      scientific_name => 'Unknown unknown',
+      taxonid => $self->taxonid(),
+    }
   }
 }
 
