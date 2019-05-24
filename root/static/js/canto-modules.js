@@ -5225,31 +5225,41 @@ var genotypeListViewCtrl =
           var startAllele = {};
           copyObject(selectedGenotypes[0].alleles[0], startAllele);
 
-          var aberrations = [];
+          var sameGeneAlleles = [];
 
-          var sameGeneGenotypes =
-              $.grep($scope.genotypeList,
-                     function(genotype) {
-                       if (genotype.alleles.length !== 1) {
-                         return false;
-                       }
-
-                       var allele = genotype.alleles[0];
-
-                       if (allele.type === 'aberration') {
-                         aberrations.push(allele);
-                       }
-
-                       return allele.gene_id === startAllele.gene_id;
-                     });
-
-          var allelesForDiploid =
-              $.map(sameGeneGenotypes,
+          if (startAllele.type !== 'aberration') {
+              $.map($scope.genotypeList,
                     function(genotype) {
-                      return genotype.alleles[0];
-                    });
+                      if (genotype.alleles.length !== 1) {
+                        return false;
+                      }
 
-          $.map(aberrations,
+                      var allele = genotype.alleles[0];
+
+                      if (allele.gene_id === startAllele.gene_id) {
+                        sameGeneAlleles.push(allele);
+                      }
+                    });
+          }
+
+          var aberrationAlleles = [];
+
+          $.grep($scope.genotypeList,
+                 function(genotype) {
+                   if (genotype.alleles.length !== 1) {
+                     return false;
+                   }
+
+                   var allele = genotype.alleles[0];
+
+                   if (allele.type === 'aberration') {
+                     aberrationAlleles.push(allele);
+                   }
+                 });
+
+          var allelesForDiploid = sameGeneAlleles;
+
+          $.map(aberrationAlleles,
                 function(aberration) {
                   allelesForDiploid.push(aberration);
                 });
