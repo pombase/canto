@@ -303,7 +303,6 @@ my $full_expected_curation_session =
     publications => {
       'PMID:19756689' => {
         title => 'SUMOylation is required for normal development of linear elements and wild-type meiotic recombination in Schizosaccharomyces pombe.',
-        abstract => re($abstract),
       },
     },
     metadata => {

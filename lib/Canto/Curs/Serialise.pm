@@ -530,7 +530,6 @@ sub _get_pubs
     if ($options->{all_data}) {
       $ret{$pub->uniquename()} = {
         title => $pub->title(),
-        abstract => $pub->abstract(),
       };
     } else {
       $ret{$pub->uniquename()} = { };
