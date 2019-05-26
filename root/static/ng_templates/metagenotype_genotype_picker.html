@@ -5,9 +5,9 @@
           <a href="{{genotypeShortcutUrl}}">Create a new {{organismType}} genotype...</a>
         </p>
         <div>
-            <div class="curs-box-title">Single allele genotypes</div>
+            <div class="curs-box-title">Single locus genotypes</div>
             <div ng-show="genotypes.single.length === 0">
-                <p>No Single allele genotypes created</p>
+                <p>No Single locus genotypes created</p>
             </div>
             <div ng-if="genotypes.single.length > 0">
                 <genotype-simple-list-view
