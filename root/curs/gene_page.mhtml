@@ -65,12 +65,6 @@ Choose curation type for <% $gene->display_name() %>:
     </a>
     <help-icon key="gene_page_single_allele"></help-icon>
   </li>
-  <li class="annotation-type">
-    <a href='<% "$curs_root_uri/genotype_manage" %>'>
-      Multiple allele <% ucfirst $type_display_name %>
-    </a>
-    <help-icon key="gene_page_multi_allele"></help-icon>
-  </li>
 %     }
 %   }
 % }
@@ -122,6 +116,12 @@ Gene details
 Genotypes for <% $gene->display_name() %> in this session
   </div>
   <div class="curs-box-body">
+    <div style="margin: 0.2em 0 0.5em 0;">
+      <a href='<% "$curs_root_uri/genotype_manage" %>'>
+        Genotype management
+      </a>
+    </div>
+
     <single-gene-genotype-list gene-primary-identifier="'<% $gene->primary_identifier() %>'"></single-gene-genotype-list>
   </div>
 </div>
