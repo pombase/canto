@@ -752,11 +752,11 @@ canto.service('CantoGlobals', function ($window) {
   this.cumulativeAnnotationTypeCounts = $window.cumulativeAnnotationTypeCounts;
   this.perPub5YearStatsData = $window.perPub5YearStatsData;
   this.htpPerPub5YearStatsData = $window.htpPerPub5YearStatsData;
-  this.multi_organism_mode = $window.multi_organism_mode == 1;
-  this.split_genotypes_by_organism = $window.split_genotypes_by_organism == 1;
+  this.multi_organism_mode = $window.multi_organism_mode;
+  this.split_genotypes_by_organism = $window.split_genotypes_by_organism;
   this.show_genotype_management_genes_list = $window.show_genotype_management_genes_list;
-  this.strains_mode = $window.strains_mode == 1;
-  this.pathogen_host_mode = $window.pathogen_host_mode == 1;
+  this.strains_mode = $window.strains_mode;
+  this.pathogen_host_mode = $window.pathogen_host_mode;
   this.alleles_have_expression = $window.alleles_have_expression;
   this.allow_single_wildtype_allele = $window.allow_single_wildtype_allele;
   this.diploid_mode = $window.diploid_mode;
