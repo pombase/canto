@@ -756,7 +756,7 @@ canto.service('CantoGlobals', function ($window) {
   this.split_genotypes_by_organism = $window.split_genotypes_by_organism == 1;
   this.show_genotype_management_genes_list = $window.show_genotype_management_genes_list;
   this.strains_mode = $window.strains_mode == 1;
-  this.pathogen_host_mode = $window.pathogen_host_mode;
+  this.pathogen_host_mode = $window.pathogen_host_mode == 1;
   this.alleles_have_expression = $window.alleles_have_expression;
   this.allow_single_wildtype_allele = $window.allow_single_wildtype_allele;
   this.diploid_mode = $window.diploid_mode;
@@ -4216,7 +4216,7 @@ var genotypeManageCtrl =
         $scope.app_static_path = CantoGlobals.app_static_path;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
-        $scope.pathogen_host_mode = CantoGlobals.pathogen_host_mode == "1";
+        $scope.pathogen_host_mode = CantoGlobals.pathogen_host_mode;
         $scope.metagenotypeUrl = CantoGlobals.curs_root_uri + '/metagenotype_manage';
 
         $scope.data = {
@@ -4693,7 +4693,7 @@ var genotypeListRowLinksCtrl =
 
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
-        $scope.pathogen_host_mode = CantoGlobals.pathogen_host_mode !== "0";
+        $scope.pathogen_host_mode = CantoGlobals.pathogen_host_mode;
 
         $scope.matchingAnnotationTypes = [];
 
@@ -5066,7 +5066,7 @@ var genotypeListViewCtrl =
         }
 
         function getOrganismType(genotypes) {
-          if (CantoGlobals.pathogen_host_mode === "1") {
+          if (CantoGlobals.pathogen_host_mode) {
             var genotype = genotypes[0];
             if ('organism' in genotype) {
               var organism = genotype.organism;
@@ -5673,6 +5673,9 @@ var annotationEditDialogCtrl =
       showConditions: false,
       showEvidence: true,
     };
+
+    $scope.showOrganismName = CantoGlobals.pathogen_host_mode;
+    $scope.showStrainName = CantoGlobals.strains_mode;
 
     copyObject(args.annotation, $scope.annotation);
 
