@@ -5675,7 +5675,7 @@ var annotationEditDialogCtrl =
     };
 
     $scope.showOrganismName = CantoGlobals.pathogen_host_mode;
-    $scope.showStrainName = CantoGlobals.strains_mode;
+    $scope.showStrainName = CantoGlobals.strains_mode && !!args.annotation.strain;
 
     copyObject(args.annotation, $scope.annotation);
 
