@@ -6,21 +6,24 @@
                 <table class="curs-genotype-list">
                     <thead>
                         <tr>
-                            <th colspan="2">Pathogen</th>
-                            <th colspan="2">Host</th>
+                            <th colspan="{{showBackground.pathogen ? 3 : 2}}">Pathogen</th>
+                            <th colspan="{{showBackground.host ? 3 : 2}}">Host</th>
                             <th></th>
                         </tr>
                         <tr>
                             <th>Organism</th>
                             <th>Genotype</th>
+                            <th ng-if="showBackground.pathogen">Background</th>
                             <th>Organism</th>
                             <th>Genotype</th>
+                            <th ng-if="showBackground.host">Background</th>
                             <th>Annotations</th>
                         </tr>
                     </thead>
                     <tbody
                     metagenotype-list-row
                     ng-repeat="meta in metagenotypes track by meta.metagenotype_id"
+                    show-background="showBackground"
                     metagenotype="meta">
                   </tbody>
                 </table>

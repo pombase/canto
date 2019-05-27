@@ -4,13 +4,14 @@
       <thead>
         <tr>
           <th ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column" rowspan="2">&nbsp;</th>
-          <th style="border-bottom: 1px solid grey" colspan="4">Genotype</th>
+          <th style="border-bottom: 1px solid grey" colspan="{{showBackground ? 5 : 4}}">Genotype</th>
         </tr>
         <tr>
           <th>Genes</th>
           <th>Alleles</th>
           <th>Expression</th>
           <th>Strain</th>
+          <th ng-show="showBackground">Background</th>
         </tr>
       </thead>
       <tbody
@@ -20,6 +21,7 @@
         show-check-box-actions="showCheckBoxActions"
         genotype="currentGenotype"
         on-genotype-select="onGenotypeChange(genotype)"
+        show-background="showBackground"
       </tbody>
     </table>
   </div>

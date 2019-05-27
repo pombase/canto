@@ -7138,6 +7138,7 @@ var genotypeSimpleListRowCtrl =
         genotype: '<',
         isHost: '<',
         showCheckBoxActions: '<',
+        showBackground: '<',
         onGenotypeSelect: '&'
       },
       replace: true,
@@ -7182,6 +7183,9 @@ var genotypeSimpleListViewCtrl =
       replace: true,
       templateUrl: app_static_path + 'ng_templates/genotype_simple_list_view.html',
       controller: function ($scope) {
+        $scope.showBackground = false;
+
+        $scope.$watch('genotypeList', updateShowBackground);
 
         $scope.onGenotypeChange = function (genotype) {
           $scope.onGenotypeSelect({
@@ -7189,6 +7193,12 @@ var genotypeSimpleListViewCtrl =
           });
         };
 
+        function updateShowBackground() {
+          function hasBackground(genotype) {
+            return !! genotype.background;
+          }
+          $scope.showBackground = arrayContains($scope.genotypeList, hasBackground);
+        }
       }
     };
   };
@@ -7343,6 +7353,7 @@ var metagenotypeListRow = function (CantoGlobals, Metagenotype, AnnotationTypeCo
   return {
     scope: {
       metagenotype: '=',
+      showBackground: '<'
     },
     restrict: 'A',
     replace: true,
@@ -7403,8 +7414,11 @@ var metagenotypeListView = function (Metagenotype) {
     templateUrl: app_static_path + 'ng_templates/metagenotype_list_view.html',
     controller: function ($scope) {
       $scope.metagenotypes = [];
+      $scope.showBackground = {};
+
       $scope.$on('metagenotype:updated', function (event, data) {
         $scope.metagenotypes = data;
+        $scope.showBackground = getBackgroundColumnSettings($scope.metagenotypes);
       });
 
       $scope.$on('metagenotype list changed', function () {
@@ -7412,6 +7426,23 @@ var metagenotypeListView = function (Metagenotype) {
       });
 
       Metagenotype.load();
+
+      function getBackgroundColumnSettings(metagenotypes) {
+        var backgroundFinder = function (organismType) {
+          return function (mg) {
+            var genotype = mg[organismType + '_genotype'];
+            return (
+              genotype.organism.pathogen_or_host === organismType &&
+              !! genotype.background
+            );
+          };
+        };
+        return {
+          'pathogen': arrayContains(metagenotypes, backgroundFinder('pathogen')),
+          'host': arrayContains(metagenotypes, backgroundFinder('host')),
+        };
+      }
+
     }
   };
 };
