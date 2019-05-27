@@ -5107,11 +5107,14 @@ var genotypeListViewCtrl =
 
         $scope.selectedGenotypes = function () {
           var retVal = [];
-          $.map($scope.genotypeList, function (genotype) {
-            if ($scope.checkBoxChecked[genotype.genotype_id]) {
-              retVal.push(genotype);
-            }
-          });
+          var checkFunc =
+              function (genotype) {
+                if ($scope.checkBoxChecked[genotype.genotype_id]) {
+                  retVal.push(genotype);
+                }
+              };
+          $.map($scope.genotypeList, checkFunc);
+          $.map($scope.diploidList, checkFunc);
           return retVal;
         };
 
@@ -5140,7 +5143,7 @@ var genotypeListViewCtrl =
 
         $scope.combineGenotypes = function () {
           var checkedGenotypes =
-            $.grep($scope.genotypeList, function (genotype) {
+            $.grep($scope.genotypeList.concat($scope.diploidList),function (genotype) {
               return !!$scope.checkBoxChecked[genotype.genotype_id];
             });
 
