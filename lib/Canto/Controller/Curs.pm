@@ -1794,9 +1794,9 @@ sub _genotype_store
 
         if ($allele_data->{diploid_name}) {
           push @{$diploid_groups{$allele_data->{diploid_name}}}, $allele;
+        } else {
+          push @alleles, $allele;
         }
-
-        push @alleles, $allele;
       }
 
       my @diploid_groups = ();
@@ -1815,6 +1815,7 @@ sub _genotype_store
         Canto::Curs::GenotypeManager->new(config => $c->config(),
                                           curs_schema => $schema);
 
+      # FIXME: we need to pass \@diploid_groups into find_genotype
       my $existing_genotype =
         $genotype_manager->find_genotype($genotype_taxonid, $genotype_background,
                                          $strain_name, \@alleles);

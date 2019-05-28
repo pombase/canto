@@ -222,8 +222,8 @@ sub _remove_unused_diploids
                                             $comment, \@diploid_groups);
  Function: Create a Genotype object in the CursDB
  Args    : $name - the name for the new object
-           \@allele_objects - a list of Allele objects to attach to the new
-                              Genotype
+           \@allele_objects - a list of Allele objects that aren't part of a
+                              diploid to attach to the new Genotype
            $genotype_taxonid - the organism of this genotype
            $identifier - the identifier of the new object if the Genotype
                          details are from an external source (Chado) or undef
@@ -233,9 +233,8 @@ sub _remove_unused_diploids
            $strain_name - the name of the strain of this genotype which must
                           already be added to the session (optional)
            $comment - an optional comment field
-           \@diploid_groups - an array of array of Alleles (from @allele_objects)
-                              that group alleles together into diploids. Each
-                              allele should appear in at most one group.
+           \@diploid_groups - an array of array of Alleles that group
+                              alleles together into diploids.
  Return  : the new Genotype
 
 =cut
@@ -308,38 +307,16 @@ sub make_genotype
                                                 name => $diploid_name,
                                               });
 
-      my %allele_counts = ();
-
-      map {
-        $allele_counts{$_->allele_id()}++;
-      } @group_alleles;
-
       map {
         my $allele = $_;
 
-        my %search_args = (
+        my %create_args = (
           allele => $allele->allele_id(),
           genotype => $genotype->genotype_id(),
+          diploid => $diploid->diploid_id(),
         );
 
-        my $genotype_allele_rs = $schema->resultset('AlleleGenotype')->search(\%search_args);
-
-        while (defined (my $genotype_allele = $genotype_allele_rs->next())) {
-          if ($allele_counts{$allele->allele_id()} == 0) {
-            # (rare special case) if an allele is part of diploid and
-            # also part of genotype as a single copy (hemizygous) make
-            # sure that the non-diploid copy doesn't have the diploid
-            # added to it - we keep count so we know when we've added
-            # the Diploid enough
-            next;
-          }
-
-          $genotype_allele->diploid($diploid);
-          $genotype_allele->update();
-
-          $allele_counts{$allele->allele_id()}--;
-        }
-
+        $schema->create_with_type('AlleleGenotype', \%create_args);
       } @group_alleles;
     }
   }
