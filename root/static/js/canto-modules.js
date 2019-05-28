@@ -7754,13 +7754,12 @@ var strainPicker = function () {
         newStrain: '',
         strains: null,
         sessionStrains: null,
-        strainSelector: 'Add experimental strains for this organism'
+        strainSelector: ''
       };
 
       CantoService.lookup('strains', [$scope.taxonId]).then(function (data) {
         $scope.data.strains = data;
       });
-
 
       $scope.getSessionStrains = function () {
         StrainsService.getSessionStrains($scope.taxonId)
@@ -7772,7 +7771,7 @@ var strainPicker = function () {
       $scope.getSessionStrains();
 
       $scope.changed = function () {
-        if ($scope.data.strainSelector !== 'Type a new strain') {
+        if ($scope.data.strainSelector && ($scope.data.strainSelector !== 'Type a new strain')) {
           StrainsService.addSessionStrain($scope.taxonId, $scope.data.strainSelector)
             .then($scope.getSessionStrains);
         }
@@ -7791,6 +7790,7 @@ var strainPicker = function () {
         StrainsService.addSessionStrain($scope.taxonId, $scope.data.newStrain)
           .then($scope.getSessionStrains);
       };
+
     },
   };
 };
