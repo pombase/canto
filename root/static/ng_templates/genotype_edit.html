@@ -92,7 +92,7 @@
                 <th>Name</th>
                 <th>Type</th>
                 <th>Description</th>
-                <th>Expression</th>
+                <th ng-if="allelesHaveExpression">Expression</th>
               </tr>
             </thead>
             <tbody ng-repeat="allele in group.alleles">
@@ -100,7 +100,7 @@
               <td>{{allele.name}}</td>
               <td>{{allele.type}}</td>
               <td>{{allele.description}}</td>
-              <td>{{allele.expression}}</td>
+              <td ng-if="allelesHaveExpression">{{allele.expression}}</td>
               <td class="curs-table-row-remove">
                 <div ng-if="allele.primary_identifier">
                   <span title="This is a pre-existing allele that can't be edited.  If this isn't the allele you need, please remove it from the genotype and add another"

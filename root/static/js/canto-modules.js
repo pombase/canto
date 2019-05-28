@@ -3647,6 +3647,7 @@ var genotypeEdit =
         $scope.multi_organism_mode = CantoGlobals.multi_organism_mode;
         $scope.strains_mode = CantoGlobals.strains_mode;
         $scope.allow_single_wildtype_allele = CantoGlobals.allow_single_wildtype_allele;
+        $scope.allelesHaveExpression = CantoGlobals.alleles_have_expression;
 
         $scope.strainSelected = function (strain) {
           $scope.data.selectedStrainName = strain ?
