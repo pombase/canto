@@ -1553,6 +1553,11 @@ a:not([href]) {
   color: whitesmoke;
 }
 
+.curs-organism-selector-select {
+  width: auto;
+  max-width: 300px;
+}
+
 .strain-selector__container {
   display: inline-block;
 }
