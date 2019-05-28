@@ -3691,7 +3691,6 @@ var genotypeEdit =
         }
 
         $scope.reset = function () {
-          $scope.alleles = [];
           $scope.genes = [];
           $scope.strains = [];
 
@@ -3702,7 +3701,9 @@ var genotypeEdit =
             genotypeComment: null,
             selectedStrainName: null,
             strainName: null,
-            taxonId: null
+            taxonId: null,
+            alleles: [],
+            alleleGroups: [],
           };
 
           $scope.wildTypeCheckPasses = true;
@@ -3710,6 +3711,44 @@ var genotypeEdit =
 
         $scope.reset();
         reload();
+
+        function processAlleles(alleles) {
+          var alleleGroupMap = { haploid: [] };
+          $.map(alleles,
+                function(allele) {
+                  if (allele.diploid_name) {
+                    if (!(allele.diploid_name in alleleGroupMap)) {
+                      alleleGroupMap[allele.diploid_name] = [];
+                    }
+                    alleleGroupMap[allele.diploid_name].push(allele);
+                  } else {
+                    alleleGroupMap.haploid.push(allele);
+                  }
+                });
+
+          var haploidAlleles = alleleGroupMap['haploid'];
+          delete alleleGroupMap['haploid'];
+
+          var alleleGroups = [];
+
+          var idx = 1;
+          Object.keys(alleleGroupMap).forEach(function(groupName) {
+            var groupAlleles = alleleGroupMap[groupName];
+            if (groupAlleles.length == 1) {
+              haploidAlleles.push(groupAlleles[0]);
+            } else {
+              alleleGroups.push({ name: idx, alleles: groupAlleles });
+              idx++;
+            }
+          })
+
+          if (haploidAlleles.length > 0) {
+            // make sure hapoids come first
+            alleleGroups.unshift({ name: 'haploid', alleles: haploidAlleles });
+          }
+
+          return alleleGroups;
+        }
 
         function reload() {
 
@@ -3719,7 +3758,7 @@ var genotypeEdit =
             }
             Curs.details('genotype', ['by_id', $scope.genotypeId])
               .then(function (genotypeDetails) {
-                $scope.alleles = genotypeDetails.alleles;
+                $scope.data.alleles = genotypeDetails.alleles;
                 $scope.data.genotypeName = genotypeDetails.name;
                 $scope.data.genotypeBackground = genotypeDetails.background;
                 $scope.data.genotypeComment = genotypeDetails.comment;
@@ -3740,13 +3779,14 @@ var genotypeEdit =
           cursConfigPromise: CantoConfig.get('curs_config')
         };
 
-        $scope.$watch('alleles',
+        $scope.$watch('data.alleles',
           function () {
+            $scope.data.alleleGroups = processAlleles($scope.data.alleles);
             $scope.env.cursConfigPromise.then(function (data) {
               $scope.data.genotype_long_name =
                 data.genotype_config.default_strain_name +
                 " " +
-                $.map($scope.alleles, function (val) {
+                $.map($scope.data.alleles, function (val) {
                   var newName = val.name || 'no_name';
                   if (val.description === '') {
                     newName += "(" + val.type + ")";
@@ -3774,7 +3814,7 @@ var genotypeEdit =
 
           var wildTypeStates = {};
 
-          $.map($scope.alleles,
+          $.map($scope.data.alleles,
             function (allele) {
               var currentState = wildTypeStates[allele.gene_id];
 
@@ -3810,7 +3850,7 @@ var genotypeEdit =
             $scope.data.genotype_id,
             $scope.data.genotypeName,
             $scope.data.genotypeBackground,
-            $scope.alleles,
+            $scope.data.alleles,
             undefined,
             $scope.data.selectedStrainName,
             $scope.data.genotypeComment
@@ -3845,7 +3885,7 @@ var genotypeEdit =
         };
 
         $scope.removeAllele = function (allele) {
-          $scope.alleles.splice($scope.alleles.indexOf(allele), 1);
+          $scope.data.alleles.splice($scope.data.alleles.indexOf(allele), 1);
         };
 
         $scope.allelesEqual = function (allele1, allele2) {
@@ -3853,13 +3893,13 @@ var genotypeEdit =
         };
 
         $scope.findExistingAlleleIdx = function (allele) {
-          var index = $scope.alleles.indexOf(allele);
+          var index = $scope.data.alleles.indexOf(allele);
 
           if (index >= 0) {
             return index;
           }
 
-          $.map($scope.alleles,
+          $.map($scope.data.alleles,
             function (existingAllele, mapIndex) {
               if ($scope.allelesEqual(existingAllele, allele)) {
                 index = mapIndex;
@@ -3884,7 +3924,7 @@ var genotypeEdit =
             editInstance.result.then(function (editResults) {
               var editedAllele = editResults.alleleData;
               if ($scope.findExistingAlleleIdx(editedAllele) < 0) {
-                $scope.alleles.push(editedAllele);
+                $scope.data.alleles.push(editedAllele);
               } else {
                 toaster.pop('info', 'Not adding duplicate allele');
               }
@@ -3903,7 +3943,7 @@ var genotypeEdit =
         };
 
         $scope.isValid = function () {
-          return $scope.alleles.length > 0 && $scope.wildTypeCheckPasses;
+          return $scope.data.alleles.length > 0 && $scope.wildTypeCheckPasses;
         };
       }
     };

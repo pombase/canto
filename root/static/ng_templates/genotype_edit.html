@@ -79,13 +79,13 @@
       </div>
       <div class="col-sm-6 col-md-6">
         <div class="curs-genotype-edit-allele-list"
-             id="multi-allele-genotype" class="ng-cloak" ng-show="alleles.length">
+             id="multi-allele-genotype" class="ng-cloak" ng-show="data.alleleGroups.length">
 
-          <div>
-            The alleles of this genotype:
-          </div>
+          <div ng-repeat="group in data.alleleGroups">
+            <span ng-if="group.name == 'haploid'">Haploid alleles:</span>
+            <span ng-if="group.name != 'haploid'">Diploid {{group.name}}:</span>
 
-          <table class="list">
+          <table ng-if="group.alleles.length != 0" class="list">
             <thead>
               <tr>
                 <th>Gene</th>
@@ -95,7 +95,7 @@
                 <th>Expression</th>
               </tr>
             </thead>
-            <tbody ng-repeat="allele in alleles">
+            <tbody ng-repeat="allele in group.alleles">
               <td>{{allele.gene_display_name}}</td>
               <td>{{allele.name}}</td>
               <td>{{allele.type}}</td>
@@ -116,6 +116,7 @@
               </td>
             </tbody>
           </table>
+          </div>
         </div>
         <button type="submit" class="btn btn-primary curs-finish-button"
                 title="{{ isValid() ? 'Store changes ' : (wildTypeCheckPasses ? 'At least one allele for each gene is required' : 'Wild type allele needs a non wild type product level') }}"
