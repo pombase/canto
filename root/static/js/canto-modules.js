@@ -7668,7 +7668,7 @@ var strainPicker = function () {
         newStrain: '',
         strains: null,
         sessionStrains: null,
-        strainSelector: 'Add experimental strains for this organism'
+        strainSelector: ''
       };
 
       CantoService.lookup('strains', [$scope.taxonId]).then(function (data) {
