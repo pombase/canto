@@ -1554,7 +1554,8 @@ a:not([href]) {
 }
 
 .curs-organism-selector-select {
-  width: 100%;
+  width: auto;
+  max-width: 300px;
 }
 
 .strain-selector__container {
