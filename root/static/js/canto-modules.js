@@ -5248,7 +5248,6 @@ var genotypeListViewCtrl =
               CantoGlobals.curs_root_uri +
               '/' + getGenotypeManagePath($scope.organismType) +
               '#/select/' + data.genotype_id;
-            $scope.checkBoxChecked = {};
           });
         };
 
