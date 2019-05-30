@@ -5182,6 +5182,10 @@ var genotypeListViewCtrl =
           return true;
         };
 
+        $scope.selectNone = function () {
+          $scope.checkBoxChecked = {};
+        }
+
         $scope.combineGenotypes = function () {
           var checkedGenotypes =
             $.grep($scope.genotypeList.concat($scope.diploidList),function (genotype) {
