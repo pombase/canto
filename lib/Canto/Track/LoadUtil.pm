@@ -52,6 +52,7 @@ use Package::Alias PubmedUtil => 'Canto::Track::PubmedUtil';
 use Canto::Curs::GeneManager;
 use Canto::Curs::AlleleManager;
 use Canto::Curs::GenotypeManager;
+use Canto::Curs::Utils;
 
 use Canto::Track;
 
@@ -917,7 +918,9 @@ sub create_sessions_from_json
       my @genotype_details = ();
 
       while (my ($allele_uniquename, $allele_details) = each %$alleles) {
-        my $allele_gene_uniquename = $allele_details->{gene};
+        my $allele_gene_uniquename = delete $allele_details->{gene};
+
+        $allele_details->{source_identifier} = $allele_uniquename;
 
         my $gene = undef;
 
@@ -932,31 +935,38 @@ sub create_sessions_from_json
             print qq|gene $allele_gene_uniquename (from allele $allele_uniquename) missing from data for $pub_uniquename\n|;
             next PUB;
           }
+
+          $allele_details->{gene_id} = $gene->gene_id();
         }
 
-        my $type = $allele_details->{type} || 'other';
-        my $name = $allele_details->{name} || undef;
-        my $comment = $allele_details->{comment} || undef;
-        my $description = $allele_details->{description} || undef;
-        my $synonyms = $allele_details->{synonyms};
-        my @args = ($allele_uniquename, $type, $name, $description, $gene, $synonyms);
+        my $comment = delete $allele_details->{comment};
 
-        my $allele_object = $allele_manager->create_simple_allele(@args);
+        $allele_details->{synonyms} = [map {
+          {
+            edit_status => 'existing',
+            synonym => $_,
+          }
+        } @{$allele_details->{synonyms} // []}];
 
         my $gene_display_name;
 
-        if ($allele_object->gene()) {
+        if ($gene) {
           my $gene_proxy =
-            Canto::Curs::GeneProxy->new(config => $config,
-                                        cursdb_gene => $allele_object->gene());
+            Canto::Curs::GeneProxy->new(config => $config, cursdb_gene => $gene);
           $gene_display_name = $gene_proxy->display_name();
         } else {
           $gene_display_name = "(aberration)";
         }
 
+        my $allele_display_name =
+          Canto::Curs::Utils::make_allele_display_name($allele_details->{name},
+                                                       $allele_details->{description},
+                                                       $allele_details->{type});
+
+
         push @genotype_details, {
-          allele => $allele_object,
-          allele_display_name => lc $allele_object->display_name(),
+          allele => $allele_details,
+          allele_display_name => lc $allele_display_name,
           gene_display_name => lc $gene_display_name,
           identifier => "genotype-$allele_uniquename",
           comment => $comment,
@@ -971,10 +981,16 @@ sub create_sessions_from_json
       } @genotype_details;
 
       for my $genotype_details (@genotype_details) {
-        $genotype_manager->make_genotype(undef, undef, [$genotype_details->{allele}],
-                                         $genotype_details->{taxonid},
-                                         $genotype_details->{identifier}, undef,
-                                         $genotype_details->{comment});
+        my $genotype =
+          $genotype_manager->make_genotype(undef, undef, [$genotype_details->{allele}],
+                                           $genotype_details->{taxonid},
+                                           $genotype_details->{identifier}, undef,
+                                           $genotype_details->{comment});
+        my $genotype_allele = ($genotype->alleles()->all())[0];
+
+        my $allele_source_identifier = $genotype_details->{allele}->{source_identifier};
+        $genotype_allele->primary_identifier($allele_source_identifier);
+        $genotype_allele->update();
       }
     }
 

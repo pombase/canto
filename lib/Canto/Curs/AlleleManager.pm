@@ -96,11 +96,22 @@ sub set_allele_synonyms
   my $allele = shift;
   my $allele_synonyms = shift;
 
-  $allele->allelesynonyms()->search({ edit_status => 'new' })->delete();
+  my $rs = $allele->allelesynonyms()->search();
+
+  my @existing = ();
+
+  while (defined (my $syn = $rs->next())) {
+    if ($syn->edit_status() eq 'existing') {
+      push @existing, $syn->synonym();
+    }
+  }
+
+  $rs->search({ edit_status => 'new' })->delete();
 
   map {
     my $syn = $_;
-    if ($syn->{edit_status} && $syn->{edit_status} eq 'new') {
+    if ($syn->{edit_status} eq 'new' ||
+      !grep { $_ eq $syn->{synonym} } @existing) {
       $schema->create_with_type('Allelesynonym', {
         allele => $allele->allele_id(),
         synonym => $syn->{synonym},

@@ -62,26 +62,42 @@ ok($cdc11_allele);
 
 my $cdc11_gene = $cdc11_allele->gene();
 
+my $cdc11_allele_details = {
+  name => 'cdc11-33',
+  gene_id => $cdc11_gene->gene_id(),
+  type => 'unknown',
+  description => 'unknown',
+};
+
 my $ssm4_allele =
   $curs_schema->resultset('Allele')->find({ name => 'ssm4delta' });
 ok ($ssm4_allele);
 
+my $ssm4_gene = $ssm4_allele->gene();
+
+my $ssm4_allele_details = {
+  name => 'ssm4delta',
+  type => 'deletion',
+  description => 'deletion',
+  gene_id => $ssm4_gene->gene_id(),
+};
+
 my $pombe_taxonid = 4896;
 
-my $found_genotype = $genotype_manager->find_genotype($pombe_taxonid, undef, undef, [$cdc11_allele]);
+my $found_genotype = $genotype_manager->find_genotype($pombe_taxonid, undef, undef, [$cdc11_allele_details]);
 ok(!defined $found_genotype);
 
-$found_genotype = $genotype_manager->find_genotype($pombe_taxonid, undef, undef, [$ssm4_allele]);
+$found_genotype = $genotype_manager->find_genotype($pombe_taxonid, undef, undef, [$ssm4_allele_details]);
 ok(!defined $found_genotype);
 
-$found_genotype = $genotype_manager->find_genotype($pombe_taxonid, undef, undef, [$ssm4_allele, $cdc11_allele]);
+$found_genotype = $genotype_manager->find_genotype($pombe_taxonid, undef, undef, [$ssm4_allele_details, $cdc11_allele_details]);
 ok(defined $found_genotype);
+
 is($found_genotype->name(), $genotype_name);
 
 $found_genotype = $genotype_manager->find_genotype($pombe_taxonid, 'new-background-name', undef,
-                                                              [$ssm4_allele, $cdc11_allele]);
+                                                   [$ssm4_allele_details, $cdc11_allele_details]);
 ok(!defined $found_genotype);
-
 
 #test delete_genotype()
 try {
@@ -100,22 +116,21 @@ ok(!defined($deleted_genotype));
 my $cdc11_wt_allele_details = {
   gene_id => $cdc11_gene->gene_id(),
   type => 'wild type',
+  diploid_name => 'diploid_1',
 };
-
-my $cdc11_wt_allele = $allele_manager->allele_from_json($cdc11_wt_allele_details, 'aaaa0007');
 
 my $cdc11_delta_details = {
   gene_id => $cdc11_gene->gene_id(),
   type => 'deletion',
   name => 'cdc11delta',
+  diploid_name => 'diploid_1',
 };
-
-my $cdc11_delta = $allele_manager->allele_from_json($cdc11_delta_details, 'aaaa0007');
 
 my $diploid_genotype =
   $genotype_manager->make_genotype(undef, undef,
-                                   [$cdc11_delta, $cdc11_wt_allele], $pombe_taxonid,
-                                   undef, undef, undef, [[$cdc11_wt_allele, $cdc11_delta]]);
+                                   [$cdc11_delta_details, $cdc11_wt_allele_details],
+                                   $pombe_taxonid,
+                                   undef, undef, undef);
 
 my $diploid_genotype_identifier = $diploid_genotype->identifier();
 

@@ -1770,8 +1770,6 @@ sub _genotype_store
 
   my $strain_name = $body_data->{strain_name} || undef;
 
-  my @alleles = ();
-
   if ($genotype_name && $schema->resultset('Genotype')->find( { name => $genotype_name } )) {
     $c->stash->{json_data} = {
       status => "error",
@@ -1782,47 +1780,19 @@ sub _genotype_store
     try {
       my $curs_key = $st->{curs_key};
 
-      my $allele_manager =
-        Canto::Curs::AlleleManager->new(config => $c->config(),
-                                        curs_schema => $schema);
-
-      my %diploid_groups = ();
-
-      for my $allele_data (@alleles_data) {
-        my $allele = $allele_manager->allele_from_json($allele_data, $curs_key,
-                                                               \@alleles);
-
-        if ($allele_data->{diploid_name}) {
-          push @{$diploid_groups{$allele_data->{diploid_name}}}, $allele;
-        } else {
-          push @alleles, $allele;
-        }
-      }
-
-      my @diploid_groups = ();
-
-      while (my ($diploid_name, $diploid_alleles) = each %diploid_groups) {
-        push @diploid_groups, $diploid_alleles;
-      }
-
-      if (!$genotype_taxonid) {
-        $genotype_taxonid = $alleles[0]->gene()->organism()->taxonid();
-      }
-
       die "no genotype taxonid" unless $genotype_taxonid;
 
       my $genotype_manager =
         Canto::Curs::GenotypeManager->new(config => $c->config(),
                                           curs_schema => $schema);
 
-      # FIXME: we need to pass \@diploid_groups into find_genotype
       my $existing_genotype =
         $genotype_manager->find_genotype($genotype_taxonid, $genotype_background,
-                                         $strain_name, \@alleles);
+                                         $strain_name, \@alleles_data);
 
       if ($existing_genotype) {
         my $alleles_string = "allele";
-        if (@alleles > 1) {
+        if (@alleles_data > 1) {
           $alleles_string = "alleles";
         }
         if (defined $existing_genotype->name()) {
@@ -1849,9 +1819,8 @@ sub _genotype_store
 
         my $genotype =
           $genotype_manager->make_genotype($genotype_name, $genotype_background,
-                                           \@alleles, $genotype_taxonid, undef,
-                                           $strain_name, $genotype_comment,
-                                           \@diploid_groups);
+                                           \@alleles_data, $genotype_taxonid, undef,
+                                           $strain_name, $genotype_comment);
 
         $guard->commit();
 

@@ -118,7 +118,22 @@ sub find_genotype
   my $genotype_taxonid = shift;
   my $new_background = shift;
   my $strain_name = shift;
-  my $search_alleles = shift;
+  my $search_alleles_data = shift;
+
+  my @search_alleles = ();
+
+  my $schema = $self->curs_schema();
+  my $curs_key = $self->curs_key();
+
+  my $allele_manager =
+    Canto::Curs::AlleleManager->new(config => $self->config(),
+                                    curs_schema => $schema);
+
+  for my $allele_data (@$search_alleles_data) {
+    my $allele = $allele_manager->allele_from_json($allele_data, $curs_key);
+
+    push @search_alleles, $allele;
+  }
 
   if (defined $new_background) {
     $new_background =~ s/^\s+//;
@@ -142,11 +157,9 @@ sub find_genotype
       $a <=> $b;
     } map {
       $_->allele_id();
-    } @$search_alleles;
+    } @search_alleles;
 
   my $joined_search_ids = join " ", @sorted_search_allele_ids;
-
-  my $schema = $self->curs_schema();
 
   my $genotype_rs = $schema->resultset('Genotype');
 
@@ -167,7 +180,7 @@ sub find_genotype
 
     my @alleles = $genotype->alleles();
 
-    next if scalar(@alleles) != scalar(@$search_alleles);
+    next if scalar(@alleles) != scalar(@search_alleles);
 
     my @sorted_allele_ids = sort {
       $a <=> $b;
@@ -250,7 +263,6 @@ sub make_genotype
   my $identifier = shift;  # defined if this genotype is from Chado
   my $strain_name = shift;
   my $comment = shift;
-  my $diploid_groups = shift;
 
   if (!defined $genotype_taxonid) {
     croak "no taxon ID passed to GenotypeManager::make_genotype()\n";
@@ -289,10 +301,31 @@ sub make_genotype
     $genotype->identifier("$curs_key-genotype-$genotype_id");
   }
 
-  $genotype->set_alleles($alleles);
+  my $allele_manager =
+    Canto::Curs::AlleleManager->new(config => $self->config(),
+                                    curs_schema => $schema);
 
-  if ($diploid_groups) {
-    my @diploid_groups = @$diploid_groups;
+  my @haploid_alleles = ();
+
+  my %diploid_groups = ();
+
+  for my $allele_data (@$alleles) {
+    my $allele = $allele_manager->allele_from_json($allele_data, $curs_key);
+
+    if ($allele_data->{diploid_name}) {
+      push @{$diploid_groups{$allele_data->{diploid_name}}}, $allele;
+    } else {
+      push @haploid_alleles, $allele;
+    }
+  }
+
+  my @diploid_groups = ();
+
+  while (my ($diploid_name, $diploid_alleles) = each %diploid_groups) {
+    push @diploid_groups, $diploid_alleles;
+  }
+
+  $genotype->set_alleles(\@haploid_alleles);
 
     for my $group (@diploid_groups) {
       my @group_alleles = @$group;
@@ -319,7 +352,7 @@ sub make_genotype
         $schema->create_with_type('AlleleGenotype', \%create_args);
       } @group_alleles;
     }
-  }
+
 
   if ($strain_name) {
     my $strain = $self->strain_manager()->find_strain_by_name($genotype_taxonid, $strain_name);
@@ -527,23 +560,12 @@ sub _store_chado_genotype
     };
   } @{$chado_genotype_details->{allele_identifiers}};
 
-  my @alleles = ();
-
-  my $allele_manager = $self->allele_manager();
-
-  for my $allele_data (@alleles_data) {
-    my $allele = $allele_manager->allele_from_json($allele_data, $curs_key,
-                                                   \@alleles);
-
-    push @alleles, $allele;
-  }
-
   my $name = $chado_genotype_details->{name};
   my $background = $chado_genotype_details->{background};
   my $identifier = $chado_genotype_details->{identifier};
 
-  return $self->make_genotype($name, $background, \@alleles,
-                              $alleles[0]->gene()->organism()->taxonid(),
+  return $self->make_genotype($name, $background, \@alleles_data,
+                              $chado_genotype_details->{organism}->{taxonid},
                               $identifier);
 }
 
