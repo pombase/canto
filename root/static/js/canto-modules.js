@@ -5725,7 +5725,7 @@ var annotationEditDialogCtrl =
       CantoGlobals.pathogen_host_mode &&
       args.annotation.feature_type !== 'metagenotype'
     );
-    $scope.showStrainName = CantoGlobals.strains_mode && !!args.annotation.strain;
+    $scope.showStrainName = CantoGlobals.strains_mode && !!args.annotation.strain_name;
 
     copyObject(args.annotation, $scope.annotation);
 
