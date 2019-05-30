@@ -5721,13 +5721,16 @@ var annotationEditDialogCtrl =
       showEvidence: true,
     };
 
+    copyObject(args.annotation, $scope.annotation);
+
     $scope.showOrganismName = (
       CantoGlobals.pathogen_host_mode &&
-      args.annotation.feature_type !== 'metagenotype'
+      $scope.annotation.feature_type !== 'metagenotype'
     );
-    $scope.showStrainName = CantoGlobals.strains_mode && !!args.annotation.strain_name;
-
-    copyObject(args.annotation, $scope.annotation);
+    $scope.showStrainName = (
+      CantoGlobals.strains_mode &&
+      $scope.annotation.strain_name
+    );
 
     $scope.isValidFeature = function () {
       return $scope.annotation.feature_id;
