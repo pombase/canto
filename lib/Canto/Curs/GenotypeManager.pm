@@ -246,8 +246,6 @@ sub _remove_unused_diploids
            $strain_name - the name of the strain of this genotype which must
                           already be added to the session (optional)
            $comment - an optional comment field
-           \@diploid_groups - an array of array of Alleles that group
-                              alleles together into diploids.
  Return  : the new Genotype
 
 =cut
