@@ -4940,6 +4940,12 @@ var genotypeListRowCtrl =
           editCommentDialog($uibModal, $scope.genotype);
         };
 
+        $scope.viewAlleleComment = function(allele) {
+          openSimpleDialog($uibModal, 'Allele comment',
+                           'Allele comment for ' + allele.display_name,
+                           allele.comment);
+        };
+
         $scope.strain = $scope.genotype.strain_name;
 
         $scope.mouseOver = function () {

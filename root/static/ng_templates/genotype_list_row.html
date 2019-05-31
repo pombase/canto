@@ -25,6 +25,11 @@
     <span class="curs-genotype-comment-indicator" ng-if="userIsAdmin && genotype.comment">
       <a title="{{genotype.comment}}  (click to edit)" ng-click="editComment()">comment ...</a>
     </span>
+
+    <span class="curs-genotype-comment-indicator"
+          ng-if="userIsAdmin && firstLocus.comment">
+      <a title="{{firstLocus.comment}}" ng-click="viewAlleleComment(genotype.alleles[0])">note ...</a>
+    </span>
   </td>
   <td ng-if="alleles_have_expression">
     <span ng-bind-html="firstLocus.expression | formatExpression | toTrusted"></span>
@@ -70,6 +75,11 @@
         <span ng-repeat="synonym in currentAllele.synonyms" class="curs-genotype-view-allele-synonym">
           {{synonym.synonym}}
         </span>
+      </span>
+
+      <span class="curs-genotype-comment-indicator"
+            ng-if="userIsAdmin && currentAllele.comment">
+        <a title="{{currentAllele.comment}}" ng-click="viewAlleleComment(currentAllele)">note ...</a>
       </span>
     </td>
     <td ng-if="alleles_have_expression">

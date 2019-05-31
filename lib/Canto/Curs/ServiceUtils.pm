@@ -685,6 +685,7 @@ sub _allele_details_hash
     type => $allele->type(),
     expression => $allele->expression(),
     display_name => $display_name,
+    comment => $allele->comment(),
     allele_id => $allele->allele_id(),
     synonyms => \@synonyms_list,
   );
