@@ -430,7 +430,7 @@ sub _genotype_details_hash
     background => $genotype->background(),
     comment => $genotype->comment(),
     allele_string => $genotype->allele_string(),
-    display_name => $genotype->display_name(),
+    display_name => $genotype->display_name($self->config()),
     genotype_id => $genotype->genotype_id(),
     annotation_count => $genotype->annotations()->count(),
     metagenotype_count => $genotype->metagenotype_count(),
@@ -672,7 +672,8 @@ sub _allele_details_hash
   }
 
   my $display_name =
-    Canto::Curs::Utils::make_allele_display_name($allele->name(),
+    Canto::Curs::Utils::make_allele_display_name($self->config(),
+                                                 $allele->name(),
                                                  $allele->description(),
                                                  $allele->type());
 

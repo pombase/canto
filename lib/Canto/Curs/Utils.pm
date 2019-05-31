@@ -106,7 +106,7 @@ sub _make_genotype_details
         name => $allele->name(),
         gene_id => $gene_id,
         gene_display_name => $gene_display_name,
-        long_display_name => $allele->long_identifier(),
+        long_display_name => $allele->long_identifier($config),
         synonyms => \@synonyms_list,
     };
 
@@ -137,16 +137,18 @@ sub _make_genotype_details
     $strain_name = $strain->lookup_strain_name($strain_lookup);
   }
 
+  my $genotype_display_name = $genotype->display_name($config);
+
   return (
     genotype_id => $genotype->genotype_id(),
     genotype_identifier => $genotype->identifier(),
     genotype_name => $genotype->name(),
     genotype_background => $genotype->background(),
-    genotype_display_name => $genotype->display_name(),
+    genotype_display_name => $genotype_display_name,
     strain_name => $strain_name,
     organism => $organism_lookup->lookup_by_taxonid($genotype->organism()->taxonid()),
     feature_type => 'genotype',
-    feature_display_name => $genotype->display_name(),
+    feature_display_name => $genotype_display_name,
     feature_id => $genotype->genotype_id(),
     alleles => [@alleles],
   );
@@ -1080,12 +1082,16 @@ sub canto_allele_type
 
 sub make_allele_display_name
 {
+  my $config = shift;
   my $name = shift || 'unnamed';
   my $description = shift;
   my $type = shift;
 
+  my $allele_type_config = $config->{allele_types}->{$type};
+
   if ($type eq 'deletion' && $name =~ /delta$/ ||
-      $type =~ /^wild[\s_]?type$/ && $name =~ /\+$/) {
+        $type =~ /^wild[\s_]?type$/ && $name =~ /\+$/ ||
+      $allele_type_config && $allele_type_config->{hide_type_name}) {
     if ($description &&
         $description =~ s/[\s_]+//gr ne $type =~ s/[\s_]+//gr) {
       return "$name($description)";

@@ -188,8 +188,10 @@ use Canto::Curs::Utils;
 sub display_name
 {
   my $self = shift;
+  my $config = shift;
 
-  return Canto::Curs::Utils::make_allele_display_name($self->name(),
+  return Canto::Curs::Utils::make_allele_display_name($config,
+                                                      $self->name(),
                                                       $self->description(),
                                                       $self->type());
 }
@@ -205,8 +207,9 @@ sub display_name
 sub long_identifier
 {
   my $self = shift;
+  my $config = shift;
 
-  my $ret = $self->display_name();
+  my $ret = $self->display_name($config);
 
   $ret .= ($self->expression() ? '[' . $self->expression() . ']' : '');
 

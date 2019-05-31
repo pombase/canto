@@ -7,7 +7,7 @@ $pub
 </%args>
 
 <div class="curs-annotate-feature-title">
-    Annotating <% $feature_type %> &ndash; <% $feature->display_name() %>
+    Annotating <% $feature_type %> &ndash; <% $feature_display_name %>
 </div>
 
 <div ng-controller="OntologyWorkflowCtrl"
@@ -27,13 +27,13 @@ $pub
                            unset-term-callback="unsetTerm()"
                            suggest-term-callback="suggestTerm(termSuggestion)"
                            confirm-term-callback="confirmTerm()"
-                           feature-display-name="<% $feature->display_name() %>"></ontology-term-confirm>
+                           feature-display-name="<% $feature_display_name %>"></ontology-term-confirm>
   </div>
 
   <div ng-show="getState() == 'selectingEvidence'" class="ng-cloak curs-box">
     <div class="curs-box-title">
 Choose evidence <span ng-show="annotationType.can_have_conditions">and conditions</span>
-for annotating <% $feature->display_name() %> with {{termDetails.id}}
+for annotating <% $feature_display_name %> with {{termDetails.id}}
     </div>
     <div class="curs-box-body">
       <annotation-evidence evidence-code="data.evidence_code"
@@ -57,7 +57,7 @@ Annotation extensions
     </div>
     <div class="curs-box-body">
       <extension-builder extension="data.extension"
-                         feature-display-name='<% $feature->display_name() %>'
+                         feature-display-name='<% $feature_display_name %>'
                          term-id="{{currentTerm()}}"
                          is-valid="extensionBuilderIsValid"></extension-builder>
     </div>
@@ -66,7 +66,7 @@ Annotation extensions
   <div class="ng-cloak">
   <ontology-term-comment-transfer ng-show="getState() == 'commenting'"
                                   feature-type="<% $feature_type %>"
-                                  feature-display-name="<% $feature->display_name() %>"
+                                  feature-display-name="<% $feature_display_name %>"
                                   annotation-details="annotationForServer"
                                   comment="data.comment"
                                   annotation-type="annotationType"></ontology-term-comment-transfer>
@@ -91,3 +91,7 @@ Annotation extensions
      href="{{backToFeatureUrl}}"
      class="btn btn-primary curs-back-button">&lt;- Back</a>
 </div>
+
+<%init>
+my $feature_display_name = $feature->display_name($c->config());
+</%init>

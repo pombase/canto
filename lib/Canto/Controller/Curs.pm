@@ -1154,7 +1154,7 @@ sub start_annotation : Chained('annotate') PathPart('start') Args(1)
   my $annotation_display_name = $annotation_config->{display_name};
 
   my $display_names = join ',', map {
-    $_->display_name();
+    $_->display_name($config);
   } @features;
 
   $st->{title} = "Create annotation";
@@ -1445,7 +1445,7 @@ sub _get_all_alleles
     });
 
   while (defined (my $allele = $allele_rs->next())) {
-    my $allele_display_name = $allele->display_name();
+    my $allele_display_name = $allele->display_name($config);
     $results{$allele_display_name} = {
       name => $allele->name(),
       description => $allele->description(),
@@ -1553,7 +1553,7 @@ sub feature_view : Chained('feature') PathPart('view')
       $st->{feature} = $genotype;
       $st->{features} = [$genotype];
 
-      my $display_name = $st->{feature}->display_name();
+      my $display_name = $st->{feature}->display_name($config);
       $st->{title} = "Genotype: $display_name";
     } else {
       if ($feature_type eq 'metagenotype') {
@@ -1567,7 +1567,7 @@ sub feature_view : Chained('feature') PathPart('view')
         $st->{feature} = $metagenotype;
         $st->{features} = [$metagenotype];
 
-        my $display_name = $st->{feature}->display_name();
+        my $display_name = $st->{feature}->display_name($config);
         $st->{title} = "Metagenotype: $display_name";
 
       } else {
@@ -1682,7 +1682,7 @@ sub _feature_edit_helper
         $st->{annotation_count} = $genotype->annotations()->count();
       }
 
-      my $display_name = $st->{feature}->display_name();
+      my $display_name = $st->{feature}->display_name($c->config());
 
       if ($edit_or_duplicate eq 'edit') {
         $st->{title} = "Editing genotype: $display_name";
@@ -1808,7 +1808,7 @@ sub _genotype_store
 
         $c->stash->{json_data} = {
           status => "existing",
-          genotype_display_name => $existing_genotype->display_name($strain_name),
+          genotype_display_name => $existing_genotype->display_name($config, $strain_name),
           genotype_id => $existing_genotype->genotype_id(),
           taxonid => $existing_genotype->organism()->taxonid(),
           comment => $existing_genotype->comment(),
@@ -1824,11 +1824,13 @@ sub _genotype_store
 
         $guard->commit();
 
-        $c->flash()->{message} = 'Created new genotype: ' . $genotype->display_name();
+        my $genotype_display_name = $genotype->display_name($config);
+
+        $c->flash()->{message} = 'Created new genotype: ' . $genotype_display_name;
 
         $c->stash->{json_data} = {
           status => "success",
-          genotype_display_name => $genotype->display_name(),
+          genotype_display_name => $genotype_display_name,
           genotype_id => $genotype->genotype_id(),
           taxonid => $genotype->organism()->taxonid(),
           strain_name => $strain_name,
@@ -1910,7 +1912,7 @@ sub _metagenotype_store
     if ($existing_metagenotype) {
         $c->stash->{json_data} = {
           status => "existing",
-          metagenotype_display_name => $existing_metagenotype->display_name(),
+          metagenotype_display_name => $existing_metagenotype->display_name($config),
           metagenotype_id => $existing_metagenotype->metagenotype_id(),
         };
     } else {
@@ -1924,7 +1926,7 @@ sub _metagenotype_store
 
       $c->stash->{json_data} = {
         status => "success",
-        metagenotype_display_name => $metagenotype->display_name(),
+        metagenotype_display_name => $metagenotype->display_name($config),
         metagenotype_id => $metagenotype->metagenotype_id(),
       };
     }

@@ -279,20 +279,21 @@ sub all_annotations
 sub allele_string
 {
   my $self = shift;
+  my $config = shift;
 
   return
     join " ", map {
-      $_->long_identifier()
+      $_->long_identifier($config)
     } $self->alleles();
 }
 
 sub display_name
 {
   my $self = shift;
-
+  my $config = shift;
   my $strain_name = shift;
 
-  my $display_name = $self->name() || $self->allele_string() || 'wild type';
+  my $display_name = $self->name() || $self->allele_string($config) || 'wild type';
 
   if ($strain_name) {
     $display_name .= " ($strain_name)";

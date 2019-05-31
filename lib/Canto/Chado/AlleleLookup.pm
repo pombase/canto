@@ -157,7 +157,8 @@ sub lookup
 
   return [ map {
     my $display_name =
-      Canto::Curs::Utils::make_allele_display_name($_->{name},
+      Canto::Curs::Utils::make_allele_display_name($self->config(),
+                                                   $_->{name},
                                                    $_->{description},
                                                    $_->{allele_type});
 
@@ -226,7 +227,8 @@ sub lookup_by_uniquename
     } $allele->featureprops()->all();
 
     my $display_name =
-      Canto::Curs::Utils::make_allele_display_name($allele->name(),
+      Canto::Curs::Utils::make_allele_display_name($self->config(),
+                                                   $allele->name(),
                                                    $props{description},
                                                    $props{allele_type});
 

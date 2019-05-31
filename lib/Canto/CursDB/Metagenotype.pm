@@ -191,9 +191,10 @@ sub all_annotations
 sub display_name
 {
   my $self = shift;
+  my $config = shift;
 
-  return 'pathogen: ' .$self->pathogen_genotype->display_name() . ' / host: ' .
-    $self->host_genotype->display_name();
+  return 'pathogen: ' .$self->pathogen_genotype->display_name($config) . ' / host: ' .
+    $self->host_genotype->display_name($config);
 }
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

@@ -33,7 +33,7 @@ Add a new <% $type_display_name %> for this genotype ...
     <span class="curs-annotation-quick-add" ng-show="advancedMode()">
       <annotation-quick-add annotation-type-name="<% $annotation_type->{name} %>"
                             feature-type="genotype" feature-id="<% $genotype->genotype_id() %>"
-                            feature-display-name="<% $genotype->display_name() %>">
+                            feature-display-name="<% $genotype->display_name($c->config()) %>">
       </annotation-quick-add>
     </span>
     </li>
@@ -87,7 +87,7 @@ Description
     </table>
 
 % for my $allele ($genotype->alleles()) {
-<% $_unicode_allele_symbol->($allele->display_name()) |n %>
+<% $_unicode_allele_symbol->($allele->display_name($c->config())) |n %>
 %   if ($allele->expression()) {
 -     <i><% $allele->expression() %></i>
 %   }
@@ -124,7 +124,7 @@ Description
         class="btn btn-primary curs-back-button">&lt;- Back to genotypes</button>
 
 <annotation-table-list feature-type-filter="genotype" feature-id-filter="<% $genotype_id %>"
-                       feature-filter-display-name="<% $genotype->display_name() %>"></annotation-table-list>
+                       feature-filter-display-name="<% $genotype->display_name($c->config()) %>"></annotation-table-list>
 
 </div>
 

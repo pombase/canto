@@ -37,9 +37,9 @@ my $genotype_0 = ($genotype_annotations[0]->genotypes())[0];
 
 my @alleles_0 =
   sort {
-    $a->long_identifier()
+    $a->long_identifier($config)
       cmp
-    $b->long_identifier()
+    $b->long_identifier($config)
   } $genotype_0->alleles();
 
 cmp_deeply(
@@ -70,8 +70,8 @@ cmp_deeply(
       description => $_->description(),
       expression => $_->expression(),
       name => $_->name(),
-      long_identifier => $_->long_identifier(),
-      display_name => $_->display_name()
+      long_identifier => $_->long_identifier($config),
+      display_name => $_->display_name($config)
     };
   } @alleles_0]);
 

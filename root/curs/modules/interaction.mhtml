@@ -63,5 +63,5 @@ my $root_path = $c->stash()->{curs_root_path};
 
 my $gene_count = $c->stash()->{schema}->resultset('Gene')->count();
 
-my $feature_display_name = $feature->display_name();
+my $feature_display_name = $feature->display_name($c->config());
 </%init>

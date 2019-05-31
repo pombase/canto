@@ -957,7 +957,8 @@ sub create_sessions_from_json
         }
 
         my $allele_display_name =
-          Canto::Curs::Utils::make_allele_display_name($allele_details->{name},
+          Canto::Curs::Utils::make_allele_display_name($config,
+                                                       $allele_details->{name},
                                                        $allele_details->{description},
                                                        $allele_details->{type});
 

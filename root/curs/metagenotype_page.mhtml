@@ -50,7 +50,7 @@ Details
 Description
           </td>
           <td>
-<% $_unicode_allele_symbol->($metagenotype->display_name()) |n %>
+<% $_unicode_allele_symbol->($metagenotype->display_name($c->config())) |n %>
           </td>
         </tr>
       </tbody>
@@ -63,7 +63,7 @@ Description
 <div class="clearall"/>
 
 <annotation-table-list feature-type-filter="metagenotype" feature-id-filter="<% $metagenotype_id %>"
-                       feature-filter-display-name="<% $metagenotype->display_name() %>"></annotation-table-list>
+                       feature-filter-display-name="<% $metagenotype->display_name($c->config()) %>"></annotation-table-list>
 
 <div class="clearall"/>
 

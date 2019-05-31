@@ -45,6 +45,7 @@ with 'Canto::Role::SimpleCache';
 
 sub _long_allele_identifier
 {
+  my $config = shift;
   my $allele_feature = shift;
 
   my %props = map {
@@ -55,7 +56,8 @@ sub _long_allele_identifier
 
   (my $type_tidy = $props{allele_type}) =~ s/[\s,]+/-/g;
 
-  my $ret = Canto::Curs::Utils::make_allele_display_name($allele_feature->name(),
+  my $ret = Canto::Curs::Utils::make_allele_display_name($config,
+                                                         $allele_feature->name(),
                                                          $props{description},
                                                          $props{allele_type});
   if ($ret !~ /$type_tidy/) {
@@ -68,6 +70,7 @@ sub _long_allele_identifier
 
 sub _allele_string
 {
+  my $config = shift;
   my @alleles = @_;
 
   return
@@ -75,7 +78,7 @@ sub _allele_string
       if (defined $_->name()) {
         $_->name();
       } else {
-        _long_allele_identifier($_);
+        _long_allele_identifier($config, $_);
       }
     } @alleles;
 }
@@ -141,7 +144,7 @@ sub _genotype_details
 
   my @alleles = $self->_get_alleles($genotype);
 
-  my $allele_string = _allele_string(@alleles);
+  my $allele_string = _allele_string($self->config(), @alleles);
 
   my $ret_val =
     {

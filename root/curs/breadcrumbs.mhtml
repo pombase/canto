@@ -81,13 +81,15 @@ my $feature_crumb_text;
 my @feature_genes = ();
 
 if (defined $feature) {
-  $display_name = $feature->display_name();
-
   $feature_id = $feature->feature_id();
 
   if ($feature_type eq 'gene') {
+    $display_name = $feature->display_name();
+
     $feature_crumb_text = $display_name;
   } else {
+    $display_name = $feature->display_name($c->config());
+
     $feature_crumb_text = ucfirst $feature_type . " details";
 
     if ($feature_type eq 'genotype' && defined $feature->name()) {

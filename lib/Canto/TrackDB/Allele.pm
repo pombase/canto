@@ -126,9 +126,10 @@ __PACKAGE__->belongs_to(
 sub display_name
 {
   my $self = shift;
+  my $config = shift;
 
-  return Canto::Curs::Utils::make_allele_display_name($self->name(),
-                                                       $self->description());
+  return Canto::Curs::Utils::make_allele_display_name($config, $self->name(),
+                                                      $self->description());
 }
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

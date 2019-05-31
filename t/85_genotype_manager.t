@@ -46,8 +46,8 @@ my $genotype_name = 'cdc11-33 ssm4delta';
 is ($genotype_from_chado->identifier(), $created_genotype_identifier);
 is ($genotype_from_chado->name(), $genotype_name);
 is ($genotype_from_chado->alleles(), 2);
-is (($genotype_from_chado->alleles())[0]->display_name(), 'cdc11-33(unknown)');
-is (($genotype_from_chado->alleles())[1]->display_name(), 'ssm4delta');
+is (($genotype_from_chado->alleles())[0]->display_name($config), 'cdc11-33(unknown)');
+is (($genotype_from_chado->alleles())[1]->display_name($config), 'ssm4delta');
 
 
 is ($curs_schema->resultset('Genotype')->find({ identifier => $created_genotype_identifier })
