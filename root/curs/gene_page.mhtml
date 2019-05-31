@@ -116,12 +116,13 @@ Gene details
 Genotypes for <% $gene->display_name() %> in this session
   </div>
   <div class="curs-box-body">
+%     if (!$pathogen_host_mode) {
     <div style="margin: 0.2em 0 0.5em 0;">
       <a href='<% "$curs_root_uri/genotype_manage" %>'>
         Genotype management
       </a>
     </div>
-
+%     }
     <single-gene-genotype-list gene-primary-identifier="'<% $gene->primary_identifier() %>'"></single-gene-genotype-list>
   </div>
 </div>
