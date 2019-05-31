@@ -178,6 +178,7 @@ sub allele_from_json
   my $expression = $json_allele->{expression};
   my $allele_type = $json_allele->{type};
   my $gene_id = $json_allele->{gene_id};
+  my $comment = $json_allele->{comment};
 
   if ($primary_identifier) {
     # lookup existing allele
@@ -280,6 +281,7 @@ sub allele_from_json
     %search_args,
     name => $name || undef,
     description => $description || undef,
+    comment => $comment || undef,
     expression => $expression || undef,
   );
 

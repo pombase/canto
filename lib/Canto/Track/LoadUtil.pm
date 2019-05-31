@@ -939,8 +939,6 @@ sub create_sessions_from_json
           $allele_details->{gene_id} = $gene->gene_id();
         }
 
-        my $comment = delete $allele_details->{comment};
-
         $allele_details->{synonyms} = [map {
           {
             edit_status => 'existing',
@@ -969,7 +967,6 @@ sub create_sessions_from_json
           allele_display_name => lc $allele_display_name,
           gene_display_name => lc $gene_display_name,
           identifier => "genotype-$allele_uniquename",
-          comment => $comment,
           taxonid => $default_organism_taxonid,
         };
       }

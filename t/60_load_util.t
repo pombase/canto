@@ -48,11 +48,10 @@ ok (defined $FBal0119310_allele);
 is($FBal0119310_allele->type(), 'other');
 is($FBal0119310_allele->name(), 'Dmel\Cdk2_UAS.Tag:MYC');
 is($FBal0119310_allele->description(), 'description of FBal0119310');
+is($FBal0119310_allele->comment(), 'comment on FBal0119310');
 
 my $genotype_FBal0119310 =
   $created_cursdb->resultset('Genotype')->find({ identifier => "genotype-FBal0119310" });
-
-is($genotype_FBal0119310->comment(), 'comment on FBal0119310');
 
 my $FBal0119310_genotype_allele = ($genotype_FBal0119310->alleles()->all())[0];
 is ($FBal0119310_genotype_allele->allele_id(), $FBal0119310_allele->allele_id());
