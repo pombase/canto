@@ -3194,9 +3194,25 @@ var alleleNameComplete =
             });
           }
         }).data("autocomplete")._renderItem = function (ul, item) {
+          var inputValue = elem.find('input').val().trim().toLowerCase();
+          var displayName = item.display_name;
+          if (displayName.indexOf(inputValue) == -1) {
+            SYN:
+            if (item.synonyms) {
+              for (var i = 0; i < item.synonyms.length; i++) {
+                var syn = item.synonyms[i];
+                if (syn.edit_status === 'existing' &&
+                    syn.synonym.toLowerCase().indexOf(inputValue) != -1) {
+                  displayName += ' (matching synonym: ' + syn.synonym  + ')';
+                  break SYN;
+                }
+              }
+            }
+          }
+
           return $("<li></li>")
             .data("item.autocomplete", item)
-            .append("<a>" + item.display_name + "</a>")
+            .append("<a>" + displayName + "</a>")
             .appendTo(ul);
         };
       }
