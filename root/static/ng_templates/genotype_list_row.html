@@ -18,7 +18,16 @@
     <span ng-bind-html="firstLocus.display_name | encodeAlleleSymbols | toTrusted"></span>
     <span ng-if="firstLocus.synonyms && genotype.alleles.length == 1">
       <span ng-repeat="synonym in firstLocus.synonyms" class="curs-genotype-view-allele-synonym">
-        {{synonym.synonym}}
+        <span ng-if="synonym.edit_status == 'existing'"
+              title="Existing synonym"
+              class="curs-genotype-view-allele-existing-synonym">
+          {{synonym.synonym}}
+        </span>
+        <span ng-if="synonym.edit_status == 'new'"
+              title="New synonym from this session"
+              class="curs-genotype-view-allele-new-synonym">
+          {{synonym.synonym}}
+        </span>
       </span>
     </span>
 
@@ -72,8 +81,17 @@
     <td>
       <span ng-bind-html="currentAllele.display_name | encodeAlleleSymbols | toTrusted"></span>
       <span ng-if="currentAllele.synonyms">
-        <span ng-repeat="synonym in currentAllele.synonyms" class="curs-genotype-view-allele-synonym">
-          {{synonym.synonym}}
+        <span ng-repeat="synonym in currentAllele.synonyms">
+          <span ng-if="synonym.edit_status == 'existing'"
+                title="Existing synonym"
+                class="curs-genotype-view-allele-existing-synonym">
+            {{synonym.synonym}}
+          </span>
+          <span ng-if="synonym.edit_status == 'new'"
+                title="New synonym from this session"
+                class="curs-genotype-view-allele-new-synonym">
+            {{synonym.synonym}}
+          </span>
         </span>
       </span>
 

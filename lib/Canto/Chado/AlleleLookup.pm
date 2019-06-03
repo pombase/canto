@@ -136,6 +136,18 @@ sub lookup
    )
   } $rs->all();
 
+  my $syn_rs = $schema->resultset('FeatureSynonym')
+    ->search({ feature_id => { -in => [ keys %res ] } },
+             { prefetch => { synonym => 'type' }});
+
+  while (defined (my $row = $syn_rs->next())) {
+    my $synonym = $row->synonym();
+    push @{$res{$row->feature_id()}->{synonyms}}, {
+      synonym => $synonym->name(),
+      type => $synonym->type()->name(),
+    };
+  }
+
   my $desc_rs = $schema->resultset('Cv')
     ->search({ 'me.name' => 'PomBase feature property types' })
     ->search_related('cvterms',
@@ -167,7 +179,7 @@ sub lookup
       Canto::Curs::Utils::canto_allele_type($self->config(),
                                             $_->{allele_type},
                                             $_->{description});
-    $_->{synonyms} = [];
+    $_->{synonyms} //= [];
 
     delete $_->{allele_type};
     $_;

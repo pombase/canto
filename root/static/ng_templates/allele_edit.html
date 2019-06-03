@@ -24,10 +24,7 @@
           </td>
           <td ng-class="{ 'has-error': !isValidName() }">
             <allele-name-complete ng-if="alleleData.type != 'aberration'"
-                                  allele-primary-identifier="alleleData.primary_identifier"
-                                  allele-name="alleleData.name"
-                                  allele-description="alleleData.description"
-                                  allele-type="alleleData.type"
+                                  name-selected="nameSelectedCallback(alleleData)"
                                   placeholder="{{current_type_config.name_hint}}"
                                   gene-identifier="{{alleleData.gene_systematic_id}}">
             </allele-name-complete>
@@ -37,7 +34,7 @@
           </td>
         </tr>
 
-        <tr ng-if="alleleData.existingSynonyms.length != 0">
+        <tr ng-if="alleleData.existingSynonyms.length != 0 && !!alleleData.type">
           <td>
             Existing synonyms:
           </td>
@@ -48,7 +45,7 @@
           </td>
         </tr>
 
-        <tr ng-if="userIsAdmin && alleleData.existingSynonyms.length == 0">
+        <tr ng-if="userIsAdmin && alleleData.existingSynonyms.length == 0 && !!alleleData.type">
           <td>
             Existing synonyms:
           </td>
@@ -57,7 +54,7 @@
           </td>
         </tr>
 
-        <tr ng-if="userIsAdmin">
+        <tr ng-if="userIsAdmin && !!alleleData.type">
           <td>
             New synonyms:
           </td>
@@ -137,6 +134,30 @@
                 {{alleleData.name}}
               </td>
             </tr>
+
+            <tr ng-if="userIsAdmin && !!alleleData.type">
+              <td class="title">
+                Existing synonyms:
+              </td>
+              <td>
+                <span ng-if="alleleData.existingSynonyms.length == 0">
+                  (none)
+                </span>
+                <span ng-repeat="synonym in alleleData.existingSynonyms">
+                  <span>{{synonym}}</span>
+                </span>
+              </td>
+            </tr>
+
+            <tr ng-if="userIsAdmin && !!alleleData.type">
+              <td class="title">
+                New synonyms:
+              </td>
+              <td>
+                <input type="text" ng-model="data.newSynonymsString"/>
+              </td>
+            </tr>
+
             <tr>
               <td class="title">
                 Type

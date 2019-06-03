@@ -3119,10 +3119,7 @@ var alleleNameComplete =
   function (CursAlleleList, toaster) {
     var directive = {
       scope: {
-        allelePrimaryIdentifier: '=',
-        alleleName: '=',
-        alleleDescription: '=',
-        alleleType: '=',
+        nameSelected: '&',
         geneIdentifier: '@',
         placeholder: '@'
       },
@@ -3130,6 +3127,12 @@ var alleleNameComplete =
       replace: true,
       template: '<span><input ng-model="alleleName" placeholder="{{placeholder}}" type="text" class="curs-allele-name aform-control" value=""/></span>',
       controller: function ($scope) {
+        $scope.allelePrimaryIdentifier = null;
+        $scope.alleleName = null;
+        $scope.alleleSynonyms = null;
+        $scope.alleleDescription = null;
+        $scope.alleleType = null;
+
         $scope.clicked = function () {
           $scope.merge = $scope.alleleDescription + ' ' + $scope.allelePrimaryIdentifier;
         };
@@ -3144,6 +3147,7 @@ var alleleNameComplete =
                 allele_primary_identifier: el.uniquename,
                 display_name: el.display_name,
                 description: el.description,
+                synonyms: el.synonyms,
                 type: el.type,
               };
             });
@@ -3176,6 +3180,17 @@ var alleleNameComplete =
               } else {
                 scope.alleleDescription = ui.item.description;
               }
+              scope.alleleSynonyms = ui.item.synonyms;
+
+              scope.nameSelected({
+                alleleData: {
+                  primaryIdentifier: scope.allelePrimaryIdentifier,
+                  name: scope.alleleName,
+                  synonyms: scope.alleleSynonyms,
+                  description: scope.alleleDescription,
+                  type: scope.alleleType,
+                },
+              });
             });
           }
         }).data("autocomplete")._renderItem = function (ul, item) {
@@ -3204,6 +3219,7 @@ var alleleEditDialogCtrl =
     $scope.alleleData.type = $scope.alleleData.type || '';
     $scope.alleleData.expression = $scope.alleleData.expression || '';
     $scope.alleleData.evidence = $scope.alleleData.evidence || '';
+    $scope.alleleData.synonyms = $scope.alleleData.synonyms || [];
     $scope.alleleData.existingSynonyms = [];
     $scope.alleleData.newSynonyms = [];
     $scope.data = {
@@ -3212,14 +3228,18 @@ var alleleEditDialogCtrl =
 
     $scope.userIsAdmin = CantoGlobals.current_user_is_admin;
 
-    $.map($scope.alleleData.synonyms || [],
-          function(synonymDetails) {
-            if (synonymDetails.edit_status === 'existing') {
-              $scope.alleleData.existingSynonyms.push(synonymDetails.synonym);
-            } else {
-              $scope.alleleData.newSynonyms.push(synonymDetails.synonym);
-            }
-          });
+    function processSynonyms() {
+      $.map($scope.alleleData.synonyms || [],
+            function(synonymDetails) {
+              if (synonymDetails.edit_status === 'existing') {
+                $scope.alleleData.existingSynonyms.push(synonymDetails.synonym);
+              } else {
+                $scope.alleleData.newSynonyms.push(synonymDetails.synonym);
+              }
+            });
+    }
+
+    processSynonyms();
 
     $scope.data.newSynonymsString = $scope.alleleData.newSynonyms.join(',');
 
@@ -3298,6 +3318,15 @@ var alleleEditDialogCtrl =
           $scope.alleleData.expression = '';
         });
       });
+
+    $scope.nameSelectedCallback = function(alleleData) {
+      $scope.alleleData.primary_identifier = alleleData.primaryIdentifier;
+      $scope.alleleData.name = alleleData.name;
+      $scope.alleleData.description = alleleData.description;
+      $scope.alleleData.type = alleleData.type;
+      $scope.alleleData.synonyms = alleleData.synonyms;
+      processSynonyms();
+    };
 
     $scope.isValidType = function () {
       return !!$scope.alleleData.type;

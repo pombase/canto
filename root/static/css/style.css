@@ -445,8 +445,11 @@ table.curs-genotype-list tbody {
   margin-left: 5px;
 }
 
-.curs-genotype-view-allele-synonym {
+.curs-genotype-view-allele-existing-synonym {
   color: #666;
+}
+.curs-genotype-view-allele-new-synonym {
+  color: #169;
 }
 
 /* override Bootstrap */
