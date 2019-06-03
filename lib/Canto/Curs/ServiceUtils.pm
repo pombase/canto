@@ -744,18 +744,6 @@ sub _get_alleles
     }
   }
 
-  map {
-    my $synonyms = $_->{synonyms};
-
-    if ($synonyms) {
-      map {
-        delete $_->{type};
-        $_->{edit_status} = 'existing';
-      } @$synonyms;
-    }
-
-  } @res;
-
   return @res;
 }
 

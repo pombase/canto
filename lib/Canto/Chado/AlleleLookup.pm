@@ -147,7 +147,7 @@ sub lookup
     my $synonym = $row->synonym();
     push @{$res{$row->feature_id()}->{synonyms}}, {
       synonym => $synonym->name(),
-      type => $synonym->type()->name(),
+      edit_status => 'existing',
     };
   }
 
