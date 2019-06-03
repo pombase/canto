@@ -139,6 +139,26 @@ sub lookup
    )
   } $rs->all();
 
+  if (scalar(keys %res) < $max_results) {
+    my $synonym_rs = $schema->resultset('Cv')
+      ->search({ 'me.name' => 'sequence' })
+      ->search_related('cvterms', { 'cvterms.name' => 'allele' })
+      ->search_related('features')
+      ->search({ 'features.feature_id' => {
+                   -in => $gene_constraint_rs->get_column('subject_id')->as_query(),
+                 },
+                 'lower(synonym.name)' => { -like => '%' . lc $search_string . '%' }
+               },
+               { join => { feature_synonyms => 'synonym' } });
+
+    map {
+      $res{$_->feature_id()} = {
+        name => $_->name(),
+        uniquename => $_->uniquename(),
+      };
+    } $synonym_rs->all();
+  }
+
   my $syn_rs = $schema->resultset('FeatureSynonym')
     ->search({ feature_id => { -in => [ keys %res ] } },
              { prefetch => { synonym => 'type' }});
