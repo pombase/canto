@@ -1629,29 +1629,13 @@ sub _feature_edit_helper
           Canto::Curs::AlleleManager->new(config => $c->config(),
                                           curs_schema => $schema);
 
-        my @alleles = ();
-
-        my $curs_key = $st->{curs_key};
-
-        for my $allele_data (@alleles_data) {
-          my $allele = $allele_manager->allele_from_json($allele_data, $curs_key,
-                                                         \@alleles);
-
-          push @alleles, $allele;
-        }
-
-        if (!$genotype_taxonid) {
-          # FIXME - we should get the organism from the client
-          $genotype_taxonid = $alleles[0]->gene()->organism()->taxonid();
-        }
-
         my $genotype_manager =
           Canto::Curs::GenotypeManager->new(config => $c->config(),
                                             curs_schema => $schema);
 
         $genotype_manager->store_genotype_changes($genotype,
                                                   $genotype_name, $genotype_background,
-                                                  $genotype_taxonid, \@alleles,
+                                                  $genotype_taxonid, \@alleles_data,
                                                   $strain_name, $genotype_comment);
 
         $guard->commit();

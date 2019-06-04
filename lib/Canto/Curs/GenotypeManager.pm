@@ -499,7 +499,7 @@ sub make_metagenotype
                    set to undef rather than keeping the old version (optional)
            $background - the genotype background (optional)
            $genotype_taxonid - the organism of this genotype
-           \@allele_objects - a list of Allele objects to attach to the new
+           \@allele_objects - details of Allele objects to attach to the new
                               Genotype
            $strain_name - the name of the strain of this genotype which must
                           already be added to the session (optional)
@@ -514,7 +514,7 @@ sub store_genotype_changes
   my $name = shift;
   my $background = shift;
   my $genotype_taxonid = shift;
-  my $alleles = shift;
+  my $alleles_data = shift;
   my $strain_name = shift;
   my $comment = shift;
 
@@ -529,7 +529,19 @@ sub store_genotype_changes
 
   my $organism = $self->organism_manager()->add_organism_by_taxonid($genotype_taxonid);
   $genotype->organism_id($organism->organism_id());
-  $genotype->set_alleles($alleles);
+
+  my $allele_manager =
+    Canto::Curs::AlleleManager->new(config => $self->config(),
+                                    curs_schema => $schema);
+
+  my @alleles = ();
+  for my $allele_data (@$alleles_data) {
+    my $allele = $allele_manager->allele_from_json($allele_data, $self->curs_key(), \@alleles);
+
+    push @alleles, $allele;
+  }
+
+  $genotype->set_alleles(\@alleles);
 
   if ($strain_name) {
     my $strain = $self->strain_manager()->find_strain_by_name($genotype_taxonid, $strain_name);
