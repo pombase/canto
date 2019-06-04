@@ -1154,7 +1154,11 @@ sub start_annotation : Chained('annotate') PathPart('start') Args(1)
   my $annotation_display_name = $annotation_config->{display_name};
 
   my $display_names = join ',', map {
-    $_->display_name($config);
+    if ($annotation_config->{feature_type} eq 'gene') {
+      $_->display_name();
+    } else {
+      $_->display_name($config);
+    }
   } @features;
 
   $st->{title} = "Create annotation";

@@ -93,5 +93,10 @@ Annotation extensions
 </div>
 
 <%init>
-my $feature_display_name = $feature->display_name($c->config());
+my $feature_display_name;
+if ($feature_type eq 'gene') {
+  $feature_display_name = $feature->display_name();
+} else {
+  $feature_display_name = $feature->display_name($c->config());
+}
 </%init>
