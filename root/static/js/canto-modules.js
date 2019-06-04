@@ -3897,7 +3897,7 @@ var genotypeEdit =
             $scope.data.genotypeName,
             $scope.data.genotypeBackground,
             $scope.data.alleles,
-            undefined,
+            $scope.data.taxonId,
             $scope.data.selectedStrainName,
             $scope.data.genotypeComment
          );
