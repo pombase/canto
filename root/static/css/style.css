@@ -357,10 +357,6 @@ table.curs-genotype-list th {
   text-align: center;
 }
 
-table.curs-genotype-list .curs-genotype-list-spacer {
-  height: 1em;
-}
-
 table.list tr.even,
 table.list tr:nth-child(even),
 table.curs-genotype-list tbody.even,
