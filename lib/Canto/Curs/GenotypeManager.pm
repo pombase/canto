@@ -228,6 +228,70 @@ sub _remove_unused_diploids
   $diploids_with_no_genotype_rs->delete();
 }
 
+sub _set_genotype_alleles
+{
+  my $self = shift;
+  my $genotype = shift;
+  my $alleles = shift;
+  my $new_identifier_prefix = shift;
+
+  my $schema = $self->curs_schema();
+  my $curs_key = $self->curs_key();
+
+  my $allele_manager =
+    Canto::Curs::AlleleManager->new(config => $self->config(),
+                                    curs_schema => $schema);
+
+  my @haploid_alleles = ();
+
+  my %diploid_groups = ();
+
+  for my $allele_data (@$alleles) {
+    my $allele = $allele_manager->allele_from_json($allele_data, $curs_key);
+
+    if ($allele_data->{diploid_name}) {
+      push @{$diploid_groups{$allele_data->{diploid_name}}}, $allele;
+    } else {
+      push @haploid_alleles, $allele;
+    }
+  }
+
+  my @diploid_groups = ();
+
+  while (my ($diploid_name, $diploid_alleles) = each %diploid_groups) {
+    push @diploid_groups, $diploid_alleles;
+  }
+
+  $genotype->set_alleles(\@haploid_alleles);
+
+  for my $group (@diploid_groups) {
+    my @group_alleles = @$group;
+    my $diploid_name = $new_identifier_prefix . '-' . join "--",
+      sort map {
+        my $allele = $_;
+        $allele->primary_identifier();
+      } @group_alleles;
+
+    my $diploid = $schema->create_with_type('Diploid',
+                                            {
+                                              name => $diploid_name,
+                                            });
+
+    map {
+      my $allele = $_;
+
+      my %create_args = (
+        allele => $allele->allele_id(),
+        genotype => $genotype->genotype_id(),
+        diploid => $diploid->diploid_id(),
+      );
+
+      $schema->create_with_type('AlleleGenotype', \%create_args);
+    } @group_alleles;
+  }
+
+}
+
 =head2 make_genotype
 
  Usage   : $genotype_manager->make_genotype($name, $background, \@allele_objects,
@@ -298,58 +362,7 @@ sub make_genotype
     $genotype->identifier("$curs_key-genotype-$genotype_id");
   }
 
-  my $allele_manager =
-    Canto::Curs::AlleleManager->new(config => $self->config(),
-                                    curs_schema => $schema);
-
-  my @haploid_alleles = ();
-
-  my %diploid_groups = ();
-
-  for my $allele_data (@$alleles) {
-    my $allele = $allele_manager->allele_from_json($allele_data, $curs_key);
-
-    if ($allele_data->{diploid_name}) {
-      push @{$diploid_groups{$allele_data->{diploid_name}}}, $allele;
-    } else {
-      push @haploid_alleles, $allele;
-    }
-  }
-
-  my @diploid_groups = ();
-
-  while (my ($diploid_name, $diploid_alleles) = each %diploid_groups) {
-    push @diploid_groups, $diploid_alleles;
-  }
-
-  $genotype->set_alleles(\@haploid_alleles);
-
-    for my $group (@diploid_groups) {
-      my @group_alleles = @$group;
-      my $diploid_name = $new_identifier . '-' . join "--",
-        sort map {
-          my $allele = $_;
-          $allele->primary_identifier();
-        } @group_alleles;
-
-      my $diploid = $schema->create_with_type('Diploid',
-                                              {
-                                                name => $diploid_name,
-                                              });
-
-      map {
-        my $allele = $_;
-
-        my %create_args = (
-          allele => $allele->allele_id(),
-          genotype => $genotype->genotype_id(),
-          diploid => $diploid->diploid_id(),
-        );
-
-        $schema->create_with_type('AlleleGenotype', \%create_args);
-      } @group_alleles;
-    }
-
+  $self->_set_genotype_alleles($genotype, $alleles, $new_identifier);
 
   if ($strain_name) {
     my $strain = $self->strain_manager()->find_strain_by_name($genotype_taxonid, $strain_name);
