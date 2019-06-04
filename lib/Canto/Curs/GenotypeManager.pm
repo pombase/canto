@@ -235,8 +235,7 @@ sub _remove_unused_diploids
                                             $comment, \@diploid_groups);
  Function: Create a Genotype object in the CursDB
  Args    : $name - the name for the new object
-           \@allele_objects - a list of Allele objects that aren't part of a
-                              diploid to attach to the new Genotype
+           \@allele_objects - a list of Allele objects
            $genotype_taxonid - the organism of this genotype
            $identifier - the identifier of the new object if the Genotype
                          details are from an external source (Chado) or undef
