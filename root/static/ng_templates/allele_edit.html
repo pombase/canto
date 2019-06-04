@@ -24,6 +24,7 @@
           </td>
           <td ng-class="{ 'has-error': !isValidName() }">
             <allele-name-complete ng-if="alleleData.type != 'aberration'"
+                                  allele-name="alleleData.name"
                                   name-selected="nameSelectedCallback(alleleData)"
                                   placeholder="{{current_type_config.name_hint}}"
                                   gene-identifier="{{alleleData.gene_systematic_id}}">

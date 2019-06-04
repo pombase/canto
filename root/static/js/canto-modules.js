@@ -3119,6 +3119,7 @@ var alleleNameComplete =
   function (CursAlleleList, toaster) {
     var directive = {
       scope: {
+        alleleName: '=',
         nameSelected: '&',
         geneIdentifier: '@',
         placeholder: '@'
