@@ -121,7 +121,7 @@ my $track_schema = Canto::TrackDB->new(config => $config,
 
 my $current_version = Canto::DBUtil::get_schema_version($track_schema);
 
-if ($current_version + 1 != $new_version) {
+if ($new_version ne 'latest' && $current_version + 1 != $new_version) {
   warn "can only upgrade from version ", ($new_version - 1), " schema to $new_version, " .
     "database is currently version $current_version\n" .
     "exiting ...\n";
@@ -152,6 +152,9 @@ sub _unreplace_commas
   return $string;
 }
 
+sub upgrade_to
+{
+  $new_version = shift;
 given ($new_version) {
   when (3) {
     $dbh->do("
@@ -586,5 +589,27 @@ CREATE TABLE allele_genotype (
     $db_upgrade->upgrade_to($new_version);
   }
 }
+}
 
-Canto::DBUtil::set_schema_version($track_schema, $new_version);
+if ($new_version eq 'latest') {
+  if ($current_version == $config->{schema_version}) {
+    print "Database is up to date at version $current_version\n";
+    exit 0;
+  }
+
+  if ($current_version > $config->{schema_version}) {
+    print "Database version ($current_version) is ahead of the code (" .
+      $config->{schema_version} . qq|) - try "git pull"\n|;
+  }
+
+  for (my $ver = $current_version + 1;
+       $ver <= $config->{schema_version};
+       $ver++) {
+    print "upgrading to version $ver\n";
+    upgrade_to($ver);
+    Canto::DBUtil::set_schema_version($track_schema, $ver);
+  }
+} else {
+  upgrade_to($new_version);
+  Canto::DBUtil::set_schema_version($track_schema, $new_version);
+}
