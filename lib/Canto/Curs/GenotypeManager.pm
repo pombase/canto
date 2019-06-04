@@ -238,6 +238,11 @@ sub _set_genotype_alleles
   my $schema = $self->curs_schema();
   my $curs_key = $self->curs_key();
 
+  $genotype->set_alleles([]);
+
+  $self->_remove_unused_alleles();
+  $self->_remove_unused_diploids();
+
   my $allele_manager =
     Canto::Curs::AlleleManager->new(config => $self->config(),
                                     curs_schema => $schema);
@@ -554,14 +559,12 @@ sub store_genotype_changes
     push @alleles, $allele;
   }
 
-  $genotype->set_alleles(\@alleles);
+  $self->_set_genotype_alleles($genotype, $alleles_data, $genotype->identifier());
 
   if ($strain_name) {
     my $strain = $self->strain_manager()->find_strain_by_name($genotype_taxonid, $strain_name);
     $genotype->strain($strain);
   }
-
-  $self->_remove_unused_alleles();
 
   $genotype->update();
 }
