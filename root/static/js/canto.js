@@ -124,16 +124,6 @@ var ferret_choose = {
 };
 
 
-// eslint-disable-next-line no-unused-vars
-var canto_util = {
-  show_message : function(title, message) {
-    var html = '<div>' + message + '</div>';
-    $('#curs-dialog').html(html);
-    $('#curs-dialog').dialog({ modal: true,
-                               title: title});
-  }
-};
-
 $(document).ready(function() {
   $('input[type=checkbox]').shiftcheckbox();
 

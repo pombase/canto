@@ -94,7 +94,11 @@ $total_annotation_count
 % }
 %   if (defined $message_to_curators) {
 <div class="curs-inline-message-to-curators">
-  <a href="#" onclick="javascript:canto_util.show_message('Message to curators', '<% Canto::WebUtil::escape_inline_js($message_to_curators) %>')">Display message to curators ...</a>
+%     if ($current_user_is_admin) {
+  <a href="#" ng-click="editMessageToCurators()">Edit message to curators ...</a>
+%     } else {
+  <a href="#" ng-click="viewMessageToCurators()">Display message to curators ...</a>
+%     }
 </div>
 %   }
 % }

@@ -1166,7 +1166,7 @@ var helpIcon = function (CantoGlobals, CantoConfig) {
 canto.directive('helpIcon', ['CantoGlobals', 'CantoConfig', helpIcon]);
 
 var cursFrontPageCtrl =
-  function ($scope, CursSettings, CursAnnotationDataService) {
+  function ($scope, $uibModal, CursSettings, CursAnnotationDataService) {
     $scope.checkAll = function () {
       CursAnnotationDataService.set('all', 'checked', 'yes').
       then(function () {
@@ -1180,13 +1180,31 @@ var cursFrontPageCtrl =
       });
     };
 
+    $scope.viewMessageToCurators = function() {
+      CursSettings.getAll().then(function (response) {
+        openSimpleDialog($uibModal, 'Message for curators',
+                         'Message for curators',
+                         response.data.message_for_curators);
+      });
+    };
+
+    $scope.editMessageToCurators = function () {
+      CursSettings.getAll().then(function (response) {
+        editMessageForCurators($uibModal, response.data.message_for_curators)
+          .then(function(result) {
+            $scope.messageForCurators = result;
+          });
+      })
+    };
+
     $scope.getAnnotationMode = function () {
       return CursSettings.getAnnotationMode();
     };
   };
 
 canto.controller('CursFrontPageCtrl',
-  ['$scope', 'CursSettings', 'CursAnnotationDataService', cursFrontPageCtrl]);
+                 ['$scope', '$uibModal', 'CursSettings',
+                  'CursAnnotationDataService', cursFrontPageCtrl]);
 
 
 function openSimpleDialog($uibModal, title, heading, message) {
