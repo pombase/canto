@@ -1264,7 +1264,7 @@ var pubmedIdStart =
           loadingStart();
           var url =
             CantoGlobals.application_root +
-            'tools/pubmed_id_lookup?pubmed-id-lookup-input=' + $scope.data.searchId;
+            '/tools/pubmed_id_lookup?pubmed-id-lookup-input=' + $scope.data.searchId;
           var promise = $http.post(url);
           promise.then(function (response) {
             var results = response.data;
@@ -1299,14 +1299,14 @@ var pubmedIdStart =
           if ($scope.data.results.sessions.length > 0) {
             if ($scope.publicMode) {
               window.location.href =
-                CantoGlobals.application_root + 'curs/' + $scope.data.results.sessions[0];
+                CantoGlobals.application_root + '/curs/' + $scope.data.results.sessions[0];
             } else {
               window.location.href =
-                CantoGlobals.application_root + 'curs/' + $scope.data.results.sessions[0] + '/ro';
+                CantoGlobals.application_root + '/curs/' + $scope.data.results.sessions[0] + '/ro';
             }
           } else {
             window.location.href =
-              CantoGlobals.application_root + 'tools/start/' + $scope.data.results.pub.uniquename;
+              CantoGlobals.application_root + '/tools/start/' + $scope.data.results.pub.uniquename;
           }
         };
       }
@@ -1644,7 +1644,7 @@ var externalTermLinks =
                   return newTermId.replace(new RegExp(p1), p2);
                 });
               var img_src =
-                application_root + 'static/images/logos/' +
+                application_root + '/static/images/logos/' +
                 link_conf.icon;
               var title = 'View in: ' + link_conf.name;
               html += '<div class="curs-external-link"><a target="_blank" href="' +
@@ -1654,7 +1654,7 @@ var externalTermLinks =
               } else {
                 html += title;
               }
-              var link_img_src = application_root + 'static/images/ext_link.png';
+              var link_img_src = application_root + '/static/images/ext_link.png';
               html += '<img src="' + link_img_src + '"/></div>';
             });
             var $linkouts = $('.curs-term-linkouts');
@@ -5545,7 +5545,7 @@ canto.service('CantoConfig', function ($http) {
       this.promises[key] =
         $http({
           method: 'GET',
-          url: application_root + 'ws/canto_config/' + key
+          url: application_root + '/ws/canto_config/' + key
         })
         .then(function(response) {
           return response.data;
