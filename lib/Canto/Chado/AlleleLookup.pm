@@ -105,7 +105,7 @@ sub lookup
     die "no search_string parameter passed to lookup()";
   }
 
-  my $max_results = $args{max_results} || 15;
+  my $max_results = $args{max_results} || 20;
 
   my $schema = $self->schema();
 
