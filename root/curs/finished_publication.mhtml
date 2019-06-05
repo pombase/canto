@@ -46,13 +46,14 @@ find more of your publications</p>
 </div>
 
 % if (defined $message_to_curators) {
-<div class="curs-box curs-pub-finished-message-to-curator">
+<div class="curs-box">
   <div class="curs-box-title">
     Message sent to the curators
   </div>
   <div class="curs-box-body">
     <span ng-hide="messageForCurators"><% $message_to_curators %></span>
-    <span class="ng-cloak" ng-show="messageForCurators">{{messageForCurators}}</span>
+    <span class="ng-cloak curs-pub-finished-message-to-curator"
+          ng-show="messageForCurators">{{messageForCurators}}</span>
   </div>
 % if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
   <div class="curs-box-body" ng-hide="messageForCurators == null" >

@@ -1623,3 +1623,7 @@ a:not([href]) {
   text-align: left;
   vertical-align: middle;
 }
+
+.curs-pub-finished-message-to-curator  {
+  white-space: pre;
+}
