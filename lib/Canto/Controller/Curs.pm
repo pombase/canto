@@ -724,7 +724,7 @@ sub gene_upload : Chained('top') Args(0) Form
   if ($form->submitted_and_valid()) {
     if ($form->param_value('no-genes')) {
       my $no_genes_reason =
-        $form->param_value('no-genes-other') // $form->param_value('no-genes-reason');
+        $form->param_value('no-genes-other') || $form->param_value('no-genes-reason');
 
       $no_genes_reason =~ s/^\s+//;
       $no_genes_reason =~ s/\s+$//;
@@ -733,12 +733,13 @@ sub gene_upload : Chained('top') Args(0) Form
                             $no_genes_reason);
       } else {
         $st->{message} = $not_valid_message;
-        return;
       }
 
       $c->flash()->{message} = "Annotation complete";
 
       _redirect_and_detach($c, 'finish_form');
+
+      return;
     }
 
     my $search_terms_text = $form->param_value($gene_list_textarea_name);
