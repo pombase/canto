@@ -1069,7 +1069,8 @@ var cursSettingsService =
       var q = $q.defer();
 
       var unique = '?u=' + (new Date()).getTime();
-      var getRes = $http.get(curs_root_uri + '/ws/settings/set/' + key + '/' + value + unique);
+      var getRes = $http.get(curs_root_uri + '/ws/settings/set/' + key + '/' +
+                             encodeURI(value) + unique);
 
       getRes.then(function (response) {
         var result = response.data;
