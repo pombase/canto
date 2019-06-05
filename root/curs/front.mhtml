@@ -92,6 +92,7 @@ $total_annotation_count
 <button type="button" id="curs-cancel-approval" class="btn btn-primary curs-finish-button">Cancel approval</button>
 </div>
 % }
+% }
 %   if (defined $message_to_curators) {
 <div class="curs-inline-message-to-curators">
 %     if ($current_user_is_admin) {
@@ -101,7 +102,6 @@ $total_annotation_count
 %     }
 </div>
 %   }
-% }
 
 <annotation-table-list></annotation-table-list>
 
