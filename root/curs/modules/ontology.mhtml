@@ -74,22 +74,22 @@ Annotation extensions
 
   <div ng-show="currentTerm()" class="ng-cloak curs-ontology-workflow-buttons">
     <button type="submit" class="btn btn-primary curs-back-button"
-            title="&lt;- Back"
-            ng-click="back()">&lt;- Back</button>
+            title="&larr; Back"
+            ng-click="back()">&larr; Back</button>
     <div ng-if="getState() == 'searching' && doNotAnnotateCurrentTerm" class="curs-do-not-annotate">
       This term should not be used for direct annotations. Please
       select a more specific term, or suggest a new descendant term.
     </div>
     <button ng-if="getState() != 'searching' || !doNotAnnotateCurrentTerm"
             type="submit" class="btn btn-primary curs-finish-button"
-            title="Proceed -&gt;"
+            title="Proceed &rarr;"
             ng-disabled="!isValid() || postInProgress"
-            ng-click="proceed()" >Proceed -&gt;</button>
+            ng-click="proceed()" >Proceed &rarr;</button>
   </div>
 
   <a ng-show="!prevState() && !currentTerm() && backToFeatureUrl"
      href="{{backToFeatureUrl}}"
-     class="btn btn-primary curs-back-button">&lt;- Back</a>
+     class="btn btn-primary curs-back-button">&larr; Back</a>
 </div>
 
 <%init>

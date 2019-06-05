@@ -54,7 +54,7 @@ $editing
 
   <button id="curs-add-allele-proceed" name="allele-proceed" type="submit"
           style="display: none" class="curs-finish-button">
-    Proceed -&gt;
+    Proceed &rarr;
   </button>
 </div>
 

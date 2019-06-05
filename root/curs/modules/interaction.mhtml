@@ -17,12 +17,12 @@ $feature
 
       <button type="submit" class="btn btn-primary curs-back-button"
               title="Back to previous page"
-              ng-click="unconfirmEvidence()">&lt;- Back</button>
+              ng-click="unconfirmEvidence()">&larr; Back</button>
 
       <button type="submit" class="btn btn-primary curs-finish-button"
               title="{{someFeaturesSelected() ? 'Confirm' : 'Select some genes to confirm this interaction'}}"
               ng-disabled="!someFeaturesSelected()"
-              ng-click="addInteractionAndEvidence()">Confirm -&gt;</button>
+              ng-click="addInteractionAndEvidence()">Confirm &rarr;</button>
     </div>
   </div>
 
@@ -49,11 +49,11 @@ the interaction once.
     </div>
 
     <button type="submit" class="btn btn-primary curs-back-button"
-            title="&lt;- Back"
-            ng-click="backToGene()">&lt;- Back</button>
+            title="&larr; Back"
+            ng-click="backToGene()">&larr; Back</button>
     <button type="submit" class="btn btn-primary curs-finish-button"
             ng-disabled="!isValidEvidence() || postInProgress"
-            ng-click="confirmEvidence()" >Proceed -&gt;</button>
+            ng-click="confirmEvidence()" >Proceed &rarr;</button>
 
   </div>
 </div>

@@ -68,7 +68,7 @@ Description
 <div class="clearall"/>
 
 <button type="button" ng-click="backToMetagenotypes()"
-        class="btn btn-primary curs-back-button">&lt;- Back</button>
+        class="btn btn-primary curs-back-button">&larr; Back</button>
 
 </div>
 
