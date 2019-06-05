@@ -187,7 +187,7 @@ if ($do_organisms) {
   my $load_util = Canto::Track::LoadUtil->new(schema => $schema);
   my $guard = $schema->txn_scope_guard;
 
-  open my $fh, '<', $do_organisms or die "can't open $do_genes: $!";
+  open my $fh, '<', $do_organisms or die "can't open $do_organisms: $!";
 
   my %seen_organisms = ();
 
@@ -195,14 +195,14 @@ if ($do_organisms) {
     next if $line =~ /Genus|ScientificName/ && $. == 1;
 
     chomp $line;
-    next if $line =~ /^\s*$/;
 
     if ($line !~ /,/) {
       warn "line doesn't look comma separated: $line\n";
       next;
     }
 
-    my ($scientific_name, $taxonid, $common_name) = split (/,/, $line);
+    my ($scientific_name, $taxonid, $common_name) =
+      map { s/^\s+//; s/\s+$//; $_; } split (/,/, $line);
 
     if (!defined $taxonid) {
       warn "not enough fields in line: $line\n";
@@ -215,7 +215,7 @@ if ($do_organisms) {
 
     if ($taxonid !~ /^\d+$/) {
       $guard->{inactivated} = 1;
-      die qq(load failed - Taxon ID in third column of line $. isn't an integer: $taxonid\n);
+      die qq(load failed - Taxon ID on line $. isn't an integer: $taxonid\n);
     }
 
     if (exists $seen_organisms{$scientific_name}) {
@@ -232,7 +232,21 @@ if ($do_organisms) {
       $seen_organisms{$scientific_name} = [$taxonid, $.];
     }
 
-    $load_util->get_organism($scientific_name, $taxonid, $common_name);
+    my $org = $load_util->find_organism_by_taxonid($taxonid);
+
+    if ($org) {
+      if ($org->scientific_name() ne $scientific_name) {
+        $org->scientific_name($scientific_name);
+        $org->update();
+      }
+
+      if ($org->common_name() && $org->common_name() ne $common_name) {
+        $org->common_name($common_name);
+        $org->update();
+      }
+    } else {
+      $load_util->get_organism($scientific_name, $taxonid, $common_name);
+    }
   }
 
   $guard->commit unless $dry_run;
