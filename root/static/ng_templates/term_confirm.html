@@ -41,10 +41,10 @@ Confirm term
   <div class="modal-footer">
     <div ng-if="data.state == 'definition'">
       <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-      <button class="btn btn-primary" ng-click="next()">Next -&gt;</button>
+      <button class="btn btn-primary" ng-click="next()">Next &rarr;</button>
     </div>
     <div ng-if="data.state == 'children'">
-      <button class="btn btn-warning" ng-click="back()">&lt;- Back</button>
+      <button class="btn btn-warning" ng-click="back()">&larr; Back</button>
       <button ng-if="!data.doNotAnnotateCurrentTerm"
               class="btn btn-primary" ng-click="finish()">Finish</button>
     </div>
