@@ -724,7 +724,7 @@ sub gene_upload : Chained('top') Args(0) Form
   if ($form->submitted_and_valid()) {
     if ($form->param_value('no-genes')) {
       my $no_genes_reason =
-        $form->param_value('no-genes-reason') // $form->param_value('no-genes-other');
+        $form->param_value('no-genes-other') // $form->param_value('no-genes-reason');
 
       $no_genes_reason =~ s/^\s+//;
       $no_genes_reason =~ s/\s+$//;
