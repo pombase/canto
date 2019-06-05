@@ -4387,7 +4387,7 @@ var genotypeManageCtrl =
           }
         }
 
-        window.addEventListener('load', hashChangedHandler);
+        hashChangedHandler();
         window.addEventListener('hashchange', hashChangedHandler);
 
         $scope.cancelEdit = function () {
