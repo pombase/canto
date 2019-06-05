@@ -27,7 +27,7 @@ $title
 %}
 
 <script language="javascript" type="text/javascript">
-var application_root = '<% $c->uri_for('/') %>';
+var application_root = '<% $c->uri_for('/') =~ s|/$||r %>';
 var app_static_path = '<% $c->uri_for('/static/') %>';
 var is_admin_user = '<% $c->stash()->{is_admin_user} %>';
 </script>

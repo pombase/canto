@@ -52,7 +52,7 @@ $(document).ready(function() {
 
 // eslint-disable-next-line no-unused-vars
 function make_ontology_complete_url(annotation_type, extensionLookup) {
-  var url = application_root + 'ws/lookup/ontology/' + annotation_type + '?def=1';
+  var url = application_root + '/ws/lookup/ontology/' + annotation_type + '?def=1';
   if (extensionLookup) {
     url += '&extension_lookup=' + extensionLookup;
   }
@@ -186,7 +186,7 @@ $(document).ready(function() {
   });
 
   $('#curs-pub-triage-this-pub').click(function () {
-    window.location.href = application_root + 'tools/triage?triage-return-pub-id=' + $(this).val();
+    window.location.href = application_root + '/tools/triage?triage-return-pub-id=' + $(this).val();
   });
 
   $('#curs-pub-assign-cancel,#curs-pub-create-session-cancel,.curs-dialog-cancel').click(function () {
