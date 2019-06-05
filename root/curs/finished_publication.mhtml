@@ -5,7 +5,7 @@ $message_to_curators => undef
 $no_annotation_reason => undef
 </%args>
 
-<div id="curs-pub-finished">
+<div ng-controller="FinishedPublicationPageCtrl" id="curs-pub-finished">
 <p>
 Thank you for your contribution<% $contrib_destination %>.
 You curated <% $gene_count %> <% $gene_count == 1 ? 'gene' : 'genes' %> for
@@ -51,8 +51,14 @@ find more of your publications</p>
     Message sent to the curators
   </div>
   <div class="curs-box-body">
-    <% $message_to_curators %>
+    <span ng-hide="messageForCurators"><% $message_to_curators %></span>
+    <span class="ng-cloak" ng-show="messageForCurators">{{messageForCurators}}</span>
   </div>
+% if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
+  <div class="curs-box-body" ng-hide="messageForCurators == null" >
+    <a href="" ng-click="editMessageForCurators()">Edit ...</a>
+  </div>
+% }
 </div>
 % }
 

@@ -2123,6 +2123,7 @@ max_term_name_select_count: 20
 curs_settings_service:
   allowed_keys:
     annotation_mode: 1
+    message_for_curators: 1
   allowed_data_keys:
     checked: 1
 

@@ -8234,3 +8234,79 @@ var editOrganisms = function ($window, EditOrganismsSvc, StrainsService, CantoGl
 };
 
 canto.directive('editOrganisms', ['$window', 'EditOrganismsSvc', 'StrainsService', 'CantoGlobals', editOrganisms]);
+
+
+
+var messageForCuratorsEditDialogCtrl =
+  function ($scope, $uibModalInstance, toaster, CursSettings, args) {
+    $scope.data = {
+      message: args.message,
+    };
+
+    $scope.finish = function () {
+      if ($scope.data.message === args.message) {
+        $uibModalInstance.close();
+      } else {
+        CursSettings.set('message_for_curators', $scope.data.message)
+        .then(function () {
+          $uibModalInstance.close($scope.data.message);
+        })
+        .catch(function(error) {
+          toaster.pop('error', 'Failed to save message: ' + error);
+        });
+      }
+    };
+
+    $scope.cancel = function () {
+      $uibModalInstance.dismiss('cancel');
+    };
+  };
+
+canto.controller('MessageForCuratorsEditDialogCtrl',
+  ['$scope', '$uibModalInstance', 'toaster', 'CursSettings',
+    'args',
+    messageForCuratorsEditDialogCtrl
+  ]);
+
+
+function editMessageForCurators($uibModal, message) {
+  var editInstance = $uibModal.open({
+    templateUrl: app_static_path + 'ng_templates/message_for_curators_edit_dialog.html',
+    controller: 'MessageForCuratorsEditDialogCtrl',
+    title: 'Edit message for curators',
+    animate: false,
+    size: 'lg',
+    resolve: {
+      args: function () {
+        return {
+          message: message
+        };
+      }
+    },
+    backdrop: 'static',
+  });
+
+  return editInstance.result;
+}
+
+
+var finishedPublicationPageCtrl =
+    function ($scope, $uibModal, CursSettings) {
+    $scope.messageForCurators = null;
+
+    CursSettings.getAll().then(function (response) {
+      $scope.messageForCurators = response.data.message_for_curators;
+    });
+
+    $scope.editMessageForCurators = function () {
+      if ($scope.messageForCurators) {
+        editMessageForCurators($uibModal, $scope.messageForCurators)
+          .then(function(result) {
+            $scope.messageForCurators = result;
+          });
+      }
+    };
+  };
+
+canto.controller('FinishedPublicationPageCtrl',
+                 ['$scope', '$uibModal', 'CursSettings', finishedPublicationPageCtrl]);
