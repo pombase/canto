@@ -3147,7 +3147,6 @@ var alleleNameComplete =
       template: '<span><input ng-model="alleleName" placeholder="{{placeholder}}" type="text" class="curs-allele-name aform-control" value=""/></span>',
       controller: function ($scope) {
         $scope.allelePrimaryIdentifier = null;
-        $scope.alleleName = null;
         $scope.alleleSynonyms = null;
         $scope.alleleDescription = null;
         $scope.alleleType = null;
