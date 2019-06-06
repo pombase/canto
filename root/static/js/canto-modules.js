@@ -4756,6 +4756,56 @@ canto.directive('genotypeSearch',
     genotypeSearchCtrl
   ]);
 
+
+function getDisplayLoci(alleles) {
+  var diploidMap = {};
+  var displayLoci = [];
+
+  $.map(alleles,
+        function(allele) {
+          if (allele.diploid_name) {
+            if (!diploidMap[allele.diploid_name]) {
+              diploidMap[allele.diploid_name] = [];
+            }
+            diploidMap[allele.diploid_name].push(allele);
+          } else {
+            displayLoci.push(allele);
+          }
+        });
+
+  Object.keys(diploidMap).forEach(function(diploidName) {
+    var alleles = diploidMap[diploidName];
+
+    var type;
+
+    if (alleles.length == 2) {
+      type = 'diploid';
+    } else {
+      type = 'multiploid';
+    }
+
+    var alleleDisplayNames =
+        $.map(alleles,
+              function(allele) {
+                return allele.display_name;
+              });
+
+    var displayName = alleleDisplayNames.join(' / ');
+
+    var diploidLocus = {
+      gene_display_name: alleles[0].gene_display_name,
+      gene_id: alleles[0].gene_id,
+      type: type,
+      display_name: displayName,
+    };
+
+    displayLoci.push(diploidLocus);
+  });
+
+  return displayLoci;
+}
+
+
 var genotypeListRowLinksCtrl =
   function ($uibModal, $http, toaster, CantoGlobals, CursGenotypeList, AnnotationTypeConfig) {
     return {
@@ -4940,49 +4990,7 @@ var genotypeListRowCtrl =
         $scope.multi_organism_mode = CantoGlobals.multi_organism_mode;
         $scope.userIsAdmin = CantoGlobals.current_user_is_admin;
 
-        var diploidMap = {};
-        var displayLoci = [];
-
-        $.map($scope.genotype.alleles,
-              function(allele) {
-                if (allele.diploid_name) {
-                  if (!diploidMap[allele.diploid_name]) {
-                    diploidMap[allele.diploid_name] = [];
-                  }
-                  diploidMap[allele.diploid_name].push(allele);
-                } else {
-                  displayLoci.push(allele);
-                }
-              });
-
-        Object.keys(diploidMap).forEach(function(diploidName) {
-          var alleles = diploidMap[diploidName];
-
-          var type;
-
-          if (alleles.length == 2) {
-            type = 'diploid';
-          } else {
-            type = 'multiploid';
-          }
-
-          var alleleDisplayNames =
-              $.map(alleles,
-                    function(allele) {
-                      return allele.display_name;
-                    });
-
-          var displayName = alleleDisplayNames.join(' / ');
-
-          var diploidLocus = {
-            gene_display_name: alleles[0].gene_display_name,
-            gene_id: alleles[0].gene_id,
-            type: type,
-            display_name: displayName,
-          };
-
-          displayLoci.push(diploidLocus);
-        });
+        var displayLoci = getDisplayLoci($scope.genotype.alleles);
 
         $scope.firstLocus = displayLoci[0];
         $scope.otherLoci = displayLoci.slice(1);
@@ -6151,7 +6159,6 @@ function filterAnnotations(annotations, params) {
     return false;
   });
 }
-
 
 var annotationTableCtrl =
   function (CantoGlobals, AnnotationTypeConfig, CursGenotypeList,
