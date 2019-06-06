@@ -446,14 +446,16 @@ sub _genotype_details_hash
       ->search({ genotype => $genotype->genotype_id() },
                { prefetch => [qw[diploid allele]] });
 
+    my @alleles = ();
+
     while (defined (my $row = $allele_genotype_rs->next())) {
+      my $allele = $row->allele();
+      push @alleles, $allele;
       my $diploid = $row->diploid();
       if ($diploid) {
-        push @{$diploid_names{$row->allele()->allele_id()}}, $diploid->name();
+        push @{$diploid_names{$allele->allele_id()}}, $diploid->name();
       }
     }
-
-    my @alleles = $genotype->alleles()->all();
 
     my @allele_hashes = map { $self->_allele_details_hash($_); } @alleles;
 
