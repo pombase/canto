@@ -4787,7 +4787,7 @@ function getDisplayLoci(alleles) {
     var alleleDisplayNames =
         $.map(alleles,
               function(allele) {
-                return allele.display_name;
+                return allele.long_display_name;
               });
 
     var displayName = alleleDisplayNames.join(' / ');
@@ -4796,7 +4796,7 @@ function getDisplayLoci(alleles) {
       gene_display_name: alleles[0].gene_display_name,
       gene_id: alleles[0].gene_id,
       type: type,
-      display_name: displayName,
+      long_display_name: displayName,
     };
 
     displayLoci.push(diploidLocus);
@@ -6394,6 +6394,12 @@ var annotationTableRow =
           });
 
         var annotation = $scope.annotation;
+
+        if (annotation.alleles) {
+          $scope.displayLoci = getDisplayLoci(annotation.alleles);
+        } else {
+          $scope.displayLoci = null;
+        }
 
         $scope.checked = annotation['checked'] || 'no';
 

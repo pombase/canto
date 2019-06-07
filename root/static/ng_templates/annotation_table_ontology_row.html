@@ -6,8 +6,8 @@
     {{annotation.strain_name}}
   </td>
   <td ng-if="annotationType.feature_type == 'genotype'">
-    <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles">
-      {{allele.gene_display_name}}
+    <div style="white-space: nowrap" ng-repeat="locus in displayLoci">
+      {{locus.gene_display_name}}
     </div>
   </td>
   <td ng-if="annotationType.feature_type == 'metagenotype'">
@@ -43,8 +43,8 @@
     <span ng-if="annotation.status === 'new'">
       <a ng-if="addLinks()"
          href="{{featureLink(annotationType.feature_type, annotation.feature_id)}}">
-        <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles">
-          <initially-hidden-text text="{{allele.long_display_name | encodeAlleleSymbols | toTrusted}}"
+        <div style="white-space: nowrap" ng-repeat="locus in displayLoci">
+          <initially-hidden-text text="{{locus.long_display_name | encodeAlleleSymbols | toTrusted}}"
                                  preview-char-count="50"
                                  break-on-comma="true"
                                  link-label="..."></initially-hidden-text>
@@ -52,8 +52,8 @@
         </div>
       </a>
       <span ng-if="!addLinks()">
-        <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles">
-          <initially-hidden-text text="{{allele.long_display_name | encodeAlleleSymbols | toTrusted}}"
+        <div style="white-space: nowrap" ng-repeat="locus in displayLoci">
+          <initially-hidden-text text="{{locus.long_display_name | encodeAlleleSymbols | toTrusted}}"
                                  preview-char-count="50"
                                  break-on-comma="true"
                                  link-label="..."></initially-hidden-text>
@@ -61,8 +61,8 @@
       </span>
     </span>
     <span ng-if="annotation.status === 'existing'">
-      <div style="white-space: nowrap" ng-repeat="allele in annotation.alleles">
-        <initially-hidden-text text="{{allele.long_display_name | encodeAlleleSymbols | toTrusted}}"
+      <div style="white-space: nowrap" ng-repeat="locus in displayLoci">
+        <initially-hidden-text text="{{locus.long_display_name | encodeAlleleSymbols | toTrusted}}"
                                preview-char-count="50"
                                break-on-comma="true"
                                link-label="..."></initially-hidden-text>

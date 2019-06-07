@@ -673,11 +673,8 @@ sub _allele_details_hash
     confess();
   }
 
-  my $display_name =
-    Canto::Curs::Utils::make_allele_display_name($self->config(),
-                                                 $allele->name(),
-                                                 $allele->description(),
-                                                 $allele->type());
+  my $display_name = $allele->display_name($self->config());
+  my $long_display_name = $allele->long_identifier($self->config());
 
   my @synonyms_list = _make_allelesynonym_hashes($allele);
 
@@ -688,6 +685,7 @@ sub _allele_details_hash
     type => $allele->type(),
     expression => $allele->expression(),
     display_name => $display_name,
+    long_display_name => $long_display_name,
     comment => $allele->comment(),
     allele_id => $allele->allele_id(),
     synonyms => \@synonyms_list,

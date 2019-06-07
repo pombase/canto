@@ -63,6 +63,7 @@ sub _make_allelesynonym_hashes
 
 sub _make_genotype_details
 {
+  my $curs_schema = shift;
   my $genotype = shift;
   my $config = shift;
   my $ontology_lookup = shift;
@@ -75,7 +76,25 @@ sub _make_genotype_details
     die "internal error - no \$organism_lookup passed to _make_genotype_details()";
   }
 
-  my @alleles = map {
+  my %diploid_names = ();
+
+  my $allele_genotype_rs = $curs_schema->resultset('AlleleGenotype')
+    ->search({ genotype => $genotype->genotype_id() },
+             {
+               prefetch => [qw[diploid allele]] });
+
+  my @alleles = ();
+
+  while (defined (my $row = $allele_genotype_rs->next())) {
+    my $allele = $row->allele();
+    push @alleles, $allele;
+    my $diploid = $row->diploid();
+    if ($diploid) {
+      push @{$diploid_names{$allele->allele_id()}}, $diploid->name();
+    }
+  }
+
+  my @allele_hashes = map {
     my $allele = $_;
 
     my $gene_display_name;
@@ -107,13 +126,23 @@ sub _make_genotype_details
         gene_id => $gene_id,
         gene_display_name => $gene_display_name,
         long_display_name => $allele->long_identifier($config),
+        display_name => $allele->display_name($config),
         synonyms => \@synonyms_list,
     };
 
     $allele_obj;
-  } $genotype->alleles()->search({}, { prefetch => ['gene', 'allelesynonyms'] });
+  } @alleles;
 
-  @alleles = sort {
+  map {
+    if ($diploid_names{$_->{allele_id}}) {
+      my $diploid_name = pop(@{$diploid_names{$_->{allele_id}}});
+      if ($diploid_name) {
+        $_->{diploid_name} = $diploid_name;
+      }
+    }
+  } @allele_hashes;
+
+  @allele_hashes = sort {
     my $a_gene = $a->{gene_display_name};
     my $b_gene = $b->{gene_display_name};
 
@@ -126,7 +155,7 @@ sub _make_genotype_details
     }
 
     $a_gene cmp $b_gene;
-  } @alleles;
+  } @allele_hashes;
 
   my $strain_name = undef;
 
@@ -150,12 +179,13 @@ sub _make_genotype_details
     feature_type => 'genotype',
     feature_display_name => $genotype_display_name,
     feature_id => $genotype->genotype_id(),
-    alleles => [@alleles],
+    alleles => [@allele_hashes],
   );
 }
 
 sub _make_metagenotype_details
 {
+  my $curs_schema = shift;
   my $metagenotype = shift;
   my $config = shift;
   my $ontology_lookup = shift;
@@ -165,9 +195,11 @@ sub _make_metagenotype_details
   my $host_genotype = $metagenotype->host_genotype();
 
   my %pathogen_genotype_details =
-    _make_genotype_details($pathogen_genotype, $config, $ontology_lookup, $organism_lookup);
+    _make_genotype_details($curs_schema, $pathogen_genotype, $config,
+                           $ontology_lookup, $organism_lookup);
   my %host_genotype_details =
-    _make_genotype_details($host_genotype, $config, $ontology_lookup, $organism_lookup);
+    _make_genotype_details($curs_schema, $host_genotype, $config,
+                           $ontology_lookup, $organism_lookup);
 
   my $metagenotype_display_name =
     $pathogen_genotype_details{organism}->{full_name} . ' ' .
@@ -245,7 +277,7 @@ sub make_ontology_annotation
 
     my $genotype = $annotation_genotypes[0];
 
-    %genotype_details = _make_genotype_details($genotype, $config,
+    %genotype_details = _make_genotype_details($schema, $genotype, $config,
                                                $ontology_lookup, $organism_lookup);
   }
 
@@ -263,7 +295,7 @@ sub make_ontology_annotation
 
     my $metagenotype = $annotation_metagenotypes[0];
 
-    %metagenotype_details = _make_metagenotype_details($metagenotype, $config,
+    %metagenotype_details = _make_metagenotype_details($schema, $metagenotype, $config,
                                                        $ontology_lookup, $organism_lookup);
   }
 
