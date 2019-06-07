@@ -40,9 +40,6 @@
       <a title="{{firstLocus.comment}}" ng-click="viewAlleleComment(genotype.alleles[0])">note ...</a>
     </span>
   </td>
-  <td ng-if="alleles_have_expression">
-    <span ng-bind-html="firstLocus.expression | formatExpression | toTrusted"></span>
-  </td>
   <td rowspan="{{genotype.alleles.length}}" ng-hide="columnsToHide.strain">{{ strain }}</td>
   <td rowspan="{{genotype.alleles.length}}" ng-hide="columnsToHide.background">
     <span ng-bind-html="genotype.background | wrapAtSpaces | encodeAlleleSymbols | toTrusted"></span>
@@ -99,9 +96,6 @@
             ng-if="userIsAdmin && currentAllele.comment">
         <a title="{{currentAllele.comment}}" ng-click="viewAlleleComment(currentAllele)">note ...</a>
       </span>
-    </td>
-    <td ng-if="alleles_have_expression">
-      <span ng-bind-html="currentAllele.expression | formatExpression | toTrusted"></span>
     </td>
   </tr>
 </tbody>
