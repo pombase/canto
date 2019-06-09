@@ -5,7 +5,7 @@
       rowspan="{{genotype.alleles.length}}">
     <input ng-show="showCheckBoxActions" name="select-annotation" type="Checkbox" ng-model="$parent.checkBoxIsChecked"/>
   </td>
-  <td ng-hide="columnsToHide.name">
+  <td ng-hide="columnsToHide.name" rowspan="{{otherLoci.length + 1}}">
     <span ng-bind-html="genotype.name | wrapAtSpaces | encodeAlleleSymbols | toTrusted"></span>
   </td>
   <td>
