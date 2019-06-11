@@ -79,6 +79,9 @@ and only show genes and genotypes for the selected organism.
 If 0, hide the list of genes and actions on the left hand side of the
 genotype management page.
 
+### notes_on_single_genotypes_only
+If 1, allow notes/comments on diploids and multi-locus genotypes.
+
 ### allow_single_wildtype_allele
 If 0, a wildtype allele is allowed only if there is another non-wildtype or
 non-wildtype expression allele from the same gene.

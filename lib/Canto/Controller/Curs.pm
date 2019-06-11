@@ -167,6 +167,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{pathogen_host_mode} = $config->{pathogen_host_mode};
   $st->{split_genotypes_by_organism} = $config->{split_genotypes_by_organism};
   $st->{show_genotype_management_genes_list} = $config->{show_genotype_management_genes_list};
+  $st->{notes_on_single_allele_genotypes_only} = $config->{notes_on_single_allele_genotypes_only};
 
   my $with_gene_evidence_codes =
     { map { ( $_, 1 ) }

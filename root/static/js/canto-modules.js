@@ -755,6 +755,7 @@ canto.service('CantoGlobals', function ($window) {
   this.multi_organism_mode = $window.multi_organism_mode;
   this.split_genotypes_by_organism = $window.split_genotypes_by_organism;
   this.show_genotype_management_genes_list = $window.show_genotype_management_genes_list;
+  this.notes_on_single_allele_genotypes_only = $window.notes_on_single_allele_genotypes_only;
   this.strains_mode = $window.strains_mode;
   this.pathogen_host_mode = $window.pathogen_host_mode;
   this.alleles_have_expression = $window.alleles_have_expression;
@@ -4989,6 +4990,8 @@ var genotypeListRowCtrl =
         $scope.closeIconPath = CantoGlobals.app_static_path + '/images/close_icon.png';
         $scope.multi_organism_mode = CantoGlobals.multi_organism_mode;
         $scope.userIsAdmin = CantoGlobals.current_user_is_admin;
+        $scope.notesOnSingleAlleleGenotypesOnly =
+          CantoGlobals.notes_on_single_allele_genotypes_only;
 
         var displayLoci = getDisplayLoci($scope.genotype.alleles);
 
