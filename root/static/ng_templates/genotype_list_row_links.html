@@ -30,7 +30,7 @@
   </div>
   <div ng-if="!read_only_curs && userIsAdmin">
     <a ng-class="{disabled: genotypeId == null }"
-       ng-click="editComment(genotypeId)">Add/edit comment...</a>
+       ng-click="editComment(genotypeId)">Add/edit new note...</a>
   </div>
   <div title="{{deleteTitle}}">
     <a ng-class="{disabled: genotypeId == null || !canDelete}"

@@ -4734,7 +4734,7 @@ function editCommentDialog($uibModal, genotype) {
   var editInstance = $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/genotype_comment_edit.html',
     controller: 'GenotypeCommentEditDialogCtrl',
-    title: 'Edit genotype comment',
+    title: 'Edit new note',
     animate: false,
     //    size: 'lg',
     resolve: {
