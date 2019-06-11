@@ -1122,7 +1122,7 @@ sub make_allele_display_name
   my $allele_type_config = $config->{allele_types}->{$type};
 
   if ($type eq 'deletion' && $name =~ /delta$/ ||
-        $type =~ /^wild[\s_]?type$/ && $name =~ /\+$/ ||
+        $type =~ /^wild[\s_]?type$/ && $name =~ /(\+|\[\+\])$/ ||
       $allele_type_config && $allele_type_config->{hide_type_name}) {
     if ($description &&
         $description =~ s/[\s_]+//gr ne $type =~ s/[\s_]+//gr) {
