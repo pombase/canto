@@ -2995,7 +2995,11 @@ sub ws_settings_get_all : Chained('top') PathPart('ws/settings/get_all')
 
 sub ws_settings_set : Chained('top') PathPart('ws/settings/set')
 {
-  my ($self, $c, $key, $value) = @_;
+  my ($self, $c, $key) = @_;
+
+  my $body_data = _decode_json_content($c);
+
+  my $value = $body_data->{value};
 
   my $st = $c->stash();
   my $schema = $st->{schema};
