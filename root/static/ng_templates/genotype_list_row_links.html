@@ -28,7 +28,7 @@
     <a ng-class="{disabled: genotypeId == null }"
        ng-click="editBackground(genotypeId)">Add/edit background ...</a>
   </div>
-  <div ng-if="!read_only_curs && userIsAdmin">
+  <div ng-if="showNoteEdit()">
     <a ng-class="{disabled: genotypeId == null }"
        ng-click="editComment(genotypeId)">Add/edit new note...</a>
   </div>

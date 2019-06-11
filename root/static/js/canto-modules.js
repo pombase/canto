@@ -4821,6 +4821,8 @@ var genotypeListRowLinksCtrl =
       templateUrl: CantoGlobals.app_static_path + 'ng_templates/genotype_list_row_links.html',
       controller: function ($scope) {
         $scope.userIsAdmin = CantoGlobals.current_user_is_admin;
+        $scope.notesOnSingleAlleleGenotypesOnly =
+          CantoGlobals.notes_on_single_allele_genotypes_only;
 
         var genotype =
           $.grep($scope.genotypes, function (genotype) {
@@ -4938,6 +4940,11 @@ var genotypeListRowLinksCtrl =
           genotypePromise.then(function (genotype) {
             editBackgroundDialog($uibModal, genotype);
           });
+        };
+
+        $scope.showNoteEdit = function () {
+          return !$scope.read_only_curs && $scope.userIsAdmin &&
+            (!$scope.notesOnSingleAlleleGenotypesOnly || genotype.alleles.length == 1);
         };
 
         $scope.editComment = function (genotypeId) {
