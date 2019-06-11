@@ -45,7 +45,7 @@ Annotations
   </table>
 
   <div class="curs-genotype-list-view-no-checkbox"
-       ng-if="showCheckBoxActions && diploid_mode && diploidList.length != 0">
+       ng-if="showCheckBoxActions && userIsAdmin && diploid_mode && diploidList.length != 0">
     Actions:
     <button class="btn btn-primary btn-xs"
             ng-disabled="!validForDiploid()"
@@ -102,7 +102,7 @@ Annotations
                     ng-disabled="checkedGenotypeCount() < 2"
                     title="{{checkedGenotypeCount() < 2 ? 'Select two or more genotypes' : 'Combine the selected genotypes'}}"
                     ng-click="combineGenotypes()">Combine selected genotypes</button>
-    <span ng-if="diploid_mode && diploidList.length == 0">
+    <span ng-if="userIsAdmin && diploid_mode && diploidList.length == 0">
       <button class="btn btn-primary btn-xs"
                       ng-disabled="!validForDiploid()"
                       title="{{checkedGenotypeCount() < 1 ? 'Select a single allele genotype' : 'Create a diploid genotype the includes the selected allele'}}"
