@@ -5216,9 +5216,6 @@ var genotypeListViewCtrl =
               count += 1;
             }
           }
-          if (!CantoGlobals.alleles_have_expression) {
-            count += 1;
-          }
           return count;
         }
 
