@@ -1303,6 +1303,9 @@ implementation_classes:
   organism_adaptor: Canto::Track::OrganismLookup
   strain_adaptor: Canto::Track::StrainLookup
 
+wildtype_name_template: '@@gene_display_name@@+'
+deletion_name_template: '@@gene_display_name@@delta'
+
 allele_type_list:
   - name: wild type
     export_type: wild_type
@@ -1311,14 +1314,12 @@ allele_type_list:
     allele_name_required: true
     allow_expression_change: true
     expression_required: true
-    autopopulate_name: '@@gene_display_name@@+'
   - name: deletion
     export_type: deletion
     show_description: false
     description_required: false
     allele_name_required: true
     allow_expression_change: false
-    autopopulate_name: '@@gene_display_name@@delta'
   - name: disruption
     name_hint: "e.g. pom1::ura4+"
     export_type: disruption
@@ -2120,6 +2121,8 @@ config_service:
     help_text: 1
     public_mode: 1
     ontology_namespace_config: 1
+    wildtype_name_template: 1
+    deletion_name_template: 1
 
 max_term_name_select_count: 20
 

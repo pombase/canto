@@ -3244,6 +3244,11 @@ var alleleNameComplete =
 canto.directive('alleleNameComplete', ['CursAlleleList', 'toaster', alleleNameComplete]);
 
 
+function makeAutopopulateName(template, geneName) {
+  return template.replace(/@@gene_display_name@@/, geneName);
+}
+
+
 var alleleEditDialogCtrl =
   function ($scope, $uibModalInstance, toaster, CantoConfig, args, Curs, CantoGlobals) {
     $scope.alleleData = {};
@@ -3325,7 +3330,7 @@ var alleleEditDialogCtrl =
       }
 
       $scope.alleleData.name =
-        autopopulate_name.replace(/@@gene_display_name@@/, $scope.alleleData.gene_display_name);
+        makeAutopopulateName(autopopulate_name, $scope.alleleData.gene_display_name);
       return this.alleleData.name;
     };
 
@@ -5081,7 +5086,7 @@ canto.directive('alleleSelector',
 
 
 var diploidConstructorDialogCtrl =
-    function ($scope, $uibModalInstance, toaster, args) {
+    function ($scope, $uibModalInstance, CantoGlobals, CantoConfig, toaster, args) {
       $scope.startAllele = args.startAllele;
       $scope.diploidType = 'homozygous';
       $scope.selectorAlleles = [];
@@ -5114,28 +5119,36 @@ var diploidConstructorDialogCtrl =
       };
 
       $scope.ok = function () {
-        var otherAllele;
+        return CantoConfig.get('wildtype_name_template')
+          .then(function (data) {
+            var nameTemplate = data.value;
+            var otherAllele;
 
-        if ($scope.diploidType === 'wild type') {
-          otherAllele = {
-            expression: "Wild type product level",
-            gene_id: $scope.startAllele.gene_id,
-            type: "wild type",
-          };
-        } else {
-          if ($scope.diploidType === 'homozygous') {
-            otherAllele = $scope.startAllele;
-          } else {
-            otherAllele = $.grep(args.alleles,
-                                 function(allele) {
-                                   return allele.allele_id === $scope.selectedAlleleId;
-                                 })[0];
-          }
-        }
+            if ($scope.diploidType === 'wild type') {
+              var geneDisplayName = $scope.startAllele.gene_display_name;
+              otherAllele = {
+                name: makeAutopopulateName(nameTemplate, geneDisplayName),
+                gene_id: $scope.startAllele.gene_id,
+                type: "wild type",
+              };
+              if (CantoGlobals.alleles_have_expression) {
+                otherAllele['expression'] = "Wild type product level";
+              }
+            } else {
+              if ($scope.diploidType === 'homozygous') {
+                otherAllele = $scope.startAllele;
+              } else {
+                otherAllele = $.grep(args.alleles,
+                                     function(allele) {
+                                       return allele.allele_id === $scope.selectedAlleleId;
+                                     })[0];
+              }
+            }
 
-        $uibModalInstance.close({
-          diploidAlleles: [$scope.startAllele, otherAllele],
-        });
+            $uibModalInstance.close({
+              diploidAlleles: [$scope.startAllele, otherAllele],
+            });
+          });
       };
 
       $scope.cancel = function () {
@@ -5144,7 +5157,7 @@ var diploidConstructorDialogCtrl =
     };
 
 canto.controller('DiploidConstructorDialogCtrl',
-                 ['$scope', '$uibModalInstance', 'toaster', 'args',
+                 ['$scope', '$uibModalInstance', 'CantoGlobals', 'CantoConfig', 'toaster', 'args',
                   diploidConstructorDialogCtrl
                  ]);
 

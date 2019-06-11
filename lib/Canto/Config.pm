@@ -310,6 +310,12 @@ sub setup
   # Service::canto_config() simpler
   if (defined $self->{allele_type_list}) {
     for my $allele_type (@{$self->{allele_type_list}}) {
+      if ($allele_type->{name} =~ /^wild[ _]?type$/) {
+        $allele_type->{autopopulate_name} = $self->{wildtype_name_template};
+      }
+      if ($allele_type->{name} eq 'deletion') {
+        $allele_type->{autopopulate_name} = $self->{deletion_name_template};
+      }
       my $export_type = $allele_type->{export_type} // $allele_type->{name};
       push @{$self->{export_type_to_allele_type}->{$export_type}}, $allele_type;
       $self->{allele_types}->{$allele_type->{name}} = $allele_type;
