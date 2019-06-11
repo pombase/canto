@@ -78,31 +78,37 @@ my $full_expected_curation_session =
         'name' => 'SPCC63.05delta ssm4KE',
         'background' => 'h+',
         'organism_taxonid' => 4896,
-        'alleles' => [
-          {
-            'id' => 'Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-1'
-          },
-          {
-            'id' => 'Schizosaccharomyces pombe SPCC63.05:aaaa0007-1'
-          }
+        'loci' => [
+          [
+            {
+              'id' => 'SPAC27D7.13c:aaaa0007-1'
+            },
+          ],
+          [
+            {
+              'id' => 'SPCC63.05:aaaa0007-1'
+            }
+          ]
         ]
       },
       'aaaa0007-genotype-3' => {
         'organism_taxonid' => 4932,
-        'alleles' => []
+        'loci' => []
       },
       'aaaa0007-genotype-test-2' => {
         'organism_taxonid' => 4896,
-        'alleles' => [
-          {
-            'expression' => 'Knockdown',
-            'id' => 'Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-3'
-          }
+        'loci' => [
+          [
+            {
+              'expression' => 'Knockdown',
+              'id' => 'SPAC27D7.13c:aaaa0007-3'
+            }
+          ]
         ]
       }
     },
     'alleles' => {
-      'Schizosaccharomyces pombe SPCC63.05:aaaa0007-1' => {
+      'SPCC63.05:aaaa0007-1' => {
         'primary_identifier' => 'SPCC63.05:aaaa0007-1',
         'gene' => 'Schizosaccharomyces pombe SPCC63.05',
         'description' => 'deletion',
@@ -110,7 +116,7 @@ my $full_expected_curation_session =
         'synonyms' => [],
         'allele_type' => 'deletion'
       },
-      'Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-1' => {
+      'SPAC27D7.13c:aaaa0007-1' => {
         'primary_identifier' => 'SPAC27D7.13c:aaaa0007-1',
         'gene' => 'Schizosaccharomyces pombe SPAC27D7.13c',
         'description' => 'deletion',
@@ -118,7 +124,7 @@ my $full_expected_curation_session =
         'synonyms' => [],
         'allele_type' => 'deletion'
       },
-      'Schizosaccharomyces pombe SPAC27D7.13c:aaaa0007-3' => {
+      'SPAC27D7.13c:aaaa0007-3' => {
         'description' => 'del_100-200',
         'allele_type' => 'partial_nucleotide_deletion',
         'name' => 'ssm4-D4',

@@ -290,7 +290,7 @@ sub _get_genes
   return %ret;
 }
 
-sub _get_genotype_alleles
+sub _get_genotype_loci
 {
   my $config = shift;
   my $schema = shift;
@@ -298,31 +298,42 @@ sub _get_genotype_alleles
 
   my $organism_lookup = Canto::Track::get_adaptor($config, 'organism');
 
-  my $rs = $genotype->alleles();
+  my $rs = $schema->resultset('AlleleGenotype')
+    ->search({ genotype => $genotype->genotype_id() },
+             {
+               prefetch => [ { allele => 'gene' }, 'diploid' ],
+             });
 
   my @ret = ();
 
-  while (defined (my $allele = $rs->next())) {
-    my $gene = $allele->gene();
+  my %non_haploids = ();
 
-    my $taxonid = $gene->organism()->taxonid();
-    my $organism_details = $organism_lookup->lookup_by_taxonid($taxonid);
-    my $organism_full_name = $organism_details->{full_name};
+  while (defined (my $allele_genotype = $rs->next())) {
+    my $allele = $allele_genotype->allele();
+    my $gene = $allele->gene();
 
     if (!defined $allele->primary_identifier()) {
       warn "undefined primary_identifier: ", $allele->name(), "\n";
     }
 
     my %ret_hash = (
-      id => "$organism_full_name " . $allele->primary_identifier(),
+      id => $allele->primary_identifier(),
     );
 
     if ($allele->expression()) {
       $ret_hash{expression} = $allele->expression();
     }
 
-    push @ret, \%ret_hash;
+    my $locus = $allele_genotype->diploid();
+
+    if ($locus) {
+      push @{$non_haploids{$locus->diploid_id()}}, \%ret_hash;
+    } else {
+      push @ret, [\%ret_hash];
+    }
   }
+
+  push @ret, values %non_haploids;
 
   return @ret;
 }
@@ -341,16 +352,11 @@ sub _get_alleles
   while (defined (my $allele = $rs->next())) {
     my $gene = $allele->gene();
 
-    my $taxonid = $gene->organism()->taxonid();
-    my $organism_details = $organism_lookup->lookup_by_taxonid($taxonid);
-    my $organism_full_name = $organism_details->{full_name};
-
     if (!$allele->primary_identifier()) {
       die 'no primary_identifier for allele with ID: ', $allele->allele_id();
     }
 
-    my $key = "$organism_full_name " . $allele->primary_identifier();
-    my $gene_key = "$organism_full_name " . $gene->primary_identifier();
+    my $key = $allele->primary_identifier();
 
     my $export_type =
       $config->{allele_types}->{$allele->type()}->{export_type};
@@ -358,12 +364,12 @@ sub _get_alleles
     if (!defined $export_type) {
       croak "can't find the export/database type for allele: ",
         ($allele->name() // 'noname'), "(", ($allele->description() // 'unknown'),
-        ") of gene: ", $gene->primary_identifier(), '  type: ', $allele->type();
+        ") ", ($gene ? 'of gene: ' . $gene->primary_identifier() : ''),
+        '  type: ', $allele->type();
     }
 
     my %allele_data = (
       allele_type => $export_type,
-      gene => $gene_key,
     );
 
     if ($gene) {
@@ -459,7 +465,7 @@ sub _get_genotypes
     my $genotype_identifier = $genotype->identifier();
 
     $ret{$genotype_identifier} = {
-      alleles => [_get_genotype_alleles($config, $schema, $genotype)]
+      loci => [_get_genotype_loci($config, $schema, $genotype)]
     };
 
     if ($genotype->organism()) {
