@@ -138,9 +138,11 @@ test_psgi $app, sub {
     is($perl_res->{annotation_mode}, undef);
   }
 
+  my $post_header = ['Content-Type' => 'application/json; charset=UTF-8'];
+
   {
-    my $uri = new URI("$root_url/ws/settings/set/annotation_mode/advanced");
-    my $req = HTTP::Request->new(GET => $uri);
+    my $uri = new URI("$root_url/ws/settings/set/annotation_mode");
+    my $req = HTTP::Request->new(POST => $uri, $post_header, '{"value": "advanced"}');
     my $res = $cb->($req);
 
     my $perl_res = decode_json $res->content();
@@ -159,8 +161,8 @@ test_psgi $app, sub {
   }
 
   {
-    my $uri = new URI("$root_url/ws/settings/set/dummy/dummy");
-    my $req = HTTP::Request->new(GET => $uri);
+    my $uri = new URI("$root_url/ws/settings/set/dummy");
+    my $req = HTTP::Request->new(POST => $uri, $post_header, '{"value": "dummy"}');
     my $res = $cb->($req);
 
     my $perl_res = decode_json $res->content();
