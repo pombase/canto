@@ -281,10 +281,34 @@ sub allele_string
   my $self = shift;
   my $config = shift;
 
-  return
-    join " ", map {
-      $_->long_identifier($config)
-    } $self->alleles();
+  my %diploid_groups = ();
+
+  my $allele_genotype_rs = $self->allele_genotypes()
+    ->search({},
+             {
+               prefetch => [qw[diploid allele]]
+             });
+
+  while (defined (my $row = $allele_genotype_rs->next())) {
+    my $allele = $row->allele();
+    my $diploid = $row->diploid();
+    if ($diploid) {
+      push @{$diploid_groups{$diploid->name()}}, $allele;
+    } else {
+      push @{$diploid_groups{"_haploid-" . $allele->allele_id()}}, $allele;
+    }
+  }
+
+  my @group_names = ();
+
+  for my $group_name (sort keys %diploid_groups) {
+    push @group_names, (join ' / ',
+                        map {
+                          $_->long_identifier($config);
+                        } @{$diploid_groups{$group_name}});
+  }
+
+  return join " ", @group_names;
 }
 
 sub display_name
