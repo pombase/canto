@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 24;
+use Test::More tests => 25;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -30,6 +30,8 @@ $schema->txn_do(
 # get genotype annotations
 my $genotype = $schema->resultset('Genotype')->find({ identifier => 'aaaa0007-genotype-test-1' });
 my @genotype_annotations = $genotype->annotations();
+
+is ($genotype->display_name($config), "SPCC63.05delta ssm4KE");
 
 is (@genotype_annotations, 1);
 
