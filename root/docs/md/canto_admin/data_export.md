@@ -22,9 +22,8 @@ exported sessions with be marked as "EXPORTED" in the Canto database. These
 sessions won't be exported next time. This option is provided so that
 annotation will be exported only once from Canto.
 
-To export the data from all the sessions, regardless of its state use:
-
-    script/canto_export.pl canto-json --all  > canto_all.json
+Add the flag `--all` to include details of all publications and people
+in the JSON output.
 
 ## Reading Canto data into Chado
 The code for loading Canto JSON format files into a Chado database is
