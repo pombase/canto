@@ -28,8 +28,8 @@
           <span ng-if="selectorAlleles.length == 1">{{selectorAlleles[0].displayName}}</span>
         </label>
         <allele-selector
+          mousedown-handler="alleleSelectorMousedown()"
           ng-if="selectorAlleles.length != 1"
-          disable-selector="diploidType != 'other'"
           selected-allele="selectedAlleleId" alleles="selectorAlleles">
         </allele-selector>
       </div>
