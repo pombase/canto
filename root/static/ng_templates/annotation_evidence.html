@@ -2,7 +2,7 @@
   <div ng-class="{ 'has-error': !isValidEvidenceCode() }">
     <select class="form-control"
             ng-model="evidenceCode">
-      <option value="">Choose an evidence code ...</option>
+      <option value="">Choose genetic interaction type ...</option>
       <option ng-repeat="code in evidenceCodes"
               ng-selected="{{evidenceCode == code}}" value="{{code}}" title="{{getDefinition(code)}}">{{getDisplayCode(code)}}</option>
     </select>
