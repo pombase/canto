@@ -4847,7 +4847,7 @@ var genotypeListRowLinksCtrl =
         if ($scope.annotationCount > 0) {
           $scope.canDelete = false;
           $scope.deleteTitle =
-            'Genotypes with more than one annotation cannot be deleted - delete the annotations first';
+            'Genotypes with annotations cannot be deleted - delete the annotations first';
         } else {
           if (genotype.metagenotype_count) {
             $scope.canDelete = false;
