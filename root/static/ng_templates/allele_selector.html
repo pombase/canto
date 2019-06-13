@@ -1,4 +1,5 @@
-<select ng-disabled="disableSelector" class="form-control" ng-model="selectedAllele">
+<select ng-mousedown="handleMousedown()"
+        ng-disabled="disableSelector" class="form-control" ng-model="selectedAllele">
   <option ng-repeat="allele in alleles" value="{{allele.alleleId}}"
           ng-bind-html="allele.displayName | encodeAlleleSymbols | toTrusted">
   </option>
