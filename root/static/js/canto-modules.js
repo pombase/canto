@@ -5176,8 +5176,17 @@ function getDisplayLoci(alleles) {
 
     var displayName = alleleDisplayNames.join(' / ');
 
+    var geneDisplayName = null;
+
+    $.map(alleles,
+          function(allele) {
+            if (allele.gene_display_name) {
+              geneDisplayName = allele.gene_display_name;
+            }
+          });
+
     var diploidLocus = {
-      gene_display_name: alleles[0].gene_display_name,
+      gene_display_name: geneDisplayName,
       gene_id: alleles[0].gene_id,
       type: type,
       long_display_name: displayName,
@@ -5391,15 +5400,14 @@ var genotypeListRowCtrl =
         $scope.multi_organism_mode = CantoGlobals.multi_organism_mode;
         $scope.userIsAdmin = CantoGlobals.current_user_is_admin;
 
-        var displayLoci = getDisplayLoci($scope.genotype.alleles);
-
-        $scope.firstLocus = displayLoci[0];
-        $scope.otherLoci = displayLoci.slice(1);
+        $scope.displayLoci = getDisplayLoci($scope.genotype.alleles);
 
         $scope.isSelected = function () {
           return $scope.selectedGenotypeId &&
             $scope.selectedGenotypeId == $scope.genotype.genotype_id;
         };
+
+        $scope.encodeSymbols = encodeSymbol;
 
         $scope.clearSelection = function () {
           $scope.setSelectedGenotypeId({
@@ -7786,7 +7794,7 @@ var initiallyHiddenText =
       template: '<span ng-show="trimmedText.length > 0">' +
         '<span ng-hide="hidden" ng-bind-html="trimmedText | toTrusted"></span>' +
         '<span ng-show="hidden" uib-tooltip="{{trimmedText}}">' +
-        '  <span ng-show="previewChars.length > 0" ng-bind-html="previewChars | toTrusted"></span>' +
+        '  <span ng-click="show()" ng-show="previewChars.length > 0" ng-bind-html="previewChars | toTrusted"></span>' +
         '  <a ng-click="show()">&nbsp;<span style="font-weight: bold">{{linkLabel}}</span></a>' +
         '</span></span>',
     };
