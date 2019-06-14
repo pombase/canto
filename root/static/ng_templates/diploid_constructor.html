@@ -29,8 +29,9 @@
         </label>
         <allele-selector
           mousedown-handler="alleleSelectorMousedown()"
+          allele-selected="alleleSelected(alleleId)"
           ng-if="selectorAlleles.length != 1"
-          selected-allele="selectedAlleleId" alleles="selectorAlleles">
+          initial-selected-allele="{{selectedAlleleId}}" alleles="selectorAlleles">
         </allele-selector>
       </div>
     </div>

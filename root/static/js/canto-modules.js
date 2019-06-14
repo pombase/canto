@@ -5069,16 +5069,23 @@ var alleleSelectorCtrl =
     return {
       scope: {
         alleles: '=',
-        selectedAllele: '=',
         disableSelector: '=',
+        initialSelectedAllele: '@',
+        alleleSelected: '&',
         mousedownHandler: '&',
       },
       restrict: 'E',
       replace: true,
       templateUrl: app_static_path + 'ng_templates/allele_selector.html',
       controller: function ($scope) {
+        $scope.selectedAllele = $scope.initialSelectedAllele;
+
         $scope.handleMousedown = function() {
           $scope.mousedownHandler();
+        };
+
+        $scope.selectionChanged = function() {
+          $scope.alleleSelected({ alleleId: $scope.selectedAllele });
         };
       },
     };
@@ -5121,6 +5128,10 @@ var diploidConstructorDialogCtrl =
 
       $scope.alleleSelectorMousedown = function() {
         $scope.diploidType = 'other';
+      };
+
+      $scope.alleleSelected = function(selectedAlleleId) {
+        $scope.selectedAlleleId = selectedAlleleId;
       };
 
       $scope.isValid = function() {
