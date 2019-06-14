@@ -11,7 +11,7 @@
       <th>
         Term name
       </th>
-      <th>
+      <th ng-if="showEvidenceColumn">
         Evidence
       </th>
       <th ng-if="annotationType.can_have_with && annotationDetails.with_gene_id">
@@ -39,7 +39,7 @@
     <td>
       {{termDetails.name}}
     </td>
-    <td>
+    <td ng-if="showEvidenceColumn">
       {{displayEvidence}}
     </td>
     <td ng-if="annotationType.can_have_with && annotationDetails.with_gene_id">

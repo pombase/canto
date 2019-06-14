@@ -6599,10 +6599,15 @@ var annotationSingleRow =
         $scope.displayEvidence = '';
         $scope.conditionsString = '';
         $scope.withGeneDisplayName = '';
+        $scope.showEvidenceColumn = true;
 
         AnnotationTypeConfig.getByName($scope.annotationTypeName)
           .then(function (annotationType) {
             $scope.annotationType = annotationType;
+
+            $scope.showEvidenceColumn =
+              annotationType.evidence_codes &&
+              annotationType.evidence_codes.length > 0;
           });
 
         $scope.$watch('annotationDetails.term_ontid',
