@@ -2758,7 +2758,15 @@ var ontologyWorkflowCtrl =
       if ($scope.getState() == 'commenting') {
         if ($scope.matchingExtensionConfigs &&
           $scope.matchingExtensionConfigs.length == 0) {
-          CursStateService.setState('selectingEvidence');
+          var evidenceIsAllowedState =
+              $.grep($scope.states, function(state) {
+                return state === 'selectingEvidence';
+              }).length > 0;
+          if (evidenceIsAllowedState) {
+            CursStateService.setState('selectingEvidence');
+          } else {
+            CursStateService.setState('searching');
+          }
           return;
         }
       }
