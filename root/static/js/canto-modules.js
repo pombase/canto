@@ -5459,7 +5459,17 @@ var genotypeListViewCtrl =
                                              strain, undefined);
 
             storePromise.then(function (result) {
-              $scope.checkBoxChecked = {};
+              if (result.status === 'existing') {
+                toaster.pop(
+                  'warning', 'The genotype already exists: ' + result.genotype_display_name
+                );
+              } else {
+                toaster.pop({
+                  type: 'success',
+                  title: 'Genotype stored successfully',
+                });
+                $scope.checkBoxChecked = {};
+              }
             });
           });
         };
