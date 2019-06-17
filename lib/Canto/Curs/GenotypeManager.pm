@@ -95,6 +95,39 @@ sub _string_or_undef
   return $string // '<__UNDEF__>';
 }
 
+sub _allele_string_from_json
+{
+  my $config = shift;
+  my $curs_key = shift;
+  my $allele_manager = shift;
+  my $alleles_data = shift;
+
+  my %diploid_groups= ();
+
+  for my $allele_data (@$alleles_data) {
+    my $allele = $allele_manager->allele_from_json($allele_data, $curs_key);
+
+    if ($allele_data->{diploid_name}) {
+      push @{$diploid_groups{$allele_data->{diploid_name}}}, $allele;
+    } else {
+      push @{$diploid_groups{"_haploid-" . $allele->allele_id()}}, $allele;
+    }
+  }
+
+  my @group_names = ();
+
+  for my $group_name (sort keys %diploid_groups) {
+    push @group_names, (join ' / ',
+                        sort
+                        map {
+                          $_->long_identifier($config);
+                        } @{$diploid_groups{$group_name}});
+  }
+
+  return join " ", @group_names;
+}
+
+
 =head2 find_genotype
 
  Usage   : my $existing = $manager->find_genotype($taxon_id, $background,
@@ -120,8 +153,6 @@ sub find_genotype
   my $strain_name = shift;
   my $search_alleles_data = shift;
 
-  my @search_alleles = ();
-
   my $schema = $self->curs_schema();
   my $curs_key = $self->curs_key();
 
@@ -129,11 +160,9 @@ sub find_genotype
     Canto::Curs::AlleleManager->new(config => $self->config(),
                                     curs_schema => $schema);
 
-  for my $allele_data (@$search_alleles_data) {
-    my $allele = $allele_manager->allele_from_json($allele_data, $curs_key);
-
-    push @search_alleles, $allele;
-  }
+  my $search_allele_string =
+    _allele_string_from_json($self->config(), $curs_key, $allele_manager,
+                             $search_alleles_data);
 
   if (defined $new_background) {
     $new_background =~ s/^\s+//;
@@ -151,15 +180,6 @@ sub find_genotype
     $strain_id = $strain->strain_id();
   }
 
-
-  my @sorted_search_allele_ids =
-    sort {
-      $a <=> $b;
-    } map {
-      $_->allele_id();
-    } @search_alleles;
-
-  my $joined_search_ids = join " ", @sorted_search_allele_ids;
 
   my $genotype_rs = $schema->resultset('Genotype');
 
@@ -180,15 +200,9 @@ sub find_genotype
 
     my @alleles = $genotype->alleles();
 
-    next if scalar(@alleles) != scalar(@search_alleles);
+    next if scalar(@alleles) != scalar(@$search_alleles_data);
 
-    my @sorted_allele_ids = sort {
-      $a <=> $b;
-    } map {
-      $_->allele_id();
-    } $genotype->alleles();
-
-    if ((join " ", @sorted_allele_ids) eq $joined_search_ids) {
+    if ($search_allele_string eq $genotype->allele_string($self->config())) {
       return $genotype;
     }
   }

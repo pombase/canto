@@ -303,6 +303,7 @@ sub allele_string
 
   for my $group_name (sort keys %diploid_groups) {
     push @group_names, (join ' / ',
+                        sort
                         map {
                           $_->long_identifier($config);
                         } @{$diploid_groups{$group_name}});

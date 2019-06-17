@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 23;
+use Test::More tests => 27;
 
 use Try::Tiny;
 
@@ -117,6 +117,7 @@ my $cdc11_wt_allele_details = {
   gene_id => $cdc11_gene->gene_id(),
   type => 'wild type',
   diploid_name => 'diploid_1',
+  expression => 'Overexpression',
 };
 
 my $cdc11_delta_details = {
@@ -145,6 +146,28 @@ ok($cdc11_diploid->name() =~ /canto-genotype-temp-\d+-SPCC1739.11c:aaaa0007-1--S
 ok(defined $cdc11_diploid);
 
 is($cdc11_diploid->allele_genotypes()->count(), 2);
+
+
+# test that find_genotype() can find with diploids
+my $find_results =
+  $genotype_manager->find_genotype($pombe_taxonid, undef, undef,
+                                   [$cdc11_delta_details, $cdc11_wt_allele_details],
+                                   $curs_schema, $curs_key);
+
+
+ok(defined $find_results);
+is($find_results->display_name($config), "cdc11+[Overexpression] / cdc11delta");
+
+
+# switch allele order:
+$find_results =
+  $genotype_manager->find_genotype($pombe_taxonid, undef, undef,
+                                   [$cdc11_wt_allele_details, $cdc11_delta_details],
+                                   $curs_schema, $curs_key);
+
+
+ok(defined $find_results);
+is($find_results->display_name($config), "cdc11+[Overexpression] / cdc11delta");
 
 # deleting a genotype should delete unused Allele and Diploid objects
 $genotype_manager->delete_genotype($diploid_genotype->genotype_id());
