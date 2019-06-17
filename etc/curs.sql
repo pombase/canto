@@ -74,8 +74,9 @@ CREATE TABLE genotype (
 CREATE TABLE metagenotype (
        metagenotype_id integer PRIMARY KEY AUTOINCREMENT,
        identifier text UNIQUE NOT NULL,
-       pathogen_genotype_id integer NOT NULL REFERENCES genotype(genotype_id),
-       host_genotype_id integer NOT NULL REFERENCES genotype(genotype_id)
+       type TEXT NOT NULL CHECK(type = 'pathogen-host' OR type = 'interaction'),
+       first_genotype_id integer NOT NULL REFERENCES genotype(genotype_id),
+       second_genotype_id integer NOT NULL REFERENCES genotype(genotype_id)
 );
 
 CREATE TABLE metagenotype_annotation (
