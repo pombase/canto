@@ -5375,6 +5375,16 @@ var genotypeListViewCtrl =
             CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, newBackground, allelesForGenotype, taxonid, strain, newComment);
 
           storePromise.then(function (data) {
+            if (data.status === 'existing') {
+              toaster.pop('info',
+                          'Using existing genotype: ' + data.genotype_display_name);
+            } else {
+              toaster.pop({
+                type: 'success',
+                title: 'Genotype stored successfully',
+              });
+            }
+
             window.location.href =
               CantoGlobals.curs_root_uri +
               '/' + getGenotypeManagePath($scope.organismType) +
@@ -5460,9 +5470,8 @@ var genotypeListViewCtrl =
 
             storePromise.then(function (result) {
               if (result.status === 'existing') {
-                toaster.pop(
-                  'warning', 'The genotype already exists: ' + result.genotype_display_name
-                );
+                toaster.pop('info',
+                            'Using existing genotype: ' + result.genotype_display_name);
               } else {
                 toaster.pop({
                   type: 'success',
