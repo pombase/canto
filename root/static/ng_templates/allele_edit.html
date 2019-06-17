@@ -189,28 +189,28 @@
             <div ng-show="!isValidExpression()"
                  class="help-block">Required for this allele type</div>
             <div>
-              <label>Overexpression</label>
-              <input ng-model="alleleData.expression" name="curs-allele-expression"
+              <label for="allele-edit-overexpression">Overexpression</label>
+              <input ng-model="alleleData.expression" name="curs-allele-expression" id="allele-edit-overexpression"
                      type="radio" value="Overexpression" />
             </div>
             <div>
-              <label>Wild type product level</label>
-              <input ng-model="alleleData.expression" name="curs-allele-expression"
+              <label for="allele-edit-wild-type-level">Wild type product level</label>
+              <input ng-model="alleleData.expression" name="curs-allele-expression" id="allele-edit-wild-type-level"
                      type="radio" value="Wild type product level" />
             </div>
             <div>
-              <label>Knockdown</label>
-              <input ng-model="alleleData.expression" name="curs-allele-expression"
+              <label for="allele-edit-knockdown">Knockdown</label>
+              <input ng-model="alleleData.expression" name="curs-allele-expression" id="allele-edit-knockdown"
                      type="radio" value="Knockdown" />
             </div>
             <div ng-show="alleleData.type">
-              <label>Null</label>
-              <input ng-model="alleleData.expression" name="curs-allele-expression"
+              <label for="allele-edit-null-expression">Null</label>
+              <input ng-model="alleleData.expression" name="curs-allele-expression" id="allele-edit-null-expression"
                      type="radio" value="Null" />
             </div>
             <div ng-show="alleleData.type !== 'wild type'">
-              <label>Not assayed</label>
-              <input ng-model="alleleData.expression" name="curs-allele-expression"
+              <label for="allele-edit-not-assayed">Not assayed</label>
+              <input ng-model="alleleData.expression" name="curs-allele-expression" id="allele-edit-not-assayed"
                      type="radio" value="Not assayed" />
             </div>
           </td>
