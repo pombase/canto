@@ -3972,28 +3972,27 @@ var genotypeEdit =
         };
 
         $scope.allelesEqual = function (allele1, allele2) {
-          return angular.equals(allele1, allele2);
+          return allele1.type === allele2.type &&
+            allele1.gene_id === allele2.gene_id &&
+            (allele1.expression || '') === (allele2.expression || '') &&
+            (allele1.name || '') === (allele2.name || '');
         };
 
-        $scope.findExistingAlleleIdx = function (allele) {
-          var index = $scope.data.alleles.indexOf(allele);
-
-          if (index >= 0) {
-            return index;
-          }
+        $scope.findExistingAllele = function (alleleData) {
+          var foundAllele = null;
 
           $.map($scope.data.alleles,
-            function (existingAllele, mapIndex) {
-              if ($scope.allelesEqual(existingAllele, allele)) {
-                index = mapIndex;
+            function (existingAllele) {
+              if ($scope.allelesEqual(existingAllele, alleleData)) {
+                foundAllele = existingAllele;
               }
             });
 
-          return index;
+          return foundAllele;
         };
 
         $scope.openAlleleEditDialog =
-          function (allele) {
+          function (isNewAllele, allele) {
             if (allele.gene) {
               allele.gene_display_name = allele.gene.display_name;
               allele.gene_systematic_id = allele.gene.primary_identifier;
@@ -4006,10 +4005,16 @@ var genotypeEdit =
 
             editInstance.result.then(function (editResults) {
               var editedAllele = editResults.alleleData;
-              if ($scope.findExistingAlleleIdx(editedAllele) < 0) {
+              if (isNewAllele) {
+                if ($scope.findExistingAllele(editedAllele)) {
+                  toaster.pop({
+                    type: 'warning',
+                    title: 'Warning: adding duplicate allele',
+                    timeout: 10000,
+                    showCloseButton: true
+                  });
+                }
                 $scope.data.alleles.push(editedAllele);
-              } else {
-                toaster.pop('info', 'Not adding duplicate allele');
               }
             });
           };

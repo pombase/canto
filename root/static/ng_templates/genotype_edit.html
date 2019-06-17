@@ -70,7 +70,7 @@
                 <td>{{gene.primary_identifier}}</td>
                 <td>
                   <button class="btn btn-primary btn-xs"
-                          ng-click="openAlleleEditDialog({gene: gene})">Add allele ..</button>
+                          ng-click="openAlleleEditDialog(true, {gene: gene})">Add allele ..</button>
                 </td>
               </tr>
             </tbody>
@@ -107,7 +107,8 @@
                         class="curs-genotype-edit-existing-allele-edit">Edit</span>
                 </div>
                 <div ng-if="!allele.primary_identifier">
-                  <a href="" style="white-space: nowrap;" ng-click="openAlleleEditDialog(allele)">Edit</a>
+                  <a href="" style="white-space: nowrap;"
+                     ng-click="openAlleleEditDialog(false, allele)">Edit</a>
                 </div>
                 <div>
                   <a href="" style="white-space: nowrap;" ng-click="removeAllele(allele)"
