@@ -343,13 +343,13 @@ var greekCharMap = {
 };
 
 function symbolEncoder() {
-  return function (item) {
-    if (item == null) {
+  return function (argItem) {
+    if (argItem == null) {
       return null;
     }
-    item = item.replace(/delta/g, '&Delta;');
+    var item = argItem.replace(/delta/g, '&Delta;');
 
-    if (item.indexOf('&') >= 0) {
+    if (argItem.indexOf('&') >= 0) {
       item = multiReplaceAll(item, greekCharMap);
     }
 
