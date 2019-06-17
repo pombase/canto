@@ -623,6 +623,47 @@ CREATE TABLE diploid (
 
     Canto::Track::curs_map($config, $track_schema, $update_proc);
   },
+
+  30 => sub {
+    my $config = shift;
+    my $track_schema = shift;
+
+    my $dbh = $track_schema->storage()->dbh();
+
+    my $update_proc = sub {
+      my $curs = shift;
+      my $curs_schema = shift;
+
+      my $curs_dbh = $curs_schema->storage()->dbh();
+
+      $curs_dbh->do("PRAGMA foreign_keys = OFF");
+
+      $curs_dbh->do("DROP TABLE if exists metagenotype_temp");
+
+      $curs_dbh->do("
+CREATE TABLE metagenotype_temp (
+       metagenotype_id integer PRIMARY KEY AUTOINCREMENT,
+       identifier text UNIQUE NOT NULL,
+       type TEXT NOT NULL CHECK(type = 'pathogen-host' OR type = 'interaction'),
+       first_genotype_id integer NOT NULL REFERENCES genotype(genotype_id),
+       second_genotype_id integer NOT NULL REFERENCES genotype(genotype_id)
+);
+      ");
+
+      $curs_dbh->do("INSERT INTO metagenotype_temp(metagenotype_id, identifier, first_genotype_id, second_genotype_id, type)
+         SELECT metagenotype_id, identifier, pathogen_genotype_id, host_genotype_id, 'pathogen-host'
+         FROM metagenotype
+      ");
+
+      $curs_dbh->do("DROP TABLE metagenotype");
+
+      $curs_dbh->do("ALTER TABLE metagenotype_temp RENAME TO metagenotype");
+
+      $curs_dbh->do("PRAGMA foreign_keys = ON");
+    };
+
+    Canto::Track::curs_map($config, $track_schema, $update_proc);
+  },
 );
 
 sub upgrade_to

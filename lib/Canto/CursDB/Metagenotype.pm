@@ -37,13 +37,18 @@ __PACKAGE__->table("metagenotype");
   data_type: 'text'
   is_nullable: 0
 
-=head2 pathogen_genotype_id
+=head2 type
+
+  data_type: 'text'
+  is_nullable: 0
+
+=head2 first_genotype_id
 
   data_type: 'integer'
   is_foreign_key: 1
   is_nullable: 0
 
-=head2 host_genotype_id
+=head2 second_genotype_id
 
   data_type: 'integer'
   is_foreign_key: 1
@@ -56,9 +61,11 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "identifier",
   { data_type => "text", is_nullable => 0 },
-  "pathogen_genotype_id",
+  "type",
+  { data_type => "text", is_nullable => 0 },
+  "first_genotype_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "host_genotype_id",
+  "second_genotype_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
 
@@ -90,7 +97,7 @@ __PACKAGE__->add_unique_constraint("identifier_unique", ["identifier"]);
 
 =head1 RELATIONS
 
-=head2 host_genotype
+=head2 first_genotype
 
 Type: belongs_to
 
@@ -99,9 +106,9 @@ Related object: L<Canto::CursDB::Genotype>
 =cut
 
 __PACKAGE__->belongs_to(
-  "host_genotype",
+  "first_genotype",
   "Canto::CursDB::Genotype",
-  { genotype_id => "host_genotype_id" },
+  { genotype_id => "first_genotype_id" },
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
@@ -120,7 +127,7 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 pathogen_genotype
+=head2 second_genotype
 
 Type: belongs_to
 
@@ -129,15 +136,15 @@ Related object: L<Canto::CursDB::Genotype>
 =cut
 
 __PACKAGE__->belongs_to(
-  "pathogen_genotype",
+  "second_genotype",
   "Canto::CursDB::Genotype",
-  { genotype_id => "pathogen_genotype_id" },
+  { genotype_id => "second_genotype_id" },
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07048 @ 2018-06-26 15:30:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:PinMbH9UkHqj20DW/b1+PQ
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2019-06-17 20:56:44
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:RGUJg0lswFUky3cqCtnF5w
 
 =head2 annotations
 
@@ -151,6 +158,31 @@ __PACKAGE__->belongs_to(
 
 __PACKAGE__->many_to_many('annotations' => 'metagenotype_annotations',
                           'annotation');
+
+# an alias to make the calling code more readable
+sub pathogen_genotype {
+  my $self = shift;
+  my $arg = shift;
+
+  if ($arg) {
+    return $self->first_genotype($arg);
+  } else {
+    return $self->first_genotype();
+  }
+}
+
+# an alias to make the calling code more readable
+sub host_genotype {
+  my $self = shift;
+  my $arg = shift;
+
+  if ($arg) {
+    return $self->second_genotype($arg);
+  } else {
+    return $self->second_genotype();
+  }
+}
+
 
 =head2 feature_id
 

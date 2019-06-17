@@ -153,7 +153,7 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 metagenotype_host_genotypes
+=head2 metagenotype_first_genotypes
 
 Type: has_many
 
@@ -162,13 +162,13 @@ Related object: L<Canto::CursDB::Metagenotype>
 =cut
 
 __PACKAGE__->has_many(
-  "metagenotype_host_genotypes",
+  "metagenotype_first_genotypes",
   "Canto::CursDB::Metagenotype",
-  { "foreign.host_genotype_id" => "self.genotype_id" },
+  { "foreign.first_genotype_id" => "self.genotype_id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 metagenotype_pathogen_genotypes
+=head2 metagenotype_second_genotypes
 
 Type: has_many
 
@@ -177,9 +177,9 @@ Related object: L<Canto::CursDB::Metagenotype>
 =cut
 
 __PACKAGE__->has_many(
-  "metagenotype_pathogen_genotypes",
+  "metagenotype_second_genotypes",
   "Canto::CursDB::Metagenotype",
-  { "foreign.pathogen_genotype_id" => "self.genotype_id" },
+  { "foreign.second_genotype_id" => "self.genotype_id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
@@ -224,8 +224,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2019-03-22 21:42:33
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:xgCssye8nFTIDpe9u048nQ
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2019-06-17 20:56:44
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:q4OLCAH0iwZo5n5NC/wsWw
 
 =head2 annotations
 
@@ -339,11 +339,11 @@ sub metagenotypes
 {
   my $self = shift;
 
-  my @metagenotypes = $self->metagenotype_host_genotypes()->all();
+  my @metagenotypes = $self->metagenotype_first_genotypes()->all();
 
   return @metagenotypes if scalar(@metagenotypes) > 0;
 
-  return $self->metagenotype_pathogen_genotypes()->all();
+  return $self->metagenotype_second_genotypes()->all();
 }
 
 # returns either the count of metagenotypes that this genotype is part of
@@ -351,11 +351,11 @@ sub metagenotype_count
 {
   my $self = shift;
 
-  my $count = $self->metagenotype_host_genotypes()->count();
+  my $count = $self->metagenotype_first_genotypes()->count();
 
   return $count if $count;
 
-  return $self->metagenotype_pathogen_genotypes()->count();
+  return $self->metagenotype_second_genotypes()->count();
 }
 
 # return true if this genotype is part of a metagenotype
@@ -363,11 +363,11 @@ sub is_part_of_metagenotype
 {
   my $self = shift;
 
-  if ($self->metagenotype_host_genotypes()->count() > 0) {
+  if ($self->metagenotype_first_genotypes()->count() > 0) {
     return 1;
   }
 
-  return $self->metagenotype_pathogen_genotypes()->count > 0;
+  return $self->metagenotype_second_genotypes()->count > 0;
 }
 
 =head2
@@ -377,7 +377,6 @@ sub is_part_of_metagenotype
  Returns : "normal", "host" or "pathogen"
 
 =cut
-
 
 sub genotype_type
 {
