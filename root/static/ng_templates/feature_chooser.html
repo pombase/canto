@@ -2,13 +2,13 @@
   <span ng-hide="features">
 Loading ...
   </span>
-  <span ng-show="features">
-    <select class="form-control" ng-model="chosenFeatureId"
-            ng-options="feature.feature_id as (feature | featureChooserFilter) for feature in features">
+
+    <select class="form-control" ng-model="chosenFeatureId">
       <option value="">Choose a {{featureType}} ...</option>
+      <option ng-repeat="feature in features track by feature.feature_id"
+              ng-value="{{feature.feature_id}}"
+              ng-bind-html="feature | featureChooserFilter | encodeAlleleSymbols | toTrusted">
+      </option>
     </select>
-    <span ng-if="featureType === 'gene'" >
-      <a ng-click="openSingleGeneAddDialog()">Add another ...</a>
-    </span>
-  </span>
+
 </span>

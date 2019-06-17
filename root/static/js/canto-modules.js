@@ -342,19 +342,21 @@ var greekCharMap = {
   "&OHgr;": "Ω",
 };
 
+function encodeSymbol(argItem) {
+  if (argItem == null) {
+    return null;
+  }
+  var item = argItem.replace(/delta/g, '&Delta;');
+
+  if (argItem.indexOf('&') >= 0) {
+    item = multiReplaceAll(item, greekCharMap);
+  }
+
+  return item;
+};
+
 function symbolEncoder() {
-  return function (argItem) {
-    if (argItem == null) {
-      return null;
-    }
-    var item = argItem.replace(/delta/g, '&Delta;');
-
-    if (argItem.indexOf('&') >= 0) {
-      item = multiReplaceAll(item, greekCharMap);
-    }
-
-    return item;
-  };
+  return encodeSymbol;
 }
 
 canto.filter('encodeAlleleSymbols', symbolEncoder);
