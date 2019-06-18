@@ -270,6 +270,29 @@ sub curs_iterator
   };
 }
 
+=head2 all_curs_keys
+
+ Usage   : @keys = Canto::Track::all_curs_keys($track_schema);
+ Function: Return a list of the curs keys
+ Args    : $track_schema - the TrackDB schema
+
+=cut
+
+sub all_curs_keys
+{
+  my $track_schema = shift;
+
+  my @curs_keys = ();
+
+  my $rs = $track_schema->resultset('Curs');
+
+  while (defined (my $curs = $rs->next())) {
+    push @curs_keys, $curs->curs_key();
+  }
+
+  return @curs_keys;
+}
+
 =head2 curs_map
 
  Usage   : my $proc = sub { ... };

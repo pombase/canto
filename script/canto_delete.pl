@@ -28,6 +28,7 @@ use Canto::Meta::Util;
 my $remove_person = undef;
 my $remove_lab = undef;
 my $remove_curs = undef;
+my $remove_all_sessions = undef;
 my $remove_pub = undef;
 my $do_help = 0;
 
@@ -38,6 +39,7 @@ if (!@ARGV) {
 my $result = GetOptions ("person=s" => \$remove_person,
                          "lab=s" => \$remove_lab,
                          "curs" => \$remove_curs,
+                         "all-canto-sessions!" => \$remove_all_sessions,
                          "pub" => \$remove_pub,
                          "help|h" => \$do_help);
 
@@ -59,6 +61,8 @@ OR
   $0 --curs <session_key> [<session_key> [<session_key>] ...]
 OR
   $0 --pub <pubmed_id> [<pubmed_id> [<pubmed_id>]...]
+OR
+  $0 --all-canto-sessions
 
 Options:
   --person - remove the person with the given email address, and unassign any
@@ -66,6 +70,7 @@ Options:
   --lab - remove the lab with the given name.
   --curs - remove a curation session (curs) and the curs database
   --pub - remove a publication from the database, unless it has a session
+  --all-canto-sessions - remove ALL sessions
 
 Example:
   $0 --pub PMID:9161420 PMID:8937892
@@ -149,6 +154,15 @@ Delete the lab first with:
       if (Canto::Track::delete_pub($config, $schema, $pub_uniquename)) {
         print "successfully removed $pub_uniquename\n";
       }
+    }
+    $exit_flag = 0;
+  }
+  if (defined $remove_all_sessions) {
+    my @keys = Canto::Track::all_curs_keys($schema);
+
+    for my $curs_key (sort @keys) {
+      warn "removing: $curs_key\n";
+      Canto::Track::delete_curs($config, $schema, $curs_key);
     }
     $exit_flag = 0;
   }
