@@ -189,7 +189,8 @@ if ($do_organisms) {
 
   open my $fh, '<', $do_organisms or die "can't open $do_organisms: $!";
 
-  my %seen_organisms = ();
+  my %seen_org_names = ();
+  my %seen_taxonids = ();
 
   while (defined (my $line = <$fh>)) {
     next if $line =~ /Genus|ScientificName/ && $. == 1;
@@ -218,9 +219,9 @@ if ($do_organisms) {
       die qq(load failed - Taxon ID on line $. isn't an integer: $taxonid\n);
     }
 
-    if (exists $seen_organisms{$scientific_name}) {
+    if (exists $seen_org_names{$scientific_name}) {
       $guard->{inactivated} = 1;
-      my ($previous_taxonid, $previous_line) = @{$seen_organisms{$scientific_name}};
+      my ($previous_taxonid, $previous_line) = @{$seen_org_names{$scientific_name}};
       if ($previous_taxonid == $taxonid) {
         die "load failed - duplicate scientific name and taxon ID at input lines: "
           . "$. and $previous_line\n";
@@ -228,22 +229,24 @@ if ($do_organisms) {
         die "load failed - same scientific name with different taxon ID at lines: "
           . "$. and $previous_line\n";
       }
-    } else {
-      $seen_organisms{$scientific_name} = [$taxonid, $.];
     }
+
+    if (exists $seen_taxonids{$taxonid}) {
+      my ($previous_taxonid, $previous_line) = @{$seen_taxonids{$taxonid}};
+
+      $guard->{inactivated} = 1;
+      die "load failed - duplicate taxonid at lines $. and $previous_line\n";
+    }
+
+    $seen_org_names{$scientific_name} = [$taxonid, $.];
+    $seen_taxonids{$taxonid} = [$scientific_name, $.];
 
     my $org = $load_util->find_organism_by_taxonid($taxonid);
 
     if ($org) {
-      if ($org->scientific_name() ne $scientific_name) {
-        $org->scientific_name($scientific_name);
-        $org->update();
-      }
-
-      if ($org->common_name() && $org->common_name() ne $common_name) {
-        $org->common_name($common_name);
-        $org->update();
-      }
+      $org->scientific_name($scientific_name);
+      $org->common_name($common_name);
+      $org->update();
     } else {
       $load_util->get_organism($scientific_name, $taxonid, $common_name);
     }
