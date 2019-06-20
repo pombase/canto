@@ -1,6 +1,18 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+require 'yaml'
+
+# Use a default value for settings, so we can avoid checking if it's nil
+settings = Hash.new
+
+begin
+  config_file = YAML.load_file './vagrant_config.yaml'
+  settings = config_file
+rescue
+  # couldn't find config file; fall back on default
+end
+
 setup_docker_folders = <<-SCRIPT
   cd /home/vagrant
   if [ ! -d canto-docker ]
@@ -31,9 +43,16 @@ Vagrant.configure("2") do |config|
 
   config.vagrant.plugins = "vagrant-vbguest"
   
+  # Disable the default shared folder
   config.vm.synced_folder ".", "/vagrant",
     disabled: true
-  
+
+  if settings['config_directory'] 
+    config.vm.synced_folder settings['config_directory'], "/home/vagrant/canto-docker/config",
+      create: true,
+      type: "virtualbox"
+  end
+
   config.vm.synced_folder ".", "/home/vagrant/canto-docker/canto",
     type: "virtualbox"
 
