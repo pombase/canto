@@ -39,4 +39,4 @@ cd canto
 
 echo $CANTO_DOCKER_RUN_ARGS
 
-exec docker run -it $CANTO_DOCKER_RUN_ARGS "$@"
+exec docker run $CANTO_DOCKER_RUN_ARGS "$@"
