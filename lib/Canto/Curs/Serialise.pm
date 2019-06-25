@@ -518,6 +518,7 @@ sub _get_metagenotypes
         genotype_b => $metagenotype->second_genotype()->identifier(),
       };
     }
+    $ret{$metagenotype->identifier()}->{type} = $metagenotype->type();
   }
 
   return %ret;
