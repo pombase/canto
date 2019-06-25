@@ -135,10 +135,12 @@ my $full_expected_curation_session =
     },
     metagenotypes => {
       "test-metagenotype-1" => {
+        'type' => 'interaction',
         'genotype_b' => 'aaaa0007-genotype-test-2',
         'genotype_a' => 'aaaa0007-genotype-test-1'
       },
       "aaaa0007-metagenotype-1" => {
+        type => 'pathogen-host',
         pathogen_genotype => "aaaa0007-genotype-test-1",
         host_genotype => "aaaa0007-genotype-3",
       }
