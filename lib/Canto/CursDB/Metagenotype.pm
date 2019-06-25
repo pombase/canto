@@ -229,6 +229,19 @@ sub display_name
     $self->host_genotype->display_name($config);
 }
 
+sub delete
+{
+  my $self = shift;
+
+  my $rs = $self->metagenotype_annotations();
+
+  while (defined (my $metagenotype_annotation = $rs->next())) {
+    $metagenotype_annotation->delete();
+  }
+
+  $self->SUPER::delete();
+}
+
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;
 1;

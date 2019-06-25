@@ -945,6 +945,12 @@ sub _load_curs_db_data
       }
     }
 
+    for my $metagenotype_details (@{$curs_config->{metagenotypes}}) {
+      my %create_args = %{_process_data($cursdb_schema, $metagenotype_details)};
+
+      $cursdb_schema->create_with_type('Metagenotype', { %create_args });
+    }
+
     for my $annotation (@{$curs_config->{annotations}}) {
       my %create_args = %{_process_data($cursdb_schema, $annotation)};
 

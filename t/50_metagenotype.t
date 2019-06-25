@@ -38,7 +38,7 @@ is ($metagenotype->metagenotype_id(),
     ($cerevisiae_genotype->metagenotypes())[0]->metagenotype_id());
 
 is ($metagenotype->metagenotype_id(),
-    ($existing_pombe_genotype->metagenotypes())[0]->metagenotype_id());
+    ($existing_pombe_genotype->metagenotypes())[1]->metagenotype_id());
 
 my $lookup_metagenotype =
   $genotype_manager->find_metagenotype(pathogen_genotype => $existing_pombe_genotype,
@@ -50,4 +50,4 @@ is ($lookup_metagenotype->metagenotype_id(),
     ($cerevisiae_genotype->metagenotypes())[0]->metagenotype_id());
 
 is ($lookup_metagenotype->metagenotype_id(),
-    ($existing_pombe_genotype->metagenotypes())[0]->metagenotype_id());
+    ($existing_pombe_genotype->metagenotypes())[1]->metagenotype_id());

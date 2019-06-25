@@ -949,27 +949,48 @@ sub make_annotation
 
   my %annotation_data = ();
 
-  if ($self->_category_from_type($annotation_type_name) eq 'ontology') {
-    my $term_ontid = $data->{term_ontid};
-    if (!defined $term_ontid) {
-      die "Adding annotation failed - no term ID\n";
-    }
-    if (!defined $self->_term_name_from_id($term_ontid)) {
-      die "Adding annotation failed - invalid term ID\n";
-    }
+  my $term_ontid = $data->{term_ontid};
+  if (!defined $term_ontid) {
+    die "Adding annotation failed - no term ID\n";
+  }
+  if (!defined $self->_term_name_from_id($term_ontid)) {
+    die "Adding annotation failed - invalid term ID\n";
+  }
 
-    $annotation_data{term_ontid} = $term_ontid;
+  $annotation_data{term_ontid} = $term_ontid;
 
-    my $needs_with_gene = $evidence_types->{$evidence_code}->{with_gene};
-    if ($needs_with_gene) {
-      if (!$data->{with_gene_id}) {
-        die "no 'with_gene_id' with passed in the data object to make_annotation()\n";
-      }
-    } else {
-      if ($data->{with_gene_id}) {
-        die "annotation with evidence code '$evidence_code' shouldn't have a 'with_gene_id' passed in the data\n";
-      }
+  my $needs_with_gene = $evidence_types->{$evidence_code}->{with_gene};
+  if ($needs_with_gene) {
+    if (!$data->{with_gene_id}) {
+      die "no 'with_gene_id' with passed in the data object to make_annotation()\n";
     }
+  } else {
+    if ($data->{with_gene_id}) {
+      die "annotation with evidence code '$evidence_code' shouldn't have a 'with_gene_id' passed in the data\n";
+    }
+  }
+
+  if ($self->_category_from_type($annotation_type_name) eq 'interaction') {
+    my $genotype_manager =
+      Canto::Curs::GenotypeManager->new(config => $self->config(),
+                                        curs_schema => $self->curs_schema());
+
+    my $genotype_a =
+      $self->curs_schema()->resultset('Genotype')->find($data->{feature_id});
+    my $genotype_b =
+      $self->curs_schema()->resultset('Genotype')->find($data->{second_feature_id});
+
+    my $metagenotype =
+      $genotype_manager->find_metagenotype(interactor_a => $genotype_a,
+                                           interactor_b => $genotype_b)
+        //
+      $genotype_manager->make_metagenotype(interactor_a => $genotype_a,
+                                           interactor_b => $genotype_b);
+
+    $data->{feature_id} = $metagenotype->metagenotype_id();
+    $data->{feature_type} = 'metagenotype';
+
+    delete $data->{second_feature_id};
   }
 
   my $current_date = Canto::Curs::Utils::get_iso_date();
@@ -1141,70 +1162,6 @@ sub _ontology_change_keys
   )
 }
 
-sub _interaction_change_keys
-{
-  my $self = shift;
-  my $annotation = shift;
-  my $changes = shift;
-
-  my $data = $annotation->data();
-
-  return (
-    evidence_code => sub {
-      my $evidence_code = shift;
-
-      my $evidence_config = $self->config()->{evidence_types}->{$evidence_code};
-
-      if (defined $evidence_config) {
-        # do the default - set Annotation->data()->{...}
-        return 0
-      } else {
-        die "no such evidence code: $evidence_code\n";
-      }
-    },
-    feature_id => sub {
-      my $feature_id = shift;
-
-      my $gene = $self->curs_schema()->find_with_type('Gene', { gene_id => $feature_id });
-      $annotation->gene_annotations()->delete();
-      $annotation->set_genes($gene);
-
-      return 1;
-    },
-    feature_type => sub {
-      my $feature_type = shift;
-
-      if ($feature_type ne 'gene') {
-        die qq(incorrect feature_type "$feature_type" for interaction - needed "gene"\n);
-      }
-
-      return 1;
-    },
-    interacting_gene_id => sub {
-      my $gene_id = shift;
-
-      if ($gene_id) {
-        my $gene = _lookup_gene_id($self->curs_schema(), $gene_id);
-
-        if (defined $gene) {
-          $data->{interacting_genes} =
-            [
-              {
-                primary_identifier => $gene->primary_identifier(),
-              },
-            ];
-          return 1;
-        } else {
-          die "can't find gene with id: $gene_id\n";
-        }
-      } else {
-        die "no interacting_gene_id passed to service\n";
-      }
-    },
-    submitter_comment => 1,
-  );
-}
-
 sub _store_change_hash
 {
   my $self = shift;
@@ -1213,19 +1170,7 @@ sub _store_change_hash
 
   $self->_check_curs_key($changes);
 
-  my %valid_change_keys;
-
-  my $category = $self->_category_from_type($annotation->type());
-
-  if ($category eq 'ontology') {
-    %valid_change_keys = $self->_ontology_change_keys($annotation, $changes);
-  } else {
-    if ($category eq 'interaction') {
-      %valid_change_keys = $self->_interaction_change_keys($annotation, $changes);
-    } else {
-      die "can't find category for ", $annotation->type(), "\n";
-    }
-  }
+  my %valid_change_keys = $self->_ontology_change_keys($annotation, $changes);
 
   my $data = $annotation->data();
 
@@ -1422,7 +1367,7 @@ sub create_annotation
 
     my $annotation = $self->make_annotation($pub, $details);
 
-    my $annotation_hash;
+    my $annotation_hash = undef;
 
     if ($self->_category_from_type($annotation_type) eq 'ontology') {
       $annotation_hash =

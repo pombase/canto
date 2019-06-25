@@ -75,7 +75,7 @@ test_psgi $app, sub {
              {
                'allele_string' => 'SPCC63.05delta ssm4delta',
                'genotype_id' => 1,
-               'metagenotype_count' => 0,
+               'metagenotype_count' => 1,
                strain_name => undef,
                'alleles' => [
                  {

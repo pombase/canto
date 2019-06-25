@@ -503,14 +503,21 @@ sub _get_metagenotypes
   my $schema = shift;
 
   my $rs = $schema->resultset('Metagenotype',
-                              { prefetch => ['pathogen_genotype', 'host_genotype'] });
+                              { prefetch => ['first_genotype', 'second_genotype'] });
   my %ret = ();
 
   while (defined (my $metagenotype = $rs->next())) {
-    $ret{$metagenotype->identifier()} = {
-      pathogen_genotype => $metagenotype->pathogen_genotype()->identifier(),
-      host_genotype => $metagenotype->host_genotype()->identifier(),
-    };
+    if ($metagenotype->type() eq 'pathogen-host') {
+      $ret{$metagenotype->identifier()} = {
+        pathogen_genotype => $metagenotype->pathogen_genotype()->identifier(),
+        host_genotype => $metagenotype->host_genotype()->identifier(),
+      };
+    } else {
+      $ret{$metagenotype->identifier()} = {
+        genotype_a => $metagenotype->first_genotype()->identifier(),
+        genotype_b => $metagenotype->second_genotype()->identifier(),
+      };
+    }
   }
 
   return %ret;

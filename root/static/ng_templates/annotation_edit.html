@@ -9,9 +9,8 @@
   </div>
 
   <div class="modal-body">
-    <div class="curs-dialog-body-contents" ng-switch="annotationType.category">
-    <table ng-switch-when="ontology" class="curs-definition-table">
-
+    <div class="curs-dialog-body-contents">
+    <table class="curs-definition-table">
       <tr ng-if="showOrganismName">
         <td class="title">Organism</td>
         <td>
@@ -20,8 +19,7 @@
         </td>
       </tr>
 
-      <tr ng-if="annotationType.feature_type === 'gene'"
-          ng-class="{ 'has-error': !isValidFeature() }">
+      <tr ng-class="{ 'has-error': !isValidFeature() }">
         <td class="title">
           {{displayAnnotationFeatureType}}
         </td>
@@ -30,28 +28,44 @@
             {{currentFeatureDisplayName}}
           </div>
           <div ng-if="featureEditable">
-            <feature-chooser feature-type="{{annotationType.feature_type}}"
+            <feature-chooser feature-type="{{chooseFeatureType}}"
                              chosen-feature-id="annotation.feature_id"></feature-chooser>
             <span ng-show="!isValidFeature()"
-                  class="help-block">Please select a gene</span>
+                  class="help-block">Please select a {{chooseFeatureType}}</span>
           </div>
         </td>
       </tr>
 
-      <tr ng-if="annotationType.feature_type === 'genotype' || annotationType.feature_type === 'metagenotype'"
+      <tr ng-if="status.showEvidence">
+        <td ng-if="annotationType.category == 'ontology'" class="title">
+          Evidence code
+        </td>
+        <td ng-if="annotationType.category == 'interaction'" class="title">
+          Interaction type
+        </td>
+        <td colspan="2">
+          <annotation-evidence evidence-code="annotation.evidence_code"
+                               show-conditions="status.showConditions"
+                               with-gene-id="annotation.with_gene_id"
+                               valid-evidence="status.validEvidence"
+                               annotation-type-name="{{annotationType.name}}"></annotation-evidence>
+        </td>
+      </tr>
+
+      <tr ng-if="annotationType.category == 'interaction'"
           ng-class="{ 'has-error': !isValidFeature() }">
         <td class="title">
-          {{displayAnnotationFeatureType}}
+          Interacting {{displayAnnotationFeatureType}}
         </td>
         <td colspan="2">
           <div ng-if="!featureEditable">
-            {{currentFeatureDisplayName}}
+            {{currentSecondFeatureDisplayName}}
           </div>
           <div ng-if="featureEditable">
-            <feature-chooser feature-type="{{annotationType.feature_type}}"
-                             chosen-feature-id="annotation.feature_id"></feature-chooser>
+            <feature-chooser feature-type="{{chooseFeatureType}}"
+                             chosen-feature-id="annotation.second_feature_id"></feature-chooser>
             <span ng-show="!isValidFeature()"
-                  class="help-block">Please select a {{annotationType.feature_type}}</span>
+                  class="help-block">Please select a {{chooseFeatureType}}</span>
           </div>
         </td>
       </tr>
@@ -87,17 +101,6 @@
           <div ng-if="currentUserIsAdmin">
             <a href="" ng-click="manualEdit()">Edit as text (admin only) ...</a>
           </div>
-        </td>
-      </tr>
-
-      <tr ng-if="status.showEvidence">
-        <td class="title">Evidence code</td>
-        <td colspan="2">
-          <annotation-evidence evidence-code="annotation.evidence_code"
-                               show-conditions="status.showConditions"
-                               with-gene-id="annotation.with_gene_id"
-                               valid-evidence="status.validEvidence"
-                               annotation-type-name="{{annotationType.name}}"></annotation-evidence>
         </td>
       </tr>
 
@@ -144,65 +147,6 @@
 
     </table>
 
-    <table ng-switch-when="interaction" class="curs-definition-table">
-
-      <tr ng-class="{ 'has-error': !isValidFeature() }">
-        <td class="title">
-          {{displayAnnotationFeatureType}}
-        </td>
-        <td>
-          <div ng-if="newlyAdded && currentFeatureDisplayName">
-            {{currentFeatureDisplayName}}
-          </div>
-          <div ng-if="!(newlyAdded && currentFeatureDisplayName)">
-            <feature-chooser feature-type="{{annotationType.feature_type}}"
-                             chosen-feature-id="annotation.feature_id"></feature-chooser>
-            <span ng-show="!isValidFeature()"
-                  class="help-block">Please select a gene</span>
-          </div>
-        </td>
-      </tr>
-
-      <tr>
-        <td class="title">Evidence code</td>
-        <td>
-          <annotation-evidence evidence-code="annotation.evidence_code"
-                               with-gene-id="annotation.with_gene_id"
-                               valid-evidence="status.validEvidence"
-                               annotation-type-name="{{annotationType.name}}"></annotation-evidence
-        </td>
-      </tr>
-
-      <tr ng-class="{ 'has-error': !isValidInteractingGene() }">
-        <td class="title">
-          Interacting gene
-        </td>
-        <td>
-          <div>
-            <feature-chooser feature-type="{{annotationType.feature_type}}"
-                             chosen-feature-id="annotation.interacting_gene_id"></feature-chooser>
-          </div>
-          <span ng-show="isValidFeature() && !isValidInteractingGene()"
-                class="help-block">Please select an interacting gene</span>
-        </td>
-      </tr>
-
-      <tr>
-        <td class="title">Comment</td>
-        <td>
-          <input class="form-control"
-                 type="text" size="60"
-                 ng-model="annotation.submitter_comment"
-                 value="{{annotation.submitter_comment}}"/>
-        </td>
-      </tr>
-
-      <tr>
-        <td class="title">Curator</td>
-        <td>{{annotation.curator}}</td>
-      </tr>
-
-    </table>
   </div>
 
   <div class="modal-footer">

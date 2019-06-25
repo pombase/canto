@@ -115,6 +115,13 @@ sub get_curs_annotation_zip
   if (keys %$results > 0) {
     my $zip = Archive::Zip->new();
     for my $annotation_type_name (keys %$results) {
+
+      my $annotation_type = $config->{annotation_types}->{$annotation_type_name};
+
+      if ($annotation_type->{category} ne 'ontology') {
+        next;
+      }
+
       my $annotation_tsv = $results->{$annotation_type_name};
       my $file_name = "$annotation_type_name.tsv";
       my $member = $zip->addString($annotation_tsv, $file_name);
@@ -175,11 +182,6 @@ sub get_annotation_table_tsv
        db_object_type
        creation_date_short assigned_by extension);
 
-  my @interaction_column_names =
-    qw(gene_identifier interacting_gene_identifier
-       gene_taxonid interacting_gene_taxonid evidence_code
-       publication_uniquename score phenotypes submitter_comment);
-
   my @column_names;
 
   if ($annotation_type->{category} eq 'ontology') {
@@ -189,7 +191,7 @@ sub get_annotation_table_tsv
       @column_names = @phenotype_column_names;
     }
   } else {
-    @column_names = @interaction_column_names;
+    return '';
   }
 
   my $db = $config->{export}->{gene_association_fields}->{db};
