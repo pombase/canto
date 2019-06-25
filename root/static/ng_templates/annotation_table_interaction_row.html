@@ -1,34 +1,49 @@
 <tr ng-class="{ 'curs-row-checked' : sessionState == 'APPROVAL_IN_PROGRESS' && checked == 'yes' }">
   <td>
-    <a ng-if="annotation.status === 'new'" href="{{curs_root_uri + '/feature/gene/view/' + annotation.feature_id + (read_only_curs ? '/ro' : '')}}">
-      {{annotation.gene_display_name}}
+    <a ng-if="annotation.status === 'new'" href="{{curs_root_uri + '/feature/genotype/view/' + annotation.genotype_a_id + (read_only_curs ? '/ro' : '')}}">
+      {{annotation.genotype_a_display_name}}
     </a>
     <span ng-if="annotation.status === 'existing'">
-      {{annotation.gene_display_name}}
+      {{annotation.genotype_a_display_name}}
     </span>
   </td>
   <td ng-if="multiOrganismMode">
-    {{annotation.gene_taxonid}}
+    {{annotation.genotype_a_taxonid}}
   </td>
   <td ng-if="!data.hideColumns.evidence_code">
     {{displayEvidence}}
   </td>
+  <td ng-if="annotationType.can_have_conditions && !data.hideColumns.conditions">
+    <span ng-bind-html="annotation.conditionsString | toTrusted"></span>
+  </td>
   <td>
-    <a ng-if="annotation.status === 'new'" href="{{curs_root_uri + '/feature/gene/view/' + annotation.interacting_gene_id + (read_only_curs ? '/ro' : '')}}">
-      {{annotation.interacting_gene_display_name}}
+    <a ng-if="annotation.status === 'new'" href="{{curs_root_uri + '/feature/genotype/view/' + annotation.genotype_b_id + (read_only_curs ? '/ro' : '')}}">
+      {{annotation.genotype_b_display_name}}
     </a>
     <span ng-if="annotation.status === 'existing'">
-      {{annotation.interacting_gene_display_name}}
+      {{annotation.genotype_b_display_name}}
     </span>
   </td>
   <td ng-if="multiOrganismMode">
-    {{annotation.interacting_gene_taxonid}}
+    {{annotation.genotype_b_taxonid}}
   </td>
   <td ng-if="!data.hideColumns.submitter_comment">
     {{annotation.submitter_comment}}
   </td>
   <td ng-if="!data.hideColumns.curator">
     {{annotation.curator}}
+  </td>
+  <td ng-class="{ 'term-warning': annotation.is_obsolete_term }">
+    {{annotation.term_ontid}}
+  </td>
+  <td ng-class="{ 'term-warning': annotation.is_obsolete_term }">
+    {{annotation.term_name}}
+  </td>
+  <td ng-if="!data.hideColumns.extension">
+    <extension-display extension="annotation.extension"></extension-display>
+  </td>
+  <td ng-if="!data.hideColumns.qualifiers">
+    {{annotation.qualifiersString}}
   </td>
   <td class="table-row-actions">
     <div ng-if="addLinks()">

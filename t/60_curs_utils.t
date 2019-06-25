@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 126;
+use Test::More tests => 122;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -74,15 +74,13 @@ sub check_new_annotations
     my $interacting_gene_count = 0;
 
     for my $annotation (@annotations) {
-      is ($annotation->{gene_identifier}, 'SPCC63.05');
-      is ($annotation->{gene_taxonid}, '4896');
+      is ($annotation->{genotype_a_display_name}, 'SPCC63.05delta ssm4KE');
+      is ($annotation->{genotype_a_taxonid}, '4896');
       is ($annotation->{publication_uniquename}, 'PMID:19756689');
-      if ($annotation->{interacting_gene_identifier} eq 'SPBC14F5.07') {
-        is ($annotation->{evidence_code}, 'Synthetic Haploinsufficiency');
+      if ($annotation->{evidence_code} eq 'Synthetic Haploinsufficiency') {
         $interacting_gene_count++
       } else {
-        if ($annotation->{interacting_gene_identifier} eq 'SPAC27D7.13c') {
-          is ($annotation->{evidence_code}, 'Far Western');
+        if ($annotation->{evidence_code} eq 'Far Western') {
           $interacting_gene_count++
         } else {
           fail ("unknown interacting gene");

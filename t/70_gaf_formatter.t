@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 19;
+use Test::More tests => 17;
 use MooseX::Test::Role;
 use IO::String;
 
@@ -65,7 +65,7 @@ my $mock_formatter = consumer_of('Canto::Role::GAFFormatter');
     'biological_process.tsv' => 3,
     'post_translational_modification.tsv' => 0,
     'physical_interaction.tsv' => 0,
-    'genetic_interaction.tsv' => 2,
+    'genetic_interaction.tsv' => 0,
   );
 
   my $member_count = 0;

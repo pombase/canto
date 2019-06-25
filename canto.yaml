@@ -1963,9 +1963,11 @@ available_annotation_type_list:
       - IDA
     detailed_help_path: /docs/modification_annotation
   - name: genetic_interaction
+    namespace: fission_yeast_phenotype
+    can_have_conditions: 1
     category: interaction
     display_name: 'genetic interaction'
-    feature_type: 'gene'
+    feature_type: 'metagenotype'
     help_text: 'Examples: synthetic lethality, dosage suppression, phenotype enhancement.'
     evidence_codes:
       - Dosage Growth Defect
@@ -1979,9 +1981,11 @@ available_annotation_type_list:
       - Synthetic Rescue
     detailed_help_path: /docs/genetic_interaction_annotation
   - name: physical_interaction
+    namespace: fission_yeast_phenotype
+    can_have_conditions: 1
     category: interaction
     display_name: 'physical interaction'
-    feature_type: 'gene'
+    feature_type: 'metagenotype'
     help_text: 'Examples: co-purification, two-hybrid, affinity capture'
     evidence_codes:
       - Affinity Capture-Luminescence

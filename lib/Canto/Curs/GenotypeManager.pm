@@ -733,7 +733,17 @@ sub delete_genotype
   }
 
   if ($genotype->is_part_of_metagenotype()) {
-    return "genotype is part of a metagenotype - delete failed";
+    my $metagenotype = ($genotype->metagenotypes())[0];
+
+    my $type;
+
+    if ($metagenotype->type() eq 'pathogen-host') {
+      $type = 'pathogen-host metagenotype';
+    } else {
+      $type = $metagenotype->type();
+    }
+
+    return "genotype is part of a $type - delete failed";
   }
 
   $genotype->delete();

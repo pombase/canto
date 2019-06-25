@@ -15,28 +15,32 @@ my $config = $test_util->config();
 my $track_schema = Canto::TrackDB->new(config => $config);
 my $curs_schema = Canto::Curs::get_schema_for_key($config, 'aaaa0007');
 
-sub _get_annotation_with_conditions
+sub _get_conditions
 {
   my $curs_schema = shift;
+
+  my %ret = ();
 
   my $annotation_rs = $curs_schema->resultset('Annotation');
 
   while (defined (my $annotation = $annotation_rs->next())) {
     if (defined $annotation->data()->{conditions}) {
-      return $annotation;
+      for my $cond (@{$annotation->data()->{conditions}}) {
+        $ret{$cond} = 1;
+      }
     }
   }
+
+  return [sort keys %ret];
 }
 
-my $annotation = _get_annotation_with_conditions($curs_schema);
-my $conditions = $annotation->data()->{conditions};
+my $conditions = _get_conditions($curs_schema);
 
-cmp_deeply(['PECO:0000137', 'rich medium'], $conditions);
+cmp_deeply($conditions, ['PECO:0000137', 'rich medium']);
 
 my $term_update = Canto::Curs::TermUpdate->new(config => $config);
 $term_update->update_curs_terms($curs_schema);
 
-$annotation = _get_annotation_with_conditions($curs_schema);
-$conditions = $annotation->data()->{conditions};
+$conditions = _get_conditions($curs_schema);
 
-cmp_deeply(['PECO:0000137', 'PECO:0000080'], $conditions);
+cmp_deeply($conditions, ['PECO:0000080', 'PECO:0000137']);

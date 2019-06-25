@@ -47,7 +47,7 @@ my %extra_curs_statuses = (
         annotation_status => Canto::Controller::Curs::CURATION_IN_PROGRESS,
         annotation_status_datestamp => '2012-02-15 13:45:00',
         session_genes_count => 4,
-        session_unknown_conditions_count => 1,
+        session_unknown_conditions_count => 2,
         session_term_suggestions_count => 1,
 );
 
@@ -134,6 +134,10 @@ my $full_expected_curation_session =
       }
     },
     metagenotypes => {
+      "test-metagenotype-1" => {
+        'genotype_b' => 'aaaa0007-genotype-test-2',
+        'genotype_a' => 'aaaa0007-genotype-test-1'
+      },
       "aaaa0007-metagenotype-1" => {
         pathogen_genotype => "aaaa0007-genotype-test-1",
         host_genotype => "aaaa0007-genotype-3",
@@ -230,6 +234,9 @@ my $full_expected_curation_session =
       {
         type => 'genetic_interaction',
         publication => 'PMID:19756689',
+        conditions => ['PECO:0000137'],
+        metagenotype => 'test-metagenotype-1',
+        term => 'FYPO:0000114',
         curator => {
           name => 'Some Testperson',
           email => 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org',
@@ -238,14 +245,13 @@ my $full_expected_curation_session =
         status => 'new',
         creation_date => "2010-01-02",
         evidence_code => 'Synthetic Haploinsufficiency',
-        gene => 'Schizosaccharomyces pombe SPCC63.05',
-        interacting_genes => [
-          'Schizosaccharomyces pombe SPBC14F5.07',
-        ],
       },
       {
         type => 'genetic_interaction',
         publication => 'PMID:19756689',
+        conditions => ['rich medium'],
+        metagenotype => 'test-metagenotype-1',
+        term => 'FYPO:0000061',
         curator => {
           name => 'Some Testperson',
           email => 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org',
@@ -254,10 +260,6 @@ my $full_expected_curation_session =
         status => 'new',
         creation_date => "2010-01-02",
         evidence_code => 'Far Western',
-        gene => 'Schizosaccharomyces pombe SPCC63.05',
-        interacting_genes => [
-          'Schizosaccharomyces pombe SPAC27D7.13c',
-        ]
       },
       {
         status => 'new',
@@ -315,7 +317,7 @@ my $full_expected_curation_session =
       canto_session => 'aaaa0007',
       curation_pub_id => 'PMID:19756689',
       term_suggestion_count => 1,
-      unknown_conditions_count => 1,
+      unknown_conditions_count => 2,
       accepted_timestamp => '2012-02-15 13:45:00',
       curation_in_progress_timestamp => '2012-02-15 13:45:00',
       session_created_timestamp => '2012-02-15 13:45:00',
@@ -566,7 +568,6 @@ my $small_expected_track_data =
   my $curs_json = Canto::Curs::Serialise::json($config, $track_schema,
                                                 'aaaa0007', { all_data => 1 });
   my $curs_ref = decode_json($curs_json);
-
 
   cmp_deeply($curs_ref, $full_expected_curation_session);
 }

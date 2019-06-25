@@ -198,27 +198,6 @@ sub _get_indirect_annotations
       if ($include_with_annotations &&
           defined $with_gene && $with_gene eq $self->primary_identifier()) {
         $ids{$annotation->annotation_id()} = 1;
-      } else {
-        my $interacting_genes = $annotation->data()->{interacting_genes};
-
-        if (defined $interacting_genes) {
-          if ($remove_annotations) {
-            # special case - only delete the whole Annotation if we
-            # are deleting the last interactor
-            Canto::Curs::Utils::delete_interactor($annotation, $self->primary_identifier());
-          } else {
-            my @interacting_genes = @$interacting_genes;
-
-            for my $interacting_gene (@interacting_genes) {
-              my $interacting_gene_identifier =
-                $interacting_gene->{primary_identifier};
-              if ($interacting_gene_identifier eq $self->primary_identifier()) {
-                $ids{$annotation->annotation_id()} = 1;
-                last;
-              }
-            }
-          }
-        }
       }
     }
   }

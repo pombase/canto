@@ -831,7 +831,8 @@ var keysForServer = {
   term_suggestion_name: true,
   term_suggestion_definition: true,
   with_gene_id: true,
-  interacting_gene_id: true,
+  second_feature_id: true,
+  second_feature_type: true,
 };
 
 var annotationProxy =
@@ -5932,6 +5933,7 @@ var annotationEditDialogCtrl =
       showConditions: false,
       showEvidence: true,
     };
+    $scope.chooseFeatureType = null;
 
     copyObject(args.annotation, $scope.annotation);
 
@@ -5948,8 +5950,8 @@ var annotationEditDialogCtrl =
       return $scope.annotation.feature_id;
     };
 
-    $scope.isValidInteractingGene = function () {
-      return $scope.annotation.interacting_gene_id;
+    $scope.validFeatures = function () {
+      return $scope.isValidFeature() && $scope.annotation.second_feature_id;
     };
 
     $scope.isValidTerm = function () {
@@ -6030,8 +6032,7 @@ var annotationEditDialogCtrl =
         return $scope.isValidFeature() &&
           $scope.isValidTerm() && $scope.isValidEvidence();
       }
-      return $scope.isValidFeature() &&
-        $scope.isValidInteractingGene() && $scope.isValidEvidence();
+      return $scope.validFeatures() && $scope.isValidEvidence();
     };
 
     $scope.termFoundCallback =
@@ -6118,6 +6119,12 @@ var annotationEditDialogCtrl =
         $scope.displayAnnotationFeatureType = capitalizeFirstLetter(annotationType.feature_type);
         $scope.annotation.feature_type = annotationType.feature_type;
 
+        if (annotationType.category === 'interaction') {
+          $scope.chooseFeatureType = 'genotype';
+        } else {
+          $scope.chooseFeatureType = annotationType.feature_type;
+        }
+
         $scope.status.showEvidence = annotationType.evidence_codes.length > 0;
 
         if (annotationType.can_have_conditions &&
@@ -6125,8 +6132,7 @@ var annotationEditDialogCtrl =
           $scope.annotation.conditions = [];
         }
 
-        if (annotationType.category == 'ontology' &&
-          !$scope.annotation['extension']) {
+        if (!$scope.annotation['extension']) {
           $scope.annotation.extension = [];
         }
       });
