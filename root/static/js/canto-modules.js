@@ -812,6 +812,8 @@ var keysForServer = {
   conditions: true,
   feature_id: true,
   feature_type: true,
+  genotype_a_id: true,
+  genotype_b_id: true,
   //  is_not: true,
   qualifiers: true,
   submitter_comment: true,

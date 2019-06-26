@@ -1002,7 +1002,7 @@ sub make_annotation
 
   if ($self->_category_from_type($annotation_type_name) eq 'interaction') {
     my $metagenotype =
-      $self->_process_interaction_genotypes($data->{genotype_a_id}, $data->{genotype_a_id});
+      $self->_process_interaction_genotypes($data->{genotype_a_id}, $data->{genotype_b_id});
 
     delete $data->{genotype_a_id};
     delete $data->{genotype_b_id};
@@ -1391,10 +1391,9 @@ sub create_annotation
   my $self = shift;
   my $details = shift;
 
-  my $feature_id = $details->{feature_id};
-
-  if (!defined $feature_id) {
-    return _make_error('No feature_id passed to annotation creation service');
+  if (!defined $details->{feature_id} && !defined $details->{genotype_a_id} &&
+      !defined $details->{genotype_b_id}) {
+    return _make_error('No feature(s) passed to annotation creation service');
   }
 
   my $annotation_type = $details->{annotation_type};
