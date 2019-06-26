@@ -23,14 +23,14 @@ Choose curation type for <% $gene->display_name() %>:
 %   my $type_display_name = $annotation_type->{display_name};
 %   if ($annotation_type->{feature_type} eq 'gene') {
 %    if ($annotation_type->{category} eq 'interaction') {
-    <li class="annotation-type">
-      <annotation-quick-add annotation-type-name="<% $annotation_type->{name} %>"
-                            feature-type="gene" feature-id="<% $gene->gene_id() %>"
-                            feature-display-name="<% $gene_proxy->display_name() %>"
-                            link-label="<% ucfirst $type_display_name %>">
-      </annotation-quick-add>
-      <help-icon key="<% $annotation_type->{name} . '_definition' %>"></help-icon>
-    </li>
+%#    <li class="annotation-type">
+%#      <annotation-quick-add annotation-type-name="<% $annotation_type->{name} %>"
+%#                            feature-type="gene" feature-id="<% $gene->gene_id() %>"
+%#                            feature-display-name="<% $gene_proxy->display_name() %>"
+%#                            link-label="<% ucfirst $type_display_name %>">
+%#      </annotation-quick-add>
+%#      <help-icon key="<% $annotation_type->{name} . '_definition' %>"></help-icon>
+%#    </li>
 %    } else {
 %     my $action_path = "$curs_root_uri/feature/gene/annotate/$gene_id/" .
 %       "start/$annotation_type_name";
@@ -59,12 +59,14 @@ Choose curation type for <% $gene->display_name() %>:
 %    }
 %   } else {
 %     if (!$pathogen_host_mode) {
+%       if ($annotation_type->{category} eq 'ontology') {
   <li class="annotation-type">
     <a href="#" ng-click="singleAlleleQuick('<% $gene->display_name() |n %>', '<% $gene->primary_identifier() |n %>', <% $gene->gene_id() |n%>, '<%$annotation_type_name%>', <% $taxon_id %>)">
       Single allele <% ucfirst $type_display_name %>
     </a>
     <help-icon key="gene_page_single_allele"></help-icon>
   </li>
+%       }
 %     }
 %   }
 % }
