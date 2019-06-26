@@ -6072,6 +6072,13 @@ var annotationEditDialogCtrl =
     };
 
     $scope.ok = function () {
+      if ($scope.annotationType.category === 'interaction') {
+        $scope.annotation.genotype_a_id = $scope.annotation.feature_id;
+        delete $scope.annotation.feature_id;
+        $scope.annotation.genotype_b_id = $scope.annotation.second_feature_id;
+        delete $scope.annotation.second_feature_id;
+      }
+
       var q = AnnotationProxy.storeChanges(args.annotation,
         $scope.annotation, args.newlyAdded);
       loadingStart();
@@ -6091,6 +6098,13 @@ var annotationEditDialogCtrl =
           });
         })
         .catch(function (message) {
+          if ($scope.annotationType.category === 'interaction') {
+            $scope.annotation.feature_id = $scope.annotation.genotype_a_id;
+            delete $scope.annotation.genotype_a_id;
+            $scope.annotation.second_feature_id = $scope.annotation.genotype_b_id;
+            delete $scope.annotation.genotype_b_id;
+          }
+
           toaster.pop('error', message);
         })
         .finally(function () {
@@ -6121,6 +6135,11 @@ var annotationEditDialogCtrl =
 
         if (annotationType.category === 'interaction') {
           $scope.chooseFeatureType = 'genotype';
+
+          $scope.annotation.feature_id = $scope.annotation.genotype_a_id;
+          delete $scope.annotation.genotype_a_id;
+          $scope.annotation.second_feature_id = $scope.annotation.genotype_b_id;
+          delete $scope.annotation.genotype_b_id;
         } else {
           $scope.chooseFeatureType = annotationType.feature_type;
         }
