@@ -354,15 +354,25 @@ sub metagenotypes
 }
 
 # returns either the count of metagenotypes that this genotype is part of
-sub metagenotype_count
+sub metagenotype_count_by_type
 {
   my $self = shift;
 
-  my $count = $self->metagenotype_first_genotypes()->count();
+  my %ret = ();
 
-  return $count if $count;
+  my $rs = $self->metagenotype_first_genotypes();
 
-  return $self->metagenotype_second_genotypes()->count();
+  while (defined (my $metagenotype = $rs->next())) {
+    $ret{$metagenotype->type()}++;
+  }
+
+  $rs = $self->metagenotype_second_genotypes();
+
+  while (defined (my $metagenotype = $rs->next())) {
+    $ret{$metagenotype->type()}++;
+  }
+
+  return %ret;
 }
 
 # return true if this genotype is part of a metagenotype
