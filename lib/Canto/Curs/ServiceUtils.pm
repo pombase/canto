@@ -914,6 +914,36 @@ sub _term_name_from_id
   }
 }
 
+sub _process_interaction_genotypes
+{
+  my $self = shift;
+  my $genotype_a_id = shift;
+  my $genotype_b_id = shift;
+
+  if (!$genotype_a_id) {
+    croak "missing genotype_a_id";
+  }
+  if (!$genotype_b_id) {
+    croak "missing genotype_b_id";
+  }
+
+  my $genotype_manager =
+    Canto::Curs::GenotypeManager->new(config => $self->config(),
+                                      curs_schema => $self->curs_schema());
+
+  my $genotype_a = $self->curs_schema()->resultset('Genotype')->find($genotype_a_id);
+  my $genotype_b = $self->curs_schema()->resultset('Genotype')->find($genotype_b_id);
+
+  my $metagenotype =
+    $genotype_manager->find_metagenotype(interactor_a => $genotype_a,
+                                         interactor_b => $genotype_b)
+      //
+    $genotype_manager->make_metagenotype(interactor_a => $genotype_a,
+                                         interactor_b => $genotype_b);
+
+  return $metagenotype;
+}
+
 sub make_annotation
 {
   my ($self, $pub, $data_arg) = @_;
@@ -971,26 +1001,14 @@ sub make_annotation
   }
 
   if ($self->_category_from_type($annotation_type_name) eq 'interaction') {
-    my $genotype_manager =
-      Canto::Curs::GenotypeManager->new(config => $self->config(),
-                                        curs_schema => $self->curs_schema());
-
-    my $genotype_a =
-      $self->curs_schema()->resultset('Genotype')->find($data->{feature_id});
-    my $genotype_b =
-      $self->curs_schema()->resultset('Genotype')->find($data->{second_feature_id});
-
     my $metagenotype =
-      $genotype_manager->find_metagenotype(interactor_a => $genotype_a,
-                                           interactor_b => $genotype_b)
-        //
-      $genotype_manager->make_metagenotype(interactor_a => $genotype_a,
-                                           interactor_b => $genotype_b);
+      $self->_process_interaction_genotypes($data->{genotype_a_id}, $data->{genotype_a_id});
+
+    delete $data->{genotype_a_id};
+    delete $data->{genotype_b_id};
 
     $data->{feature_id} = $metagenotype->metagenotype_id();
     $data->{feature_type} = 'metagenotype';
-
-    delete $data->{second_feature_id};
   }
 
   my $current_date = Canto::Curs::Utils::get_iso_date();
@@ -1295,7 +1313,35 @@ sub change_annotation
       die "annotation status unsupported: $annotation_status\n";
     }
 
+    my $orig_metagenotype = undef;
+
+    if ($self->_category_from_type($annotation->type()) eq 'interaction') {
+      my $genotype_a_id = delete $changes->{genotype_a_id};
+      my $genotype_b_id = delete $changes->{genotype_b_id};
+
+      if ($genotype_a_id || $genotype_b_id) {
+        $orig_metagenotype = $annotation->metagenotype_annotations()
+          ->search({ }, { prefetch => 'metagenotype' })->first()->metagenotype();
+
+        $genotype_a_id //= $orig_metagenotype->first_genotype_id();
+        $genotype_b_id //= $orig_metagenotype->second_genotype_id();
+
+        my $new_metagenotype =
+          $self->_process_interaction_genotypes($genotype_a_id, $genotype_b_id);
+
+        $changes->{feature_id} = $new_metagenotype->metagenotype_id();
+        $changes->{feature_type} = 'metagenotype';
+      }
+    }
+
     $self->_store_change_hash($annotation, $changes);
+
+    if ($orig_metagenotype) {
+      my $rs = $orig_metagenotype->metagenotype_annotations();
+      if ($rs->count() == 0) {
+        $orig_metagenotype->delete();
+      }
+    }
 
     my $annotation_hash;
 
