@@ -4867,10 +4867,16 @@ var genotypeListRowLinksCtrl =
           $scope.deleteTitle =
             'Genotypes with annotations cannot be deleted - delete the annotations first';
         } else {
-          if (genotype.metagenotype_count) {
+          if (Object.keys(genotype.metagenotype_count_by_type).length > 0) {
             $scope.canDelete = false;
-            $scope.deleteTitle =
-              'This genotype is part of a metagenotype - delete the metagenotype first';
+            if (genotype.metagenotype_count_by_type['pathogen-host']) {
+              $scope.deleteTitle =
+                'This genotype is part of a metagenotype - delete the metagenotype(s) first';
+            } else {
+              var metagenotypeType = (Object.keys(genotype.metagenotype_count_by_type))[0];
+              $scope.deleteTitle =
+                'First delete the ' + metagenotypeType + '(s) that contain this genotype';
+            }
           }
         }
 

@@ -424,6 +424,8 @@ sub _genotype_details_hash
     }
   }
 
+  my %metagenotype_count_by_type = $genotype->metagenotype_count_by_type();
+
   my %ret = (
     identifier => $genotype->identifier(),
     name => $genotype->name(),
@@ -433,7 +435,7 @@ sub _genotype_details_hash
     display_name => $genotype->display_name($self->config()),
     genotype_id => $genotype->genotype_id(),
     annotation_count => $genotype->annotations()->count(),
-    metagenotype_count => $genotype->metagenotype_count(),
+    metagenotype_count_by_type => \%metagenotype_count_by_type,
     strain_name => $strain_name,
     organism => $organism_details,
   );

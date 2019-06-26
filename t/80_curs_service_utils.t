@@ -42,7 +42,9 @@ cmp_deeply($res,
               genotype_id => 1,
               allele_string => 'SPCC63.05delta ssm4delta',
               annotation_count => 1,
-              metagenotype_count => 1,
+              metagenotype_count_by_type => {
+                interaction => 1,
+              },
               strain_name => undef,
               'organism' => {
                               scientific_name => 'Schizosaccharomyces pombe',
@@ -61,7 +63,9 @@ cmp_deeply($res,
               genotype_id => 2,
               allele_string => 'ssm4-D4(del_100-200)[Knockdown]',
               annotation_count => 1,
-              metagenotype_count => 1,
+              metagenotype_count_by_type => {
+                interaction => 1,
+              },
               strain_name => undef,
               'organism' => {
                               scientific_name => 'Schizosaccharomyces pombe',
@@ -99,7 +103,9 @@ cmp_deeply($res,
               genotype_id => 1,
               allele_string => 'SPCC63.05delta ssm4delta',
               annotation_count => 1,
-              metagenotype_count => 1,
+              metagenotype_count_by_type => {
+                interaction => 1,
+              },
               strain_name => undef,
               organism => {
                 scientific_name => 'Schizosaccharomyces pombe',
@@ -163,7 +169,9 @@ cmp_deeply($res,
               'display_name' => 'SPCC63.05delta ssm4KE',
               'identifier' => 'aaaa0007-genotype-test-1',
               annotation_count => 1,
-              metagenotype_count => 1,
+              metagenotype_count_by_type => {
+                interaction => 1,
+              },
               strain_name => undef,
               organism => {
                 scientific_name => 'Schizosaccharomyces pombe',
@@ -182,7 +190,9 @@ cmp_deeply($res,
               'genotype_id' => 2,
               'identifier' => 'aaaa0007-genotype-test-2',
               annotation_count => 1,
-              metagenotype_count => 1,
+              metagenotype_count_by_type => {
+                interaction => 1,
+              },
               strain_name => undef,
               organism => {
                 scientific_name => 'Schizosaccharomyces pombe',
@@ -490,7 +500,7 @@ $stderr = capture_stderr {
   });
 };
 is ($res->{status}, 'error');
-my $lack_of_info_message = 'No feature_id passed to annotation creation service';
+my $lack_of_info_message = 'No feature(s) passed to annotation creation service';
 is ($res->{message}, $lack_of_info_message);
 
 
@@ -1135,7 +1145,9 @@ my $expected_genotype_detail_res =
       },
     ],
     annotation_count => 1,
-    metagenotype_count => 1,
+    metagenotype_count_by_type => {
+      interaction => 1,
+    },
     organism => {
       scientific_name => 'Schizosaccharomyces pombe',
       taxonid => '4896',
