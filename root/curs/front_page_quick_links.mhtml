@@ -9,7 +9,8 @@
   <div class="curs-box-body">
 % for my $annotation_type (@annotation_type_list) {
     <div>
-      <annotation-quick-add annotation-type-name="<% $annotation_type->{name} %>"
+      <annotation-quick-add ng-if="getAnnotationMode() == 'advanced' || '<% $annotation_type->{category} %>' == 'interaction'"
+                            annotation-type-name="<% $annotation_type->{name} %>"
                             link-label="<% $annotation_type->{display_name} %> ..."
                             feature-type="<% $annotation_type->{feature_type} %>">
       </annotation-quick-add>

@@ -13,13 +13,13 @@ $total_annotation_count
 <div ng-controller="CursFrontPageCtrl" id="curs-front-page">
 <div>
   <div class="row">
-    <div class="curs-front-gene-list {{getAnnotationMode() == 'advanced' ? 'col-sm-4 col-md-4' : 'col-sm-6 col-md-6'}}">
+    <div class="curs-front-gene-list col-sm-4 col-md-4">
 <& /curs/front_gene_section.mhtml, pub => $pub &>
     </div>
-    <div ng-if="getAnnotationMode() == 'advanced'" class="col-sm-3 col-md-3 ng-cloak">
+    <div class="col-sm-3 col-md-3 ng-cloak">
 <& /curs/front_page_quick_links.mhtml, annotation_type_list => \@annotation_type_list &>
     </div>
-    <div class="curs-front-pub-details {{getAnnotationMode() == 'advanced' ? 'col-sm-5 col-md-5' : 'col-sm-6 col-md-6'}}">
+    <div class="curs-front-pub-details col-sm-5 col-md-5">
 <& /pub_details.mhtml, pub => $pub &>
    </div>
   </div>
