@@ -62,13 +62,11 @@ Description
 
 <div class="clearall"/>
 
-<annotation-table-list feature-type-filter="metagenotype" feature-id-filter="<% $metagenotype_id %>"
-                       feature-filter-display-name="<% $metagenotype->display_name($c->config()) %>"></annotation-table-list>
-
-<div class="clearall"/>
-
 <button type="button" ng-click="backToMetagenotypes()"
         class="btn btn-primary curs-back-button">&larr; Back to metagenotypes</button>
+
+<annotation-table-list feature-type-filter="metagenotype" feature-id-filter="<% $metagenotype_id %>"
+                       feature-filter-display-name="<% $metagenotype->display_name($c->config()) %>"></annotation-table-list>
 
 </div>
 
