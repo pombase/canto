@@ -373,6 +373,13 @@ canto.filter('featureChooserFilter', function () {
       }
       ret += ")";
     }
+    if (feature.strain_name) {
+      ret += "  (strain: " + feature.strain_name.substr(0, 15);
+      if (feature.strain_name.length > 15) {
+        ret += " ...";
+      }
+      ret += ")";
+    }
     return ret;
   };
 });
