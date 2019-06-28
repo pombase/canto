@@ -1,8 +1,9 @@
 <span style="padding-bottom: 10px">
   <span ng-if="rangeConfig.type == 'Gene'">
     <span ng-if="disabled">Gene</span>
-    <feature-chooser ng-if="!disabled"
-                     feature-type="gene" chosen-feature-uniquename="extensionRelation.rangeValue"
+    <feature-chooser ng-if="!disabled && genes"
+                     features="genes" feature-type="gene"
+                     chosen-feature-uniquename="extensionRelation.rangeValue"
                      chosen-feature-display-name="extensionRelation.rangeDisplayName"
                      chosen-feature-id="rangeGeneId"></feature-chooser>
   </span>

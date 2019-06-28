@@ -11,7 +11,7 @@
   <div ng-show="showWith()" ng-class="{ 'has-error': !isValidWithGene() }">
     <div class="curs-evidence-directive-with">
       <span>With:</span>
-      <span><feature-chooser feature-type="gene"
+      <span><feature-chooser feature-type="gene" features="genes"
                              chosen-feature-id="withGeneId"></feature-chooser></span>
     </div>
     <div ng-show="isValidEvidenceCode() && !isValidWithGene()"

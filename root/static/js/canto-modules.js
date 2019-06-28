@@ -1528,40 +1528,7 @@ function openSingleGeneAddDialog($uibModal) {
 
 
 function featureChooserControlHelper($scope, $uibModal, CursGeneList,
-  CursGenotypeList, Curs, toaster) {
-  function getGenesFromServer() {
-    CursGeneList.geneList().then(function (results) {
-      $scope.features = results;
-    }).catch(function () {
-      toaster.pop('note', "couldn't read the gene list from the server");
-    });
-  }
-
-  if ($scope.featureType === 'gene') {
-    getGenesFromServer();
-  } else {
-    if ($scope.featureType === 'genotype') {
-      CursGenotypeList.cursGenotypeList().then(function (results) {
-        $scope.features = results;
-      }).catch(function () {
-        toaster.pop('note', "couldn't read the genotype list from the server");
-      });
-    } else {
-      Curs.list('metagenotype').then(function (data) {
-        $scope.features = data;
-      }).catch(function () {
-        toaster.pop('note', "couldn't read the metagenotype list from the server");
-      });
-    }
-  }
-
-  $scope.openSingleGeneAddDialog = function () {
-    var modal = openSingleGeneAddDialog($uibModal);
-    modal.result.then(function () {
-      getGenesFromServer();
-    });
-  };
-
+                                     CursGenotypeList, Curs, toaster) {
   if ($scope.chosenFeatureUniquename !== undefined ||
     $scope.chosenFeatureDisplayName !== undefined) {
     $scope.$watch('chosenFeatureId',
@@ -1588,6 +1555,7 @@ var multiFeatureChooser =
   function ($uibModal, CursGeneList, CursGenotypeList, Curs, toaster) {
     return {
       scope: {
+        features: '=',
         featureType: '@',
         selectedFeatureIds: '=',
       },
@@ -1625,6 +1593,7 @@ var featureChooser =
   function ($uibModal, CursGeneList, CursGenotypeList, Curs, toaster) {
     return {
       scope: {
+        features: '=',
         featureType: '@',
         chosenFeatureId: '=',
         chosenFeatureUniquename: '=',
@@ -2483,6 +2452,12 @@ var extensionRelationDialogCtrl =
         $scope.extensionRelation.rangeType = $scope.selected.rangeType;
       }, true);
 
+    CursGeneList.geneList().then(function (results) {
+      $scope.genes = results;
+    }).catch(function (err) {
+      toaster.pop('note', "couldn't read the gene list from the server");
+    });
+
     $scope.ok = function () {
       if ($scope.extensionRelation.rangeType == '%') {
         $scope.extensionRelation.rangeValue =
@@ -2546,6 +2521,15 @@ var extensionRelationEdit =
       controller: function ($scope) {
         $scope.rangeGeneId = '';
 
+        $scope.genes = null;
+
+        // editing existing part
+        CursGeneList.geneList().then(function (results) {
+          $scope.genes = results;
+        }).catch(function () {
+          toaster.pop('note', "couldn't read the gene list from the server");
+        });
+
         $scope.disableAll = function (element, disabled) {
           $(element).find('input').attr('disabled', disabled);
           $(element).find('select').attr('disabled', disabled);
@@ -2568,14 +2552,7 @@ var extensionRelationEdit =
         };
 
         if ($scope.rangeConfig.type == 'Gene') {
-          if ($scope.extensionRelation.rangeValue) {
-            // editing existing part
-            CursGeneList.geneList().then(function () {
-              //
-            }).catch(function () {
-              toaster.pop('note', "couldn't read the gene list from the server");
-            });
-          } else {
+          if (!$scope.extensionRelation.rangeValue) {
             $scope.extensionRelation.rangeValue = '';
           }
         }
@@ -3020,7 +2997,7 @@ canto.controller('InteractionWorkflowCtrl',
 
 
 var annotationEvidence =
-  function (AnnotationTypeConfig, CantoConfig) {
+  function (AnnotationTypeConfig, CantoConfig, CursGeneList) {
     var directive = {
       scope: {
         evidenceCode: '=',
@@ -3034,6 +3011,14 @@ var annotationEvidence =
       controller: function ($scope, $element, $attrs) {
         $scope.annotationType = null;
         $scope.evidenceCodes = [];
+
+        $scope.genes = null;
+
+        CursGeneList.geneList().then(function (results) {
+          $scope.genes = results;
+        }).catch(function (err) {
+          toaster.pop('note', "couldn't read the gene list from the server");
+        });
 
         AnnotationTypeConfig.getByName($scope.annotationTypeName)
           .then(function (annotationType) {
@@ -3124,7 +3109,7 @@ var annotationEvidence =
   };
 
 canto.directive('annotationEvidence',
-  ['AnnotationTypeConfig', 'CantoConfig', annotationEvidence]);
+   ['AnnotationTypeConfig', 'CantoConfig', 'CursGeneList', annotationEvidence]);
 
 var conditionPicker =
   function (CursConditionList, toaster) {
@@ -4160,6 +4145,7 @@ var organismSelector = function () {
     scope: {
       organismSelected: '&',
       organisms: '<',
+      initialSelectionTaxonId: '@',
       label: '@'
     },
     restrict: 'E',
@@ -4183,11 +4169,22 @@ var organismSelectorCtrl = function ($scope, CantoGlobals) {
   };
 
   $scope.$watch('organisms', function () {
-    if ($scope.organisms && $scope.organisms.length === 1) {
-      $scope.organismSelected({
-        organism: $scope.organisms[0]
-      });
-    }
+    if ($scope.organisms && $scope.organisms.length > 0)
+      if ($scope.organisms.length === 1) {
+          $scope.data.selectedOrganism = organisms[0];
+        $scope.organismChanged()
+      } else {
+        if ($scope.initialSelectionTaxonId) {
+          var matchingOrganisms =
+              $.grep($scope.organisms,
+                     function (organism) {
+                       return organism.taxonid == $scope.initialSelectionTaxonId;
+                     });
+          $scope.data.selectedOrganism = matchingOrganisms[0];
+          $scope.organismChanged();
+          $scope.initialSelectionTaxonId = null;
+        }
+      }
   });
 };
 
@@ -5927,8 +5924,8 @@ canto.directive('termChildrenDisplay',
 
 var annotationEditDialogCtrl =
   function ($scope, $uibModal, $q, $uibModalInstance, AnnotationProxy,
-    AnnotationTypeConfig, CantoConfig,
-    CursSessionDetails, CantoService, CantoGlobals, toaster, args) {
+            AnnotationTypeConfig, CantoConfig, CursGenotypeList, CursGeneList,
+    CursSessionDetails, CantoService, CantoGlobals, Curs, toaster, args) {
     $scope.currentUserIsAdmin = CantoGlobals.current_user_is_admin;
     $scope.annotation = {};
     $scope.annotationTypeName = args.annotationTypeName;
@@ -5942,17 +5939,87 @@ var annotationEditDialogCtrl =
       showEvidence: true,
     };
     $scope.chooseFeatureType = null;
+    $scope.organisms = [];
+    $scope.selectedOrganism = args.annotation.organism;
+
+    $scope.isMetagenotypeAnnotation = null;
 
     copyObject(args.annotation, $scope.annotation);
 
-    $scope.showOrganismName = (
-      CantoGlobals.pathogen_host_mode &&
-      $scope.annotation.feature_type !== 'metagenotype'
-    );
+    $scope.multiOrganismMode = CantoGlobals.multi_organism_mode;
+
+    $scope.filteredFeatures = null;
+
     $scope.showStrainName = (
       CantoGlobals.strains_mode &&
       $scope.annotation.strain_name
     );
+
+    function filterFeatures (features) {
+      if ($scope.selectedOrganism) {
+        $scope.filteredFeatures =
+          $.grep(features,
+                 function(feature) {
+                   return feature.organism.taxonid === $scope.selectedOrganism.taxonid;
+                 });
+      } else {
+        $scope.filteredFeatures = features;
+      }
+    }
+
+    function setFilteredFeatures () {
+      if ($scope.chooseFeatureType === 'gene') {
+        if (!$scope.selectedOrganism) {
+          return null;
+        }
+
+        CursGeneList.geneList().then(function (results) {
+          filterFeatures(results);
+        }).catch(function (err) {
+          toaster.pop('note', "couldn't read the gene list from the server");
+        });
+      } else {
+        if ($scope.chooseFeatureType === 'genotype') {
+          if (!$scope.selectedOrganism) {
+            return null;
+          }
+
+          CursGenotypeList.cursGenotypeList().then(function (results) {
+            filterFeatures(results);
+          }).catch(function (err) {
+            toaster.pop('note', "couldn't read the genotype list from the server");
+          });
+        } else {
+          Curs.list('metagenotype').then(function (results) {
+            filterFeatures(results);
+          }).catch(function (err) {
+            toaster.pop('note', "couldn't read the metagenotype list from the server");
+          });
+        }
+      }
+    }
+
+    function getOrganisms() {
+      Curs.list('organism').then(function (organisms) {
+        $scope.organisms = organisms;
+        if (organisms.length == 1) {
+          $scope.selectedOrganism = organisms[0];
+        }
+
+        setFilteredFeatures();
+      }).catch(function (res) {
+        toaster.pop('error', "couldn't read the organism list from the server");
+      });
+    }
+
+    $scope.organismSelected = function (organism) {
+      $scope.selectedOrganism = organism;
+      setFilteredFeatures();
+    }
+
+    $scope.isValidOrganism = function () {
+      return !!$scope.selectedOrganism;
+    };
 
     $scope.isValidFeature = function () {
       return $scope.annotation.feature_id;
@@ -6036,6 +6103,10 @@ var annotationEditDialogCtrl =
       });
 
     $scope.isValid = function () {
+      if (!$scope.annotationType) {
+        return false;
+      }
+
       if ($scope.annotationType.category === 'ontology') {
         return $scope.isValidFeature() &&
           $scope.isValidTerm() && $scope.isValidEvidence();
@@ -6138,7 +6209,6 @@ var annotationEditDialogCtrl =
     AnnotationTypeConfig.getByName($scope.annotationTypeName)
       .then(function (annotationType) {
         $scope.annotationType = annotationType;
-        $scope.displayAnnotationFeatureType = capitalizeFirstLetter(annotationType.feature_type);
         $scope.annotation.feature_type = annotationType.feature_type;
 
         if (annotationType.category === 'interaction') {
@@ -6152,6 +6222,13 @@ var annotationEditDialogCtrl =
           $scope.chooseFeatureType = annotationType.feature_type;
         }
 
+        $scope.isMetagenotypeAnnotation =
+          $scope.annotationType.feature_type == 'metagenotype' &&
+          $scope.annotationType.category == 'ontology';
+
+        getOrganisms();
+
+        $scope.displayAnnotationFeatureType = capitalizeFirstLetter($scope.chooseFeatureType);
         $scope.status.showEvidence = annotationType.evidence_codes.length > 0;
 
         if (annotationType.can_have_conditions &&
@@ -6165,14 +6242,14 @@ var annotationEditDialogCtrl =
       });
   };
 
-
 canto.controller('AnnotationEditDialogCtrl',
   ['$scope', '$uibModal', '$q', '$uibModalInstance', 'AnnotationProxy',
-    'AnnotationTypeConfig', 'CantoConfig',
+   'AnnotationTypeConfig', 'CantoConfig', 'CursGenotypeList', 'CursGeneList',
     'CursSessionDetails', 'CantoService',
-    'CantoGlobals', 'toaster', 'args',
+    'CantoGlobals', 'Curs', 'toaster', 'args',
     annotationEditDialogCtrl
   ]);
+
 
 angular.module('cantoApp')
   .directive('ngAltEnter', function ($document) {
