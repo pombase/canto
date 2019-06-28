@@ -3,6 +3,7 @@
 Loading ...
   </span>
 
+  <span ng-show="features && features.length != 0">
     <select class="form-control" ng-model="chosenFeatureId">
       <option value="">Choose a {{featureType}} ...</option>
       <option ng-repeat="feature in features track by feature.feature_id"
@@ -13,4 +14,5 @@ Loading ...
 
     <img src="http://les.nyc/wp-content/themes/les/site_assets/images/icons/search-icon.svg"
          style="width: 1.4em; height: 1.4em;" />
+  </span>
 </span>

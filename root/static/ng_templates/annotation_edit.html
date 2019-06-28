@@ -11,15 +11,23 @@
   <div class="modal-body">
     <div class="curs-dialog-body-contents">
     <table class="curs-definition-table">
-      <tr ng-if="showOrganismName">
-        <td class="title">Organism</td>
+      <tr ng-if="multiOrganismMode && !isMetagenotypeAnnotation"
+          ng-class="{ 'has-error': !isValidOrganism() }">
+        <td class="title">
+          Organism
+        </td>
         <td>
-          <b>{{annotation.organism.scientific_name}}</b>
-          <span ng-if="showStrainName">({{annotation.strain_name}})</span>
+          <organism-selector
+            organisms="organisms"
+            initial-selection-taxon-id="{{selectedOrganism.taxonid}}"
+            organism-selected="organismSelected(organism)">
+          </organism-selector>
+          <span ng-show="!isValidOrganism()"
+                class="help-block">Please select an organism</span>
         </td>
       </tr>
 
-      <tr ng-class="{ 'has-error': !isValidFeature() }">
+      <tr ng-class="{ 'has-error': !annotation.feature_id }">
         <td class="title">
           {{displayAnnotationFeatureType}}
         </td>
@@ -27,11 +35,17 @@
           <div ng-if="!featureEditable">
             {{currentFeatureDisplayName}}
           </div>
-          <div ng-if="featureEditable">
+          <div ng-if="featureEditable && filteredFeatures">
             <feature-chooser feature-type="{{chooseFeatureType}}"
+                             features="filteredFeatures"
+                             filter-organism="selectedOrganism"
                              chosen-feature-id="annotation.feature_id"></feature-chooser>
-            <span ng-show="!isValidFeature()"
+            <span ng-show="filteredFeatures.length != 0 && !annotation.feature_id"
                   class="help-block">Please select a {{chooseFeatureType}}</span>
+
+            <span ng-show="filteredFeatures.length == 0">
+              No {{chooseFeatureType}}s in this session for the selected organism
+            </span>
           </div>
         </td>
       </tr>
@@ -44,7 +58,8 @@
           Interaction type
         </td>
         <td colspan="2">
-          <annotation-evidence evidence-code="annotation.evidence_code"
+          <annotation-evidence ng-if="filteredFeatures && filteredFeatures.length != 0"
+                               evidence-code="annotation.evidence_code"
                                show-conditions="status.showConditions"
                                with-gene-id="annotation.with_gene_id"
                                valid-evidence="status.validEvidence"
@@ -53,18 +68,20 @@
       </tr>
 
       <tr ng-if="annotationType.category == 'interaction'"
-          ng-class="{ 'has-error': !isValidFeature() }">
+          ng-class="{ 'has-error': !annotation.second_feature_id }">
         <td class="title">
-          Interacting {{displayAnnotationFeatureType}}
+          Interacting {{chooseFeatureType}}
         </td>
         <td colspan="2">
           <div ng-if="!featureEditable">
             {{currentSecondFeatureDisplayName}}
           </div>
-          <div ng-if="featureEditable">
+          <div ng-if="featureEditable && filteredFeatures">
             <feature-chooser feature-type="{{chooseFeatureType}}"
+                             features="filteredFeatures"
+                             filter-organism="selectedOrganism"
                              chosen-feature-id="annotation.second_feature_id"></feature-chooser>
-            <span ng-show="!isValidFeature()"
+            <span ng-show="filteredFeatures.length != 0 && !annotation.second_feature_id"
                   class="help-block">Please select a {{chooseFeatureType}}</span>
           </div>
         </td>
@@ -73,7 +90,7 @@
       <tr ng-class="{ 'has-error': !isValidTerm() }">
         <td class="title">Term name</td>
         <td colspan="2">
-          <div>
+          <div ng-if="filteredFeatures && filteredFeatures.length != 0">
             <term-name-complete current-term-name="{{annotation.term_name}}"
                                 found-callback="termFoundCallback(termId, termName, searchString, matchingSynonym)"
                                 annotation-type-name="{{annotationType.name}}">
@@ -90,6 +107,7 @@
       <tr ng-if="isValidTerm() && matchingConfigurations.length > 0 || annotation.extension.length > 0">
         <td class="title">Annotation extension</td>
         <td>
+          <div ng-if="filteredFeatures && filteredFeatures.length != 0">
           <extension-display ng-if="annotation.extension.length > 0" extension="annotation.extension"></extension-display>
           <span ng-show="matchingConfigurations.length > 0 || annotation.extension.length > 0">
             <button class="btn btn-default btn-xs"
@@ -101,20 +119,23 @@
           <div ng-if="currentUserIsAdmin">
             <a href="" ng-click="manualEdit()">Edit as text (admin only) ...</a>
           </div>
+          </div>
         </td>
       </tr>
 
       <tr ng-show="status.showConditions">
         <td class="title">Conditions</td>
         <td class="curs-evidence-conditions">
+          <div ng-if="filteredFeatures && filteredFeatures.length != 0">
           Please add experimental conditions.  Conditions are the aspects of the
           experimental setup that are independent of what cells (strain, genotype,
           constructs, etc.) are used.
           <condition-picker conditions="annotation.conditions"></condition-picker>
+          </div>
         </td>
       </tr>
 
-      <tr>
+      <tr ng-if="filteredFeatures && filteredFeatures.length != 0">
         <td class="title" rowspan="2">Term suggestion</td>
         <td colspan="2">
           <input class="form-control curs-edit-wide-field"
@@ -123,7 +144,7 @@
         </td>
       </tr>
 
-      <tr>
+      <tr ng-if="filteredFeatures && filteredFeatures.length != 0">
         <td colspan="2">
           <textarea class="form-control curs-edit-wide-field"
                     placeholder="Definition ..." cols="60"
@@ -131,7 +152,7 @@
         </td>
       </tr>
 
-      <tr>
+      <tr ng-if="filteredFeatures && filteredFeatures.length != 0">
         <td class="title">Comment</td>
         <td colspan="2">
           <input class="form-control curs-edit-wide-field"

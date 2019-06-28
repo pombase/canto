@@ -504,6 +504,10 @@ sub make_interaction_annotation
     $curator = $data->{curator}->{name} . ' <' . $data->{curator}->{email} . '>';
   }
 
+  my $organism_hash = clone $organism_lookup->lookup_by_taxonid($organism_a->taxonid());
+
+  delete $organism_hash->{genes};
+
   my @results = ();
 
 #  if (defined $constrain_gene) {
@@ -520,6 +524,7 @@ sub make_interaction_annotation
 
   my $entry =
     {
+      organism => $organism_hash,
       annotation_type => $annotation_type,
       annotation_type_display_name => $annotation_type_display_name,
       genotype_a_display_name => $genotype_a->display_name($config),
