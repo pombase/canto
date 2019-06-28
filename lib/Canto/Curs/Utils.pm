@@ -438,7 +438,6 @@ sub make_interaction_annotation
   my $config = shift;
   my $schema = shift;
   my $annotation = shift;
-  my $constrain_gene = shift;
 
   my $ontology_lookup = shift //
     Canto::Track::get_adaptor($config, 'ontology');
@@ -508,20 +507,6 @@ sub make_interaction_annotation
 
   delete $organism_hash->{genes};
 
-  my @results = ();
-
-#  if (defined $constrain_gene) {
-#    if ($constrain_gene->gene_id() != $gene->gene_id()) {
-#      if ($interacting_gene->gene_id() == $constrain_gene->gene_id()) {
-#        $is_inferred_annotation = 1;
-#      } else {
-#        # ignore bait or prey from this annotation if it isn't the
-#        # current gene (on a gene page)
-#        next;
-#      }
-#    }
-#  }
-
   my $entry =
     {
       organism => $organism_hash,
@@ -562,14 +547,14 @@ sub make_interaction_annotation
              Canto::Curs::Utils::get_annotation_table($config, $schema,
                                                       $annotation_type_name,
                                                       $constrain_annotations,
-                                                      $constrain_target);
+                                                      $constrain_feature);
  Function: Return a table of the current annotations
  Args    : $config - the Canto::Config object
            $schema - a Canto::CursDB object
            $annotation_type_name - the type of annotation to show (eg.
                                    biological_process, phenotype)
            $constrain_annotations - restrict the table to these annotations
-           $constrain_target      - the gene or genotype to show annotations for
+           $constrain_feature     - the gene or genotype to show annotations for
  Returns : ($completed_count, $table)
            where:
              $completed_count - a count of the annotations that are incomplete
@@ -610,7 +595,7 @@ sub get_annotation_table
   my $schema = shift;
   my $annotation_type_name = shift;
   my $constrain_annotations = shift;
-  my $constrain_gene = shift;
+  my $constrain_feature = shift;
 
   my @annotations = ();
 
@@ -652,7 +637,8 @@ sub get_annotation_table
                                           $ontology_lookup, $organism_lookup);
     } else {
       if ($annotation_type_category eq 'interaction') {
-        @entries = make_interaction_annotation($config, $schema, $annotation, $constrain_gene,
+
+        @entries = make_interaction_annotation($config, $schema, $annotation,
                                                $ontology_lookup, $organism_lookup);
       } else {
         die "unknown annotation type category: $annotation_type_category\n";

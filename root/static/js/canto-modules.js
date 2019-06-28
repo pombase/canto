@@ -6339,7 +6339,9 @@ function filterAnnotations(annotations, params) {
           }
         }
         if (params.featureType === 'genotype' &&
-          annotation.genotype_id == params.featureId) {
+            (annotation.genotype_id == params.featureId ||
+             annotation.genotype_a_id == params.featureId ||
+             annotation.genotype_b_id == params.featureId)) {
           return true;
         }
         if (params.featureType === 'metagenotype' &&
@@ -6537,7 +6539,9 @@ var annotationTableList =
               function (annotationType) {
                 if ($scope.featureTypeFilter === undefined ||
                   $scope.featureTypeFilter === 'gene' ||
-                  annotationType.feature_type === $scope.featureTypeFilter) {
+                  annotationType.feature_type === $scope.featureTypeFilter ||
+                  (annotationType.category === 'interaction' &&
+                   $scope.featureTypeFilter === 'genotype')) {
                   return annotationType;
                 }
               });
