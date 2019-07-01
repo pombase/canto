@@ -4125,7 +4125,7 @@ var organismSelectorCtrl = function ($scope, CantoGlobals) {
   $scope.$watch('organisms', function () {
     if ($scope.organisms && $scope.organisms.length > 0)
       if ($scope.organisms.length === 1) {
-          $scope.data.selectedOrganism = organisms[0];
+          $scope.data.selectedOrganism = $scope.organisms[0];
         $scope.organismChanged()
       } else {
         if ($scope.initialSelectionTaxonId) {
