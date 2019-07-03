@@ -86,7 +86,10 @@ sub _get_curation_sessions
       }
     }
 
-    next unless $curs->pub()->triage_status()->name() eq 'Curatable' ||
+    my $triage_status_name = $curs->pub()->triage_status()->name();
+
+    next unless $triage_status_name eq 'Curatable' ||
+      $triage_status_name eq 'Browser datasets, to host' ||
       $curs_status eq 'APPROVED';
 
     my $data;
@@ -195,7 +198,10 @@ sub _get_pubs
       }
     }
 
-    next unless $pub->triage_status()->name() eq 'Curatable' ||
+    my $triage_status_name = $pub->triage_status()->name();
+
+    next unless $triage_status_name eq 'Curatable' ||
+      $triage_status_name eq 'Browser datasets, to host' ||
       $curs_status && $curs_status eq 'APPROVED';
 
     my %pub_hash = (
