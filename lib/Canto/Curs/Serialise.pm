@@ -78,9 +78,20 @@ sub _get_metadata
     ($key, _get_metadata_value($curs_schema, $_->key(), $_->value() ))
   } @results;
 
-  my $cursprops_rs =
-    $track_schema->resultset('Curs')->find({ curs_key => $ret{canto_session} })
-                 ->cursprops();
+  if (!$ret{canto_session}) {
+    warn "can't for curs_key in CursDB metadata\n";
+    confess();
+  }
+
+  my $curs_obj =
+    $track_schema->resultset('Curs')->find({ curs_key => $ret{canto_session} });
+
+  if (!defined $curs_obj) {
+    warn "can't find Curs object for ", $ret{canto_session}, " in TrackDB\n";
+    confess();
+  }
+
+  my $cursprops_rs = $curs_obj->cursprops();
 
   while (defined (my $prop = $cursprops_rs->next())) {
     my $prop_type_name = $prop->type()->name();
