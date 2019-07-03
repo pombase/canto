@@ -6051,7 +6051,10 @@ var annotationEditDialogCtrl =
     };
 
     $scope.isValidTerm = function () {
-      return $scope.annotation.term_ontid;
+      if (!$scope.annotationType) {
+        return false;
+      }
+      return $scope.annotationType.category == 'interaction' || $scope.annotation.term_ontid;
     };
 
     $scope.isValidEvidence = function () {
