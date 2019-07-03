@@ -478,20 +478,25 @@ sub make_interaction_annotation
   my $evidence_code = $data->{evidence_code};
   my $annotation_type = $annotation->type();
 
+  my $term_name = '';
+
   my $term_ontid = $data->{term_ontid};
+  my $is_obsolete_term = undef;
 
-  my $term_lookup_result = $ontology_lookup->lookup_by_id(id => $term_ontid);
+  if ($term_ontid) {
+    my $term_lookup_result = $ontology_lookup->lookup_by_id(id => $term_ontid);
 
-  if (! defined $term_lookup_result) {
-    warn qq(internal error: cannot find details for "$term_ontid" in "$annotation_type");
-    $term_lookup_result = {
-      name => "[UNKNOWN TERM]",
-      is_obsolete => 1,
-    };
+    if (! defined $term_lookup_result) {
+      warn qq(internal error: cannot find details for "$term_ontid" in "$annotation_type");
+      $term_lookup_result = {
+        name => "[UNKNOWN TERM]",
+        is_obsolete => 1,
+      };
+    }
+
+    $term_name = $term_lookup_result->{name};
+    $is_obsolete_term = $term_lookup_result->{is_obsolete};
   }
-
-  my $term_name = $term_lookup_result->{name};
-  my $is_obsolete_term = $term_lookup_result->{is_obsolete};
 
   my %annotation_types_config = %{$config->{annotation_types}};
   my $annotation_type_config = $annotation_types_config{$annotation_type};
