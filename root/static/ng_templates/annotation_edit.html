@@ -88,7 +88,8 @@
       </tr>
 
       <tr ng-class="{ 'has-error': !isValidTerm() }">
-        <td class="title">Term name</td>
+        <td ng-if="annotationType.category != 'interaction'" class="title">Term name</td>
+        <td ng-if="annotationType.category == 'interaction'" class="title">Phenotype (optional)</td>
         <td colspan="2">
           <div ng-if="filteredFeatures && filteredFeatures.length != 0">
             <term-name-complete current-term-name="{{annotation.term_name}}"
