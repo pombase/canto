@@ -1584,6 +1584,10 @@ var ontologyTermSelect =
       templateUrl: app_static_path + 'ng_templates/ontology_term_select.html',
       controller: function ($scope) {
         $scope.foundCallback = function (termId, termName, searchString, matchingSynonym) {
+          if (!termId) {
+            // ignore callback, user has cleared the input field
+            return;
+          }
           $scope.termFoundCallback({
             termId: termId,
             termName: termName,
@@ -2493,6 +2497,11 @@ var extensionRelationEdit =
         };
 
         $scope.termFoundCallback = function (termId, termName, searchString) {
+          if (!termId) {
+            // ignore callback, user has cleared the input field
+            return;
+          }
+
           $scope.extensionRelation.rangeValue = termId;
           $scope.extensionRelation.rangeDisplayName = termName;
 
@@ -2688,6 +2697,11 @@ var ontologyWorkflowCtrl =
 
     $scope.termFoundCallback =
       function (termId, termName, searchString, matchingSynonym) {
+        if (!termId) {
+          // ignore callback, user has cleared the input field
+          return;
+        }
+
         CursStateService.clearTerm();
         CursStateService.addTerm(termId);
         CursStateService.searchString = searchString;
@@ -6067,6 +6081,11 @@ var annotationEditDialogCtrl =
         $scope.annotation.term_ontid = termId;
         $scope.annotation.term_name = termName;
 
+        if (!termId) {
+          // user has cleared the input field, so we clear the term_ontid and continue
+          return;
+        }
+
         if (!searchString.match(/^".*"$/) && searchString !== termId) {
           var termConfirm = openTermConfirmDialog($uibModal, termId, 'definition',
             $scope.annotationType.feature_type, false);
@@ -6990,6 +7009,23 @@ var termNameComplete =
             // return should autocomplete not submit the form
             event.preventDefault();
             do_autocomplete();
+          }
+        });
+
+        input.keyup(function (event) {
+          var value = input.val();
+
+          if (trim(value).length == 0) {
+            $timeout(
+              function () {
+                scope.foundCallback({
+                  termId: null,
+                  termName: null,
+                  searchString: '',
+                  matchingSynonym: null,
+                });
+              },
+              1);
           }
         });
 
