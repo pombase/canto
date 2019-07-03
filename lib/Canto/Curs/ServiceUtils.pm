@@ -1071,6 +1071,7 @@ sub _ontology_change_keys
 
       if (!defined $term_ontid) {
         if ($category eq 'interaction') {
+          delete $data->{term_ontid};
           return 1;
         } else {
           die "no term_ontid passed to change_annotation()\n";
