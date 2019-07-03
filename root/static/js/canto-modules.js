@@ -5244,7 +5244,7 @@ var genotypeListViewCtrl =
         }
 
         function getOrganismType(genotypes) {
-          if (CantoGlobals.pathogen_host_mode) {
+          if (CantoGlobals.pathogen_host_mode && genotypes.length > 0) {
             var genotype = genotypes[0];
             if ('organism' in genotype) {
               var organism = genotype.organism;
