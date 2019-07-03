@@ -95,7 +95,7 @@
                                 found-callback="termFoundCallback(termId, termName, searchString, matchingSynonym)"
                                 annotation-type-name="{{annotationType.name}}">
             </term-name-complete>
-            <span ng-show="isValidFeature() && !isValidTerm()"
+            <span ng-show="!isValidTerm()"
                   class="help-block">Start typing to choose a term</span>
           </div>
           <div>
