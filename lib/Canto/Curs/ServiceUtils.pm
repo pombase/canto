@@ -970,6 +970,8 @@ sub make_annotation
     die "no annotation_type_name passed to make_annotation()\n";
   }
 
+  my $category = $self->_category_from_type($annotation_type_name);
+
   my $curs_schema = $self->curs_schema();
 
   my $evidence_types = $self->config()->{evidence_types};
@@ -982,14 +984,18 @@ sub make_annotation
   my %annotation_data = ();
 
   my $term_ontid = $data->{term_ontid};
-  if (!defined $term_ontid) {
-    die "Adding annotation failed - no term ID\n";
-  }
-  if (!defined $self->_term_name_from_id($term_ontid)) {
-    die "Adding annotation failed - invalid term ID\n";
-  }
 
-  $annotation_data{term_ontid} = $term_ontid;
+  if (defined $term_ontid) {
+    if (!defined $self->_term_name_from_id($term_ontid)) {
+      die "Adding annotation failed - invalid term ID\n";
+    }
+
+    $annotation_data{term_ontid} = $term_ontid;
+  } else {
+    if ($category ne 'interaction') {
+      die "Adding annotation failed - no term ID\n";
+    }
+  }
 
   my $needs_with_gene = $evidence_types->{$evidence_code}->{with_gene};
   if ($needs_with_gene) {
@@ -1002,7 +1008,7 @@ sub make_annotation
     }
   }
 
-  if ($self->_category_from_type($annotation_type_name) eq 'interaction') {
+  if ($category eq 'interaction') {
     my $metagenotype =
       $self->_process_interaction_genotypes($data->{genotype_a_id}, $data->{genotype_b_id});
 
@@ -1059,8 +1065,14 @@ sub _ontology_change_keys
     term_ontid => sub {
       my $term_ontid = shift;
 
+      my $category = $self->_category_from_type($annotation->type());
+
       if (!defined $term_ontid) {
-        die "no term_ontid passed to change_annotation()\n";
+        if ($category eq 'interaction') {
+          return 1;
+        } else {
+          die "no term_ontid passed to change_annotation()\n";
+        }
       }
 
       my $res = $lookup->lookup_by_id( id => $term_ontid );
