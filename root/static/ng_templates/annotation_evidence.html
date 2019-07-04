@@ -13,6 +13,7 @@
       <span>With:</span>
       <span><feature-chooser feature-type="gene" features="genes"
                              chosen-feature-id="withGeneId"></feature-chooser></span>
+      <a ng-click="openSingleGeneAddDialog()">Add another ...</a>
     </div>
     <div ng-show="isValidEvidenceCode() && !isValidWithGene()"
           class="help-block">Please select a 'with' gene</div>

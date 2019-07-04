@@ -2484,12 +2484,22 @@ var extensionRelationEdit =
 
         $scope.genes = null;
 
-        // editing existing part
-        CursGeneList.geneList().then(function (results) {
-          $scope.genes = results;
-        }).catch(function () {
-          toaster.pop('note', "couldn't read the gene list from the server");
-        });
+        $scope.getGenesFromServer = function() {
+          CursGeneList.geneList().then(function (results) {
+            $scope.genes = results;
+          }).catch(function () {
+            toaster.pop('note', "couldn't read the gene list from the server");
+          });
+        };
+
+        $scope.getGenesFromServer();
+
+        $scope.openSingleGeneAddDialog = function () {
+          var modal = openSingleGeneAddDialog($uibModal);
+          modal.result.then(function () {
+            $scope.getGenesFromServer();
+          });
+        };
 
         $scope.disableAll = function (element, disabled) {
           $(element).find('input').attr('disabled', disabled);
@@ -2968,7 +2978,7 @@ canto.controller('InteractionWorkflowCtrl',
 
 
 var annotationEvidence =
-  function (AnnotationTypeConfig, CantoConfig, CursGeneList) {
+  function (AnnotationTypeConfig, CantoConfig, CursGeneList, $uibModal) {
     var directive = {
       scope: {
         evidenceCode: '=',
@@ -2985,11 +2995,22 @@ var annotationEvidence =
 
         $scope.genes = null;
 
-        CursGeneList.geneList().then(function (results) {
-          $scope.genes = results;
-        }).catch(function (err) {
-          toaster.pop('note', "couldn't read the gene list from the server");
-        });
+        $scope.getGenesFromServer = function() {
+          CursGeneList.geneList().then(function (results) {
+            $scope.genes = results;
+          }).catch(function (err) {
+            toaster.pop('note', "couldn't read the gene list from the server");
+          });
+        }
+
+        $scope.getGenesFromServer();
+
+        $scope.openSingleGeneAddDialog = function () {
+          var modal = openSingleGeneAddDialog($uibModal);
+          modal.result.then(function () {
+            $scope.getGenesFromServer();
+          });
+        };
 
         AnnotationTypeConfig.getByName($scope.annotationTypeName)
           .then(function (annotationType) {
@@ -3080,7 +3101,8 @@ var annotationEvidence =
   };
 
 canto.directive('annotationEvidence',
-   ['AnnotationTypeConfig', 'CantoConfig', 'CursGeneList', annotationEvidence]);
+                ['AnnotationTypeConfig', 'CantoConfig', 'CursGeneList', '$uibModal',
+                 annotationEvidence]);
 
 var conditionPicker =
   function (CursConditionList, toaster) {
@@ -5978,6 +6000,13 @@ var annotationEditDialogCtrl =
       $scope.selectedOrganism = organism;
       setFilteredFeatures();
     }
+
+    $scope.openSingleGeneAddDialog = function () {
+      var modal = openSingleGeneAddDialog($uibModal);
+      modal.result.then(function () {
+        setFilteredFeatures();
+      });
+    };
 
     $scope.isValidOrganism = function () {
       return !!$scope.selectedOrganism;
