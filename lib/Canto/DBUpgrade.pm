@@ -638,6 +638,8 @@ CREATE TABLE diploid (
       my $curs_schema = shift;
       my $curs_key = $curs->curs_key();
 
+      my $guard = $curs_schema->txn_scope_guard();
+
       my $curs_dbh = $curs_schema->storage()->dbh();
 
       $curs_dbh->do("PRAGMA foreign_keys = OFF");
@@ -670,12 +672,11 @@ CREATE TABLE metagenotype_temp (
       my $genotype_manager = Canto::Curs::GenotypeManager->new(config => $config,
                                                                curs_schema => $curs_schema);
 
-      my @old_interaction_annotations = ();
+      my @old_interaction_annotations = $annotation_rs->all();
 
-      while (defined (my $old_annotation = $annotation_rs->next())) {
+      for my $old_annotation (@old_interaction_annotations) {
         if ($old_annotation->type() eq 'physical_interaction' ||
             $old_annotation->type() eq 'genetic_interaction') {
-          push @old_interaction_annotations, $old_annotation;
 
           my $data = $old_annotation->data();
           my $interacting_genes = delete $data->{interacting_genes};
@@ -691,33 +692,39 @@ CREATE TABLE metagenotype_temp (
               die "can't upgrade $curs_key, interaction annotation has no genes";
             }
 
-            my $gene_a = $a_genes[0];
+            my $gene_a =
+              Canto::Curs::GeneProxy->new(config => $config, cursdb_gene => $a_genes[0]);
 
             my $json_allele_a = {
+              name => 'unspecified-' . $gene_a->display_name(),
               type => 'unspecified',
               gene_id => $gene_a->gene_id(),
             };
 
-            my $taxonid = $gene_a->organism()->taxonid();
+            my $taxonid_a = $gene_a->organism_details()->{taxonid};
 
             my $genotype_a =
-              $genotype_manager->make_genotype(undef, undef, [$json_allele_a], $taxonid,
+              $genotype_manager->make_genotype(undef, undef, [$json_allele_a], $taxonid_a,
                                                undef, undef, undef);
 
             my $gene_b_primary_identifier = $_->{primary_identifier};
-            my $gene_b = $curs_schema->resultset('Gene')
+            my $curs_gene_b = $curs_schema->resultset('Gene')
               ->find({
                 primary_identifier => $gene_b_primary_identifier,
               }, {
                 prefetch => 'organism',
               });
 
+            my $gene_b =
+              Canto::Curs::GeneProxy->new(config => $config, cursdb_gene => $curs_gene_b);
+
             my $json_allele_b = {
+              name => 'unspecified-' . $gene_b->display_name(),
               type => 'unspecified',
               gene_id => $gene_b->gene_id(),
             };
 
-            my $taxonid_b = $gene_b->organism()->taxonid();
+            my $taxonid_b = $gene_a->organism_details()->{taxonid};
 
             my $genotype_b =
               $genotype_manager->make_genotype(undef, undef, [$json_allele_b], $taxonid_b,
@@ -751,6 +758,8 @@ CREATE TABLE metagenotype_temp (
 
         $old_annotation->delete();
       } @old_interaction_annotations;
+
+      $guard->commit();
     };
 
     Canto::Track::curs_map($config, $track_schema, $update_proc);
