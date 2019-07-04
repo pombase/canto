@@ -320,7 +320,8 @@ sub _set_genotype_alleles
                                             $comment, \@diploid_groups);
  Function: Create a Genotype object in the CursDB
  Args    : $name - the name for the new object
-           \@allele_objects - a list of Allele objects
+           $background
+           \@alleles - a list of JSON details for the alleles
            $genotype_taxonid - the organism of this genotype
            $identifier - the identifier of the new object if the Genotype
                          details are from an external source (Chado) or undef
