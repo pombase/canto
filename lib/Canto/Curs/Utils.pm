@@ -472,6 +472,33 @@ sub make_interaction_annotation
   my $organism_a = $genotype_a->organism();
   my $organism_b = $genotype_b->organism();
 
+  my @genotype_a_gene_ids =
+    map {
+      my $gene = $_;
+      $gene->gene_id();
+    }
+    grep {
+      my $gene = $_;
+      defined $gene;
+    } map {
+      my $allele = $_;
+      $allele->gene();
+    } $genotype_a->alleles();
+
+  my @genotype_b_gene_ids =
+    map {
+      my $gene = $_;
+      $gene->gene_id();
+    }
+    grep {
+      my $gene = $_;
+      defined $gene;
+    } map {
+      my $allele = $_;
+      $allele->gene();
+    } $genotype_b->alleles();
+
+
   my $is_inferred_annotation = 0;
 
   my $data = $annotation->data();
@@ -520,11 +547,13 @@ sub make_interaction_annotation
       genotype_a_display_name => $genotype_a->display_name($config),
       genotype_a_id => $genotype_a->genotype_id(),
       genotype_a_taxonid => $organism_a->taxonid(),
+      genotype_a_gene_ids => \@genotype_a_gene_ids,
       publication_uniquename => $pub_uniquename,
       evidence_code => $evidence_code,
       genotype_b_display_name => $genotype_b->display_name($config),
       genotype_b_id => $genotype_b->genotype_id(),
       genotype_b_taxonid => $organism_b->taxonid(),
+      genotype_b_gene_ids => \@genotype_b_gene_ids,
       score => '',  # for biogrid format output
       submitter_comment => $data->{submitter_comment} // '',
       term_ontid => $term_ontid,
