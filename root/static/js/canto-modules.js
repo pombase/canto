@@ -6348,8 +6348,18 @@ function filterAnnotations(annotations, params) {
           if (annotation.gene_id == params.featureId) {
             return true;
           }
-          if (typeof (annotation.interacting_gene_id) !== 'undefined' &&
-            annotation.interacting_gene_id == params.featureId) {
+          if (annotation.genotype_a_gene_ids &&
+              $.grep(annotation.genotype_a_gene_ids,
+                     function(geneId) {
+                       return geneId == params.featureId;
+                     }).length > 0) {
+            return true;
+          }
+          if (annotation.genotype_b_gene_ids &&
+              $.grep(annotation.genotype_b_gene_ids,
+                     function(geneId) {
+                       return geneId == params.featureId;
+                     }).length > 0) {
             return true;
           }
           if (annotation.alleles !== undefined &&
