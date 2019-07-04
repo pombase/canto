@@ -321,6 +321,8 @@ sub curs_map
       Canto::Curs::get_schema_for_key($config, $curs_key,
                                       { cache_connection => 0 });
     push @ret, $func->($curs, $curs_schema, $track_schema);
+
+    $curs_schema->storage()->disconnect();
   }
 
   return @ret;
