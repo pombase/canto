@@ -46,6 +46,10 @@
             <span ng-show="filteredFeatures.length == 0">
               No {{chooseFeatureType}}s in this session for the selected organism
             </span>
+
+            <div ng-if="!multiOrganismMode">
+              <a ng-click="openSingleGeneAddDialog()">Add another ...</a>
+            </div>
           </div>
         </td>
       </tr>
