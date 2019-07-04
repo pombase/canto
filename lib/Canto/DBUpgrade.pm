@@ -42,6 +42,9 @@ use Canto::Track;
 use Canto::ExtensionUtil;
 use Canto::Track;
 
+use Canto::Curs::AlleleManager;
+use Canto::Curs::GenotypeManager;
+
 has config => (is => 'ro', required => 1);
 
 my %procs = (
@@ -633,6 +636,7 @@ CREATE TABLE diploid (
     my $update_proc = sub {
       my $curs = shift;
       my $curs_schema = shift;
+      my $curs_key = $curs->curs_key();
 
       my $curs_dbh = $curs_schema->storage()->dbh();
 
@@ -659,7 +663,94 @@ CREATE TABLE metagenotype_temp (
 
       $curs_dbh->do("ALTER TABLE metagenotype_temp RENAME TO metagenotype");
 
+      my $annotation_rs = $curs_schema->resultset('Annotation');
+
       $curs_dbh->do("PRAGMA foreign_keys = ON");
+
+      my $genotype_manager = Canto::Curs::GenotypeManager->new(config => $config,
+                                                               curs_schema => $curs_schema);
+
+      my @old_interaction_annotations = ();
+
+      while (defined (my $old_annotation = $annotation_rs->next())) {
+        if ($old_annotation->type() eq 'physical_interaction' ||
+            $old_annotation->type() eq 'genetic_interaction') {
+          push @old_interaction_annotations, $old_annotation;
+
+          my $data = $old_annotation->data();
+          my $interacting_genes = delete $data->{interacting_genes};
+
+          map {
+            my @a_genes = $old_annotation->genes();
+
+            if (@a_genes > 1) {
+              die "can't upgrade $curs_key, interaction annotation has more than 1 gene";
+            }
+
+            if (@a_genes == 0) {
+              die "can't upgrade $curs_key, interaction annotation has no genes";
+            }
+
+            my $gene_a = $a_genes[0];
+
+            my $json_allele_a = {
+              type => 'unspecified',
+              gene_id => $gene_a->gene_id(),
+            };
+
+            my $taxonid = $gene_a->organism()->taxonid();
+
+            my $genotype_a =
+              $genotype_manager->make_genotype(undef, undef, [$json_allele_a], $taxonid,
+                                               undef, undef, undef);
+
+            my $gene_b_primary_identifier = $_->{primary_identifier};
+            my $gene_b = $curs_schema->resultset('Gene')
+              ->find({
+                primary_identifier => $gene_b_primary_identifier,
+              }, {
+                prefetch => 'organism',
+              });
+
+            my $json_allele_b = {
+              type => 'unspecified',
+              gene_id => $gene_b->gene_id(),
+            };
+
+            my $taxonid_b = $gene_b->organism()->taxonid();
+
+            my $genotype_b =
+              $genotype_manager->make_genotype(undef, undef, [$json_allele_b], $taxonid_b,
+                                               undef, undef, undef);
+
+            if ($data->{evidence_code} eq 'Synthetic Lethality') {
+              $data->{term_ontid} = 'FYPO:0002059';
+            }
+
+            my $annotation =
+              $curs_schema->create_with_type('Annotation',
+                                             {
+                                               status => $old_annotation->status(),
+                                               pub => $old_annotation->pub(),
+                                               type => $old_annotation->type(),
+                                               creation_date => $old_annotation->creation_date(),
+                                               data => $data,
+                                             });
+
+            my $metagenotype =
+              $genotype_manager->make_metagenotype(interactor_a => $genotype_a,
+                                                   interactor_b => $genotype_b);
+
+            $annotation->set_metagenotypes($metagenotype);
+          } @$interacting_genes;
+        }
+      }
+
+      map {
+        my $old_annotation = $_;
+
+        $old_annotation->delete();
+      } @old_interaction_annotations;
     };
 
     Canto::Track::curs_map($config, $track_schema, $update_proc);
