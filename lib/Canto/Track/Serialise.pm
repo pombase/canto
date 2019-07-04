@@ -89,9 +89,9 @@ sub _get_curation_sessions
     my $triage_status_name = $curs->pub()->triage_status()->name();
 
     next unless
-      grep {
+      (grep {
         $_ eq $triage_status_name;
-      } @{$config->{export}->{canto_json}->{pub_triage_status_to_export}} ||
+      } @{$config->{export}->{canto_json}->{pub_triage_status_to_export}}) ||
       $curs_status eq 'APPROVED';
 
     my $data;
@@ -204,9 +204,9 @@ sub _get_pubs
     my $triage_status_name = $pub->triage_status()->name();
 
     next unless
-      grep {
+      (grep {
         $_ eq $triage_status_name;
-      } @{$config->{export}->{canto_json}->{pub_triage_status_to_export}} ||
+      } @{$config->{export}->{canto_json}->{pub_triage_status_to_export}}) ||
       $curs_status && $curs_status eq 'APPROVED';
 
     my %pub_hash = (
