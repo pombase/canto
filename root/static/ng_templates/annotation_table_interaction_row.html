@@ -30,9 +30,6 @@
   <td ng-if="!data.hideColumns.submitter_comment">
     {{annotation.submitter_comment}}
   </td>
-  <td ng-if="!data.hideColumns.curator">
-    {{annotation.curator}}
-  </td>
   <td ng-class="{ 'term-warning': annotation.is_obsolete_term }">
     {{annotation.term_ontid}}
   </td>
@@ -44,6 +41,12 @@
   </td>
   <td ng-if="!data.hideColumns.qualifiers">
     {{annotation.qualifiersString}}
+  </td>
+  <td ng-if="!data.hideColumns.submitter_comment">
+    {{annotation.comment}}
+  </td>
+  <td ng-if="!data.hideColumns.curator">
+    {{annotation.curator}}
   </td>
   <td class="table-row-actions">
     <div ng-if="addLinks()">
