@@ -88,8 +88,10 @@ sub _get_curation_sessions
 
     my $triage_status_name = $curs->pub()->triage_status()->name();
 
-    next unless $triage_status_name eq 'Curatable' ||
-      $triage_status_name eq 'Browser datasets, to host' ||
+    next unless
+      grep {
+        $_ eq $triage_status_name;
+      } @{$config->{export}->{canto_json}->{pub_triage_status_to_export}} ||
       $curs_status eq 'APPROVED';
 
     my $data;
@@ -175,6 +177,7 @@ sub _get_pub_curation_statuses
 
 sub _get_pubs
 {
+  my $config = shift;
   my $schema = shift;
   my $options = shift;
 
@@ -200,8 +203,10 @@ sub _get_pubs
 
     my $triage_status_name = $pub->triage_status()->name();
 
-    next unless $triage_status_name eq 'Curatable' ||
-      $triage_status_name eq 'Browser datasets, to host' ||
+    next unless
+      grep {
+        $_ eq $triage_status_name;
+      } @{$config->{export}->{canto_json}->{pub_triage_status_to_export}} ||
       $curs_status && $curs_status eq 'APPROVED';
 
     my %pub_hash = (
@@ -299,7 +304,7 @@ sub json
   if ($options->{all_data}) {
     $hash = {
       curation_sessions => $curation_sessions_hash,
-      publications => _get_pubs($schema, $options),
+      publications => _get_pubs($config, $schema, $options),
       people => _get_people($schema),
       labs => _get_labs($schema),
     };

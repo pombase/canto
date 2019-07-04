@@ -1256,6 +1256,13 @@ export:
   gene_association_fields:
     db: "PomBase"
     assigned_by: "PomBase"
+  canto_json:
+    pub_triage_status_to_export:
+      - Curatable
+      - Browser datasets, to host
+      - Browser datasets, hosted
+      - Method or reagent
+      - Review or comment
 
 load:
   ontology:
