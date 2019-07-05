@@ -289,13 +289,15 @@ sub allele_string
                prefetch => [qw[diploid allele]]
              });
 
+  my $haploid_count = 1;
+
   while (defined (my $row = $allele_genotype_rs->next())) {
     my $allele = $row->allele();
     my $diploid = $row->diploid();
     if ($diploid) {
       push @{$diploid_groups{$diploid->name()}}, $allele;
     } else {
-      push @{$diploid_groups{"_haploid-" . $allele->allele_id()}}, $allele;
+      push @{$diploid_groups{"_haploid-" . $haploid_count++}}, $allele;
     }
   }
 
@@ -309,7 +311,7 @@ sub allele_string
                         } @{$diploid_groups{$group_name}});
   }
 
-  return join " ", @group_names;
+  return join " ", sort @group_names;
 }
 
 sub display_name

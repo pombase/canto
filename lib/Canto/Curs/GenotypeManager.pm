@@ -104,13 +104,15 @@ sub _allele_string_from_json
 
   my %diploid_groups= ();
 
+  my $haplod_count = 1;
+
   for my $allele_data (@$alleles_data) {
     my $allele = $allele_manager->allele_from_json($allele_data, $curs_key);
 
     if ($allele_data->{diploid_name}) {
       push @{$diploid_groups{$allele_data->{diploid_name}}}, $allele;
     } else {
-      push @{$diploid_groups{"_haploid-" . $allele->allele_id()}}, $allele;
+      push @{$diploid_groups{"_haploid-" . $haplod_count++}}, $allele;
     }
   }
 
@@ -124,7 +126,7 @@ sub _allele_string_from_json
                         } @{$diploid_groups{$group_name}});
   }
 
-  return join " ", @group_names;
+  return join " ", sort @group_names;
 }
 
 

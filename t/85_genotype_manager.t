@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 31;
+use Test::More tests => 35;
 
 use Try::Tiny;
 
@@ -174,7 +174,8 @@ $genotype_manager->delete_genotype($diploid_genotype->genotype_id());
 
 is($curs_schema->resultset('Diploid')->count(), 0);
 
-# #####:
+
+# Test creation of homozygous diploid:
 
 delete $cdc11_delta_details->{diploid_name};
 my $cdc11_delta_genotype =
@@ -205,3 +206,41 @@ my $found_cdc11_delta_diplod_genotype =
 
 ok(defined $found_cdc11_delta_diplod_genotype);
 is($found_cdc11_delta_diplod_genotype->display_name($config), "cdc11delta / cdc11delta");
+
+$genotype_manager->delete_genotype($found_cdc11_delta_diplod_genotype->genotype_id());
+
+
+# check deletion
+my $found_cdc11_delta_haploid_genotype =
+  $genotype_manager->find_genotype($pombe_taxonid, undef, undef,
+                                   [$cdc11_delta_details, $cdc11_delta_details],
+                                   $curs_schema, $curs_key);
+
+ok(!defined $found_cdc11_delta_haploid_genotype);
+
+
+# Test creation of homozygous diploid where there is an existing
+# non-diploid gentoype with the same allele twice
+
+delete $cdc11_delta_details->{diploid_name};
+my $cdc11_delta_haploid_genotype =
+  $genotype_manager->make_genotype(undef, undef,
+                                   [$cdc11_delta_details, $cdc11_delta_details],
+                                   $pombe_taxonid,
+                                   undef, undef, undef);
+$found_cdc11_delta_haploid_genotype =
+  $genotype_manager->find_genotype($pombe_taxonid, undef, undef,
+                                   [$cdc11_delta_details, $cdc11_delta_details],
+                                   $curs_schema, $curs_key);
+
+ok(defined $found_cdc11_delta_haploid_genotype);
+is($found_cdc11_delta_haploid_genotype->display_name($config), "cdc11delta cdc11delta");
+
+$cdc11_delta_details->{diploid_name} = 'diploid_1';
+
+$found_cdc11_delta_diplod_genotype =
+  $genotype_manager->find_genotype($pombe_taxonid, undef, undef,
+                                   [$cdc11_delta_details, $cdc11_delta_details],
+                                   $curs_schema, $curs_key);
+
+ok(!defined $found_cdc11_delta_diplod_genotype);

@@ -73,7 +73,7 @@ test_psgi $app, sub {
 
   cmp_deeply($perl_res,
              {
-               'allele_string' => 'ssm4delta SPCC63.05delta',
+               'allele_string' => 'SPCC63.05delta ssm4delta',
                'genotype_id' => 1,
                'metagenotype_count' => 0,
                strain_name => undef,
