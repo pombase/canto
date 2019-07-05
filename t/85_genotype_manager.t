@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 27;
+use Test::More tests => 31;
 
 use Try::Tiny;
 
@@ -173,3 +173,35 @@ is($find_results->display_name($config), "cdc11+[Overexpression] / cdc11delta");
 $genotype_manager->delete_genotype($diploid_genotype->genotype_id());
 
 is($curs_schema->resultset('Diploid')->count(), 0);
+
+# #####:
+
+delete $cdc11_delta_details->{diploid_name};
+my $cdc11_delta_genotype =
+  $genotype_manager->make_genotype(undef, undef,
+                                   [$cdc11_delta_details],
+                                   $pombe_taxonid,
+                                   undef, undef, undef);
+my $found_cdc11_delta_genotype =
+  $genotype_manager->find_genotype($pombe_taxonid, undef, undef,
+                                   [$cdc11_delta_details],
+                                   $curs_schema, $curs_key);
+
+ok(defined $found_cdc11_delta_genotype);
+is($found_cdc11_delta_genotype->display_name($config), "cdc11delta");
+
+$cdc11_delta_details->{diploid_name} = 'diploid_1';
+
+my $cdc11_delta_diplod_genotype =
+  $genotype_manager->make_genotype(undef, undef,
+                                   [$cdc11_delta_details, $cdc11_delta_details],
+                                   $pombe_taxonid,
+                                   undef, undef, undef);
+
+my $found_cdc11_delta_diplod_genotype =
+  $genotype_manager->find_genotype($pombe_taxonid, undef, undef,
+                                   [$cdc11_delta_details, $cdc11_delta_details],
+                                   $curs_schema, $curs_key);
+
+ok(defined $found_cdc11_delta_diplod_genotype);
+is($found_cdc11_delta_diplod_genotype->display_name($config), "cdc11delta / cdc11delta");
