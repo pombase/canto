@@ -672,12 +672,13 @@ CREATE TABLE metagenotype_temp (
       my $genotype_manager = Canto::Curs::GenotypeManager->new(config => $config,
                                                                curs_schema => $curs_schema);
 
-      my @old_interaction_annotations = $annotation_rs->all();
+      my @old_interaction_annotations = grep {
+        my $old_annotation = $_;
+        $old_annotation->type() eq 'physical_interaction' ||
+          $old_annotation->type() eq 'genetic_interaction';
+      } $annotation_rs->all();
 
       for my $old_annotation (@old_interaction_annotations) {
-        if ($old_annotation->type() eq 'physical_interaction' ||
-            $old_annotation->type() eq 'genetic_interaction') {
-
           my $data = $old_annotation->data();
           my $interacting_genes = delete $data->{interacting_genes};
 
@@ -750,7 +751,6 @@ CREATE TABLE metagenotype_temp (
 
             $annotation->set_metagenotypes($metagenotype);
           } @$interacting_genes;
-        }
       }
 
       map {
