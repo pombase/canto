@@ -27,9 +27,6 @@
   <td ng-if="multiOrganismMode">
     {{annotation.genotype_b_taxonid}}
   </td>
-  <td ng-if="!data.hideColumns.submitter_comment">
-    {{annotation.submitter_comment}}
-  </td>
   <td ng-class="{ 'term-warning': annotation.is_obsolete_term }">
     {{annotation.term_ontid}}
   </td>
@@ -43,7 +40,7 @@
     {{annotation.qualifiersString}}
   </td>
   <td ng-if="!data.hideColumns.submitter_comment">
-    {{annotation.comment}}
+    {{annotation.submitter_comment}}
   </td>
   <td ng-if="!data.hideColumns.curator">
     {{annotation.curator}}
