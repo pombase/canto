@@ -6,6 +6,7 @@ use Carp;
 use File::Basename;
 use IO::All;
 use Getopt::Long;
+use Fcntl qw(:flock);
 
 BEGIN {
   my $script_name = basename $0;
@@ -155,6 +156,9 @@ if (!Canto::Meta::Util::app_initialised($app_name, $suffix)) {
   die "The application is not yet initialised, try running the canto_start " .
     "script\n";
 }
+
+open my $this_script, '<', $0 or die "can't open $0 for reading";
+flock($this_script, LOCK_EX) or die "can't get lock on $0";
 
 my $config = Canto::Config::get_config();
 my $schema = Canto::TrackDB->new(config => $config);
@@ -333,3 +337,5 @@ if ($do_pubmed_xml) {
   Canto::Track::PubmedUtil::load_pubmed_xml($schema, $xml,
                                              'admin_load');
 }
+
+flock($this_script, LOCK_UN) or die "can't unlock $0";
