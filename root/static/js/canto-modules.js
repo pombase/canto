@@ -6113,6 +6113,8 @@ var annotationEditDialogCtrl =
 
         if (!termId) {
           // user has cleared the input field, so we clear the term_ontid and continue
+          $scope.annotation.conditions = [];
+          $scope.annotation.extension = [];
           return;
         }
 
