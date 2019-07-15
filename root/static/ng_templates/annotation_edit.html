@@ -47,7 +47,7 @@
               No {{chooseFeatureType}}s in this session for the selected organism
             </span>
 
-            <div ng-if="!multiOrganismMode">
+            <div ng-if="!multiOrganismMode && chooseFeatureType == 'gene'">
               <a ng-click="openSingleGeneAddDialog()">Add another ...</a>
             </div>
           </div>
