@@ -3032,7 +3032,6 @@ var annotationEvidence =
     var directive = {
       scope: {
         evidenceCode: '=',
-        showConditions: '=?',
         withGeneId: '=',
         validEvidence: '=', // true when evidence and with_gene_id are valid
         annotationTypeName: '@',
@@ -3128,12 +3127,6 @@ var annotationEvidence =
               }
 
               $scope.validEvidence = $scope.isValidCodeAndWith();
-
-              if ("showConditions" in $attrs) {
-                $scope.showConditions =
-                  $scope.isValidEvidenceCode() &&
-                  $scope.annotationType && $scope.annotationType.can_have_conditions;
-              }
             });
 
           $scope.validEvidence = $scope.isValidCodeAndWith();
@@ -5978,7 +5971,6 @@ var annotationEditDialogCtrl =
     $scope.matchingConfigurations = [];
     $scope.status = {
       validEvidence: false,
-      showConditions: false,
       showEvidence: true,
     };
     $scope.chooseFeatureType = null;
@@ -6092,6 +6084,12 @@ var annotationEditDialogCtrl =
       }
       return $scope.status.validEvidence;
     };
+
+    $scope.showConditions = function () {
+      return $scope.status.validEvidence &&
+        $scope.annotationType && $scope.annotationType.can_have_conditions &&
+        $scope.annotation.term_ontid;
+    }
 
     $scope.annotationChanged = function () {
       var changesToStore = {};
