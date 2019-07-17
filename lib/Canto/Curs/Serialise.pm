@@ -373,10 +373,7 @@ sub _get_alleles
       $config->{allele_types}->{$allele->type()}->{export_type};
 
     if (!defined $export_type) {
-      croak "can't find the export/database type for allele: ",
-        ($allele->name() // 'noname'), "(", ($allele->description() // 'unknown'),
-        ") ", ($gene ? 'of gene: ' . $gene->primary_identifier() : ''),
-        '  type: ', $allele->type();
+      $export_type = $allele->type();
     }
 
     my %allele_data = (
