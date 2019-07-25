@@ -1481,7 +1481,30 @@ sub delete_annotation
     $self->_check_curs_key($details);
 
     my $annotation_id = $details->{annotation_id};
-    $curs_schema->find_with_type('Annotation', $annotation_id)->delete();
+    my $annotation = $curs_schema->find_with_type('Annotation', $annotation_id);
+
+    my @metagenotype_annotations = $annotation->metagenotype_annotations()
+      ->search({}, { prefetch => 'metagenotype' })
+      ->all();
+
+    my @metagenotypes = map {
+      $_->metagenotype();
+    } @metagenotype_annotations;
+
+    map {
+      $_->delete();
+    } @metagenotype_annotations;
+
+    map {
+      my $metagenotype = $_;
+      if ($metagenotype->type() eq 'interaction') {
+        if ($metagenotype->metagenotype_annotations()->count() == 0) {
+          $metagenotype->delete();
+        }
+      }
+    } @metagenotypes;
+
+    $annotation->delete();
 
     $self->metadata_storer()->store_counts($curs_schema);
 
