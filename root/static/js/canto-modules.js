@@ -6385,7 +6385,7 @@ function addAnnotation($uibModal, annotationTypeName, featureType, featureId,
 }
 
 var annotationQuickAdd =
-  function ($uibModal, CantoGlobals) {
+  function ($uibModal, CantoGlobals, CursGenotypeList) {
     return {
       scope: {
         annotationTypeName: '@',
@@ -6404,7 +6404,30 @@ var annotationQuickAdd =
           $scope.linkLabel = 'Quick add';
         }
 
+        $scope.genotypeCount = null;
+
+        if ($scope.featureType === 'metagenotype') {
+          CursGenotypeList.cursGenotypeList({})
+            .then(function (results) {
+              if (results) {
+                $scope.genotypeCount = results.length;
+              } else {
+                $scope.genotypeCount = null;
+              }
+            });
+        }
+
         $scope.add = function () {
+          if ($scope.featureType === 'metagenotype' &&
+              (!$scope.genotypeCount || $scope.genotypeCount == 0)) {
+            openSimpleDialog($uibModal, 'Interaction warning',
+                             'Interaction warning',
+                             "No genotypes have been curated yet so interaction annotations " +
+                             "aren't possible.\n" +
+                             'Add genotypes using the "Genotype management ..." link.');
+            return;
+          }
+
           addAnnotation($uibModal, $scope.annotationTypeName, $scope.featureType,
             $scope.featureId, $scope.featureDisplayName);
         };
@@ -6412,7 +6435,8 @@ var annotationQuickAdd =
     };
   };
 
-canto.directive('annotationQuickAdd', ['$uibModal', 'CantoGlobals', annotationQuickAdd]);
+canto.directive('annotationQuickAdd', ['$uibModal', 'CantoGlobals', 'CursGenotypeList',
+                                       annotationQuickAdd]);
 
 
 function filterAnnotations(annotations, params) {
