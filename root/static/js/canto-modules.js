@@ -6037,6 +6037,11 @@ var annotationEditDialogCtrl =
         $scope.annotation.term_ontid;
     }
 
+    $scope.showSuggestionFields = function() {
+      return $scope.isValidTerm() && $scope.annotationType.category == 'ontology' &&
+        $scope.filteredFeatures && $scope.filteredFeatures.length != 0
+    }
+
     $scope.annotationChanged = function () {
       var changesToStore = {};
 
