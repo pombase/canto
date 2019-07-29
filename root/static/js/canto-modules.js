@@ -5976,8 +5976,13 @@ var annotationEditDialogCtrl =
     }
 
     function getOrganisms() {
-      Curs.list('organism').then(function (organisms) {
-        $scope.organisms = organisms;
+      Curs.list('organism', [{ include_counts: 1 }]).then(function (organisms) {
+        $scope.organisms =
+          $.grep(organisms,
+                 function(organism) {
+                   return organism.genotype_counts > 0;
+                 });
+
         if (organisms.length == 1) {
           $scope.selectedOrganism = organisms[0];
         }
