@@ -140,8 +140,12 @@
         </td>
       </tr>
 
-      <tr ng-if="filteredFeatures && filteredFeatures.length != 0">
-        <td class="title" rowspan="2">Term suggestion</td>
+      <tr ng-if="showSuggestionFields()">
+        <td class="title" rowspan="2">
+          <div>Term suggestion</div>
+          <div>(if the term above</div>
+          <div>is too general)</div>
+        </td>
         <td colspan="2">
           <input class="form-control curs-edit-wide-field"
                  type="text" placeholder="Name" size="60"
@@ -149,7 +153,7 @@
         </td>
       </tr>
 
-      <tr ng-if="filteredFeatures && filteredFeatures.length != 0">
+      <tr ng-if="showSuggestionFields()">
         <td colspan="2">
           <textarea class="form-control curs-edit-wide-field"
                     placeholder="Definition" cols="60"
