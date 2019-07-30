@@ -358,6 +358,16 @@ sub setup
         $annotation_type->{evidence_codes} = [];
       }
 
+      for my $ev_code (@{$annotation_type->{evidence_codes}}) {
+        if (!exists $self->{evidence_types}->{$ev_code}) {
+          $self->{evidence_types}->{$ev_code} = {
+            name => $ev_code,
+          };
+
+          $self->{evidence_types_by_name}->{lc $ev_code} = $ev_code;
+        }
+      }
+
       if (exists $self->{annotation_types}->{$annotation_type_name}) {
         my $merge = Hash::Merge->new('RIGHT_PRECEDENT');
         my $configured_type =
