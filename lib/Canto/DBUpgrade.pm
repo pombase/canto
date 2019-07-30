@@ -638,8 +638,6 @@ CREATE TABLE diploid (
       my $curs_schema = shift;
       my $curs_key = $curs->curs_key();
 
-      my $guard = $curs_schema->txn_scope_guard();
-
       my $curs_dbh = $curs_schema->storage()->dbh();
 
       $curs_dbh->do("PRAGMA foreign_keys = OFF");
@@ -758,8 +756,6 @@ CREATE TABLE metagenotype_temp (
 
         $old_annotation->delete();
       } @old_interaction_annotations;
-
-      $guard->commit();
     };
 
     Canto::Track::curs_map($config, $track_schema, $update_proc);
