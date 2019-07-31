@@ -1622,7 +1622,17 @@ var featureComplete =
 
         input.autocomplete({
           minLength: 1,
-          source: source,
+          source: function(request, response) {
+            var searchVal = request.term.trim();
+            if (searchVal.length > 0) {
+              response($.grep(source,
+                              function(item) {
+                                return item.label.indexOf(searchVal) != -1;
+                              }));
+            } else {
+              response([]);
+            }
+          },
           select: function (event, ui) {
             $timeout(function () {
               $scope.foundCallback({
