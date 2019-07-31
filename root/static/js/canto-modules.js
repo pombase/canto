@@ -1571,6 +1571,7 @@ var featureChooser =
 
         $scope.foundCallback = function (featureId) {
           $scope.chosenFeatureId = featureId;
+          $scope.showCompleter = false;
         };
       },
       templateUrl: app_static_path + 'ng_templates/feature_chooser.html',

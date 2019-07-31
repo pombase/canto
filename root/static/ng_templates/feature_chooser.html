@@ -19,13 +19,10 @@ Loading ...
       </feature-complete>
     </span>
 
-    <a ng-show="featureType == 'genotype'" href="#" ng-click="search()">
-      <img ng-hide="showCompleter" ng-src="{{app_static_path + '/images/search.svg'}}"
+    <a ng-show="featureType == 'genotype' && !showCompleter" href="#" ng-click="search()">
+      <img ng-src="{{app_static_path + '/images/search.svg'}}"
            title="{{'Search ' + featureType + 's'}}"
            style="width: 1.4em; height: 1.4em;" /></img>
-      <img ng-show="showCompleter" ng-src="{{app_static_path + '/images/not-search.svg'}}"
-           title="Finish searching"
-           style="width: 1.4em; height: 1.4em;" />
     </a>
   </span>
 </span>
