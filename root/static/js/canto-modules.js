@@ -1547,7 +1547,7 @@ canto.directive('multiFeatureChooser',
 
 
 var featureChooser =
-  function ($uibModal, CursGeneList, CursGenotypeList, Curs, toaster) {
+  function ($uibModal, CursGeneList, CursGenotypeList, Curs, CantoGlobals, toaster) {
     return {
       scope: {
         features: '=',
@@ -1559,17 +1559,88 @@ var featureChooser =
       restrict: 'E',
       replace: true,
       controller: function ($scope) {
+        $scope.app_static_path = CantoGlobals.app_static_path;
+        $scope.showCompleter = false;
+
+        $scope.search = function() {
+          $scope.showCompleter = !$scope.showCompleter;
+        };
+
         featureChooserControlHelper($scope, $uibModal, CursGeneList, CursGenotypeList,
           Curs, toaster);
+
+        $scope.foundCallback = function (featureId) {
+          $scope.chosenFeatureId = featureId;
+        };
       },
       templateUrl: app_static_path + 'ng_templates/feature_chooser.html',
     };
   };
 
 canto.directive('featureChooser',
-  ['$uibModal', 'CursGeneList', 'CursGenotypeList', 'Curs', 'toaster',
+                ['$uibModal', 'CursGeneList', 'CursGenotypeList', 'Curs', 'CantoGlobals', 'toaster',
     featureChooser
   ]);
+
+
+var featureComplete =
+  function($timeout, CantoGlobals) {
+    return {
+      scope: {
+        featureType: '@',
+        features: '=',
+        foundCallback: '&',
+      },
+      controller: function ($scope) {
+        $scope.app_static_path = CantoGlobals.app_static_path;
+
+        $scope.render_item =
+          function (ul, item, search_string) {
+            return $("<li></li>")
+              .data("item.autocomplete", item)
+              .append("<a>" + item.label + "</a>")
+              .appendTo(ul);
+          };
+      },
+      replace: true,
+      restrict: 'E',
+      templateUrl: app_static_path + 'ng_templates/feature_complete.html',
+      link: function ($scope, elem) {
+        var input = $(elem).find('input');
+
+        $scope.selectedFeatureId = null;
+
+        var source =
+          $.map($scope.features,
+                function(feature) {
+                  return {
+                    label: feature.display_name,
+                    value: feature.display_name,
+                    id: feature.feature_id,
+                  };
+                });
+
+        input.autocomplete({
+          minLength: 1,
+          source: source,
+          select: function (event, ui) {
+            $timeout(function () {
+              $scope.foundCallback({
+                featureId: ui.item.id,
+              });
+            }, 1);
+          },
+        }).data("autocomplete")._renderItem = function (ul, item) {
+          var search_string = input.val();
+          return $scope.render_item(ul, item, search_string);
+        };
+        input.attr('disabled', false);
+      }
+    };
+  };
+
+canto.directive('featureComplete',
+                ['$timeout', 'CantoGlobals', featureComplete]);
 
 
 var ontologyTermSelect =
