@@ -1623,11 +1623,11 @@ var featureComplete =
         input.autocomplete({
           minLength: 1,
           source: function(request, response) {
-            var searchVal = request.term.trim();
+            var searchVal = request.term.trim().toLowerCase();
             if (searchVal.length > 0) {
               response($.grep(source,
                               function(item) {
-                                return item.label.indexOf(searchVal) != -1;
+                                return item.label.toLowerCase().indexOf(searchVal) != -1;
                               }));
             } else {
               response([]);
