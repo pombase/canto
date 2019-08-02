@@ -433,9 +433,10 @@ Phenotype annotation extensions can be used to indicate:
  enter a percentage (e.g. 38%) in the text box.
 </li>
 <li>
- Expressivity: the extent to which a phenotype is expressed; usually
- used to capture information about phenotype severity. Only
- qualitative values are supported; choose from the pulldown menu.
+ Severity: Only qualitative values are supported; choose from the
+ pulldown menu. (Note: severity was previously called "expressivity",
+ and can still be used in the sense of the extent to which a phenotype
+ is expressed.)
 </li>
 <li>
  A specific gene, RNA or protein, used in an assay (see "Targets of
