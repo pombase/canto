@@ -145,8 +145,8 @@ sub make_gaf_extension
       my $rel_name = $1;
       if ($identifier !~ /:/) {
         if ($identifier =~ /^([><]?\d+(?:\.\d+)?)\%?$/ &&
-            ($rel_name eq 'has_penetrance' || $rel_name eq 'has_expressivity')) {
-          # a penetrance or expressivity
+            ($rel_name eq 'has_penetrance' || $rel_name eq 'has_severity')) {
+          # a penetrance or severity
           $identifier = "$1\%";
         } else {
           # hopefully it's a gene name, or at least some sort of PomBase ID
