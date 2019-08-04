@@ -980,8 +980,13 @@ sub make_annotation
 
   my $evidence_types = $self->config()->{evidence_types};
 
+  my $annotation_config = $self->config()->{annotation_types}->{$annotation_type_name};
+
+  my $type_has_ev_codes = $annotation_config->{evidence_codes} &&
+    scalar(@{$annotation_config->{evidence_codes}}) > 0;
+
   my $evidence_code = $data->{evidence_code};
-  if (!defined $evidence_code) {
+  if (!defined $evidence_code && $type_has_ev_codes) {
     die "Adding annotation failed - no evidence_code\n";
   }
 
@@ -1243,15 +1248,12 @@ sub _store_change_hash
 
   my $evidence_code = $data->{evidence_code};
 
-  if (!defined $evidence_code) {
-    die "annotation ", $annotation->annotation_id(),
-      "has no evidence_code";
-  }
+  if (defined $evidence_code) {
+    my $evidence_config = $self->config()->{evidence_types}->{$evidence_code};
 
-  my $evidence_config = $self->config()->{evidence_types}->{$evidence_code};
-
-  if (!$evidence_config->{with_gene}) {
-    delete $data->{with_gene};
+    if (!$evidence_config->{with_gene}) {
+      delete $data->{with_gene};
+    }
   }
 
   if ($data->{term_suggestion} &&
