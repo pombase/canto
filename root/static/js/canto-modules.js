@@ -6066,6 +6066,7 @@ var annotationEditDialogCtrl =
     $scope.multiOrganismMode = CantoGlobals.multi_organism_mode;
 
     $scope.filteredFeatures = null;
+    $scope.filteredFeaturesB = null;
 
     $scope.showStrainName = (
       CantoGlobals.strains_mode &&
@@ -6157,6 +6158,12 @@ var annotationEditDialogCtrl =
                   }
                 };
               filterFeatures(results, filterFunc);
+
+              if (annotationType.same_gene_interaction_only) {
+                $scope.filteredFeaturesB = null;
+              } else {
+                $scope.filteredFeaturesB = $scope.filteredFeatures;
+              }
             });
           }).catch(function (err) {
             toaster.pop('note', "couldn't read the genotype list from the server");
@@ -6270,6 +6277,33 @@ var annotationEditDialogCtrl =
     };
 
     $scope.extConfigPromise = CantoConfig.get('extension_configuration');
+
+    $scope.$watch('annotation.feature_id',
+                  function(featureId) {
+                    $scope.annotationTypePromise.then(function (annotationType) {
+                      if (featureId) {
+                        if (!annotationType.same_gene_interaction_only) {
+                          $scope.filteredFeaturesB = $scope.filteredFeatures;
+                          return;
+                        }
+
+                        var selectedFeatureA =
+                            ($.grep($scope.filteredFeatures,
+                                    function(testFeature) {
+                                      return testFeature.feature_id == featureId;
+                                    }))[0];
+
+                        $scope.filteredFeaturesB =
+                          $.grep($scope.filteredFeatures,
+                                 function (testFeature) {
+                                   return testFeature.alleles[0].gene_id ==
+                                     selectedFeatureA.alleles[0].gene_id;
+                                 });
+                      } else {
+                        $scope.filteredFeaturesB = null;
+                      }
+                    });
+                  });
 
     $scope.$watch('annotation.term_ontid',
       function () {

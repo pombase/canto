@@ -80,9 +80,9 @@
           <div ng-if="!featureEditable">
             {{currentSecondFeatureDisplayName}}
           </div>
-          <div ng-if="featureEditable && filteredFeatures">
+          <div ng-if="featureEditable && filteredFeaturesB">
             <feature-chooser feature-type="{{chooseFeatureType}}"
-                             features="filteredFeatures"
+                             features="filteredFeaturesB"
                              filter-organism="selectedOrganism"
                              chosen-feature-id="annotation.second_feature_id"></feature-chooser>
             <span ng-show="filteredFeatures.length != 0 && !annotation.second_feature_id"
