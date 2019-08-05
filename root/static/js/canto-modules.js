@@ -6072,12 +6072,57 @@ var annotationEditDialogCtrl =
       $scope.annotation.strain_name
     );
 
-    function filterFeatures (features) {
+    $scope.annotationTypePromise = AnnotationTypeConfig.getByName($scope.annotationTypeName);
+
+    $scope.annotationTypePromise
+      .then(function (annotationType) {
+        $scope.annotationType = annotationType;
+        $scope.annotation.feature_type = annotationType.feature_type;
+
+        if (annotationType.category === 'interaction') {
+          $scope.chooseFeatureType = 'genotype';
+
+          $scope.annotation.feature_id = $scope.annotation.genotype_a_id;
+          delete $scope.annotation.genotype_a_id;
+          $scope.annotation.second_feature_id = $scope.annotation.genotype_b_id;
+          delete $scope.annotation.genotype_b_id;
+        } else {
+          $scope.chooseFeatureType = annotationType.feature_type;
+        }
+
+        $scope.isMetagenotypeAnnotation =
+          $scope.annotationType.feature_type == 'metagenotype' &&
+          $scope.annotationType.category == 'ontology';
+
+        getOrganisms();
+
+        $scope.displayAnnotationFeatureType = capitalizeFirstLetter($scope.chooseFeatureType);
+        $scope.status.showEvidence = annotationType.evidence_codes.length > 0;
+
+        if (annotationType.can_have_conditions &&
+          !$scope.annotation['conditions']) {
+          $scope.annotation.conditions = [];
+        }
+
+        if (!$scope.annotation['extension']) {
+          $scope.annotation.extension = [];
+        }
+      });
+
+    function filterFeatures (features, extraFilterFunc) {
       if ($scope.selectedOrganism) {
         $scope.filteredFeatures =
           $.grep(features,
                  function(feature) {
-                   return feature.organism.taxonid === $scope.selectedOrganism.taxonid;
+                   if (feature.organism.taxonid === $scope.selectedOrganism.taxonid) {
+                     if (extraFilterFunc) {
+                       return extraFilterFunc(feature);
+                     } else {
+                       return true;
+                     }
+                   } else {
+                     return false;
+                   }
                  });
       } else {
         $scope.filteredFeatures = features;
@@ -6101,8 +6146,18 @@ var annotationEditDialogCtrl =
             return null;
           }
 
-          CursGenotypeList.cursGenotypeList().then(function (results) {
-            filterFeatures(results);
+          CursGenotypeList.cursGenotypeList({ include_allele: 1 }).then(function (results) {
+            $scope.annotationTypePromise.then(function (annotationType) {
+              var filterFunc =
+                function(feature) {
+                  if (annotationType.single_allele_only) {
+                    return feature.alleles.length == 1;
+                  } else {
+                    return true;
+                  }
+                };
+              filterFeatures(results, filterFunc);
+            });
           }).catch(function (err) {
             toaster.pop('note', "couldn't read the genotype list from the server");
           });
@@ -6354,41 +6409,6 @@ var annotationEditDialogCtrl =
     CantoService.details('user')
       .then(function (user) {
         $scope.userDetails = user.details;
-      });
-
-    AnnotationTypeConfig.getByName($scope.annotationTypeName)
-      .then(function (annotationType) {
-        $scope.annotationType = annotationType;
-        $scope.annotation.feature_type = annotationType.feature_type;
-
-        if (annotationType.category === 'interaction') {
-          $scope.chooseFeatureType = 'genotype';
-
-          $scope.annotation.feature_id = $scope.annotation.genotype_a_id;
-          delete $scope.annotation.genotype_a_id;
-          $scope.annotation.second_feature_id = $scope.annotation.genotype_b_id;
-          delete $scope.annotation.genotype_b_id;
-        } else {
-          $scope.chooseFeatureType = annotationType.feature_type;
-        }
-
-        $scope.isMetagenotypeAnnotation =
-          $scope.annotationType.feature_type == 'metagenotype' &&
-          $scope.annotationType.category == 'ontology';
-
-        getOrganisms();
-
-        $scope.displayAnnotationFeatureType = capitalizeFirstLetter($scope.chooseFeatureType);
-        $scope.status.showEvidence = annotationType.evidence_codes.length > 0;
-
-        if (annotationType.can_have_conditions &&
-          !$scope.annotation['conditions']) {
-          $scope.annotation.conditions = [];
-        }
-
-        if (!$scope.annotation['extension']) {
-          $scope.annotation.extension = [];
-        }
       });
   };
 
