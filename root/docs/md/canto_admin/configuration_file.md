@@ -286,7 +286,7 @@ help about this type of annotation.
 Help text to show once the user finishes annotating a paper, after "Submit to
 curators".  (Optional)
 
-### host_organism_taxonids
+## host_organism_taxonids
 A list of taxon IDs for the organisms that are treated as host species
 in pathogen-host mode.  All the list taxon IDs need to match organisms
 in the organism table.  The organisms are loaded using
@@ -301,39 +301,39 @@ a list the Organism objects.  `multi_organism_mode` is also set to
 
 Note that when `pathogen_host_mode` is enabled, every organism that is in the organism table but _not_ in `host_organism_taxonids` will be assumed to be a pathogen organism.
 
-### allele_type_list
+## allele_type_list
 This list contains the configuration for each allele type
 
-#### name
+### name
 The allele type name to show in the display.  This is also the key
 when looking up configuration details so it must be unique.
 
-#### export_type
+### export_type
 The type name to use when writing the export file. See [Exporting data from Canto](data_export)
 for more.
 
-#### show_description
+### show_description
 If true, show the description input box in the allele edit dialog.
 
-#### description_required
+### description_required
 If true, an allele of this type can't be created without a description.
 
-#### allele_name_required
+### allele_name_required
 If true, alleles of this types must have a name.
 
-#### allow_expression_change
+### allow_expression_change
 If true, show the checkboxes for changing the allele expression.
 
-#### expression_required
+### expression_required
 If true, an allele of this type can't be created without setting an expression level.
 
-#### autopopulate_name
+### autopopulate_name
 This template is used when an allele name can be automatically generated
 for a given type.  For example, if the user selects "wild type" in the
 allele editing dialog, this template when set the name to something like "cdc2+".
 The string "@@gene_display_name@@" will be replaced with the current
 gene's name or systematic ID.
 
-#### do_not_annotate
+### do_not_annotate
 If true, don't show genotypes containing just this allele in the
 genotype selectors.
