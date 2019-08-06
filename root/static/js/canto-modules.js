@@ -8037,15 +8037,6 @@ var summaryPageGeneList = function (CantoGlobals) {
       $scope.organismData = CantoGlobals.organismsAndGenes.sort(function (a, b) {
         return (a.full_name > b.full_name) ? 1 : -1;
       });
-      $scope.maxCols = function () {
-        var maxCols = 0;
-        angular.forEach($scope.organismData, function (value) {
-          if (value.genes.length > maxCols) {
-            maxCols = value.genes.length;
-          }
-        }, maxCols);
-        return maxCols;
-      };
       $scope.organisms = function (orgType) {
         if (typeof orgType === 'undefined') {
           return $scope.organismData;
@@ -8054,10 +8045,6 @@ var summaryPageGeneList = function (CantoGlobals) {
         return $scope.organismData.filter(function (e) {
           return (e.pathogen_or_host === orgType);
         });
-      };
-      $scope.getPadding = function () {
-        var padLength = $scope.maxCols() - 1;
-        return new Array(padLength);
       };
       $scope.getRoleHeading = function (role) {
         if (role === 'pathogen') {
@@ -8084,39 +8071,6 @@ var summaryPageGeneList = function (CantoGlobals) {
 };
 
 canto.directive('summaryPageGeneList', ['CantoGlobals', summaryPageGeneList]);
-
-var summaryPageGeneRow = function () {
-  return {
-    scope: {
-      organism: '=',
-      maxCols: '=',
-    },
-    restrict: 'A',
-    replace: true,
-    templateUrl: app_static_path + 'ng_templates/summary_page_gene_row.html',
-    controller: function ($scope) {
-      $scope.readOnly = (read_only_curs) ? '/ro' : '';
-      $scope.curs_root_uri = curs_root_uri;
-      $scope.tidyName = function (name) {
-        var pos = name.indexOf("(");
-        if (pos > -1) {
-          name = name.substring(0, pos);
-        }
-        return name;
-      };
-      $scope.genes = $scope.organism.genes.sort(function (a, b) {
-        return (a.display_name > b.display_name) ? 1 : -1;
-      });
-      $scope.getPadding = function () {
-        var padLength = $scope.maxCols() - $scope.genes.length;
-        return new Array(padLength);
-      };
-    }
-  };
-};
-
-canto.directive('summaryPageGeneRow', [summaryPageGeneRow]);
-
 
 canto.service('EditOrganismsSvc', function (toaster, $http, CantoGlobals) {
 
