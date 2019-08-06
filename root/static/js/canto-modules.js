@@ -6047,6 +6047,8 @@ var annotationEditDialogCtrl =
     $scope.currentUserIsAdmin = CantoGlobals.current_user_is_admin;
     $scope.annotation = {};
     $scope.annotationTypeName = args.annotationTypeName;
+    $scope.annotationType = null;
+    $scope.selectedFeatureA = null;
     $scope.currentFeatureDisplayName = args.currentFeatureDisplayName;
     $scope.newlyAdded = args.newlyAdded;
     $scope.featureEditable = args.featureEditable;
@@ -6287,7 +6289,7 @@ var annotationEditDialogCtrl =
                           return;
                         }
 
-                        var selectedFeatureA =
+                        $scope.selectedFeatureA =
                             ($.grep($scope.filteredFeatures,
                                     function(testFeature) {
                                       return testFeature.feature_id == featureId;
@@ -6296,8 +6298,10 @@ var annotationEditDialogCtrl =
                         $scope.filteredFeaturesB =
                           $.grep($scope.filteredFeatures,
                                  function (testFeature) {
-                                   return testFeature.alleles[0].gene_id ==
-                                     selectedFeatureA.alleles[0].gene_id;
+                                   return testFeature.alleles[0].allele_id !=
+                                     $scope.selectedFeatureA.alleles[0].allele_id &&
+                                     testFeature.alleles[0].gene_id ==
+                                     $scope.selectedFeatureA.alleles[0].gene_id;
                                  });
                       } else {
                         $scope.filteredFeaturesB = null;

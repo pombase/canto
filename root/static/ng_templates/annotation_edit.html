@@ -85,7 +85,12 @@
                              features="filteredFeaturesB"
                              filter-organism="selectedOrganism"
                              chosen-feature-id="annotation.second_feature_id"></feature-chooser>
-            <span ng-show="filteredFeatures.length != 0 && !annotation.second_feature_id"
+            <span ng-show="filteredFeaturesB.length == 0 && annotationType && annotationType.single_allele_only && annotationType.same_gene_interaction_only">
+              (there are no other single allele genotypes for
+              {{selectedFeatureA.alleles[0].gene_display_name}} in
+              this session)
+            </span>
+            <span ng-show="filteredFeaturesB.length != 0 && !annotation.second_feature_id"
                   class="help-block">Please select a {{chooseFeatureType}}</span>
           </div>
         </td>
