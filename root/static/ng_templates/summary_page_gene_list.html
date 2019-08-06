@@ -1,19 +1,14 @@
-<div class="curs-box-body">
-  <table class="table">
-    <tr>
-      <th>Pathogens</td>
-      <th>Genes</td>
-      <td ng-repeat="pad in getPadding() track by $index"></td>
-    </tr>
-    <tr summary-page-gene-row ng-repeat="org in organisms('pathogen')" organism="org" max-cols="maxCols"></tr>
-  </table>
-  <br>
-   <table class="table">
-      <tr>
-        <th>Hosts</th>
-        <th>Genes</th>
-        <td ng-repeat="pad in getPadding() track by $index"></td>
-      </tr>
-      <tr summary-page-gene-row ng-repeat="org in organisms('host')" organism="org" max-cols="maxCols"></tr>
-    </table>
+<div class="curs-summary-gene-box">
+  <div class="curs-summary-gene-column" ng-repeat="role in ['pathogen', 'host'] track by $index">
+    <b>{{ ::getRoleHeading(role) }}</b>
+    <div class="curs-summary-gene-organism-box" ng-repeat="organism in organisms(role)">
+      <span title="NCBI taxon ID: {{ ::organism.taxonid }}">{{ ::organism.full_name }}</span>
+      <div ng-if="organism.genes.length === 0">
+        <span class="curs-summary-no-gene-text">(no genes)<span>
+      </div>
+      <div ng-if="organism.genes.length > 0" ng-repeat="gene in organism.genes">
+        <a href="{{ ::getGeneUrl(gene) }}">{{ ::gene.display_name }}</a>
+      </div>
+    </div>
+  </div>
 </div>

@@ -1627,3 +1627,18 @@ a:not([href]) {
 .curs-pub-finished-message-to-curator  {
   white-space: pre;
 }
+.curs-summary-gene-box {
+  overflow: auto;
+}
+.curs-summary-gene-column {
+  float: left;
+  margin-right: 10px;
+  padding-right: 10px;
+  margin-top: 10px;
+}
+.curs-summary-gene-organism-box {
+  margin-bottom: 8px;
+}
+.curs-summary-no-gene-text {
+  color: #737373;
+}
