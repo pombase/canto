@@ -253,6 +253,19 @@ Currently used only for types from GO (`molecular_function`,
 `cellular_component`, and `biological_process`), the abbreviation is used from
 exporting annotation to GAF files.  Required only if GO ontologies are enabled.
 
+### can_have_conditions
+If 1, this annotation type can have conditions as well as evidence.
+Mostly useful for phenotypes.
+
+### single_allele_only
+Only display/allow genotypes containing a single allele for this
+annotation type.
+
+### same_gene_interaction_only
+For interactions, restrict the genotype B list to contain only
+genotypes for the same gene selected in the genotype A list.  Only
+makes sense when single_allele_only is set.
+
 ### evidence_codes
 Possible evidence codes for this annotation type.  Each evidence code must
 appear in the [`evidence_types`](#evidence_types) list.  (Required)
