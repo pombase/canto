@@ -236,6 +236,18 @@ function filterStrainsByTaxonId(strains, taxonId) {
   });
 }
 
+function sortByProperty(p) {
+  return function(a, b) {
+    if (a[p] < b[p]) {
+      return -1;
+    }
+    if (a[p] > b[p]) {
+      return 1;
+    }
+    return 0;
+  };
+}
+
 canto.filter('breakExtensions', function () {
   return function (text) {
     if (text) {
