@@ -1,7 +1,7 @@
 <div class="curs-summary-gene-box">
-  <div class="curs-summary-gene-column" ng-repeat="role in ['pathogen', 'host'] track by $index">
-    <b>{{ ::getRoleHeading(role) }}</b>
-    <div class="curs-summary-gene-organism-box" ng-repeat="organism in organisms(role)">
+  <div class="curs-summary-gene-column" ng-repeat="role in organismRoles track by $index">
+    <b ng-if="role !== 'normal'">{{ ::getRoleHeading(role) }}</b>
+    <div class="curs-summary-gene-organism-box" ng-repeat="organism in organisms[role]">
       <span title="NCBI taxon ID: {{ ::organism.taxonid }}">{{ ::organism.full_name }}</span>
       <div ng-if="organism.genes.length === 0">
         <span class="curs-summary-no-gene-text">(no genes)<span>
