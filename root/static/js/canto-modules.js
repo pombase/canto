@@ -8033,6 +8033,7 @@ var summaryPageGeneList = function (CantoGlobals) {
     replace: true,
     templateUrl: app_static_path + 'ng_templates/summary_page_gene_list.html',
     controller: function ($scope) {
+      $scope.readOnlyFragment = getReadOnlyFragment();
       $scope.organismData = CantoGlobals.organismsAndGenes.sort(function (a, b) {
         return (a.full_name > b.full_name) ? 1 : -1;
       });
@@ -8058,7 +8059,27 @@ var summaryPageGeneList = function (CantoGlobals) {
         var padLength = $scope.maxCols() - 1;
         return new Array(padLength);
       };
-    },
+      $scope.getRoleHeading = function (role) {
+        if (role === 'pathogen') {
+          return 'Pathogens';
+        }
+        return 'Hosts';
+      };
+      $scope.getGeneUrl = function (gene) {
+        var root = CantoGlobals.curs_root_uri;
+        var readOnly = $scope.readOnlyFragment;
+        var url = root + '/feature/gene/view/' + gene.gene_id + readOnly;
+        return url;
+      }
+      function getReadOnlyFragment() {
+        var isReadOnly = CantoGlobals.read_only_curs;
+        var readOnlyFragment = ''
+        if (isReadOnly) {
+          readOnlyFragment = '/ro';
+        }
+        return readOnlyFragment;
+      }
+    }
   };
 };
 
