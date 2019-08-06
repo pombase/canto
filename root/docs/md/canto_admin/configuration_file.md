@@ -333,3 +333,7 @@ for a given type.  For example, if the user selects "wild type" in the
 allele editing dialog, this template when set the name to something like "cdc2+".
 The string "@@gene_display_name@@" will be replaced with the current
 gene's name or systematic ID.
+
+#### do_not_annotate
+If true, don't show genotypes containing just this allele in the
+genotype selectors.

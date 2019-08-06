@@ -6112,21 +6112,26 @@ var annotationEditDialogCtrl =
         }
       });
 
+    $scope.alleleTypesPromise = CantoConfig.get('allele_types');
+
     function filterFeatures (features, extraFilterFunc) {
       if ($scope.selectedOrganism) {
-        $scope.filteredFeatures =
-          $.grep(features,
-                 function(feature) {
-                   if (feature.organism.taxonid === $scope.selectedOrganism.taxonid) {
-                     if (extraFilterFunc) {
-                       return extraFilterFunc(feature);
-                     } else {
-                       return true;
-                     }
-                   } else {
-                     return false;
-                   }
-                 });
+        $scope.alleleTypesPromise
+          .then(function(alleleTypes) {
+            $scope.filteredFeatures =
+              $.grep(features,
+                     function(feature) {
+                       if (feature.organism.taxonid === $scope.selectedOrganism.taxonid) {
+                         if (extraFilterFunc) {
+                           return extraFilterFunc(feature, alleleTypes);
+                         } else {
+                           return true;
+                         }
+                       } else {
+                         return false;
+                       }
+                     });
+          });
       } else {
         $scope.filteredFeatures = features;
       }
@@ -6152,7 +6157,17 @@ var annotationEditDialogCtrl =
           CursGenotypeList.cursGenotypeList({ include_allele: 1 }).then(function (results) {
             $scope.annotationTypePromise.then(function (annotationType) {
               var filterFunc =
-                function(feature) {
+                function(feature, alleleTypes) {
+                  if (feature.alleles.length == 1) {
+                    var allele = feature.alleles[0];
+
+                    var alleleType = alleleTypes[allele.type];
+
+                    if (alleleType && alleleType.do_not_annotate) {
+                      return false;
+                    }
+                  }
+
                   if (annotationType.single_allele_only) {
                     return feature.alleles.length == 1;
                   } else {
