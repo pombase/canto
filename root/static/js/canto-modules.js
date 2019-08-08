@@ -8048,6 +8048,10 @@ var summaryPageGeneList = function (CantoGlobals) {
       $scope.readOnlyFragment = getReadOnlyFragment();
       $scope.organismRoles = getOrganismRoles();
       $scope.organisms = getOrganismGroups($scope.organismRoles);
+      $scope.organismRoles = removeEmptyRoles(
+        $scope.organismRoles,
+        $scope.organisms
+      );
 
       $scope.getRoleHeading = function (role) {
         if (role === 'pathogen') {
@@ -8069,6 +8073,12 @@ var summaryPageGeneList = function (CantoGlobals) {
           roles = ['pathogen', 'host']
         }
         return roles;
+      }
+      
+      function removeEmptyRoles(roles, groups) {
+        return roles.filter(function(r) {
+          return groups[r].length > 0;
+        });
       }
 
       function getOrganismGroups(roles) {
