@@ -1627,7 +1627,7 @@ a:not([href]) {
 .curs-pub-finished-message-to-curator  {
   white-space: pre;
 }
-.curs-summary-gene-box {
+.curs-summary-gene-container {
   overflow: auto;
 }
 .curs-summary-gene-column {
@@ -1636,9 +1636,12 @@ a:not([href]) {
   padding-right: 10px;
   margin-top: 10px;
 }
-.curs-summary-gene-organism-box {
+.curs-summary-organism-container {
   margin-bottom: 8px;
 }
 .curs-summary-no-gene-text {
   color: #737373;
+}
+.curs-summary-gene-name {
+  display: block;
 }
