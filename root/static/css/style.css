@@ -1628,10 +1628,10 @@ a:not([href]) {
   white-space: pre;
 }
 .curs-summary-gene-container {
-  overflow: auto;
+  display: flex;
+  flex-wrap: wrap;
 }
 .curs-summary-gene-column {
-  float: left;
   margin-right: 10px;
   padding-right: 10px;
   margin-top: 10px;
