@@ -7,9 +7,8 @@
         <span class="curs-summary-no-gene-text">(no genes)<span>
       </div>
       <div class="curs-summary-gene-list" ng-if="organism.genes.length > 0">
-        <a class="curs-summary-gene-name"
-           ng-repeat="gene in organism.genes"
-           href="{{ ::getGeneUrl(gene) }}">{{ ::gene.display_name }}</a>
+        <div class="curs-summary-gene-name-container" ng-repeat="gene in organism.genes">
+          <a href="{{ ::getGeneUrl(gene) }}">{{ ::gene.display_name }}</a>
       </div>
     </div>
   </div>

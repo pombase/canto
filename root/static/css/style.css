@@ -1642,6 +1642,6 @@ a:not([href]) {
 .curs-summary-no-gene-text {
   color: #737373;
 }
-.curs-summary-gene-name {
+.curs-summary-gene-name-container {
   display: block;
 }
