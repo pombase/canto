@@ -236,6 +236,18 @@ function filterStrainsByTaxonId(strains, taxonId) {
   });
 }
 
+function sortByProperty(p) {
+  return function(a, b) {
+    if (a[p] < b[p]) {
+      return -1;
+    }
+    if (a[p] > b[p]) {
+      return 1;
+    }
+    return 0;
+  };
+}
+
 canto.filter('breakExtensions', function () {
   return function (text) {
     if (text) {
@@ -8033,69 +8045,94 @@ var summaryPageGeneList = function (CantoGlobals) {
     replace: true,
     templateUrl: app_static_path + 'ng_templates/summary_page_gene_list.html',
     controller: function ($scope) {
-      $scope.organismData = CantoGlobals.organismsAndGenes.sort(function (a, b) {
-        return (a.full_name > b.full_name) ? 1 : -1;
-      });
-      $scope.maxCols = function () {
-        var maxCols = 0;
-        angular.forEach($scope.organismData, function (value) {
-          if (value.genes.length > maxCols) {
-            maxCols = value.genes.length;
-          }
-        }, maxCols);
-        return maxCols;
-      };
-      $scope.organisms = function (orgType) {
-        if (typeof orgType === 'undefined') {
-          return $scope.organismData;
-        }
+      $scope.readOnlyFragment = getReadOnlyFragment();
+      $scope.organismRoles = getOrganismRoles();
+      $scope.organisms = getOrganismGroups($scope.organismRoles);
+      $scope.organismRoles = removeEmptyRoles(
+        $scope.organismRoles,
+        $scope.organisms
+      );
 
-        return $scope.organismData.filter(function (e) {
-          return (e.pathogen_or_host === orgType);
+      $scope.getRoleHeading = function (role) {
+        if (role === 'pathogen') {
+          return 'Pathogens';
+        }
+        return 'Hosts';
+      };
+
+      $scope.getGeneUrl = function (gene) {
+        var root = CantoGlobals.curs_root_uri;
+        var readOnly = $scope.readOnlyFragment;
+        var url = root + '/feature/gene/view/' + gene.gene_id + readOnly;
+        return url;
+      }
+
+      function getOrganismRoles() {
+        var roles = ['normal'];
+        if (CantoGlobals.pathogen_host_mode) {
+          roles = ['pathogen', 'host']
+        }
+        return roles;
+      }
+      
+      function removeEmptyRoles(roles, groups) {
+        return roles.filter(function(r) {
+          return groups[r].length > 0;
         });
-      };
-      $scope.getPadding = function () {
-        var padLength = $scope.maxCols() - 1;
-        return new Array(padLength);
-      };
-    },
-  };
-};
+      }
 
-canto.directive('summaryPageGeneList', ['CantoGlobals', summaryPageGeneList]);
-
-var summaryPageGeneRow = function () {
-  return {
-    scope: {
-      organism: '=',
-      maxCols: '=',
-    },
-    restrict: 'A',
-    replace: true,
-    templateUrl: app_static_path + 'ng_templates/summary_page_gene_row.html',
-    controller: function ($scope) {
-      $scope.readOnly = (read_only_curs) ? '/ro' : '';
-      $scope.curs_root_uri = curs_root_uri;
-      $scope.tidyName = function (name) {
-        var pos = name.indexOf("(");
-        if (pos > -1) {
-          name = name.substring(0, pos);
+      function getOrganismGroups(roles) {
+        var allOrganisms = CantoGlobals.organismsAndGenes;
+        if (roles.length === 1 && roles[0] === 'normal') {
+          return { 'normal': sortGenes(allOrganisms) };
         }
-        return name;
-      };
-      $scope.genes = $scope.organism.genes.sort(function (a, b) {
-        return (a.display_name > b.display_name) ? 1 : -1;
-      });
-      $scope.getPadding = function () {
-        var padLength = $scope.maxCols() - $scope.genes.length;
-        return new Array(padLength);
-      };
+        return groupOrganismsByRole(roles, allOrganisms);
+      }
+
+      function sortGenes(organisms) {
+        var sortedGenes;
+        for (var i = 0; i < organisms.length; i++) {
+          sortedGenes = organisms[i].genes.sort(
+            sortByProperty('display_name')
+          );
+          organisms[i].genes = sortedGenes;
+        }
+        return organisms;
+      }
+
+      function groupOrganismsByRole(roles, organisms) {
+        var organismGroups = {};
+        var filterByRole = function(role) {
+          return function (organism) {
+            return organism.pathogen_or_host === role;
+          }
+        }
+        var currentOrganisms, role;
+        for (var i = 0; i < roles.length; i++) {
+          role = roles[i]
+          currentOrganisms = organisms
+            .filter(filterByRole(role))
+            .sort(sortByProperty('full_name'));
+          currentOrganisms = sortGenes(currentOrganisms)
+          organismGroups[role] = currentOrganisms;
+        }
+        return organismGroups;
+      }
+
+      function getReadOnlyFragment() {
+        var isReadOnly = CantoGlobals.read_only_curs;
+        var readOnlyFragment = ''
+        if (isReadOnly) {
+          readOnlyFragment = '/ro';
+        }
+        return readOnlyFragment;
+      }
+
     }
   };
 };
 
-canto.directive('summaryPageGeneRow', [summaryPageGeneRow]);
-
+canto.directive('summaryPageGeneList', ['CantoGlobals', summaryPageGeneList]);
 
 canto.service('EditOrganismsSvc', function (toaster, $http, CantoGlobals) {
 
