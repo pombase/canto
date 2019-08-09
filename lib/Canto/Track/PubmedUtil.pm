@@ -65,7 +65,6 @@ sub _get_url
   if ($res->is_success) {
     if ($res->content()) {
       my $decoded_content = $res->decoded_content();
-      $decoded_content =~ s/<\?xml version="1.0" \?>/<?xml version="1.0" encoding="ISO-8859-1" ?>/;
       return $decoded_content;
     } else {
       die "query returned no content: $url";
@@ -162,8 +161,6 @@ sub load_pubmed_xml
   }
 
   my $load_util = Canto::Track::LoadUtil->new(schema => $schema);
-
-  $content =~ s/encoding="ISO-8859-1"//;
 
   my $res_hash = XMLin($content,
                        ForceArray => ['AbstractText',
