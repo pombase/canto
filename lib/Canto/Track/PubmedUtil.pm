@@ -379,6 +379,8 @@ sub load_by_ids
     my @process_ids = map { s/^PMID://; $_; } splice(@$ids, 0, $max_batch_size);
 
     $count += _process_batch($config, $schema, [@process_ids], $load_type);
+
+    sleep 10;
   }
 
   return $count;
