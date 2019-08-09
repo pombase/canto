@@ -163,6 +163,8 @@ sub load_pubmed_xml
 
   my $load_util = Canto::Track::LoadUtil->new(schema => $schema);
 
+  $content =~ s/encoding="ISO-8859-1"//;
+
   my $res_hash = XMLin($content,
                        ForceArray => ['AbstractText',
                                       'Author', 'PublicationType']);
