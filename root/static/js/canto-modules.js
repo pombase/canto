@@ -1378,6 +1378,7 @@ var breadcrumbsDirective =
 
         $scope.clearTerms = function () {
           CursStateService.clearTerm();
+          CursStateService.setState('searching');
         };
 
         $scope.gotoTerm = function (termId) {
