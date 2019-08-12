@@ -3029,7 +3029,7 @@ var annotationEvidence =
           if ($scope.evidenceTypes) {
             var name = $scope.evidenceTypes[code].name;
             if (name) {
-              if (name.match('^' + code)) {
+              if (name.startsWith(code)) {
                 return name;
               }
               return name + ' (' + code + ')';
