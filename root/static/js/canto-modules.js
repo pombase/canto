@@ -6076,6 +6076,30 @@ var annotationEditDialogCtrl =
     );
 
     $scope.annotationTypePromise = AnnotationTypeConfig.getByName($scope.annotationTypeName);
+    $scope.alleleTypesPromise = CantoConfig.get('allele_types');
+    $scope.organismPromise = Curs.list('organism', [{ include_counts: 1 }]);
+    $scope.extConfigPromise = CantoConfig.get('extension_configuration');
+
+    $scope.allPromise = null;
+
+    $scope.allPromise =
+      $q.all([$scope.annotationTypePromise, $scope.alleleTypesPromise, $scope.organismPromise,
+              $scope.extConfigPromise]);
+
+    $scope.allPromise.then(function() {});
+
+    $scope.organismPromise.then(function (organisms) {
+      $scope.organisms =
+        $.grep(organisms,
+               function(organism) {
+                 return organism.genotype_counts > 0;
+               });
+      if (organisms.length == 1) {
+        $scope.selectedOrganism = organisms[0];
+      }
+    }).catch(function (res) {
+      toaster.pop('error', "couldn't read the organism list from the server");
+    });
 
     $scope.annotationTypePromise
       .then(function (annotationType) {
@@ -6097,8 +6121,6 @@ var annotationEditDialogCtrl =
           $scope.annotationType.feature_type == 'metagenotype' &&
           $scope.annotationType.category == 'ontology';
 
-        getOrganisms();
-
         $scope.displayAnnotationFeatureType = capitalizeFirstLetter($scope.chooseFeatureType);
         $scope.status.showEvidence = annotationType.evidence_codes.length > 0;
 
@@ -6112,7 +6134,6 @@ var annotationEditDialogCtrl =
         }
       });
 
-    $scope.alleleTypesPromise = CantoConfig.get('allele_types');
 
     function filterFeatures (features, extraFilterFunc) {
       if ($scope.selectedOrganism) {
@@ -6195,33 +6216,19 @@ var annotationEditDialogCtrl =
       }
     }
 
-    function getOrganisms() {
-      Curs.list('organism', [{ include_counts: 1 }]).then(function (organisms) {
-        $scope.organisms =
-          $.grep(organisms,
-                 function(organism) {
-                   return organism.genotype_counts > 0;
-                 });
-
-        if (organisms.length == 1) {
-          $scope.selectedOrganism = organisms[0];
-        }
-
-        setFilteredFeatures();
-      }).catch(function (res) {
-        toaster.pop('error', "couldn't read the organism list from the server");
-      });
-    }
-
     $scope.organismSelected = function (organism) {
       $scope.selectedOrganism = organism;
-      setFilteredFeatures();
+      $scope.allPromise.then(function () {
+        setFilteredFeatures();
+      });
     }
 
     $scope.openSingleGeneAddDialog = function () {
       var modal = openSingleGeneAddDialog($uibModal);
       modal.result.then(function () {
-        setFilteredFeatures();
+        $scope.allPromise.then(function () {
+          setFilteredFeatures();
+        });
       });
     };
 
@@ -6292,8 +6299,6 @@ var annotationEditDialogCtrl =
         return 'Annotation is incomplete - please edit the fields marked in red';
       }
     };
-
-    $scope.extConfigPromise = CantoConfig.get('extension_configuration');
 
     $scope.$watch('annotation.feature_id',
                   function(featureId) {
