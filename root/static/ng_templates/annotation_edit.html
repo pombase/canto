@@ -96,7 +96,7 @@
         </td>
       </tr>
 
-      <tr ng-class="{ 'has-error': !isValidTerm() }">
+      <tr ng-if="annotationType.namespace" ng-class="{ 'has-error': !isValidTerm() }">
         <td ng-if="annotationType.category != 'interaction'" class="title">Term name</td>
         <td ng-if="annotationType.category == 'interaction'" class="title">Phenotype (optional)</td>
         <td colspan="2">

@@ -387,16 +387,21 @@ sub setup
         $annotation_type->{short_display_name} = $annotation_type->{display_name};
       }
       $self->{annotation_types}->{$annotation_type_name} = $annotation_type;
-      $annotation_type->{namespace} //= $annotation_type->{name};
+
+      if ($annotation_type->{category} eq 'ontology') {
+        $annotation_type->{namespace} //= $annotation_type->{name};
+      }
 
       my $namespace = $annotation_type->{namespace};
 
-      $self->{annotation_types_by_namespace}->{$namespace} //= [];
+      if (defined $namespace) {
+        $self->{annotation_types_by_namespace}->{$namespace} //= [];
 
-      if (!grep {
-         $_->{name} eq $annotation_type->{name}
-      } @{$self->{annotation_types_by_namespace}->{$namespace}}) {
-        push @{$self->{annotation_types_by_namespace}->{$namespace}}, $annotation_type;
+        if (!grep {
+          $_->{name} eq $annotation_type->{name}
+        } @{$self->{annotation_types_by_namespace}->{$namespace}}) {
+          push @{$self->{annotation_types_by_namespace}->{$namespace}}, $annotation_type;
+        }
       }
 
       # if an evidence code is not in the main evidence_codes map, add it
