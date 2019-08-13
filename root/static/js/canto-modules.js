@@ -6078,27 +6078,46 @@ var annotationEditDialogCtrl =
     $scope.annotationTypePromise = AnnotationTypeConfig.getByName($scope.annotationTypeName);
     $scope.alleleTypesPromise = CantoConfig.get('allele_types');
     $scope.organismPromise = Curs.list('organism', [{ include_counts: 1 }]);
+    $scope.instanceOrganismPromise = CantoConfig.get('instance_organism');
     $scope.extConfigPromise = CantoConfig.get('extension_configuration');
 
     $scope.allPromise = null;
 
     $scope.allPromise =
       $q.all([$scope.annotationTypePromise, $scope.alleleTypesPromise, $scope.organismPromise,
-              $scope.extConfigPromise]);
+              $scope.instanceOrganismPromise, $scope.extConfigPromise]);
 
-    $scope.allPromise.then(function() {});
 
-    $scope.organismPromise.then(function (organisms) {
-      $scope.organisms =
-        $.grep(organisms,
-               function(organism) {
-                 return organism.genotype_counts > 0;
-               });
+    $scope.filteredOrganismPromise =
+      $scope.allPromise.then(function([annotationType, alleleTypes, organisms,
+                                       instanceOrganism, extConfig]) {
+        // create a promise of only organisms with genotypes
+        return $.grep(organisms,
+                      function(organism) {
+                        if (!organism.full_name) {
+                          return false;
+                        }
+
+                        if (!organism.taxonid) {
+                          return false;
+                        }
+
+                        if (instanceOrganism.taxonid) {
+                          return instanceOrganism.taxonid == organism.taxonid;
+                        }
+
+                        return true;
+                      });
+      });
+
+    $scope.filteredOrganismPromise.then(function (organisms) {
       if (organisms.length == 1) {
         $scope.selectedOrganism = organisms[0];
       }
-    }).catch(function (res) {
-      toaster.pop('error', "couldn't read the organism list from the server");
+
+      $scope.organisms = organisms;
+
+      setFilteredFeatures();
     });
 
     $scope.annotationTypePromise
