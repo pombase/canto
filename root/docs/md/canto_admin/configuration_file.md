@@ -261,10 +261,9 @@ Mostly useful for phenotypes.
 Only display/allow genotypes containing a single allele for this
 annotation type.
 
-### same_gene_interaction_only
+### single_locus_only
 For interactions, restrict the genotype B list to contain only
-genotypes for the same gene selected in the genotype A list.  Only
-makes sense when single_allele_only is set.
+genotypes for the same locus selected in the genotype A list.
 
 ### evidence_codes
 Possible evidence codes for this annotation type.  Each evidence code must

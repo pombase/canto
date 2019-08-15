@@ -6216,7 +6216,7 @@ var annotationEditDialogCtrl =
                 };
               filterFeatures(results, filterFunc);
 
-              if (annotationType.same_gene_interaction_only) {
+              if (annotationType.single_locus_only) {
                 $scope.filteredFeaturesB = null;
               } else {
                 $scope.filteredFeaturesB = $scope.filteredFeatures;
@@ -6323,7 +6323,7 @@ var annotationEditDialogCtrl =
                   function(featureId) {
                     $scope.annotationTypePromise.then(function (annotationType) {
                       if (featureId) {
-                        if (!annotationType.same_gene_interaction_only) {
+                        if (!annotationType.single_locus_only) {
                           $scope.filteredFeaturesB = $scope.filteredFeatures;
                           return;
                         }
