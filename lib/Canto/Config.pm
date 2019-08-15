@@ -399,6 +399,15 @@ sub setup
         push @{$self->{annotation_types_by_namespace}->{$namespace}}, $annotation_type;
       }
 
+      # if an evidence code is not in the main evidence_codes map, add it
+      for my $ev_code (@{$annotation_type->{evidence_codes}}) {
+        if (!defined $self->{evidence_types}->{$ev_code}) {
+          $self->{evidence_types}->{$ev_code} = {
+            name => $ev_code,
+          };
+        }
+      }
+
       # if any evidence code for this type needs a with or from field, set
       # needs_with_or_from in the type
       for my $ev_code (@{$annotation_type->{evidence_codes}}) {
