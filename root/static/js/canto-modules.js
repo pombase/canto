@@ -6177,6 +6177,14 @@ var annotationEditDialogCtrl =
       }
     }
 
+    function removeAccessoryAlleles(alleleTypes, alleles) {
+      return $.grep(alleles,
+                    function(allele) {
+                      var alleleType = alleleTypes[allele.type];
+                      return !alleleType || !alleleType.do_not_annotate;
+                    });
+    }
+
     function setFilteredFeatures () {
       if ($scope.chooseFeatureType === 'gene') {
         if (!$scope.selectedOrganism) {
@@ -6198,19 +6206,27 @@ var annotationEditDialogCtrl =
             $scope.annotationTypePromise.then(function (annotationType) {
               var filterFunc =
                 function(feature, alleleTypes) {
-                  if (feature.alleles.length == 1) {
-                    var allele = feature.alleles[0];
+                  var nonAccessoryAlleles =
+                    removeAccessoryAlleles(alleleTypes, feature.alleles);
 
-                    var alleleType = alleleTypes[allele.type];
-
-                    if (alleleType && alleleType.do_not_annotate) {
-                      return false;
-                    }
+                  if (nonAccessoryAlleles.length == 0) {
+                    return false;
                   }
 
                   if (annotationType.single_allele_only) {
-                    return feature.alleles.length == 1;
+                    return nonAccessoryAlleles.length == 1;
                   } else {
+                    if (annotationType.single_locus_only) {
+                      var seenGenes = [];
+                      $.map(nonAccessoryAlleles,
+                            function(allele) {
+                              if (seenGenes.indexOf(allele.gene_id) == -1) {
+                                seenGenes.push(allele.gene_id);
+                              }
+                            });
+                      return seenGenes.length == 1;
+                    }
+
                     return true;
                   }
                 };
@@ -6323,7 +6339,7 @@ var annotationEditDialogCtrl =
                   function(featureId) {
                     $scope.annotationTypePromise.then(function (annotationType) {
                       if (featureId) {
-                        if (!annotationType.single_locus_only) {
+                        if (!annotationType.interaction_same_locus) {
                           $scope.filteredFeaturesB = $scope.filteredFeatures;
                           return;
                         }
@@ -6334,14 +6350,30 @@ var annotationEditDialogCtrl =
                                       return testFeature.feature_id == featureId;
                                     }))[0];
 
-                        $scope.filteredFeaturesB =
-                          $.grep($scope.filteredFeatures,
-                                 function (testFeature) {
-                                   return testFeature.alleles[0].allele_id !=
-                                     $scope.selectedFeatureA.alleles[0].allele_id &&
-                                     testFeature.alleles[0].gene_id ==
-                                     $scope.selectedFeatureA.alleles[0].gene_id;
-                                 });
+                        $scope.filteredFeaturesB = [];
+
+                        $scope.alleleTypesPromise
+                          .then(function(alleleTypes) {
+
+                            var nonAccessoryAlleles =
+                                removeAccessoryAlleles(alleleTypes,
+                                                       $scope.selectedFeatureA.alleles);
+
+                            $scope.filteredFeaturesB =
+                              $.grep($scope.filteredFeatures,
+                                     function (testFeature) {
+                                       if ($scope.selectedFeatureA.genotype_id ==
+                                           testFeature.genotype_id) {
+                                         return false;
+                                       }
+                                       var testFeatNonAccessaryAlleles =
+                                         removeAccessoryAlleles(alleleTypes,
+                                                                testFeature.alleles);
+
+                                       return testFeatNonAccessaryAlleles[0].gene_id ==
+                                         nonAccessoryAlleles[0].gene_id;
+                                     });
+                          });
                       } else {
                         $scope.filteredFeaturesB = null;
                       }
