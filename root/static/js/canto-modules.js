@@ -6376,7 +6376,7 @@ var annotationEditDialogCtrl =
                          }),
                   function(annotation) {
                     return {
-                      display_string: annotation.term_name + ' ' +
+                      display_string: annotation.term_name + ' - ' +
                         extensionAsString(annotation.extension),
                       term_ontid: annotation.term_ontid,
                       term_name: annotation.term_name,
