@@ -107,6 +107,16 @@
         <td ng-if="annotationType.category != 'interaction'" class="title">Term name</td>
         <td ng-if="annotationType.category == 'interaction'" class="title">Phenotype (optional)</td>
         <td colspan="2">
+          <div ng-if="annotationType.term_suggestions_annotation_type && termSuggestions.length">
+            Suggested terms:
+            <select class="form-control" ng-model="models.chosenSuggestedTerm"
+                    ng-change="termSuggestionSelected(models.chosenSuggestedTerm)"
+                    ng-options="suggestion.display_string for suggestion in termSuggestions track by suggestion.display_string"
+                    value="{{suggestion}}">
+              <option value="">Choose a term ...</option>
+            </select>
+          </div>
+
           <div ng-if="filteredFeatures && filteredFeatures.length != 0">
             <term-name-complete current-term-name="{{annotation.term_name}}"
                                 found-callback="termFoundCallback(termId, termName, searchString, matchingSynonym)"

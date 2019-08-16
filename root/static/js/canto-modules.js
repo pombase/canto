@@ -6048,7 +6048,6 @@ var annotationEditDialogCtrl =
     $scope.annotation = {};
     $scope.annotationTypeName = args.annotationTypeName;
     $scope.annotationType = null;
-    $scope.selectedFeatureA = null;
     $scope.currentFeatureDisplayName = args.currentFeatureDisplayName;
     $scope.newlyAdded = args.newlyAdded;
     $scope.featureEditable = args.featureEditable;
@@ -6061,6 +6060,11 @@ var annotationEditDialogCtrl =
     $scope.organisms = [];
     $scope.selectedOrganism = args.annotation.organism;
 
+    $scope.models = {
+      chosenSuggestedTerm: null,
+    };
+
+    $scope.termSuggestions = [];
     $scope.isMetagenotypeAnnotation = null;
 
     copyObject(args.annotation, $scope.annotation);
@@ -6080,6 +6084,17 @@ var annotationEditDialogCtrl =
     $scope.organismPromise = Curs.list('organism', [{ include_counts: 1 }]);
     $scope.instanceOrganismPromise = CantoConfig.get('instance_organism');
     $scope.extConfigPromise = CantoConfig.get('extension_configuration');
+
+    // the term+extensions in these annotations will be used as term suggestions in
+    // interaction annotations
+    $scope.annotationsPromise = $scope.annotationTypePromise
+      .then(function(annotationType) {
+        if (annotationType.term_suggestions_annotation_type) {
+          return AnnotationProxy.getAnnotation(annotationType.term_suggestions_annotation_type);
+        } else {
+          return [];
+        }
+      });
 
     $scope.allPromise = null;
 
@@ -6343,17 +6358,50 @@ var annotationEditDialogCtrl =
       }
     };
 
+    $scope.termSuggestionSelected = function(chosenSuggestedTerm) {
+      $scope.annotation.term_ontid = chosenSuggestedTerm.term_ontid;
+      $scope.annotation.term_name = chosenSuggestedTerm.term_name;
+      $scope.annotation.extension = chosenSuggestedTerm.extension;
+    }
+
+    function updateTermSuggestions(selectedFeatureId) {
+      $scope.termSuggestions = [];
+
+      $scope.annotationsPromise
+        .then(function (annotations) {
+          $scope.termSuggestions =
+            $.map($.grep(annotations,
+                         function(annotation) {
+                           return annotation.feature_id == selectedFeatureId;
+                         }),
+                  function(annotation) {
+                    return {
+                      display_string: annotation.term_name + ' ' +
+                        extensionAsString(annotation.extension),
+                      term_ontid: annotation.term_ontid,
+                      term_name: annotation.term_name,
+                      extension: annotation.extension,
+                    };
+                  })
+        });
+    }
+
     function featureIdWatcher(featureId) {
       $q.all([$scope.annotationTypePromise, $scope.filteredFeaturesPromise])
         .then(function (data) {
           var annotationType = data[0];
           if (featureId) {
+
+            if (annotationType.term_suggestions_annotation_type) {
+              updateTermSuggestions(featureId);
+            }
+
             if (!annotationType.interaction_same_locus) {
               $scope.filteredFeaturesB = $scope.filteredFeatures;
               return;
             }
 
-            $scope.selectedFeatureA =
+            var selectedFeatureA =
               ($.grep($scope.filteredFeatures,
                       function(testFeature) {
                         return testFeature.feature_id == featureId;
@@ -6366,7 +6414,7 @@ var annotationEditDialogCtrl =
 
                 var nonAccessoryAlleles =
                     removeAccessoryAlleles(alleleTypes,
-                                           $scope.selectedFeatureA.alleles);
+                                           selectedFeatureA.alleles);
 
                 $scope.filteredFeaturesB =
                   $.grep($scope.filteredFeatures,
