@@ -6343,81 +6343,83 @@ var annotationEditDialogCtrl =
       }
     };
 
-    $scope.$watch('annotation.feature_id',
-                  function(featureId) {
-                    $q.all([$scope.annotationTypePromise, $scope.filteredFeaturesPromise])
-                      .then(function (data) {
-                        var annotationType = data[0];
-                        if (featureId) {
-                          if (!annotationType.interaction_same_locus) {
-                            $scope.filteredFeaturesB = $scope.filteredFeatures;
-                            return;
-                          }
+    function featureIdWatcher(featureId) {
+      $q.all([$scope.annotationTypePromise, $scope.filteredFeaturesPromise])
+        .then(function (data) {
+          var annotationType = data[0];
+          if (featureId) {
+            if (!annotationType.interaction_same_locus) {
+              $scope.filteredFeaturesB = $scope.filteredFeatures;
+              return;
+            }
 
-                          $scope.selectedFeatureA =
-                            ($.grep($scope.filteredFeatures,
-                                    function(testFeature) {
-                                      return testFeature.feature_id == featureId;
-                                    }))[0];
+            $scope.selectedFeatureA =
+              ($.grep($scope.filteredFeatures,
+                      function(testFeature) {
+                        return testFeature.feature_id == featureId;
+                      }))[0];
 
-                          $scope.filteredFeaturesB = [];
+            $scope.filteredFeaturesB = [];
 
-                          $scope.alleleTypesPromise
-                            .then(function(alleleTypes) {
+            $scope.alleleTypesPromise
+              .then(function(alleleTypes) {
 
-                              var nonAccessoryAlleles =
-                                removeAccessoryAlleles(alleleTypes,
-                                                       $scope.selectedFeatureA.alleles);
+                var nonAccessoryAlleles =
+                    removeAccessoryAlleles(alleleTypes,
+                                           $scope.selectedFeatureA.alleles);
 
-                              $scope.filteredFeaturesB =
-                                $.grep($scope.filteredFeatures,
-                                       function (testFeature) {
-                                         if ($scope.selectedFeatureA.genotype_id ==
-                                             testFeature.genotype_id) {
-                                           return false;
-                                         }
-                                         var testFeatNonAccessaryAlleles =
-                                             removeAccessoryAlleles(alleleTypes,
-                                                                    testFeature.alleles);
+                $scope.filteredFeaturesB =
+                  $.grep($scope.filteredFeatures,
+                         function (testFeature) {
+                           if ($scope.selectedFeatureA.genotype_id ==
+                               testFeature.genotype_id) {
+                             return false;
+                           }
+                           var testFeatNonAccessaryAlleles =
+                               removeAccessoryAlleles(alleleTypes,
+                                                      testFeature.alleles);
 
-                                         return testFeatNonAccessaryAlleles[0].gene_id ==
-                                           nonAccessoryAlleles[0].gene_id;
-                                       });
-                            });
-                        } else {
-                          $scope.filteredFeaturesB = null;
-                        }
-                      });
-                  });
+                           return testFeatNonAccessaryAlleles[0].gene_id ==
+                             nonAccessoryAlleles[0].gene_id;
+                         });
+              });
+          } else {
+            $scope.filteredFeaturesB = null;
+          }
+        });
+    }
 
-    $scope.$watch('annotation.term_ontid',
-      function () {
-        $scope.matchingConfigurations = [];
+    $scope.$watch('annotation.feature_id', featureIdWatcher);
 
-        if ($scope.annotation.term_ontid) {
-          var ontLookupPromise =
+    function termIdWatcher () {
+      $scope.matchingConfigurations = [];
+
+      if ($scope.annotation.term_ontid) {
+        var ontLookupPromise =
             CantoService.lookup('ontology', [$scope.annotation.term_ontid], {
               subset_ids: 1,
             });
 
-          $q.all([$scope.extConfigPromise, ontLookupPromise])
-            .then(function (data) {
-              var extensionConfiguration = data[0];
-              var termDetails = data[1];
+        $q.all([$scope.extConfigPromise, ontLookupPromise])
+          .then(function (data) {
+            var extensionConfiguration = data[0];
+            var termDetails = data[1];
 
-              var subset_ids = termDetails.subset_ids;
+            var subset_ids = termDetails.subset_ids;
 
-              if (extensionConfiguration.length > 0 &&
+            if (extensionConfiguration.length > 0 &&
                 subset_ids && subset_ids.length > 0) {
-                $scope.matchingConfigurations =
-                  extensionConfFilter(extensionConfiguration, subset_ids,
-                    CantoGlobals.current_user_is_admin ? 'admin' : 'user');
-              } else {
-                $scope.matchingConfigurations = [];
-              }
-            });
-        }
-      });
+              $scope.matchingConfigurations =
+                extensionConfFilter(extensionConfiguration, subset_ids,
+                                    CantoGlobals.current_user_is_admin ? 'admin' : 'user');
+            } else {
+              $scope.matchingConfigurations = [];
+            }
+          });
+      }
+    }
+
+    $scope.$watch('annotation.term_ontid', termIdWatcher);
 
     $scope.isValid = function () {
       if (!$scope.annotationType) {
