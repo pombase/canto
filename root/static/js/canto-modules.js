@@ -6043,7 +6043,7 @@ canto.directive('termChildrenDisplay',
 var annotationEditDialogCtrl =
   function ($scope, $uibModal, $q, $uibModalInstance, AnnotationProxy,
             AnnotationTypeConfig, CantoConfig, CursGenotypeList, CursGeneList,
-    CursSessionDetails, CantoService, CantoGlobals, Curs, toaster, args) {
+            CursSessionDetails, CantoService, CantoGlobals, Curs, toaster, args) {
     $scope.currentUserIsAdmin = CantoGlobals.current_user_is_admin;
     $scope.annotation = {};
     $scope.annotationTypeName = args.annotationTypeName;
@@ -6110,15 +6110,21 @@ var annotationEditDialogCtrl =
                       });
       });
 
-    $scope.filteredOrganismPromise.then(function (organisms) {
-      if (organisms.length == 1) {
-        $scope.selectedOrganism = organisms[0];
-      }
+    $scope.filteredOrganismPromise
+      .then(function (organisms) {
+        if (organisms.length == 1) {
+          $scope.selectedOrganism = organisms[0];
+        }
+        $scope.organisms = organisms;
+        return organisms;
+      })
+      .then(function() {
+        setFilteredFeatures();
+      });
 
-      $scope.organisms = organisms;
 
-      setFilteredFeatures();
-    });
+    $scope.filteredFeaturesDeferred = $q.defer();
+    $scope.filteredFeaturesPromise = $scope.filteredFeaturesDeferred.promise;
 
     $scope.annotationTypePromise
       .then(function (annotationType) {
@@ -6175,6 +6181,8 @@ var annotationEditDialogCtrl =
       } else {
         $scope.filteredFeatures = features;
       }
+
+      $scope.filteredFeaturesDeferred.resolve($scope.filteredFeatures);
     }
 
     function removeAccessoryAlleles(alleleTypes, alleles) {
@@ -6337,47 +6345,49 @@ var annotationEditDialogCtrl =
 
     $scope.$watch('annotation.feature_id',
                   function(featureId) {
-                    $scope.annotationTypePromise.then(function (annotationType) {
-                      if (featureId) {
-                        if (!annotationType.interaction_same_locus) {
-                          $scope.filteredFeaturesB = $scope.filteredFeatures;
-                          return;
-                        }
+                    $q.all([$scope.annotationTypePromise, $scope.filteredFeaturesPromise])
+                      .then(function (data) {
+                        var annotationType = data[0];
+                        if (featureId) {
+                          if (!annotationType.interaction_same_locus) {
+                            $scope.filteredFeaturesB = $scope.filteredFeatures;
+                            return;
+                          }
 
-                        $scope.selectedFeatureA =
+                          $scope.selectedFeatureA =
                             ($.grep($scope.filteredFeatures,
                                     function(testFeature) {
                                       return testFeature.feature_id == featureId;
                                     }))[0];
 
-                        $scope.filteredFeaturesB = [];
+                          $scope.filteredFeaturesB = [];
 
-                        $scope.alleleTypesPromise
-                          .then(function(alleleTypes) {
+                          $scope.alleleTypesPromise
+                            .then(function(alleleTypes) {
 
-                            var nonAccessoryAlleles =
+                              var nonAccessoryAlleles =
                                 removeAccessoryAlleles(alleleTypes,
                                                        $scope.selectedFeatureA.alleles);
 
-                            $scope.filteredFeaturesB =
-                              $.grep($scope.filteredFeatures,
-                                     function (testFeature) {
-                                       if ($scope.selectedFeatureA.genotype_id ==
-                                           testFeature.genotype_id) {
-                                         return false;
-                                       }
-                                       var testFeatNonAccessaryAlleles =
-                                         removeAccessoryAlleles(alleleTypes,
-                                                                testFeature.alleles);
+                              $scope.filteredFeaturesB =
+                                $.grep($scope.filteredFeatures,
+                                       function (testFeature) {
+                                         if ($scope.selectedFeatureA.genotype_id ==
+                                             testFeature.genotype_id) {
+                                           return false;
+                                         }
+                                         var testFeatNonAccessaryAlleles =
+                                             removeAccessoryAlleles(alleleTypes,
+                                                                    testFeature.alleles);
 
-                                       return testFeatNonAccessaryAlleles[0].gene_id ==
-                                         nonAccessoryAlleles[0].gene_id;
-                                     });
-                          });
-                      } else {
-                        $scope.filteredFeaturesB = null;
-                      }
-                    });
+                                         return testFeatNonAccessaryAlleles[0].gene_id ==
+                                           nonAccessoryAlleles[0].gene_id;
+                                       });
+                            });
+                        } else {
+                          $scope.filteredFeaturesB = null;
+                        }
+                      });
                   });
 
     $scope.$watch('annotation.term_ontid',
