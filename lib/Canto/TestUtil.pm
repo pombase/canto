@@ -215,7 +215,7 @@ sub new
   my $config = Canto::Config->new(["$root_dir/$app_name.yaml"]);
 
   $config->{annotation_types}->{phenotype}->{term_evidence_codes}
-    ->{"is_a(FYPO:0000005)"} = ['Microscopy', 'Other'];
+    ->{"is_a(FYPO:0000005)-is_a(FYPO:999999999)"} = ['Microscopy', 'Other'];
 
   my $test_config_file_name = "$root_dir/" . $config->{test_config_file};
   $config->merge_config([$test_config_file_name]);

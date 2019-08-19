@@ -117,19 +117,25 @@ sub get_subset_data
   my %exclude_subsets_to_store = ();
   my %extra_subsets_to_store = ();
 
+  my $process_excluded = sub {
+    my $subset_rel_and_id = shift;
+
+    if ($subset_rel_and_id =~ /^(?:\w+)\((\S+)\)$/) {
+      my $subset_id = $1;
+      $exclude_subsets_to_store{$subset_id} = 1;
+    } else {
+      die qq[subset term ID "$subset_rel_and_id" must include a relation name, \n
+eg. "is_a(GO:0055085)"];
+    }
+  };
+
   for my $conf (@conf) {
     $domain_subsets_to_store{$conf->{domain}} = $conf->{subset_rel};
 
     if ($conf->{exclude_subset_ids}) {
       map {
         my $subset_rel_and_id = $_;
-        if ($subset_rel_and_id =~ /^(?:\w+)\((\S+)\)$/) {
-          my $subset_id = $1;
-          $exclude_subsets_to_store{$subset_id} = 1;
-        } else {
-          die qq[subset term ID "$subset_rel_and_id" must include a relation name, \n
-eg. "is_a(GO:0055085)"];
-        }
+        $process_excluded->($subset_rel_and_id);
       } @{$conf->{exclude_subset_ids}};
     }
 
@@ -153,11 +159,24 @@ eg. "is_a(GO:0055085)"];
 
     if ($term_evidence_codes) {
       for my $rel_and_termid (keys %{$term_evidence_codes}) {
-        if (my ($rel, $termid) = ($rel_and_termid =~ /^([\S\(]+)\((\S+)\)$/)) {
-          push @{$extra_subsets_to_store{$termid}}, $rel;
+        my ($rel, $termid) = ();
+
+        if ($rel_and_termid =~ /([\S\(]+)\((\S+)\)-(\S+)$/) {
+          $rel = $1;
+          $termid = $2;
+          my $exclude_id_str = $3;
+          map {
+            $process_excluded->($_);
+          } split /&/, $exclude_id_str;
         } else {
-          die qw(error in configuration "$rel_and_termid" - should be: "rel(term_id)");
+          ($rel, $termid) = ($rel_and_termid =~ /^([\S\(]+)\((\S+)\)$/);
+
+          if (!defined $rel) {
+            die qw(error in configuration "$rel_and_termid" - should be: "rel(term_id)");
+          }
         }
+
+        push @{$extra_subsets_to_store{$termid}}, $rel;
       }
     }
   }
