@@ -161,15 +161,6 @@ for details.
 The names of the types that are enabled in this Canto instance.  If not set
 all annotation types from `available_annotation_type_list` will be enabled.
 
-#### name
-The identifier for this annotation type, used internally and in URLs.
-
-#### category
-One of: "ontology" or "interaction", used to select which Perl package
-should be used for rendering and storing these annotation type.
-
-### messages
-
 ### test_config_file
 The path to the extra configuration file needed while testing.
 
@@ -266,12 +257,39 @@ For interactions, restrict the genotype B list to contain only
 genotypes for the same locus selected in the genotype A list.
 
 ### evidence_codes
-Possible evidence codes for this annotation type.  Each evidence code must
+Possible evidence codes (or interaction types) for this annotation type.
+Each evidence code must
 appear in the [`evidence_types`](#evidence_types) list.  (Required)
 
 ### admin_evidence_codes
 Evidence codes that are only available for logged in admin user.  This
 list is added to the `evidence_codes` list.
+
+### term_evidence_codes
+Used to restrict the visible evidence codes based on a currently
+selected term (if any).  The keys are used for matching the term.  If
+the current term is a descendent of the term before the "-" in the key
+and not a descendent of the terms to the right of the "-" the given
+evidence codes are shown to the user.  The excluded terms to the right
+of the "-" are optional.
+
+If the current term doesn't match any of the keys in `term_evidence_codes`,
+the default evidence codes from `evidence_codes` are displayed.
+
+example:
+
+    term_evidence_codes:
+      "is_a(FYPO:0001985)":
+        - Cell growth assay
+        - Chromatin immunoprecipitation experiment
+        - Chromatography evidence
+
+or:
+
+    term_evidence_codes:
+      "is_a(FYPO:0001985)-is_a(FYPO:0000045)&is_a(FYPO:0000150)":
+        - Cell growth assay
+        - Chromatography evidence
 
 ### broad_term_suggestions
 A few comma separated high level or broad term names for use in help text.
