@@ -377,6 +377,7 @@ sub setup
 
         # handle evidence codes differently so codes don't get duplicated
         $annotation_type->{evidence_codes} = $configured_type->{evidence_codes};
+        $annotation_type->{term_evidence_codes} = $configured_type->{term_evidence_codes};
       }
 
       if (!defined $annotation_type->{ontology_size}) {

@@ -115,6 +115,7 @@ sub get_subset_data
   my %domain_subsets_to_store = ();
   my %range_subsets_to_store = ();
   my %exclude_subsets_to_store = ();
+  my %extra_subsets_to_store = ();
 
   for my $conf (@conf) {
     $domain_subsets_to_store{$conf->{domain}} = $conf->{subset_rel};
@@ -147,10 +148,24 @@ eg. "is_a(GO:0055085)"];
     } @{$conf->{range}};
   }
 
+  for my $annotation_type (@{$config->{annotation_type_list}}) {
+    my $term_evidence_codes = $annotation_type->{term_evidence_codes};
+
+    if ($term_evidence_codes) {
+      for my $rel_and_termid (keys %{$term_evidence_codes}) {
+        if (my ($rel, $termid) = ($rel_and_termid =~ /^([\S\(]+)\((\S+)\)$/)) {
+          push @{$extra_subsets_to_store{$termid}}, $rel;
+        } else {
+          die qw(error in configuration "$rel_and_termid" - should be: "rel(term_id)");
+        }
+      }
+    }
+  }
+
   my %subsets = map {
     ($_, { $_ => { is_a => 1 } })
   } (keys %domain_subsets_to_store, keys %range_subsets_to_store,
-     keys %exclude_subsets_to_store);
+     keys %exclude_subsets_to_store, keys %extra_subsets_to_store);
 
   my @owltools_results = $self->get_owltools_results(@obo_file_names);
 
@@ -169,6 +184,10 @@ eg. "is_a(GO:0055085)"];
     }
 
     if ($exclude_subsets_to_store{$object}) {
+      $subsets{$subject}{$object}{$rel_type} = 1;
+    }
+
+    if ($extra_subsets_to_store{$object}) {
       $subsets{$subject}{$object}{$rel_type} = 1;
     }
   }

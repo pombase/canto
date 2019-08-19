@@ -48,8 +48,7 @@ $subset_process->process_subset_data($track_schema, $subset_data);
 
 my $after_cvtermprop_count = $prop_rs->count();
 
-is ($after_cvtermprop_count, 60);
-
+is ($after_cvtermprop_count, 61);
 
 sub get_subset_props
 {
@@ -67,6 +66,10 @@ my @subset_cvtermprops = get_subset_props();
 
 my @expected_subset_props =
   (
+    [
+      'abnormal cell morphology',
+      'is_a(FYPO:0000005)'
+    ],
     [
       'biological_process',
       'is_a(canto_root_subset)'
