@@ -6459,7 +6459,7 @@ var annotationEditDialogCtrl =
                 $scope.filteredFeaturesB =
                   $.grep($scope.filteredFeatures,
                          function (testFeature) {
-                           if ($scope.selectedFeatureA.genotype_id ==
+                           if (selectedFeatureA.genotype_id ==
                                testFeature.genotype_id) {
                              return false;
                            }
