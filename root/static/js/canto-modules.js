@@ -2058,12 +2058,16 @@ function openExtensionBuilderDialog($uibModal, extension, termId, featureDisplay
 }
 
 
-function extensionAsString(extension) {
+function extensionAsString(extension, displayMode) {
   return $.map(extension,
     function (orPart) {
       return $.map(orPart,
         function (andPart) {
-          return andPart.relation + '(' + andPart.rangeValue + ')';
+          return andPart.relation + '(' +
+            (displayMode ?
+             andPart.rangeDisplayName || andPart.rangeValue :
+             andPart.rangeValue) +
+            ')';
         }).join(', ');
     }).join('| ');
 }
@@ -2196,7 +2200,7 @@ var extensionManualEdit =
       template: '<div> <textarea ng-model="text" rows="4" cols="65"></textarea> </div>',
       link: function ($scope) {
         $scope.currentError = "";
-        $scope.text = extensionAsString($scope.extension);
+        $scope.text = extensionAsString($scope.extension, false);
 
         $scope.$watch('text',
           function () {
@@ -6417,7 +6421,7 @@ var annotationEditDialogCtrl =
                   function(annotation) {
                     return {
                       display_string: annotation.term_name + ' - ' +
-                        extensionAsString(annotation.extension),
+                        extensionAsString(annotation.extension, true),
                       term_ontid: annotation.term_ontid,
                       term_name: annotation.term_name,
                       extension: annotation.extension,
