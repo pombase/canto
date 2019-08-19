@@ -3110,18 +3110,20 @@ canto.controller('InteractionWorkflowCtrl',
 
 
 var annotationEvidence =
-  function (AnnotationTypeConfig, CantoConfig, CursGeneList, $uibModal) {
+  function (AnnotationTypeConfig, CantoConfig, CursGeneList, CantoService, $uibModal) {
     var directive = {
       scope: {
         evidenceCode: '=',
         withGeneId: '=',
         validEvidence: '=', // true when evidence and with_gene_id are valid
         annotationTypeName: '@',
+        annotationTermOntid: '@',
       },
       restrict: 'E',
       replace: true,
       controller: function ($scope, $element, $attrs) {
         $scope.annotationType = null;
+        $scope.defaultEvidenceCodes = [];
         $scope.evidenceCodes = [];
 
         $scope.genes = null;
@@ -3146,6 +3148,7 @@ var annotationEvidence =
         AnnotationTypeConfig.getByName($scope.annotationTypeName)
           .then(function (annotationType) {
             $scope.annotationType = annotationType;
+            $scope.defaultEvidenceCodes = annotationType.evidence_codes;
             $scope.evidenceCodes = annotationType.evidence_codes;
           });
 
@@ -3219,6 +3222,42 @@ var annotationEvidence =
             $scope.validEvidence = $scope.isValidCodeAndWith();
           });
 
+        $scope.$watch('annotationTermOntid',
+          function (annotationTermOntid) {
+            $scope.evidenceCodes = $scope.defaultEvidenceCodes;
+
+            if (annotationTermOntid && $scope.annotationType &&
+                $scope.annotationType.term_evidence_codes) {
+              CantoService.lookup('ontology', [annotationTermOntid],
+                                  {
+                                    subset_ids: 1,
+                                  })
+                .then(function (termData) {
+                  var termEvCodes = [];
+                  $.map(termData.subset_ids,
+                        function(subset_id) {
+                          var evCodes = $scope.annotationType.term_evidence_codes[subset_id];
+
+                          if (evCodes) {
+                            $.map(evCodes,
+                                  function(evCode) {
+                                    if (($.grep(termEvCodes,
+                                                function(testEvCode) {
+                                                  return testEvCode == evCode;
+                                                })).length == 0) {
+                                      termEvCodes.push(evCode);
+                                    }
+                                  });
+
+                            if (termEvCodes.length > 0) {
+                              termEvCodes.sort();
+                              $scope.evidenceCodes = termEvCodes;
+                            }
+                          }
+                        });
+                })
+            }
+          });
       },
       templateUrl: app_static_path + 'ng_templates/annotation_evidence.html'
     };
@@ -3226,7 +3265,8 @@ var annotationEvidence =
   };
 
 canto.directive('annotationEvidence',
-                ['AnnotationTypeConfig', 'CantoConfig', 'CursGeneList', '$uibModal',
+                ['AnnotationTypeConfig', 'CantoConfig', 'CursGeneList', 'CantoService',
+                 '$uibModal',
                  annotationEvidence]);
 
 var conditionPicker =
