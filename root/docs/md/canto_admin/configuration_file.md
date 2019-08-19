@@ -151,6 +151,23 @@ Example:
 In this case "Microscopy" is treated as an evidence code and an evience
 description.
 
+### namespace_term_evidence_codes
+A map of defaults for the term to evidence lists configuration.  If
+`term_evidence_codes` isn't set in an annotation type definition this
+map will be consulted to find defaults for the namespace of the
+annotation type.  See
+[`term_evidence_codes`](configuration_file#termevidencecodes) for
+details.
+
+This example will set `term_evidence_codes` for all annotation types
+that are configured with the namespace "fission_yeast_phenotype":
+
+    namespace_term_evidence_codes:
+      fission_yeast_phenotype:
+        "is_a(FYPO:0001985)":
+          - Cell growth assay
+          - Chromatin immunoprecipitation experiment
+
 ### available_annotation_type_list
 List of possible annotation type and their configuration details.
 
@@ -290,6 +307,8 @@ or:
       "is_a(FYPO:0001985)-is_a(FYPO:0000045)&is_a(FYPO:0000150)":
         - Cell growth assay
         - Chromatography evidence
+
+See also `namespace_term_evidence_codes`.
 
 ### broad_term_suggestions
 A few comma separated high level or broad term names for use in help text.

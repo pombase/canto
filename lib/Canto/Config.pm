@@ -403,6 +403,11 @@ sub setup
         } @{$self->{annotation_types_by_namespace}->{$namespace}}) {
           push @{$self->{annotation_types_by_namespace}->{$namespace}}, $annotation_type;
         }
+
+        if (!defined $annotation_type->{term_evidence_codes}) {
+          $annotation_type->{term_evidence_codes} =
+            $self->{namespace_term_evidence_codes}->{$namespace};
+        }
       }
 
       # if an evidence code is not in the main evidence_codes map, add it

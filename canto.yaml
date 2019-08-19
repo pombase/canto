@@ -1644,6 +1644,8 @@ ontology_namespace_config:
     - "is_a(canto_root_subset)"
     - "is_a(qc_do_not_annotate)"
 
+namespace_term_evidence_codes: {}
+
 available_annotation_type_list:
   - name: molecular_function
     category: ontology
