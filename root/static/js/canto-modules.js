@@ -3132,6 +3132,8 @@ var annotationEvidence =
 
         $scope.genes = null;
 
+        $scope.annotationTermData = null;
+
         $scope.getGenesFromServer = function() {
           CursGeneList.geneList().then(function (results) {
             $scope.genes = results;
@@ -3232,11 +3234,13 @@ var annotationEvidence =
 
             if (annotationTermOntid && $scope.annotationType &&
                 $scope.annotationType.term_evidence_codes) {
+              $scope.annotationTermData = null;
               CantoService.lookup('ontology', [annotationTermOntid],
                                   {
                                     subset_ids: 1,
                                   })
                 .then(function (termData) {
+                  $scope.annotationTermData = termData;
                   var termEvCodes = [];
                   $.map(termData.subset_ids,
                         function(subset_id) {
@@ -3253,10 +3257,8 @@ var annotationEvidence =
                                     }
                                   });
 
-                            if (termEvCodes.length > 0) {
-                              termEvCodes.sort();
-                              $scope.evidenceCodes = termEvCodes;
-                            }
+                            termEvCodes.sort();
+                            $scope.evidenceCodes = termEvCodes;
                           }
                         });
                 })
