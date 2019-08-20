@@ -6419,9 +6419,15 @@ var annotationEditDialogCtrl =
                            return annotation.feature_id == selectedFeatureId;
                          }),
                   function(annotation) {
+                    var displayString = annotation.term_name;
+                    var extension = extensionAsString(annotation.extension, true);
+
+                    if (extension) {
+                      displayString += ' - ' + extension
+                    }
+
                     return {
-                      display_string: annotation.term_name + ' - ' +
-                        extensionAsString(annotation.extension, true),
+                      display_string: displayString,
                       term_ontid: annotation.term_ontid,
                       term_name: annotation.term_name,
                       extension: annotation.extension,
