@@ -310,6 +310,13 @@ or:
 
 See also `namespace_term_evidence_codes`.
 
+### term_suggestions_annotation_type
+If set to the name of an ontology annotation type, use terms from the
+annotations of that type as suggestions.  For example, once a genotype is
+selected in the interaction dialog, any phenotypes annotated for that
+genotype will be shown to the user.  If unset, no suggestions will be
+shown.
+
 ### broad_term_suggestions
 A few comma separated high level or broad term names for use in help text.
 eg. for molecular function: "transporter, transferase activity"  (Required
