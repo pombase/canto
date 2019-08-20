@@ -6350,7 +6350,9 @@ var annotationEditDialogCtrl =
       if (!$scope.annotationType) {
         return false;
       }
-      return $scope.annotationType.category == 'interaction' || $scope.annotation.term_ontid;
+      return ($scope.annotationType.category == 'interaction' &&
+              !$scope.annotationType.term_required) ||
+        $scope.annotation.term_ontid;
     };
 
     $scope.isValidEvidence = function () {
