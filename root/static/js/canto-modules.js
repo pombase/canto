@@ -6351,7 +6351,7 @@ var annotationEditDialogCtrl =
         return false;
       }
       return ($scope.annotationType.category == 'interaction' &&
-              !$scope.annotationType.term_required) ||
+              !$scope.annotationType.interaction_term_required) ||
         $scope.annotation.term_ontid;
     };
 

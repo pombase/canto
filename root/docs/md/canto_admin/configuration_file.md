@@ -273,6 +273,10 @@ annotation type.
 For interactions, restrict the genotype B list to contain only
 genotypes for the same locus selected in the genotype A list.
 
+### interaction_term_required
+For interactions, selecting a term is required if and only if this
+option is set to 1.
+
 ### evidence_codes
 Possible evidence codes (or interaction types) for this annotation type.
 Each evidence code must

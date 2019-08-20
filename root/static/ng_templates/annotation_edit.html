@@ -57,7 +57,7 @@
       <tr ng-if="annotationType.namespace" ng-class="{ 'has-error': !isValidTerm() }">
         <td ng-if="annotationType.category != 'interaction'" class="title">Term name</td>
         <td ng-if="annotationType.category == 'interaction'" class="title">
-          Phenotype <span ng-hide="annotationType.term_required">(optional)</span>
+          Phenotype <span ng-hide="annotationType.interaction_term_required">(optional)</span>
         </td>
         <td colspan="2">
           <div ng-if="annotationType.term_suggestions_annotation_type && termSuggestions.length">
