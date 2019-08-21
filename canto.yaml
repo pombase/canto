@@ -97,6 +97,9 @@ show_genotype_management_genes_list: 1
 # if 1, allow notes/comments on diploids and multi-locus genotypes
 notes_on_single_allele_genotypes_only: 0
 
+# if 1, use FlyBase specific tweaks
+flybase_mode: 0
+
 # from_address - used as the "from" field is all outgoing messages
 # admin_address - the contact address of the admin curators, used to
 #                 alert about completed sessions and problems

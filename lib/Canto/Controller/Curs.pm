@@ -169,6 +169,8 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{show_genotype_management_genes_list} = $config->{show_genotype_management_genes_list};
   $st->{notes_on_single_allele_genotypes_only} = $config->{notes_on_single_allele_genotypes_only};
 
+  $st->{flybase_mode} = $config->{flybase_mode};
+
   my $with_gene_evidence_codes =
     { map { ( $_, 1 ) }
       grep { $config->{evidence_types}->{$_}->{with_gene} } keys %{$config->{evidence_types}} };

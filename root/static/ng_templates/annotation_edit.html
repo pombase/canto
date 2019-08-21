@@ -85,7 +85,8 @@
       </tr>
 
       <tr ng-if="isValidTerm() && matchingConfigurations.length > 0 || annotation.extension.length > 0">
-        <td class="title">Annotation extension</td>
+        <td ng-if="!flyBaseMode" class="title">Annotation extension</td>
+        <td ng-if="flyBaseMode" class="title">Phenotype extensions</td>
         <td>
           <div ng-if="filteredFeatures && filteredFeatures.length != 0">
           <extension-display ng-if="annotation.extension.length > 0" extension="annotation.extension"></extension-display>

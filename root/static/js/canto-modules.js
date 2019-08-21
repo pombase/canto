@@ -782,6 +782,7 @@ canto.service('CantoGlobals', function ($window) {
   this.alleles_have_expression = $window.alleles_have_expression;
   this.allow_single_wildtype_allele = $window.allow_single_wildtype_allele;
   this.diploid_mode = $window.diploid_mode;
+  this.flybase_mode = $window.flybase_mode;
   this.organismsAndGenes = $window.organismsAndGenes;
   this.confirmGenes = $window.confirmGenes;
   this.highlightTerms = $window.highlightTerms;
@@ -6091,6 +6092,7 @@ var annotationEditDialogCtrl =
             AnnotationTypeConfig, CantoConfig, CursGenotypeList, CursGeneList,
             CursSessionDetails, CantoService, CantoGlobals, Curs, toaster, args) {
     $scope.currentUserIsAdmin = CantoGlobals.current_user_is_admin;
+    $scope.flyBaseMode = CantoGlobals.flybase_mode;
     $scope.annotation = {};
     $scope.annotationTypeName = args.annotationTypeName;
     $scope.annotationType = null;
