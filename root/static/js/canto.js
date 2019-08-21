@@ -169,7 +169,7 @@ $(document).ready(function() {
 
   $('#curs-pub-assign-popup-dialog').click(function () {
     $('#curs-pub-assign-dialog').dialog({ modal: true,
-                                          title: 'Set the corresponding author ...',
+                                          title: 'Set the corresponding author...',
                                           width: '40em' });
   });
 
@@ -203,7 +203,7 @@ $(document).ready(function() {
       $picker_div.find('.curs-person-picker-person-id').val(data.person_id);
     });
     $popup.dialog({
-      title: 'Add a person ...',
+      title: 'Add a person...',
       modal: true });
 
     $popup.find("form").ajaxForm({

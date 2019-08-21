@@ -41,7 +41,7 @@ find more of your publications</p>
     Actions
   </div>
   <div class="curs-box-body">
-    <a href="<% $review_session_uri %>">Review session ...</a>
+    <a href="<% $review_session_uri %>">Review session</a>
   </div>
 </div>
 
@@ -57,7 +57,7 @@ find more of your publications</p>
   </div>
 % if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
   <div class="curs-box-body" ng-hide="messageForCurators == null" >
-    <a href="" ng-click="editMessageForCurators()">Edit ...</a>
+    <a href="" ng-click="editMessageForCurators()">Edit</a>
   </div>
 % }
 </div>

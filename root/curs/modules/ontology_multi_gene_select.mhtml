@@ -13,7 +13,7 @@ Genes to use with <% $start_gene_display_name %> in new genotype
   </div>
 
   <div class="upload-genes-link">
-    <a href="<% $upload_path %>">Add more genes from <% $pub->uniquename() %> to this session ...</a>
+    <a href="<% $upload_path %>">Add more genes from <% $pub->uniquename() %> to this session</a>
   </div>
 </div>
 

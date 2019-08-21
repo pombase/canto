@@ -28,7 +28,7 @@ $hide_breadcrumbs => 0
 % if (!$hide_breadcrumbs) {
 <& breadcrumbs.mhtml &>
 % }
-<span class="curs-contact-page-link"><& contact.mhtml, link_text => 'Questions? Contact curators ...' &></span>
+<span class="curs-contact-page-link"><& contact.mhtml, link_text => 'Questions? Contact curators...' &></span>
 
 <& title.mhtml, show_title => $show_title, title => $title, right_title => $right_title &>
 

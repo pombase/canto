@@ -14,7 +14,7 @@ their publications for inclusion in public biological databases. Originally
 created for the fission yeast community, Canto is a generic
 tool that can be readily configured for use with other organisms and other
 databases.
-<span class="curs-contact-page-link"><& contact.mhtml, link_text => 'Questions? Contact the Canto team ...' &></span>
+<span class="curs-contact-page-link"><& contact.mhtml, link_text => 'Questions? Contact the Canto team...' &></span>
           </p>
         </div>
         <div class="col-md-4">
@@ -31,18 +31,18 @@ databases.
         Canto is currently deployed for:
         <ul>
           <li>
-  <a href="http://curation.pombase.org/pombe" class="btn btn-primary visit">Visit ...</a>
+  <a href="http://curation.pombase.org/pombe" class="btn btn-primary visit">Visit...</a>
   <span class="organism-name">Schizosaccharomyces pombe</span> (fission yeast)
   at PomBase.
   Curate GO, phenotypes, interactions, protein modifications for inclusion in
   <a href="http://www.pombase.org">PomBase</a>
           </li>
           <li>
-  <a href="http://curation.pombase.org/kpas" class="btn btn-primary visit">Visit ...</a>
+  <a href="http://curation.pombase.org/kpas" class="btn btn-primary visit">Visit...</a>
   <span class="organism-name">Komagataella pastoris</span> (formerly known as Pichia pastoris)
           </li>
           <li>
-  <a href="http://curation.pombase.org/uniprot" class="btn btn-primary visit">Visit ...</a>
+  <a href="http://curation.pombase.org/uniprot" class="btn btn-primary visit">Visit...</a>
   <span>Generic Gene Ontology Implementation: Curate GO annotations for proteins,
   using UniProtKB identifiers.</span>
           </li>
@@ -51,13 +51,13 @@ databases.
 
       <div class="col-md-6">
         <h3>Documentation</h3>
-        <a href="<% $c->uri_for('/docs/index/') %>" class="btn btn-primary visit">View ...</a>
+        <a href="<% $c->uri_for('/docs/index/') %>" class="btn btn-primary visit">View...</a>
         <p>
 Instructions for using Canto are available from
 the <a href="<% $c->uri_for('/docs/index/') %>">documentation
 pages</a>, or via the "Help" link at the top right of every Canto instance.
         <h3>Demo</h3>
-          <a href="<% $demo_url %>" class="btn btn-primary visit">Demo ...</a>
+          <a href="<% $demo_url %>" class="btn btn-primary visit">Demo...</a>
         <p>
 Try the <a href="<% $demo_url %>">demo</a>
 version of Canto: curate GO, phenotypes, interactions and protein modifications.
@@ -80,7 +80,7 @@ curation. <em>Bioinformatics</em> (2014) <a href="http://doi.org/10.1093/bioinfo
 
       <div class="col-md-6">
         <h3>Get The Code</h3>
-        <a href="https://github.com/pombase/canto" class="btn btn-primary visit">Visit ...</a>
+        <a href="https://github.com/pombase/canto" class="btn btn-primary visit">Visit...</a>
         <p>
 Canto is a free, open source application. The source code is
 available from Github.

@@ -622,7 +622,7 @@ sub gene_upload : Chained('top') Args(0) Form
 
   my @no_genes_elements = ();
   my @no_genes_reasons =
-    ( [ '', 'Please choose a reason ...' ],
+    ( [ '', 'Choose a reason...' ],
       map { [ $_, $_ ] } @{$c->config()->{curs_config}->{no_genes_reasons}} );
 
   if ($st->{gene_count} > 0) {

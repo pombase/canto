@@ -381,7 +381,7 @@ canto.filter('featureChooserFilter', function () {
     if (feature.background) {
       ret += "  (bkg: " + feature.background.substr(0, 15);
       if (feature.background.length > 15) {
-        ret += " ...";
+        ret += "...";
       }
       ret += ")";
     }
@@ -2870,7 +2870,7 @@ var ontologyWorkflowCtrl =
     $scope.storeAnnotation = function () {
       var storePop = toaster.pop({
         type: 'info',
-        title: 'Storing annotation ...',
+        title: 'Storing annotation...',
         timeout: 0, // last until page reload
         showCloseButton: false
       });
@@ -2965,7 +2965,7 @@ var interactionWorkflowCtrl =
 
     $scope.addInteractionAndEvidence = function () {
       $scope.postInProgress = true;
-      toaster.pop('info', 'Creating interaction ...');
+      toaster.pop('info', 'Creating interaction...');
       simpleHttpPost(toaster, $http, '../add_interaction/' + $scope.annotationTypeName, {
         evidence_code: $scope.data.evidence_code,
         prey_gene_ids: $scope.selectedFeatureIds,
@@ -3129,7 +3129,7 @@ var conditionPicker =
               minLength: 2,
               fieldName: 'curs-allele-condition-names',
               allowSpaces: true,
-              placeholderText: 'Type a condition ...',
+              placeholderText: 'Type a condition',
               tagSource: fetch_conditions,
               autocomplete: {
                 focus: ferret_choose.show_autocomplete_def,
@@ -6030,7 +6030,7 @@ var annotationEditDialogCtrl =
       loadingStart();
       var storePop = toaster.pop({
         type: 'info',
-        title: 'Storing annotation ...',
+        title: 'Storing annotation...',
         timeout: 0, // last until the finally()
         showCloseButton: false
       });
@@ -6187,7 +6187,7 @@ var annotationQuickAdd =
         $scope.read_only_curs = CantoGlobals.read_only_curs;
 
         if (!$scope.linkLabel) {
-          $scope.linkLabel = 'Quick add ...';
+          $scope.linkLabel = 'Quick add';
         }
 
         $scope.add = function () {
@@ -6770,7 +6770,7 @@ var termNameComplete =
             $scope.placeholder =
               $.map(results, function (data) {
                 return data.name;
-              }).join(" or ") + " ...";
+              }).join(" or ") + "...";
           });
         }
 

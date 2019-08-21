@@ -55,7 +55,7 @@ $total_annotation_count
     <div>
     <select name="reason" ng-model="data.reason"
             ng-options="r as r for r in noAnnotationReasons">
-      <option value="">Please choose a reason ...</option>
+      <option value="">Choose a reason...</option>
     </select>
     </div>
     <div>
@@ -64,7 +64,7 @@ $total_annotation_count
     <input type="hidden" name="reasonText" value="{{data.reason}}"/>
 % # reason if "Other" is chosen from the <select>
     <input ng-show="data.reason === 'Other'" size="30"
-           placeholder="Please type a reason here ..." 
+           placeholder="Type a reason"
            type="text" name="otherReason" ng-model="data.otherReason"/>
     </div>
   </div>
@@ -96,10 +96,10 @@ $total_annotation_count
 
 <div class="curs-inline-message-to-curators">
 % if ($current_user_is_admin) {
-  <a href="#" ng-click="editMessageToCurators()">Edit message to curators ...</a>
+  <a href="#" ng-click="editMessageToCurators()">Edit message to curators</a>
 % } else {
 %   if (defined $message_to_curators) {
-  <a href="#" ng-click="viewMessageToCurators()">Display message to curators ...</a>
+  <a href="#" ng-click="viewMessageToCurators()">Display message to curators</a>
 %   }
 % }
 </div>
@@ -108,7 +108,7 @@ $total_annotation_count
 
 % if ($annotation_count > 0) {
 <div id="curs-annotation-download">
-  <a href="<% $download_action %>">Download all annotation (Zip format) ...</a>
+  <a href="<% $download_action %>">Download all annotations (Zip format)...</a>
 </div>
 % }
 </div>

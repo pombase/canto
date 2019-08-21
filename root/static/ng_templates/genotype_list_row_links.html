@@ -2,40 +2,40 @@
   <div ng-repeat="annotationType in matchingAnnotationTypes">
     <a ng-class="{disabled: genotypeId == null }" ng-if="!read_only_curs"
        href="{{curs_root_uri + '/feature/genotype/annotate/' + genotypeId + '/start/' + annotationType.name + '/'}}">
-      Start a {{ annotationType.display_name }} annotation ...
+      Start a {{ annotationType.display_name }} annotation
     </a>
   </div>
   <div>
     <a ng-class="{disabled: genotypeId == null }" href="{{viewAnnotationUri}}">
-      View annotations ...
+      View annotations
     </a>
   </div>
   <div>
     <a confirm="This genotype has existing annotations.  Really edit?"
        confirm-if="annotationCount > 0"
        ng-class="{disabled: genotypeId == null }" ng-if="!read_only_curs"
-       ng-click="editGenotype(genotypeId)">Edit details ...</a>
+       ng-click="editGenotype(genotypeId)">Edit details</a>
   </div>
   <div ng-if="!read_only_curs">
     <a ng-show="alleleCount == 1"
       ng-class="{disabled: genotypeId == null }"
-      ng-click="editAllele(genotypeId)">Copy and edit ...</a>
+      ng-click="editAllele(genotypeId)">Copy and edit</a>
     <a ng-show="alleleCount != 1"
       ng-class="{disabled: genotypeId == null }"
-      href="{{curs_root_uri + '/' + genotypeManagePath + '#/duplicate/' + genotypeId}}">Copy and edit ...</a>
+      href="{{curs_root_uri + '/' + genotypeManagePath + '#/duplicate/' + genotypeId}}">Copy and edit</a>
   </div>
   <div ng-if="!read_only_curs">
     <a ng-class="{disabled: genotypeId == null }"
-       ng-click="editBackground(genotypeId)">Add/edit background ...</a>
+       ng-click="editBackground(genotypeId)">Add/edit background</a>
   </div>
   <div ng-if="showNoteEdit()">
     <a ng-class="{disabled: genotypeId == null }"
-       ng-click="editComment(genotypeId)">Add/edit new note...</a>
+       ng-click="editComment(genotypeId)">Add/edit new note</a>
   </div>
   <div title="{{deleteTitle}}">
     <a ng-class="{disabled: genotypeId == null || !canDelete}"
        ng-if="!read_only_curs"
        confirm="Are you sure you want to remove this genotype from your session?"
-       ng-click="deleteGenotype(genotypeId)">Delete ...</a>
+       ng-click="deleteGenotype(genotypeId)">Delete</a>
   </div>
 </div>

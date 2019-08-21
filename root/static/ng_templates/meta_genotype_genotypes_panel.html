@@ -1,7 +1,7 @@
 <div>
     <div ng-if="!data.allOrganisms">
         <img ng-src="{{app_static_path + '/images/spinner.gif'}}" />
-        loading genes ...
+        Loading genes...
     </div>
     <div ng-if="data.allOrganisms">
         <div ng-if="data.pathogenOrganisms.length != 0">

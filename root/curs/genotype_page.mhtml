@@ -25,7 +25,7 @@ Actions
       <a title="<% $title %>" href="<% $action_path %>">
 %   }
       <span class="annotation-type">
-Add a new <% $type_display_name %> for this genotype ...
+Add a new <% $type_display_name %> for this genotype
       </span>
 %   if (!$annotation_type->{disabled}) {
       </a>
@@ -109,10 +109,10 @@ Description
     <div>
       <a confirm="This genotype has existing annotations.  Really edit?"
          confirm-if="annotationCount > 0"
-         ng-click="editGenotype(<% $genotype->genotype_id() %>)">Edit ...</a>
+         ng-click="editGenotype(<% $genotype->genotype_id() %>)">Edit</a>
     </div>
     <div>
-      <a href="<% $duplicate_url %>">Duplicate ...</a>
+      <a href="<% $duplicate_url %>">Duplicate</a>
     </div>
 % }
   </div>

@@ -7,7 +7,7 @@ $model
     <div class="col-sm-3 col-md-3">
         <div>
           <h3>
-            View ...
+            View
           </h3>
           <ul>
             <li>
@@ -29,7 +29,7 @@ $model
     </div>
     <div class="col-sm-3 col-md-3">
         <h3>
-          Add ...
+          Add
         </h3>
         <div>
           <ul>
@@ -48,7 +48,7 @@ $model
 % if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
     <div class="col-sm-6 col-md-6">
         <h3>
-          Tools ...
+          Tools
         </h3>
         <div>
           <ul>
