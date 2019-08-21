@@ -275,7 +275,7 @@ Short help to be soon initially to users when they begin an annotation of this
 type.  (Required)
 
 ### more_help_text
-A longer help text shown when the user clicks "more ..." under the help_text.
+A longer help text shown when the user clicks "more..." under the help_text.
 (Optional)
 
 ### detailed_help_path

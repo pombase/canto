@@ -1,6 +1,6 @@
 <span>
   <span ng-show="termCount == null">
-    <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img> Loading ...
+    <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img> Loading...
   </span>
   <span ng-hide="termCount == null">
     <span ng-show="termCount == 0" style="font-weight: bold">
@@ -14,7 +14,7 @@
       <span ng-show="allTerms.length > 0">
         <select class="form-control" ng-model="chosenTerm"
                 ng-options="term.name for term in allTerms">
-          <option value="">Choose a term ...</option>
+          <option value="">Choose a term...</option>
         </select>
       </span>
     </span>

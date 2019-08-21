@@ -1,10 +1,10 @@
 <span class="curs-feature-chooser">
   <span ng-hide="features">
-Loading ...
+Loading...
   </span>
 
     <select class="form-control" ng-model="chosenFeatureId">
-      <option value="">Choose a {{featureType}} ...</option>
+      <option value="">Choose a {{featureType}}...</option>
       <option ng-repeat="feature in features track by feature.feature_id"
               ng-value="{{feature.feature_id}}"
               ng-bind-html="feature | featureChooserFilter | encodeAlleleSymbols | toTrusted">
