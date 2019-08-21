@@ -609,14 +609,14 @@ sub get_config
   my $suffix = $ENV{"${uc_app_name}_CONFIG_LOCAL_SUFFIX"};
 
   my $file_name = "$lc_app_name.yaml";
-  my $config = __PACKAGE__->new([$file_name], $upgrading);
+  my @file_names = ($file_name);
 
   if (defined $suffix) {
     my $local_file_name = "${lc_app_name}_$suffix.yaml";
-
-    $config->merge_config([$local_file_name], $upgrading);
-    $config->setup();
+    push @file_names, $local_file_name;
   }
+
+  my $config = __PACKAGE__->new(\@file_names, $upgrading);
 
   return $config;
 }
