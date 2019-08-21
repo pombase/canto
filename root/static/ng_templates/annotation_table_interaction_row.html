@@ -34,7 +34,8 @@
     {{annotation.term_name}}
   </td>
   <td ng-if="!data.hideColumns.extension">
-    <extension-display extension="annotation.extension"></extension-display>
+    <extension-display extension="annotation.extension" hide-relation-names="{{hideRelationNames}}">
+    </extension-display>
   </td>
   <td ng-if="!data.hideColumns.qualifiers">
     {{annotation.qualifiersString}}

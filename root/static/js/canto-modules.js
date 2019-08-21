@@ -2059,16 +2059,23 @@ function openExtensionBuilderDialog($uibModal, extension, termId, featureDisplay
 }
 
 
-function extensionAsString(extension, displayMode) {
+function extensionAsString(extension, displayMode, hideRelation) {
   return $.map(extension,
     function (orPart) {
       return $.map(orPart,
         function (andPart) {
-          return andPart.relation + '(' +
-            (displayMode ?
-             andPart.rangeDisplayName || andPart.rangeValue :
-             andPart.rangeValue) +
-            ')';
+          var retVal = '';
+
+          if (!hideRelation) {
+            retVal += andPart.relation + '(';
+          }
+          retVal += (displayMode ?
+                     andPart.rangeDisplayName || andPart.rangeValue :
+                     andPart.rangeValue);
+          if (!hideRelation) {
+            retVal += ')';
+          }
+          return retVal;
         }).join(', ');
     }).join('| ');
 }
@@ -2201,7 +2208,7 @@ var extensionManualEdit =
       template: '<div> <textarea ng-model="text" rows="4" cols="65"></textarea> </div>',
       link: function ($scope) {
         $scope.currentError = "";
-        $scope.text = extensionAsString($scope.extension, false);
+        $scope.text = extensionAsString($scope.extension, false, false);
 
         $scope.$watch('text',
           function () {
@@ -2754,6 +2761,7 @@ var extensionDisplay =
       scope: {
         extension: '=',
         showDelete: '@',
+        hideRelationNames: '@',
       },
       restrict: 'E',
       replace: true,
@@ -2776,6 +2784,7 @@ var extensionOrGroupDisplay =
         showDelete: '@',
         editable: '@',
         isFirst: '@',
+        hideRelationNames: '@',
       },
       restrict: 'E',
       replace: true,
@@ -6107,6 +6116,7 @@ var annotationEditDialogCtrl =
     $scope.chooseFeatureType = null;
     $scope.organisms = [];
     $scope.selectedOrganism = args.annotation.organism;
+    $scope.hideRelationNames = false;
 
     $scope.models = {
       chosenSuggestedTerm: null,
@@ -6193,6 +6203,8 @@ var annotationEditDialogCtrl =
       .then(function (annotationType) {
         $scope.annotationType = annotationType;
         $scope.annotation.feature_type = annotationType.feature_type;
+
+        $scope.hideRelationNames = annotationType.hide_extension_relations
 
         if (annotationType.category === 'interaction') {
           $scope.chooseFeatureType = 'genotype';
@@ -6426,7 +6438,12 @@ var annotationEditDialogCtrl =
                          }),
                   function(annotation) {
                     var displayString = annotation.term_name;
-                    var extension = extensionAsString(annotation.extension, true);
+                    var hideExtensionRelations = false;
+                    if ($scope.annotationType.hide_extension_relations) {
+                      hideExtensionRelations = true;
+                    }
+                    var extension =
+                      extensionAsString(annotation.extension, true, hideExtensionRelations);
 
                     if (extension) {
                       displayString += ' - ' + extension
@@ -7064,6 +7081,7 @@ var annotationTableRow =
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.multiOrganismMode = false;
         $scope.sessionState = 'UNKNOWN';
+        $scope.hideRelationNames = false;
 
         CursSessionDetails.get()
           .then(function (sessionDetails) {
@@ -7122,6 +7140,7 @@ var annotationTableRow =
         annotationTypePromise
           .then(function (annotationType) {
             $scope.annotationType = annotationType;
+            $scope.hideRelationNames = annotationType.hide_extension_relations;
           });
 
         CantoConfig.get('instance_organism').then(function (results) {

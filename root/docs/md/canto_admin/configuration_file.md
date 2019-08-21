@@ -321,6 +321,10 @@ selected in the interaction dialog, any phenotypes annotated for that
 genotype will be shown to the user.  If unset, no suggestions will be
 shown.
 
+### hide_extension_relations
+If 1, show the extension value (extension range) but not the relation.
+(default: 0)
+
 ### broad_term_suggestions
 A few comma separated high level or broad term names for use in help text.
 eg. for molecular function: "transporter, transferase activity"  (Required
