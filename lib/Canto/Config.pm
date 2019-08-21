@@ -131,7 +131,17 @@ sub merge_config
   for my $new_config (map { my ($file_name, $config) = %$_; $config } @$cfg) {
     if (defined $new_config) {
       my $merge = Hash::Merge->new('RIGHT_PRECEDENT');
+
+      my $new_available_annotation_type_list =
+        delete $new_config->{available_annotation_type_list};
+
       my $new = $merge->merge({%$self}, $new_config);
+
+      if (defined $new_available_annotation_type_list) {
+        # special case: replace rather than append the new available_annotation_type_list
+        $new->{available_annotation_type_list} = $new_available_annotation_type_list;
+      }
+
       %$self = %$new;
     } else {
       # empty file returns undef
