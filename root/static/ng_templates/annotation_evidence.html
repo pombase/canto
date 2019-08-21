@@ -1,6 +1,6 @@
 <div class="curs-evidence-directive">
   <div ng-class="{ 'has-error': !isValidEvidenceCode() }">
-    <select ng-if="evidenceCodes.length != 0" class="form-control"
+    <select ng-show="evidenceCodes.length != 0" class="form-control"
             ng-model="evidenceCode">
       <option value="">{{annotationType.category == 'interaction' ? 'Choose genetic interaction type...' : 'Choose evidence code...'}}</option>
       <option ng-repeat="code in evidenceCodes"
