@@ -16,7 +16,7 @@ with <% $term_ontid %> using <% $evidence_code %>
   </div>
 
   <div class="upload-genes-link">
-    <a href="<% $upload_path %>">Add more genes from <% $pub->uniquename() %> ...</a>
+    <a href="<% $upload_path %>">Add more genes from <% $pub->uniquename() %></a>
   </div>
 </div>
 

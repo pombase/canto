@@ -17,7 +17,7 @@ were made during this session but no further changes are possible.
     Actions
   </div>
   <div class="curs-box-body">
-    <a href="<% $review_session_uri %>">Review session ...</a>
+    <a href="<% $review_session_uri %>">Review session</a>
   </div>
 </div>
 

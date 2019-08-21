@@ -7,7 +7,7 @@ $class_info
 
 <div class="object_sub_action">
   <a href="<% $c->uri_for('/curs/' . $object->curs_key()) %>">
-    Enter this curation session ...
+    Enter this curation session
   </a>
 </div>
 </&>
@@ -18,9 +18,9 @@ $class_info
   <button href="<% $c->uri_for('/tools/send_session/' . $curs_key) %>"
           class="btn btn-primary" type="button" id="curs-pub-send-session-popup-dialog">\
 %   if ($session_sent) {
-Resend session to curator ...\
+Resend session to curator\
 %   } else {
-Send session to curator ...\
+Send session to curator\
 %   }
   </button>
 </div>

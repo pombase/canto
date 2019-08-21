@@ -4,7 +4,7 @@
     <form ng-hide="searching || pubResults && pubResults.length > 0"
           name="cursUserPaperLookupEmail">
       <input ng-model="emailAddress" name="email" type="email" size="30"
-             placeholder="Type an email address ...">
+             placeholder="Type an email address">
       <span class="error" ng-show="cursUserPaperLookupEmail.email.$error.email">
         Not valid email</span>
 
@@ -17,7 +17,7 @@
     <div ng-show="pubResults">
       <a ng-if="emailAddress.length > 0 && is_admin_user"
          href="{{application_root}}/view/object/person/{{emailAddress}}?model=track">
-        Person page (admin only) ...
+        Person page (admin only)
       </a>
       <div ng-show="pubResults.length == 0 && emailAddress.length > 0">
         No publications found

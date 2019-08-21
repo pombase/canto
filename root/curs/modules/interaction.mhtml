@@ -8,7 +8,7 @@ $feature
      annotation-type-name="<% $annotation_type_name %>" id="curs-interaction">
   <div ng-show="data.evidenceConfirmed" class="curs-box">
     <div class="curs-box-title">
-      Select the gene or genes that interact with <% $feature_display_name %> ...
+      Select the gene or genes that interact with <% $feature_display_name %>
 <& /curs/inline_help.mhtml, key => "${annotation_type_name}_select_gene" &>
     </div>
     <div class="curs-box-body">

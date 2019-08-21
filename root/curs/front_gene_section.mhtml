@@ -42,9 +42,9 @@ Annotate genes
   <div class="feature-list-action" style="margin-bottom: 20px;">
     <a href="<% $edit_path %>">
 %   if ($multi_organism_mode) {
-Delete or edit genes and organisms list ...
+Delete or edit genes and organisms list
 %   } else {
-Edit gene list ...
+Edit gene list
 %   }
     </a>
   </div>
@@ -61,17 +61,17 @@ Annotate genotypes
   </div>
 %   if ($pathogen_host_mode) {
   <div class="feature-list-action">
-    <a href="<% $pathogen_genotype_manage_url %>"><% $read_only_curs ? 'View pathogen genotypes ...' : 'Pathogen genotype management ...' %></a>
+    <a href="<% $pathogen_genotype_manage_url %>"><% $read_only_curs ? 'View pathogen genotypes' : 'Pathogen genotype management' %></a>
   </div>
   <div class="feature-list-action">
-    <a href="<% $host_genotype_manage_url %>"><% $read_only_curs ? 'View host genotypes ...' : 'Host genotype management ...' %></a>
+    <a href="<% $host_genotype_manage_url %>"><% $read_only_curs ? 'View host genotypes' : 'Host genotype management' %></a>
   </div>
   <div class="feature-list-action">
-    <a href="<% $metagenotype_manage_url %>"><% $read_only_curs ? 'View metagenotypes ...' : 'Metagenotype management ...' %></a>
+    <a href="<% $metagenotype_manage_url %>"><% $read_only_curs ? 'View metagenotypes' : 'Metagenotype management' %></a>
   </div>
 %   } else {
   <div class="feature-list-action">
-    <a href="<% $genotype_manage_url %>"><% $read_only_curs ? 'View genotypes ...' : 'Genotype management ...' %></a>
+    <a href="<% $genotype_manage_url %>"><% $read_only_curs ? 'View genotypes' : 'Genotype management' %></a>
   </div>
 %   }
 % }

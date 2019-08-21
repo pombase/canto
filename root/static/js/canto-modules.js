@@ -3129,7 +3129,7 @@ var conditionPicker =
               minLength: 2,
               fieldName: 'curs-allele-condition-names',
               allowSpaces: true,
-              placeholderText: 'Type a condition ...',
+              placeholderText: 'Type a condition',
               tagSource: fetch_conditions,
               autocomplete: {
                 focus: ferret_choose.show_autocomplete_def,
@@ -6187,7 +6187,7 @@ var annotationQuickAdd =
         $scope.read_only_curs = CantoGlobals.read_only_curs;
 
         if (!$scope.linkLabel) {
-          $scope.linkLabel = 'Quick add ...';
+          $scope.linkLabel = 'Quick add';
         }
 
         $scope.add = function () {

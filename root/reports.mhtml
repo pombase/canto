@@ -4,7 +4,7 @@ $model
 
 <div>
   <h3>
-    Reports ...
+    Reports
   </h3>
   <& /report_gen.mhtml, report_conf => $all_reports_conf, model => $model &>
 </div>

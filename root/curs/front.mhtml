@@ -96,10 +96,10 @@ $total_annotation_count
 
 <div class="curs-inline-message-to-curators">
 % if ($current_user_is_admin) {
-  <a href="#" ng-click="editMessageToCurators()">Edit message to curators ...</a>
+  <a href="#" ng-click="editMessageToCurators()">Edit message to curators</a>
 % } else {
 %   if (defined $message_to_curators) {
-  <a href="#" ng-click="viewMessageToCurators()">Display message to curators ...</a>
+  <a href="#" ng-click="viewMessageToCurators()">Display message to curators</a>
 %   }
 % }
 </div>

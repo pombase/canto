@@ -33,12 +33,12 @@
 
     <span class="curs-genotype-comment-indicator"
           ng-if="userIsAdmin && genotype.comment && (genotype.alleles.length == 1 || !notesOnSingleAlleleGenotypesOnly)">
-      <a title="{{genotype.comment}} (click to edit)" ng-click="editComment()">new note ...</a>
+      <a title="{{genotype.comment}} (click to edit)" ng-click="editComment()">new note</a>
     </span>
 
     <span class="curs-genotype-comment-indicator"
           ng-if="userIsAdmin && firstLocus.comment">
-      <a title="{{firstLocus.comment}}" ng-click="viewAlleleComment(genotype.alleles[0])">note ...</a>
+      <a title="{{firstLocus.comment}}" ng-click="viewAlleleComment(genotype.alleles[0])">note</a>
     </span>
   </td>
   <td rowspan="{{genotype.alleles.length}}" ng-hide="columnsToHide.strain">{{ strain }}</td>
@@ -55,7 +55,7 @@
   <td rowspan="{{genotype.alleles.length}}"
       ng-if="navigateOnClick == 'true'" class="table-row-actions">
     <a href="{{detailsUrl}}">
-      <span style="white-space: nowrap">Details ...</span>
+      <span style="white-space: nowrap">Details</span>
     </a>
   </td>
   <td style="width: 0; border: 0px; padding: 0; margin: 0; background-color: white;">
@@ -95,7 +95,7 @@
 
       <span class="curs-genotype-comment-indicator"
             ng-if="userIsAdmin && currentAllele.comment">
-        <a title="{{currentAllele.comment}}" ng-click="viewAlleleComment(currentAllele)">note ...</a>
+        <a title="{{currentAllele.comment}}" ng-click="viewAlleleComment(currentAllele)">note</a>
       </span>
     </td>
   </tr>
