@@ -6869,6 +6869,7 @@ var annotationTableCtrl =
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.app_static_path = CantoGlobals.app_static_path;
         $scope.curs_session_state = CantoGlobals.curs_session_state;
+        $scope.flyBaseMode = CantoGlobals.flybase_mode;
 
         $scope.isActiveSession = isActiveSession($scope.curs_session_state);
 

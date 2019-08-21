@@ -47,7 +47,10 @@
               <th ng-if="!data.hideColumns.qualifiers">Qualifiers</th>
               <th ng-if="!data.hideColumns.term_suggestion">Term suggestion</th>
               <th ng-if="!data.hideColumns.submitter_comment">Comment</th>
-              <th ng-if="!data.hideColumns.extension">Annotation extension</th>
+              <th ng-if="!data.hideColumns.extension">
+                <span ng-show="flyBaseMode">Phenotype extensions</span>
+                <span ng-hide="flyBaseMode">Annotation extension</span>
+              </th>
               <th ng-if="!data.hideColumns.curator">Curator</th>
             </tr>
           </thead>
@@ -70,7 +73,10 @@
               <th ng-if="multiOrganismMode">Taxon Id B</th>
               <th>Term ID</th>
               <th>Phenotype</th>
-              <th ng-if="!data.hideColumns.extension">Annotation extension</th>
+              <th ng-if="!data.hideColumns.extension">
+                <span ng-show="flyBaseMode">Phenotype extensions</span>
+                <span ng-hide="flyBaseMode">Annotation extension</span>
+              </th>
               <th ng-if="!data.hideColumns.qualifiers">Qualifiers</th>
               <th ng-if="!data.hideColumns.submitter_comment">Comment</th>
               <th ng-if="!data.hideColumns.curator">Curator</th>
