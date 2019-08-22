@@ -176,7 +176,11 @@ eg. "is_a(GO:0055085)"];
           }
         }
 
-        push @{$extra_subsets_to_store{$termid}}, $rel;
+        $extra_subsets_to_store{$termid} //= [];
+
+        if (!grep { $_ eq $rel } @{$extra_subsets_to_store{$termid}}) {
+          push @{$extra_subsets_to_store{$termid}}, $rel;
+        }
       }
     }
   }
