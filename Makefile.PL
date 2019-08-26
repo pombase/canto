@@ -52,7 +52,7 @@ requires 'DBIx::Class::ResultSet::Data::Pageset' => 0.06;
 requires 'DBIx::Class::Schema';
 requires 'DBIx::Class::Schema::Loader' => 0.07046;
 requires 'Data::Compare' => 1.25;
-requires 'Data::Dumper' => 2.161;
+requires 'Data::Dumper';
 requires 'Data::JavaScript::Anon' => 1.03;
 requires 'Data::Rmap' => 0.64;
 requires 'Email::MIME' => 1.937;
