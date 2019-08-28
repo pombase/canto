@@ -2,7 +2,7 @@
   <span ng-repeat="orGroup in extension">
     <extension-or-group-display is-first="{{$first}}" editable="false" extension="extension"
                                 or-group="orGroup" show-delete="{{showDelete}}"
-                                hide-relation-names="{{hideRelationNames}}">
+                                hide-relation-names="hideRelationNames">
     </extension-or-group-display>
     <span ng-show="!$last">| </span>
   </span>
