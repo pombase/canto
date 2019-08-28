@@ -90,7 +90,7 @@
         <td>
           <div ng-if="filteredFeatures && filteredFeatures.length != 0">
           <extension-display ng-if="annotation.extension.length > 0" extension="annotation.extension"
-                             hide-relation-names="{{hideRelationNames}}">
+                             hide-relation-names="hideRelationNames">
           </extension-display>
           <span ng-show="matchingConfigurations.length > 0 || annotation.extension.length > 0">
             <button class="btn btn-default btn-xs"

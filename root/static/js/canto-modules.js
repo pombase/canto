@@ -2761,7 +2761,7 @@ var extensionDisplay =
       scope: {
         extension: '=',
         showDelete: '@',
-        hideRelationNames: '@',
+        hideRelationNames: '=',
       },
       restrict: 'E',
       replace: true,
@@ -2784,7 +2784,7 @@ var extensionOrGroupDisplay =
         showDelete: '@',
         editable: '@',
         isFirst: '@',
-        hideRelationNames: '@',
+        hideRelationNames: '=',
       },
       restrict: 'E',
       replace: true,
@@ -2802,6 +2802,13 @@ var extensionOrGroupDisplay =
                 });
             }
           });
+
+        $scope.isHiddenRelName = function (relName) {
+          return $.grep($scope.hideRelationNames,
+                        function(hideRelName) {
+                          return hideRelName == relName;
+                        });
+        };
 
         $scope.deleteAndGroup = function (andGroup) {
           if ($scope.showDelete) {
@@ -6116,7 +6123,7 @@ var annotationEditDialogCtrl =
     $scope.chooseFeatureType = null;
     $scope.organisms = [];
     $scope.selectedOrganism = args.annotation.organism;
-    $scope.hideRelationNames = false;
+    $scope.hideRelationNames = [];
 
     $scope.models = {
       chosenSuggestedTerm: null,
@@ -6204,7 +6211,7 @@ var annotationEditDialogCtrl =
         $scope.annotationType = annotationType;
         $scope.annotation.feature_type = annotationType.feature_type;
 
-        $scope.hideRelationNames = annotationType.hide_extension_relations
+        $scope.hideRelationNames = annotationType.hide_extension_relations || [];
 
         if (annotationType.category === 'interaction') {
           $scope.chooseFeatureType = 'genotype';
@@ -7082,7 +7089,7 @@ var annotationTableRow =
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.multiOrganismMode = false;
         $scope.sessionState = 'UNKNOWN';
-        $scope.hideRelationNames = false;
+        $scope.hideRelationNames = [];
 
         CursSessionDetails.get()
           .then(function (sessionDetails) {
@@ -7141,7 +7148,7 @@ var annotationTableRow =
         annotationTypePromise
           .then(function (annotationType) {
             $scope.annotationType = annotationType;
-            $scope.hideRelationNames = annotationType.hide_extension_relations;
+            $scope.hideRelationNames = annotationType.hide_extension_relations || [];
           });
 
         CantoConfig.get('instance_organism').then(function (results) {
