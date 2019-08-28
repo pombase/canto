@@ -2807,7 +2807,7 @@ var extensionOrGroupDisplay =
           return $.grep($scope.hideRelationNames,
                         function(hideRelName) {
                           return hideRelName == relName;
-                        });
+                        }).length > 0;
         };
 
         $scope.deleteAndGroup = function (andGroup) {
