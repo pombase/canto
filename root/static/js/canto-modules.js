@@ -3131,7 +3131,7 @@ canto.controller('InteractionWorkflowCtrl',
 
 
 var annotationEvidence =
-  function (AnnotationTypeConfig, CantoConfig, CursGeneList, CantoService, $uibModal) {
+  function (AnnotationTypeConfig, CantoConfig, CursGeneList, CantoService, $uibModal, toaster) {
     var directive = {
       scope: {
         evidenceCode: '=',
@@ -3289,7 +3289,7 @@ var annotationEvidence =
 
 canto.directive('annotationEvidence',
                 ['AnnotationTypeConfig', 'CantoConfig', 'CursGeneList', 'CantoService',
-                 '$uibModal',
+                 '$uibModal', 'toaster',
                  annotationEvidence]);
 
 var conditionPicker =
