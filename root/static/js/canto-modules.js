@@ -3245,6 +3245,25 @@ var annotationEvidence =
             $scope.validEvidence = $scope.isValidCodeAndWith();
           });
 
+        function setTermEvidence(termData) {
+          var termEvCodes = [];
+
+          $.map(termData.subset_ids, function(subsetId) {
+            var evCodes = $scope.annotationType.term_evidence_codes[subsetId];
+
+            if (evCodes) {
+              $.map(evCodes, function(evCode) {
+                if ($.inArray(termEvCodes, evCode)) {
+                  termEvCodes.push(evCode);
+                }
+              });
+
+              termEvCodes.sort();
+              $scope.evidenceCodes = termEvCodes;
+            }
+          });
+        }
+
         $scope.$watch('annotationTermOntid',
           function (annotationTermOntid) {
             $scope.evidenceCodes = $scope.defaultEvidenceCodes;
@@ -3258,26 +3277,7 @@ var annotationEvidence =
                                   })
                 .then(function (termData) {
                   $scope.annotationTermData = termData;
-                  var termEvCodes = [];
-                  $.map(termData.subset_ids,
-                        function(subset_id) {
-                          var evCodes = $scope.annotationType.term_evidence_codes[subset_id];
-
-                          if (evCodes) {
-                            $.map(evCodes,
-                                  function(evCode) {
-                                    if (($.grep(termEvCodes,
-                                                function(testEvCode) {
-                                                  return testEvCode == evCode;
-                                                })).length == 0) {
-                                      termEvCodes.push(evCode);
-                                    }
-                                  });
-
-                            termEvCodes.sort();
-                            $scope.evidenceCodes = termEvCodes;
-                          }
-                        });
+                  setTermEvidence(termData);
                 })
             }
           });
