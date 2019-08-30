@@ -164,9 +164,10 @@ that are configured with the namespace "fission_yeast_phenotype":
 
     namespace_term_evidence_codes:
       fission_yeast_phenotype:
-        "is_a(FYPO:0001985)":
-          - Cell growth assay
-          - Chromatin immunoprecipitation experiment
+        - constraint: "is_a(FYPO:0001985)"
+          evidence_codes:
+           - Cell growth assay
+           - Chromatin immunoprecipitation experiment
 
 ### available_annotation_type_list
 List of possible annotation type and their configuration details.
@@ -288,19 +289,21 @@ list is added to the `evidence_codes` list.
 
 ### term_evidence_codes
 Used to restrict the visible evidence codes based on a currently
-selected term (if any).  The keys are used for matching the term.  If
+selected term (if any).  The `constraint` values are used for matching the term.  If
 the current term is a descendent of the term before the "-" in the key
 and not a descendent of the terms to the right of the "-" the given
 evidence codes are shown to the user.  The excluded terms to the right
 of the "-" are optional.
 
+The first matching configuration is used.
 If the current term doesn't match any of the keys in `term_evidence_codes`,
 the default evidence codes from `evidence_codes` are displayed.
 
 example:
 
     term_evidence_codes:
-      "is_a(FYPO:0001985)":
+      - constraint: "is_a(FYPO:0001985)"
+        evidence_codes:
         - Cell growth assay
         - Chromatin immunoprecipitation experiment
         - Chromatography evidence
@@ -308,7 +311,8 @@ example:
 or:
 
     term_evidence_codes:
-      "is_a(FYPO:0001985)-is_a(FYPO:0000045)&is_a(FYPO:0000150)":
+      - constraint: "is_a(FYPO:0001985)-is_a(FYPO:0000045)&is_a(FYPO:0000150)"
+        evidence_codes:
         - Cell growth assay
         - Chromatography evidence
 

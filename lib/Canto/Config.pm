@@ -301,8 +301,10 @@ sub setup
   my $namespace_term_evidence_codes = $self->{namespace_term_evidence_codes};
 
   if ($namespace_term_evidence_codes) {
-    while (my ($namespace, $details) = each %$namespace_term_evidence_codes) {
-      while (my ($restriction, $ev_codes) = each %$details) {
+    while (my ($namespace, $ev_configs) = each %$namespace_term_evidence_codes) {
+      for my $ev_config (@$ev_configs) {
+        my $restriction = $ev_config->{constraint};
+        my $ev_codes = $ev_config->{evidence_codes};
         map {
           my $new_ev_code = $_;
           if (!$self->{evidence_types}->{$new_ev_code}) {

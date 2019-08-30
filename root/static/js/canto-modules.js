@@ -3247,21 +3247,49 @@ var annotationEvidence =
 
         function setTermEvidence(termData) {
           var termEvCodes = [];
+          var subsetIds = termData.subset_ids;
 
-          $.map(termData.subset_ids, function(subsetId) {
-            var evCodes = $scope.annotationType.term_evidence_codes[subsetId];
+          $scope.evidenceCodes = null;
 
-            if (evCodes) {
-              $.map(evCodes, function(evCode) {
-                if ($.inArray(termEvCodes, evCode)) {
-                  termEvCodes.push(evCode);
-                }
-              });
+          function checkForRelAndTerm(relAndTerm) {
+            return $.inArray(relAndTerm, subsetIds) != -1;
+          }
 
-              termEvCodes.sort();
-              $scope.evidenceCodes = termEvCodes;
+          $.map(
+            $scope.annotationType.term_evidence_codes,
+            function(evConfig) {
+              var evConfigConstraint = evConfig.constraint;
+              var evConfigCodes = evConfig.evidence_codes;
+
+              if ($scope.evidenceCodes != null) {
+                return;
+              }
+
+              var includedRelAndTerm = null;
+              var excludedRelAndTerms = [];
+
+              if (evConfigConstraint.indexOf("-") == -1) {
+                includedRelAndTerm = evConfigConstraint;
+              } else {
+                var parts = evConfigConstraint.split("-", 2);
+                includedRelAndTerm = parts[0];
+                excludedRelAndTerms = parts[1].split(/[\-&]/);
+              }
+
+              if (
+                checkForRelAndTerm(includedRelAndTerm) &&
+                $.grep(excludedRelAndTerms, checkForRelAndTerm).length == 0
+              ) {
+                $scope.evidenceCodes = evConfigCodes;
+              }
             }
-          });
+          );
+
+          if ($scope.evidenceCodes) {
+            $scope.evidenceCodes.sort();
+          } else {
+            $scope.evidenceCodes = [];
+          }
         }
 
         $scope.$watch('annotationTermOntid',

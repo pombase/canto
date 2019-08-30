@@ -158,7 +158,7 @@ eg. "is_a(GO:0055085)"];
     my $term_evidence_codes = $annotation_type->{term_evidence_codes};
 
     if ($term_evidence_codes) {
-      for my $rel_and_termid (keys %{$term_evidence_codes}) {
+      for my $rel_and_termid (map { $_->{constraint} } @$term_evidence_codes) {
         my ($rel, $termid) = ();
 
         if ($rel_and_termid =~ /([\S\(]+)\((\S+)\)-(\S+)$/) {
