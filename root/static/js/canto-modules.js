@@ -2539,7 +2539,7 @@ canto.directive('extensionBuilder',
 
 
 var extensionRelationDialogCtrl =
-  function ($scope, $uibModalInstance, args, CursGeneList) {
+  function ($scope, $uibModalInstance, args, CursGeneList, toaster) {
     $scope.data = args;
     $scope.extensionRelation = args.extensionRelation;
     $scope.relationConfig = args.relationConfig;
@@ -2583,7 +2583,7 @@ var extensionRelationDialogCtrl =
   };
 
 canto.controller('ExtensionRelationDialogCtrl',
-  ['$scope', '$uibModalInstance', 'args', 'CursGeneList',
+  ['$scope', '$uibModalInstance', 'args', 'CursGeneList', 'toaster',
     extensionRelationDialogCtrl
   ]);
 
