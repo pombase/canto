@@ -74,7 +74,7 @@ a.disabled {
   float: right;
   clear: right;
   margin: 5px;
-  margin-bottom: 25px;
+  margin-bottom: 15px;
 }
 .docs th {
   text-align: left;
@@ -82,6 +82,11 @@ a.disabled {
 .docs table {
    width: auto;
    margin: 10px;
+}
+
+
+.docs .canto-other-instances li {
+  clear: both;
 }
 
 .canto-type-list-name {

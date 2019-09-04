@@ -29,22 +29,32 @@ databases.
       <div class="col-md-6">
         <h3>Canto in Use</h3>
         Canto is currently deployed for:
-        <ul>
+        <ul class="canto-other-instances">
           <li>
   <a href="http://curation.pombase.org/pombe" class="btn btn-primary visit">Visit...</a>
   <span class="organism-name">Schizosaccharomyces pombe</span> (fission yeast)
   at PomBase.
   Curate GO, phenotypes, interactions, protein modifications for inclusion in
-  <a href="http://www.pombase.org">PomBase</a>
+  <a href="http://www.pombase.org">PomBase</a>.
           </li>
           <li>
-  <a href="http://curation.pombase.org/kpas" class="btn btn-primary visit">Visit...</a>
-  <span class="organism-name">Komagataella pastoris</span> (formerly known as Pichia pastoris)
+  <a href="https://demo-canto.phi-base.org/" class="btn btn-primary visit">Visit ...</a>
+  <span>In collaboration with Rothamsted Research, we are extending
+  Canto to enable the curation of pathogen-host interaction
+  (multispecies) phenotypes and genotypes for <a href="http://www.phi-base.org">PHI-base</a></span>.
+          </li>
+          <li>
+  We are currently developing a Canto instance to support FlyBase
+  phenotype and genetic interaction annotation.
           </li>
           <li>
   <a href="http://curation.pombase.org/uniprot" class="btn btn-primary visit">Visit...</a>
   <span>Generic Gene Ontology Implementation: Curate GO annotations for proteins,
   using UniProtKB identifiers.</span>
+          </li>
+          <li>
+  <a href="http://curation.pombase.org/kpas" class="btn btn-primary visit">Visit...</a>
+  <span class="organism-name">Komagataella pastoris</span> (formerly known as Pichia pastoris)
           </li>
         </ul>
       </div>
