@@ -132,17 +132,19 @@ sub send_to_admin
     return;
   }
 
-  my $admin_address_key = 'admin_address';
-  my $admin_address = $email_config->{$admin_address_key};
+  my $admin_to_address = $email_config->{admin_address};
+  # the user the email should appear to be from
+  my $admin_from_address =
+    $email_config->{admin_from_address} // $email_config->{noreply_address};
 
-  if (!defined $admin_address) {
+  if (!defined $admin_to_address) {
     warn "admin email address not configured - email with subject " .
       "'$subject' not sent";
     return;
   }
 
-  $self->send(to => $admin_address,
-              from => $admin_address,
+  $self->send(to => $admin_to_address,
+              from => $admin_from_address,
               subject => $subject,
               body => $body);
 }
