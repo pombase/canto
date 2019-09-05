@@ -6629,6 +6629,18 @@ var annotationTableRow =
             newAnnotation, $scope.featureFilterDisplayName,
             true, true);
         };
+        
+        $scope.confirmDelete = function () {
+          var modal = openDeleteDialog(
+            $uibModal,
+            'Delete Annotation',
+            'Delete Annotation',
+            'Are you sure you want to delete this annotation?'
+          )
+          modal.result.then(function () {
+            $scope.deleteAnnotation();
+          });
+        }
 
         $scope.deleteAnnotation = function () {
           loadingStart();
