@@ -130,7 +130,7 @@ Genotypes for <% $gene->display_name() %> in this session
 
 <div class="clearall"/>
 
-<a href="<% $summary_url %>" type="button" class="btn btn-primary curs-back-button">&larr; <% $finish_text %></a>
+<genotype-and-summary-nav role="<% $gene->organism_details()->{pathogen_or_host} %>"></genotype-and-summary-nav>
 
 <annotation-table-list feature-type-filter="gene" feature-id-filter="<% $gene_id %>"
                        feature-filter-display-name="<% $gene->display_name() %>"></annotation-table-list>
