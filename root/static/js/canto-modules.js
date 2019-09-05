@@ -8385,6 +8385,26 @@ var editOrganisms = function ($window, EditOrganismsSvc, StrainsService, CantoGl
 canto.directive('editOrganisms', ['$window', 'EditOrganismsSvc', 'StrainsService', 'CantoGlobals', editOrganisms]);
 
 
+var genotypeAndSummaryNav = function () {
+  return {
+    scope: {
+      role: '@'
+    },
+    restrict: 'E',
+    templateUrl: app_static_path + 'ng_templates/genotype_and_summary_nav.html',
+    controller: 'genotypeAndSummaryNavCtrl',
+  };
+};
+
+var genotypeAndSummaryNavCtrl = function ($scope, CantoGlobals) {
+  $scope.summaryUrl = CantoGlobals.curs_root_uri;
+  $scope.genotypeManageUrl = CantoGlobals.curs_root_uri + '/' + getGenotypeManagePath($scope.role);
+}
+
+canto.controller('genotypeAndSummaryNavCtrl', ['$scope', 'CantoGlobals', genotypeAndSummaryNavCtrl]);
+
+canto.directive('genotypeAndSummaryNav', [genotypeAndSummaryNav]);
+
 
 var messageForCuratorsEditDialogCtrl =
   function ($scope, $uibModalInstance, toaster, CursSettings, args) {
