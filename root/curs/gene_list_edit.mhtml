@@ -22,9 +22,9 @@ var hostsWithNoGenes = <% $hosts_with_no_genes_js |n %>;
 <% $title %>
   </div>
   <div class="curs-box-body">
-
 % if ($pathogen_host_mode) {
-<edit-organisms></edit-organisms>
+    <p><b>Note:</b> PHI-Canto does not curate at taxonomic ranks lower than species. If you have entered UniProt identifiers that are at the strain or subspecies level, these identifiers may have been re-mapped to the nearest species rank. Please use the 'experimental strains' field to specify lower taxonomic ranks (strains, pathovars, subpsecies, etc.)</p>
+    <edit-organisms></edit-organisms>
 % } else {
   <form name="gene-edit" method="get" action="<% $edit_path %>">
 % if (scalar(@table_1_hashes) > 0 || scalar(@table_2_hashes) > 0) {
