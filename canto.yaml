@@ -2027,6 +2027,11 @@ help_text:
     inline: >
       Once you have selected a gene to annotate you will be presented with a
       set of annotation options
+  choose_genotype:
+    inline: >
+      Phenotypes annotations are connected to genotypes in Canto. Required
+      genotypes can be added upfront, or individually as required, for
+      each annotation depending on your preferred workflow.
   gene_page_choose_curation_type:
     inline: >
       These are the types of data you can annotate. Follow one of the links for more detailed instructions.
