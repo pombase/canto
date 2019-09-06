@@ -1258,6 +1258,43 @@ var simpleDialogCtrl =
 canto.controller('SimpleDialogCtrl',
   ['$scope', '$uibModalInstance', 'args', simpleDialogCtrl]);
 
+function openDeleteDialog($uibModal, title, heading, message) {
+  return $uibModal.open({
+    templateUrl: app_static_path + 'ng_templates/delete_dialog.html',
+    controller: 'DeleteDialogCtrl',
+    title: title,
+    resolve: {
+      args: function() {
+        return {
+          heading: heading,
+          message: message,
+        };
+      },
+    },
+    animate: false,
+    windowClass: "modal",
+    backdrop: 'static',
+  });
+}
+
+var DeleteDialogCtrl =
+  function ($scope, $uibModalInstance, args) {
+    $scope.heading = args.heading;
+    $scope.message = args.message;
+    
+    $scope.onDelete = function () {
+      $uibModalInstance.close('delete');
+    };
+
+    $scope.close = function () {
+      $uibModalInstance.dismiss('close');
+    };
+  };
+
+canto.controller(
+  'DeleteDialogCtrl',
+  ['$scope', '$uibModalInstance', 'args', DeleteDialogCtrl]
+);
 
 var pubmedIdStart =
   function ($http, toaster, CantoGlobals, CantoConfig) {
@@ -6592,6 +6629,18 @@ var annotationTableRow =
             newAnnotation, $scope.featureFilterDisplayName,
             true, true);
         };
+        
+        $scope.confirmDelete = function () {
+          var modal = openDeleteDialog(
+            $uibModal,
+            'Delete Annotation',
+            'Delete Annotation',
+            'Are you sure you want to delete this annotation?'
+          )
+          modal.result.then(function () {
+            $scope.deleteAnnotation();
+          });
+        }
 
         $scope.deleteAnnotation = function () {
           loadingStart();

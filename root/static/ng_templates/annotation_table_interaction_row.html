@@ -39,8 +39,7 @@
         <a ng-click="duplicate()">Copy and edit</a>
       </div>
       <div>
-        <a confirm="Are you sure you want to delete this annotation?"
-           ng-click="deleteAnnotation()">Delete</a>
+        <a title="Delete this annotation" ng-click="confirmDelete()">Delete</a>
       </div>
       <div ng-if="sessionState == 'APPROVAL_IN_PROGRESS'">
         <a ng-if="checked == 'no'" href="#" ng-click="setChecked($event)">Checked</a>
