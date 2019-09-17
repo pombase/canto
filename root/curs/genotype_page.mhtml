@@ -120,8 +120,7 @@ Description
 
 <div class="clearall"/>
 
-<button type="button" ng-click="backToGenotypes()"
-        class="btn btn-primary curs-back-button">&larr; Back to genotypes</button>
+<genotype-and-summary-nav role="<% $genotype->genotype_type($c->config()) %>"></genotype-and-summary-nav>
 
 <annotation-table-list feature-type-filter="genotype" feature-id-filter="<% $genotype_id %>"
                        feature-filter-display-name="<% $genotype->display_name($c->config()) %>"></annotation-table-list>
