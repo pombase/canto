@@ -160,7 +160,7 @@ if (defined $org_config) {
 my $st = $c->stash();
 
 my $gene_count = $st->{gene_count};
-my $finish_text = 'Back to summary';
+my $finish_text = 'Go to summary';
 my $read_only_curs = $st->{read_only_curs};
 my $pathogen_host_mode = $st->{pathogen_host_mode};
 
