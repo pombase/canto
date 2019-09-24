@@ -57,6 +57,7 @@ Genotypes from this publication
 % } else {
 Annotate genotypes
 % }
+    <& /curs/inline_help.mhtml, key => 'choose_genotype' &>
     </div>
   </div>
 %   if ($pathogen_host_mode) {

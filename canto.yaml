@@ -2027,6 +2027,12 @@ help_text:
     inline: >
       Once you have selected a gene to annotate you will be presented with a
       set of annotation options
+  choose_genotype:
+    inline: >
+      Add genotypes (including alleles, expression levels, and optional
+      background) to use in annotating phenotypes. You can add genotypes
+      individually as you go through the paper, or all at once before you
+      start adding phenotype annotations.
   gene_page_choose_curation_type:
     inline: >
       These are the types of data you can annotate. Follow one of the links for more detailed instructions.
