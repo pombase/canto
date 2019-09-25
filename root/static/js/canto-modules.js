@@ -6809,6 +6809,7 @@ var termNameComplete =
         $scope.typeMatch = re.exec($scope.annotationTypeName);
 
         if ($scope.typeMatch) {
+          $scope.placeholder = 'Start typing a term name, e.g. ';
           var split = $scope.typeMatch[1].split(/\s*\|\s*/);
           var promises =
             $.map(split,
@@ -6816,7 +6817,7 @@ var termNameComplete =
                 return CantoService.lookup('ontology', [termId], {});
               });
           $q.all(promises).then(function (results) {
-            $scope.placeholder =
+            $scope.placeholder +=
               $.map(results, function (data) {
                 return data.name;
               }).join(" or ") + "...";
