@@ -68,6 +68,19 @@ Choose curation type for <% $gene->display_name() %>:
 %     }
 %   }
 % }
+% if ($pathogen_host_mode) {
+%   my $organism_role = $gene->organism_details()->{pathogen_or_host};
+%   my $role_annotation_type_name = 'pathogen_phenotype';
+%   if ($organism_role eq 'host') {
+%     $role_annotation_type_name = 'host_phenotype';
+%   }
+    <li class="annotation-type">
+      <a href="#" ng-click="singleAlleleQuick('<% $gene->display_name() |n %>', '<% $gene->primary_identifier() |n %>', <% $gene->gene_id() |n%>, '<%$role_annotation_type_name%>', <% $taxon_id %>)">
+        Single allele phenotype
+      </a>
+      <help-icon key="gene_page_single_allele"></help-icon>
+    </li>
+% }
   </ul>
   </div>
 </div>
