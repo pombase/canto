@@ -1650,3 +1650,10 @@ a:not([href]) {
 .curs-summary-gene-name-container {
   display: block;
 }
+.curs-quick-links-list {
+  padding-left: 0;
+}
+.curs-quick-links-list > li {
+  list-style-type: circle;
+  color: grey;
+}
