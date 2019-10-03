@@ -4218,7 +4218,13 @@ var strainSelectorCtrl = function ($scope, CantoGlobals) {
   function computeStyleClass(className) {
     return className === undefined ? 'form-control' : className;
   }
-
+  
+  $scope.$watch('strains', function () {
+    if ($scope.strains && $scope.strains.length === 1) {
+      $scope.data.selectedStrain = $scope.strains[0];
+      $scope.strainChanged();
+    }
+  });
 };
 
 canto.directive('strainSelector', ['CantoGlobals', strainSelector]);
