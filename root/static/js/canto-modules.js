@@ -3330,6 +3330,7 @@ var alleleEditDialogCtrl =
     };
 
     $scope.userIsAdmin = CantoGlobals.current_user_is_admin;
+    $scope.pathogenHostMode = CantoGlobals.pathogen_host_mode;
 
     function processSynonyms() {
       $.map($scope.alleleData.synonyms || [],
