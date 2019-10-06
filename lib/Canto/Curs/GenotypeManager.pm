@@ -122,7 +122,13 @@ sub _allele_string_from_json
     push @group_names, (join ' / ',
                         sort
                         map {
-                          $_->long_identifier($config);
+                          my $gene = $_->gene();
+                          my $long_id = $_->long_identifier($config);
+                          if ($gene) {
+                            $gene->primary_identifier() . '-' . $long_id;
+                          } else {
+                            $long_id;
+                          }
                         } @{$diploid_groups{$group_name}});
   }
 
@@ -204,7 +210,7 @@ sub find_genotype
 
     next if scalar(@alleles) != scalar(@$search_alleles_data);
 
-    if ($search_allele_string eq $genotype->allele_string($self->config())) {
+    if ($search_allele_string eq $genotype->allele_string($self->config(), 1)) {
       return $genotype;
     }
   }

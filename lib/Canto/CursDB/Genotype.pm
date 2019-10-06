@@ -280,6 +280,7 @@ sub allele_string
 {
   my $self = shift;
   my $config = shift;
+  my $add_gene_primary_names = shift;
 
   my %diploid_groups = ();
 
@@ -307,7 +308,13 @@ sub allele_string
     push @group_names, (join ' / ',
                         sort
                         map {
-                          $_->long_identifier($config);
+                          my $long_id = $_->long_identifier($config);
+                          my $gene = $_->gene();
+                          if ($add_gene_primary_names && $gene) {
+                            $gene->primary_identifier() . '-' . $long_id;
+                          } else {
+                            $long_id;
+                          }
                         } @{$diploid_groups{$group_name}});
   }
 
