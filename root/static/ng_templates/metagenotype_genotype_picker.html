@@ -2,14 +2,12 @@
 <div ng-if="selectedOrganism">
     <div>
         <p class="metagenotype-genotype-shortcut">
-          <a href="{{genotypeShortcutUrl}}">Create a new {{organismType}} genotype</a>
+          <a href="{{genotypeShortcutUrl}}">Add another {{organismType}} genotype</a>
         </p>
         <div>
-            <div class="curs-box-title">Single locus genotypes</div>
-            <div ng-show="genotypes.single.length === 0">
-                <p>No Single locus genotypes created</p>
-            </div>
-            <div ng-if="genotypes.single.length > 0">
+          
+            <div ng-show="genotypes.single.length > 0">
+                <div class="curs-box-title">Single locus genotypes</div>
                 <genotype-simple-list-view
                     genotype-list="genotypes.single"
                     is-host="isHost"
@@ -18,11 +16,8 @@
                 </genotype-simple-list-view>
             </div>
 
-            <div class="curs-box-title">Multi-allele genotypes</div>
-            <div ng-show="genotypes.multi.length === 0">
-                <p>No Multi-allele genotypes created</p>
-            </div>
             <div ng-show="genotypes.multi.length > 0">
+                <div class="curs-box-title">Multi-allele genotypes</div>
                 <genotype-simple-list-view
                     genotype-list="genotypes.multi"
                     is-host="isHost"
