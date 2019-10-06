@@ -2917,7 +2917,9 @@ sub ws_add_strain_by_id : Chained('top') PathPart('ws/strain_by_id/add')
 
 sub ws_add_strain_by_name : Chained('top') PathPart('ws/strain_by_name/add')
 {
-  my ($self, $c, $taxon_id, $strain_name) = @_;
+  my ($self, $c, $taxon_id, @strain_name_parts) = @_;
+
+  my $strain_name = join '/', @strain_name_parts;
 
   my $st = $c->stash();
   my $schema = $st->{schema};
