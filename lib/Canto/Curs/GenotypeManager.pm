@@ -729,7 +729,14 @@ sub delete_metagenotype
     return "metagenotype $metagenotype_id has annotations - delete failed";
   }
 
+  my $host_genotype = $metagenotype->host_genotype();
+
   $metagenotype->delete();
+
+  if ($host_genotype->annotations()->count() == 0 &&
+        !$host_genotype->is_part_of_metagenotype()) {
+    $self->delete_genotype($host_genotype->genotype_id());
+  }
 
   return 0;
 }
