@@ -405,4 +405,5 @@ gene's name or systematic ID.
 
 ### do_not_annotate
 If true, don't show genotypes containing just this allele in the
-genotype selectors.
+genotype selectors.  And ignore alleles of this type when deciding if
+a genotype is single or multi allele.
