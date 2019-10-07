@@ -22,6 +22,13 @@ CREATE TABLE allele (
        gene integer REFERENCES gene(gene_id)
 );
 
+CREATE TABLE allele_note (
+       allele_note_id integer PRIMARY KEY,
+       allele integer REFERENCES allele(allele_id),
+       key text NOT NULL UNIQUE,
+       value text
+);
+
 CREATE TABLE allelesynonym (
        allelesynonym integer PRIMARY KEY,
        allele integer REFERENCES allele(allele_id),

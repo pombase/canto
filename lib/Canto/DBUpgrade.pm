@@ -760,6 +760,32 @@ CREATE TABLE metagenotype_temp (
 
     Canto::Track::curs_map($config, $track_schema, $update_proc);
   },
+
+  31 => sub {
+    my $config = shift;
+    my $track_schema = shift;
+
+    my $dbh = $track_schema->storage()->dbh();
+
+    my $update_proc = sub {
+      my $curs = shift;
+      my $curs_schema = shift;
+      my $curs_key = $curs->curs_key();
+
+      my $curs_dbh = $curs_schema->storage()->dbh();
+
+      $curs_dbh->do("
+CREATE TABLE allele_note (
+       allele_note_id integer PRIMARY KEY,
+       allele integer REFERENCES allele(allele_id),
+       key text NOT NULL UNIQUE,
+       value text
+);
+");
+    };
+
+    Canto::Track::curs_map($config, $track_schema, $update_proc);
+  },
 );
 
 sub upgrade_to
