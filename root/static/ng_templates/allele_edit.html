@@ -2,8 +2,11 @@
   <form name="cursAlleleEdit" class="curs-allele-edit-dialog modal-content">
     <div class="modal-header">
       <h4 class="modal-title">
-        <span ng-if="alleleData.display_name">
+        <span ng-if="alleleData.display_name && !isCopied">
           Editing {{alleleData.display_name}}
+        </span>
+        <span ng-if="alleleData.display_name && isCopied">
+          Editing a copy of {{alleleData.display_name}}
         </span>
         <span ng-if="!alleleData.display_name && alleleData.type != 'aberration'">
           Adding allele for {{ alleleData.gene_display_name }}

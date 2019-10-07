@@ -19,7 +19,7 @@
   <div ng-if="!read_only_curs">
     <a ng-show="alleleCount == 1"
       ng-class="{disabled: genotypeId == null }"
-      ng-click="editAllele(genotypeId)">Copy and edit</a>
+      ng-click="editAllele(genotypeId, true)">Copy and edit</a>
     <a ng-show="alleleCount != 1"
       ng-class="{disabled: genotypeId == null }"
       href="{{curs_root_uri + '/' + genotypeManagePath + '#/duplicate/' + genotypeId}}">Copy and edit</a>

@@ -3316,6 +3316,7 @@ var alleleEditDialogCtrl =
     $scope.alleleData = {};
     copyObject(args.allele, $scope.alleleData);
     $scope.taxonId = args.taxonId;
+    $scope.isCopied = args.isCopied;
     $scope.alleleData.primary_identifier = $scope.alleleData.primary_identifier || '';
     $scope.alleleData.name = $scope.alleleData.name || '';
     $scope.alleleData.description = $scope.alleleData.description || '';
@@ -3613,7 +3614,7 @@ function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotyp
     });
 }
 
-function makeAlleleEditInstance($uibModal, allele, taxonId) {
+function makeAlleleEditInstance($uibModal, allele, taxonId, isCopied) {
   return $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/allele_edit.html',
     controller: 'AlleleEditDialogCtrl',
@@ -3626,6 +3627,7 @@ function makeAlleleEditInstance($uibModal, allele, taxonId) {
         return {
           allele: allele,
           taxonId: taxonId,
+          isCopied: isCopied,
         };
       }
     },
@@ -4958,7 +4960,7 @@ var genotypeListRowLinksCtrl =
             '#/edit/' + genotypeId;
         };
 
-        $scope.editAllele = function (genotypeId) {
+        $scope.editAllele = function (genotypeId, isCopied) {
           var genotypePromise = CursGenotypeList.getGenotypeById(genotypeId);
 
           genotypePromise.then(function (genotype) {
@@ -4971,7 +4973,7 @@ var genotypeListRowLinksCtrl =
               delete allele.gene;
             }
             var editInstance =
-              makeAlleleEditInstance($uibModal, allele, genotype.organism.taxonid);
+              makeAlleleEditInstance($uibModal, allele, genotype.organism.taxonid, isCopied);
 
             editInstance.result.then(function (editResults) {
               var editedAllele = editResults.alleleData;
