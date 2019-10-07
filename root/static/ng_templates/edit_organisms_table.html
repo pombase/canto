@@ -40,11 +40,12 @@
           <td ng-if="o.genes.length == 0">
             <button ng-if="canRemoveHost(o)"
               title="Remove host"
-              class="btn-danger">X</button>
-            </button>
+              class="btn-danger"
+              ng-click="removeHost(o.taxonid)">X</button>
             <button ng-if="!canRemoveHost(o)"
               disabled="disabled"
-              title="Host can't be removed because it is used in a metagenotype">
+              title="Host can't be removed because it is used in a metagenotype"
+              ng-click="removeHost(o.taxonid)">
               <span class="gene-button-delete-text-disabled">X</span></button>
           </td>
         </tr>
