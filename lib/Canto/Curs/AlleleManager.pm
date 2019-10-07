@@ -351,4 +351,51 @@ sub create_simple_allele
   return $allele;
 }
 
+=head2 set_note
+
+ Usage   : $allele_manager->set_note($allele_primary_identifier, $key, $value);
+ Function: Add a note to an Allele.  If a note with $key as the key exists
+           replace the note.  If $value is undef, remove the note.
+ Args    : $allele_primary_identifier
+           $key - any string
+           $value - any string
+ Returns : nothing
+
+=cut
+
+sub set_note
+{
+  my $self = shift;
+  my $allele_primary_identifier = shift;
+  my $key = shift;
+  my $value = shift;
+
+  my $allele = $self->curs_schema()->resultset('Allele')
+    ->find({ primary_identifier => $allele_primary_identifier });
+
+  if (!$allele) {
+    die qw(can't find allele with primary_identifier "$allele_primary_identifier");
+  }
+
+  my $existing = $allele->allele_notes()->find({ key => $key });
+
+  if ($existing) {
+    if (defined $value) {
+      $existing->value($value);
+      $existing->update();
+    } else {
+      $existing->delete();
+    }
+  } else {
+    if (defined $value) {
+    $self->curs_schema()
+      ->create_with_type('AlleleNote',
+                         {
+                           allele => $allele->allele_id(),
+                           key => $key,
+                           value => $value,
+                         });
+    }
+  }
+}
 1;

@@ -94,6 +94,7 @@ test_psgi $app, sub {
                    'gene_systematic_id' => 'SPAC27D7.13c',
                    'comment' => undef,
                    'synonyms' => [],
+                   'notes' => [],
                  },
                  {
                    'display_name' => 'SPCC63.05delta',
@@ -109,6 +110,7 @@ test_psgi $app, sub {
                    'gene_systematic_id' => 'SPCC63.05',
                    'comment' => undef,
                    'synonyms' => [],
+                   'notes' => [],
                  }
                ],
                'display_name' => 'SPCC63.05delta ssm4KE',

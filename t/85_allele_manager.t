@@ -1,6 +1,7 @@
 use strict;
 use warnings;
-use Test::More tests => 17;
+use Test::More tests => 23;
+use Test::Deep;
 
 use Canto::TestUtil;
 use Canto::Curs::AlleleManager;
@@ -113,3 +114,75 @@ my $no_name_wildtype_check = $allele_manager->allele_from_json(
   'aaaa0007');
 
 is ($no_name_wildtype_check->name(), 'mot1+');
+
+
+## allele notes
+
+sub test_notes
+{
+  my $expected = shift;
+
+  my @db_notes = map {
+    {
+      key => $_->key(),
+      value => $_->value(),
+    };
+  } $new_allele->allele_notes()->all();
+
+  cmp_deeply(\@db_notes, $expected);
+}
+
+test_notes([]);
+
+$allele_manager->set_note($new_allele->primary_identifier(),
+                          'some_key', 'a value');
+$allele_manager->set_note($new_allele->primary_identifier(),
+                          'other_key', 'other value');
+
+test_notes([
+             {
+               'key' => 'some_key',
+               'value' => 'a value',
+             },
+             {
+               'key' => 'other_key',
+               'value' => 'other value',
+             }
+           ]);
+
+$allele_manager->set_note($new_allele->primary_identifier(),
+                          'some_key', 'changed value');
+test_notes([
+             {
+               'key' => 'some_key',
+               'value' => 'changed value',
+             },
+             {
+               'key' => 'other_key',
+               'value' => 'other value',
+             }
+           ]);
+
+# delete
+$allele_manager->set_note($new_allele->primary_identifier(),
+                          'some_key', undef);
+test_notes([
+             {
+               'key' => 'other_key',
+               'value' => 'other value',
+             }
+           ]);
+
+# delete again
+$allele_manager->set_note($new_allele->primary_identifier(),
+                          'some_key', undef);
+test_notes([
+             {
+               'key' => 'other_key',
+               'value' => 'other value',
+             }
+           ]);
+
+$allele_manager->set_note($new_allele->primary_identifier(),
+                          'other_key', undef);
+test_notes([]);

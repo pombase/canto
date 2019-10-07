@@ -686,6 +686,13 @@ sub _allele_details_hash
 
   my @synonyms_list = _make_allelesynonym_hashes($allele);
 
+  my @notes = map {
+    {
+      key => $_->key(),
+      value => $_->value(),
+    };
+  } $allele->allele_notes()->all();
+
   my %result = (
     uniquename => $allele->primary_identifier(),
     name => $allele->name(),
@@ -697,6 +704,7 @@ sub _allele_details_hash
     comment => $allele->comment(),
     allele_id => $allele->allele_id(),
     synonyms => \@synonyms_list,
+    notes => \@notes,
   );
 
   if ($allele->type() ne 'aberration') {

@@ -1633,10 +1633,6 @@ sub _feature_edit_helper
       try {
         my $guard = $schema->txn_scope_guard();
 
-        my $allele_manager =
-          Canto::Curs::AlleleManager->new(config => $c->config(),
-                                          curs_schema => $schema);
-
         my $genotype_manager =
           Canto::Curs::GenotypeManager->new(config => $c->config(),
                                             curs_schema => $schema);
@@ -2827,6 +2823,20 @@ sub ws_annotation_delete : Chained('top') PathPart('ws/annotation/delete')
   $c->stash->{json_data} = $service_utils->delete_annotation($json_data);
 
   $c->forward('View::JSON');
+}
+
+sub ws_allele_set_note : Chained('top') PathPart('ws/allele_note/set')
+{
+  my ($self, $c, $allele_primary_identifier, $key, $value) = @_;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $allele_manager =
+    Canto::Curs::AlleleManager->new(config => $c->config(),
+                                    curs_schema => $schema);
+
+  $allele_manager->set_note($allele_primary_identifier, $key, $value);
 }
 
 sub ws_genotype_delete : Chained('top') PathPart('ws/genotype/delete')
