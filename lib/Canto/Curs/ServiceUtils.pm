@@ -202,6 +202,8 @@ sub _get_organisms
   while (defined (my $org = $rs->next())) {
     my $organism_details = $organism_lookup->lookup_by_taxonid($org->taxonid());
 
+    $organism_details->{genotype_count} = $org->genotypes()->count();
+
     $organism_details->{genes} =
       [map {
         my $gene_proxy =

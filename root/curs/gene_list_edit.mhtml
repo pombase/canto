@@ -214,7 +214,10 @@ if ($pathogen_host_mode) {
     map {
       my $curs_organism = $_;
 
-      $organism_lookup->lookup_by_taxonid($curs_organism->taxonid());
+      my $res = $organism_lookup->lookup_by_taxonid($curs_organism->taxonid());
+
+      $res->{genotype_count} = $curs_organism->genotypes()->count();
+      $res;
     } $schema->resultset('Organism')->all();
 
   my @host_organisms_from_genes = ();

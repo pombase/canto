@@ -37,10 +37,15 @@
               <span ng-class="{'gene-button-delete-text-disabled': firstGene(o.genes).disabled}">X</span></button>
           </td>
           <td ng-if="o.genes.length == 0" class="organism-table__no-gene-notice" colspan="4">(No genes for this organism)</td>
-          <td ng-if="o.genes.length == 0"><button
-            ng-class="{'btn-danger': (!g.disabled)}"
-            title="Remove host"
-            ng-click="removeHost(o.taxonid)">X</button>
+          <td ng-if="o.genes.length == 0">
+            <button ng-if="canRemoveHost(o)"
+              title="Remove host"
+              class="btn-danger">X</button>
+            </button>
+            <button ng-if="!canRemoveHost(o)"
+              disabled="disabled"
+              title="Host can't be removed because it is used in a metagenotype">
+              <span class="gene-button-delete-text-disabled">X</span></button>
           </td>
         </tr>
         <tr ng-if="o.genes.length > 0"

@@ -8345,6 +8345,10 @@ var editOrganismsTable = function (EditOrganismsSvc, CantoGlobals) {
         EditOrganismsSvc.removeGene(gene_id);
       };
 
+      $scope.canRemoveHost = function(org) {
+        return org.genes.length == 0 && org.genotype_count == 0;
+      };
+
       $scope.removeHost = function (taxon_id) {
         EditOrganismsSvc.removeHost(taxon_id);
       };
