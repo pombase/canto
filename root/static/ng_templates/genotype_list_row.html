@@ -32,8 +32,8 @@
     </span>
 
     <span class="curs-genotype-comment-indicator"
-          ng-if="userIsAdmin && genotype.comment && (genotype.alleles.length == 1 || !notesOnSingleAlleleGenotypesOnly)">
-      <a title="{{genotype.comment}} (click to edit)" ng-click="editComment()">new note</a>
+          ng-if="showEditNotesLink()">
+      <a title="Click to view and edit notes" ng-click="editNotes()">notes</a>
     </span>
 
     <span class="curs-genotype-comment-indicator"

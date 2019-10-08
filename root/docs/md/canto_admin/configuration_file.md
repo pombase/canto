@@ -89,6 +89,12 @@ non-wildtype expression allele from the same gene.
 ### diploid_mode
 If 1, allow diploids to be created and used in genotypes.
 
+### allele_note_types
+A map from allele note type name to note config.  At the moment the only
+configuration for each note type is the `display_name` to show in the
+note editing dialog.  Example configuration: `{ phenotype: { display_name: Phenotype } }`
+
+
 ### db_initial_data
 Data needed to initialise a Canto instance.
 

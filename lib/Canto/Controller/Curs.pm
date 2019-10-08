@@ -167,7 +167,6 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{pathogen_host_mode} = $config->{pathogen_host_mode};
   $st->{split_genotypes_by_organism} = $config->{split_genotypes_by_organism};
   $st->{show_genotype_management_genes_list} = $config->{show_genotype_management_genes_list};
-  $st->{notes_on_single_allele_genotypes_only} = $config->{notes_on_single_allele_genotypes_only};
 
   $st->{flybase_mode} = $config->{flybase_mode};
 
@@ -2832,11 +2831,45 @@ sub ws_allele_set_note : Chained('top') PathPart('ws/allele_note/set')
   my $st = $c->stash();
   my $schema = $st->{schema};
 
+  my $guard = $schema->txn_scope_guard();
+
   my $allele_manager =
     Canto::Curs::AlleleManager->new(config => $c->config(),
                                     curs_schema => $schema);
 
   $allele_manager->set_note($allele_primary_identifier, $key, $value);
+
+  $c->stash->{json_data} = {
+    status => 'success',
+  };
+
+  $guard->commit();
+
+  $c->forward('View::JSON');
+}
+
+sub ws_allele_delete_note : Chained('top') PathPart('ws/allele_note/delete')
+{
+  my ($self, $c, $allele_primary_identifier, $key) = @_;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $guard = $schema->txn_scope_guard();
+
+  my $allele_manager =
+    Canto::Curs::AlleleManager->new(config => $c->config(),
+                                    curs_schema => $schema);
+
+  $allele_manager->set_note($allele_primary_identifier, $key, undef);
+
+  $c->stash->{json_data} = {
+    status => 'success',
+  };
+
+  $guard->commit();
+
+  $c->forward('View::JSON');
 }
 
 sub ws_genotype_delete : Chained('top') PathPart('ws/genotype/delete')
@@ -2981,7 +3014,7 @@ sub ws_delete_strain_by_name : Chained('top') PathPart('ws/strain_by_name/delete
   my ($self, $c, $taxon_id, @strain_name_parts) = @_;
 
   my $strain_name = join '/', @strain_name_parts;
-  
+
   my $st = $c->stash();
   my $schema = $st->{schema};
 

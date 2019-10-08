@@ -686,11 +686,11 @@ sub _allele_details_hash
 
   my @synonyms_list = _make_allelesynonym_hashes($allele);
 
-  my @notes = map {
-    {
-      key => $_->key(),
-      value => $_->value(),
-    };
+  my %notes = map {
+    (
+      $_->key(),
+      $_->value(),
+    );
   } $allele->allele_notes()->all();
 
   my %result = (
@@ -704,7 +704,7 @@ sub _allele_details_hash
     comment => $allele->comment(),
     allele_id => $allele->allele_id(),
     synonyms => \@synonyms_list,
-    notes => \@notes,
+    notes => \%notes,
   );
 
   if ($allele->type() ne 'aberration') {

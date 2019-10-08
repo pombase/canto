@@ -478,7 +478,19 @@ canto.service('Curs', function ($http, $q) {
       });
   };
 
-  this.delete = function (objectType, objectId) {
+  this.set = function (key, args) {
+    if (!args) {
+      args = [];
+    }
+
+    var url = curs_root_uri + '/ws/' + key + '/set/' + args.join('/');
+    return $http.get(url)
+      .then(function(response) {
+        return response.data;
+      });
+  };
+
+  this.delete = function (objectType, objectId, secondaryId) {
     var q = $q.defer();
 
     // POST the curs_key so that a crawled GET can't delete a feature
@@ -487,8 +499,13 @@ canto.service('Curs', function ($http, $q) {
       key: curs_key
     };
 
-    var putQ = $http.put(curs_root_uri + '/ws/' + objectType + '/delete/' + objectId,
-      details);
+    var url = curs_root_uri + '/ws/' + objectType + '/delete/' + objectId;
+
+    if (secondaryId) {
+      url += '/' + secondaryId;
+    }
+
+    var putQ = $http.put(url, details);
 
     putQ.then(function (response) {
       if (response.data.status === 'success') {
@@ -776,7 +793,6 @@ canto.service('CantoGlobals', function ($window) {
   this.multi_organism_mode = $window.multi_organism_mode;
   this.split_genotypes_by_organism = $window.split_genotypes_by_organism;
   this.show_genotype_management_genes_list = $window.show_genotype_management_genes_list;
-  this.notes_on_single_allele_genotypes_only = $window.notes_on_single_allele_genotypes_only;
   this.strains_mode = $window.strains_mode;
   this.pathogen_host_mode = $window.pathogen_host_mode;
   this.alleles_have_expression = $window.alleles_have_expression;
@@ -4992,23 +5008,61 @@ function editBackgroundDialog($uibModal, genotype) {
 }
 
 
-var genotypeCommentEditDialogCtrl =
-  function ($scope, $uibModalInstance, $http, toaster, CursGenotypeList, args) {
+var alleleNotesEditDialogCtrl =
+  function ($scope, $uibModalInstance, $http, $q, toaster, CantoConfig, Curs, args) {
+    $scope.noteTypes = {};
+
+    var notesCopy = {};
+    copyObject(args.allele.notes, notesCopy);
+
+    CantoConfig.get('allele_note_types')
+      .then(function (results) {
+        $scope.noteTypes = results;
+        $.map(Object.keys(results),
+              function(noteTypeName) {
+                if (!notesCopy[noteTypeName]) {
+                  notesCopy[noteTypeName] = '';
+                }
+              });
+      });
+
     $scope.data = {
-      comment: args.genotype.comment
+      notes: notesCopy,
     };
 
     $scope.finish = function () {
-      if ($scope.data.comment === args.genotype.comment) {
+      var promises = [];
+
+      $.map(Object.keys($scope.noteTypes),
+            function(noteTypeName) {
+              if ($scope.data.notes[noteTypeName].trim().length == 0) {
+                delete $scope.data.notes[noteTypeName];
+              }
+
+              if ($scope.data.notes[noteTypeName] != args.allele.notes[noteTypeName]) {
+                var promise;
+                var newValue = $scope.data.notes[noteTypeName];
+                if (newValue) {
+                  var setArgs = [args.allele.uniquename, noteTypeName, newValue];
+                  promise = Curs.set('allele_note', setArgs);
+                  promise.then(function() {
+                    args.allele.notes[noteTypeName] = newValue;
+                  });
+                } else {
+                  promise = Curs.delete('allele_note', args.allele.uniquename, noteTypeName);
+                  promise.then(function() {
+                    delete args.allele.notes[noteTypeName];
+                  });
+                }
+                promises.push(promise);
+              }
+            });
+
+      $q.all(promises).then(function () {
         $uibModalInstance.close();
-      } else {
-        var storePromise =
-          CursGenotypeList.setGenotypeComment(toaster, $http, args.genotype,
-            $scope.data.comment);
-        storePromise.then(function () {
-          $uibModalInstance.close();
-        });
-      }
+      });
+
+      console.log($scope.data);
     };
 
     $scope.cancel = function () {
@@ -5016,23 +5070,22 @@ var genotypeCommentEditDialogCtrl =
     };
   };
 
-canto.controller('GenotypeCommentEditDialogCtrl',
-  ['$scope', '$uibModalInstance', '$http', 'toaster', 'CursGenotypeList',
-    'args',
-    genotypeCommentEditDialogCtrl
+canto.controller('AlleleNotesEditDialogCtrl',
+  ['$scope', '$uibModalInstance', '$http', '$q', 'toaster', 'CantoConfig', 'Curs', 'args',
+    alleleNotesEditDialogCtrl
   ]);
 
-function editCommentDialog($uibModal, genotype) {
+function editNotesDialog($uibModal, allele) {
   var editInstance = $uibModal.open({
-    templateUrl: app_static_path + 'ng_templates/genotype_comment_edit.html',
-    controller: 'GenotypeCommentEditDialogCtrl',
+    templateUrl: app_static_path + 'ng_templates/allele_notes_edit.html',
+    controller: 'AlleleNotesEditDialogCtrl',
     title: 'Edit new note',
     animate: false,
     //    size: 'lg',
     resolve: {
       args: function () {
         return {
-          genotype: genotype,
+          allele: allele
         };
       }
     },
@@ -5099,7 +5152,7 @@ function getDisplayLoci(alleles) {
 
 
 var genotypeListRowLinksCtrl =
-  function ($uibModal, $http, toaster, CantoGlobals, CursGenotypeList, AnnotationTypeConfig) {
+  function ($uibModal, $http, toaster, CantoConfig, CantoGlobals, CursGenotypeList, AnnotationTypeConfig) {
     return {
       restrict: 'E',
       scope: {
@@ -5112,8 +5165,6 @@ var genotypeListRowLinksCtrl =
       templateUrl: CantoGlobals.app_static_path + 'ng_templates/genotype_list_row_links.html',
       controller: function ($scope) {
         $scope.userIsAdmin = CantoGlobals.current_user_is_admin;
-        $scope.notesOnSingleAlleleGenotypesOnly =
-          CantoGlobals.notes_on_single_allele_genotypes_only;
 
         var genotype =
           $.grep($scope.genotypes, function (genotype) {
@@ -5239,17 +5290,20 @@ var genotypeListRowLinksCtrl =
           });
         };
 
-        $scope.showNoteEdit = function () {
-          return !$scope.read_only_curs && $scope.userIsAdmin &&
-            (!$scope.notesOnSingleAlleleGenotypesOnly || genotype.alleles.length == 1);
+        var noteTypeNames = [];
+
+        CantoConfig.get('allele_note_types')
+          .then(function (results) {
+            noteTypeNames = Object.keys(results);
+          });
+
+        $scope.showNotesEdit = function () {
+          return !$scope.read_only_curs && genotype.alleles.length == 1 &&
+            noteTypeNames.length > 0;
         };
 
-        $scope.editComment = function (genotypeId) {
-          var genotypePromise = CursGenotypeList.getGenotypeById(genotypeId);
-
-          genotypePromise.then(function (genotype) {
-            editCommentDialog($uibModal, genotype);
-          });
+        $scope.editNotes = function () {
+          editNotesDialog($uibModal, genotype.alleles[0]);
         };
       },
       link: function ($scope) {
@@ -5264,7 +5318,7 @@ var genotypeListRowLinksCtrl =
   };
 
 canto.directive('genotypeListRowLinks',
-  ['$uibModal', '$http', 'toaster', 'CantoGlobals', 'CursGenotypeList',
+  ['$uibModal', '$http', 'toaster', 'CantoConfig','CantoGlobals', 'CursGenotypeList',
     'AnnotationTypeConfig',
     genotypeListRowLinksCtrl
   ]);
@@ -5294,8 +5348,6 @@ var genotypeListRowCtrl =
         $scope.closeIconPath = CantoGlobals.app_static_path + '/images/close_icon.png';
         $scope.multi_organism_mode = CantoGlobals.multi_organism_mode;
         $scope.userIsAdmin = CantoGlobals.current_user_is_admin;
-        $scope.notesOnSingleAlleleGenotypesOnly =
-          CantoGlobals.notes_on_single_allele_genotypes_only;
 
         var displayLoci = getDisplayLoci($scope.genotype.alleles);
 
@@ -5315,8 +5367,13 @@ var genotypeListRowCtrl =
           links.remove();
         };
 
-        $scope.editComment = function() {
-          editCommentDialog($uibModal, $scope.genotype);
+        $scope.showEditNotesLink = function() {
+          return $scope.genotype.alleles.length == 1 &&
+            Object.keys($scope.genotype.alleles[0].notes).length > 0;
+        };
+
+        $scope.editNotes = function() {
+          editNotesDialog($uibModal, $scope.genotype.alleles[0]);
         };
 
         $scope.viewAlleleComment = function(allele) {
