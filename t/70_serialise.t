@@ -23,6 +23,13 @@ my $config = $test_util->config();
 my $track_schema = Canto::TrackDB->new(config => $config);
 my $curs_schema = Canto::Curs::get_schema_for_key($config, 'aaaa0007');
 
+$config->{allele_note_types} = {
+  phenotype => {
+    display_name => 'Phenotype',
+  },
+};
+
+
 $test_util->add_metagenotype_config($config, $track_schema);
 
 
@@ -114,7 +121,8 @@ my $full_expected_curation_session =
         'description' => 'deletion',
         'name' => 'SPCC63.05delta',
         'synonyms' => [],
-        'allele_type' => 'deletion'
+        'allele_type' => 'deletion',
+        'notes' => {},
       },
       'SPAC27D7.13c:aaaa0007-1' => {
         'primary_identifier' => 'SPAC27D7.13c:aaaa0007-1',
@@ -122,7 +130,8 @@ my $full_expected_curation_session =
         'description' => 'deletion',
         'name' => 'ssm4delta',
         'synonyms' => [],
-        'allele_type' => 'deletion'
+        'allele_type' => 'deletion',
+        'notes' => {},
       },
       'SPAC27D7.13c:aaaa0007-3' => {
         'description' => 'del_100-200',
@@ -130,7 +139,10 @@ my $full_expected_curation_session =
         'name' => 'ssm4-D4',
         'gene' => 'Schizosaccharomyces pombe SPAC27D7.13c',
         'synonyms' => ['ssm4-c1'],
-        'primary_identifier' => 'SPAC27D7.13c:aaaa0007-3'
+        'primary_identifier' => 'SPAC27D7.13c:aaaa0007-3',
+        'notes' => {
+          'note_test_key' => 'note_test_value',
+        },
       }
     },
     metagenotypes => {

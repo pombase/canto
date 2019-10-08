@@ -407,6 +407,19 @@ sub _get_alleles
       $allele_data{name} = $allele->name();
     }
 
+    my $note_types = $config->{allele_note_types};
+
+    if ($note_types && scalar(keys %{$note_types}) > 0) {
+      $allele_data{notes} = {};
+
+      my @notes = $allele->allele_notes()->all();
+
+      map {
+        my $note = $_;
+        $allele_data{notes}->{$_->key()} = $_->value();
+      } @notes;
+    }
+
     my @allelesynonyms = $allele->allelesynonyms();
 
     my @export_synonyms = ();
