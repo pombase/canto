@@ -1113,7 +1113,9 @@ cmp_deeply($allele_res,
               'gene_display_name' => 'ssm4',
               'gene_systematic_id' => 'SPAC27D7.13c',
               'synonyms' => [{ edit_status => 'new', synonym => 'ssm4-c1' }],
-              'notes' => {},
+              'notes' => {
+                'note_test_key' => 'note_test_value',
+              },
             },
             {
               'uniquename' => 'SPAC27D7.13c:allele-2',

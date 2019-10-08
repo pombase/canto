@@ -229,6 +229,7 @@ sub _remove_unused_alleles
                                          });
 
   $alleles_with_no_genotype_rs->search_related('allelesynonyms')->delete();
+  $alleles_with_no_genotype_rs->search_related('allele_notes')->delete();
 
   $alleles_with_no_genotype_rs->delete();
 }

@@ -126,6 +126,9 @@ test_config:
                  expression: 'Knockdown'
                  synonyms:
                    - ssm4-c1
+                 allele_notes:
+                   - key: note_test_key
+                     value: note_test_value
                - primary_identifier: 'SPAC27D7.13c:aaaa0007-4'
                  description: 'del_200-300'
                  type: 'partial deletion, nucleotide'

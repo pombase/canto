@@ -926,6 +926,20 @@ sub _load_curs_db_data
         );
 
         my $allele = $cursdb_schema->create_with_type('Allele', \%create_args);
+
+        if ($allele_details->{allele_notes}) {
+          map {
+            my $key = $_->{key};
+            my $value = $_->{value};
+
+            $cursdb_schema->create_with_type('AlleleNote',
+                                             {
+                                               allele => $allele->allele_id(),
+                                               key => $key,
+                                               value => $value,
+                                             });
+          } @{$allele_details->{allele_notes}};
+        }
       }
     }
 

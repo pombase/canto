@@ -294,6 +294,7 @@ sub delete
       $genotype->delete();
     };
     $allele->search_related('allelesynonyms')->delete();
+    $allele->search_related('allele_notes')->delete();
     $allele->delete();
   } $self->alleles();
 
