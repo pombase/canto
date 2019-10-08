@@ -374,7 +374,7 @@ sub set_note
     ->find({ primary_identifier => $allele_primary_identifier });
 
   if (!$allele) {
-    die qw(can't find allele with primary_identifier "$allele_primary_identifier");
+    die qq(can't find allele with primary_identifier "$allele_primary_identifier");
   }
 
   my $existing = $allele->allele_notes()->find({ key => $key });
