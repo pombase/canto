@@ -3249,7 +3249,7 @@ var annotationEvidence =
           var termEvCodes = [];
           var subsetIds = termData.subset_ids;
 
-          $scope.evidenceCodes = null;
+          var newEvidenceCodes = null;
 
           function checkForRelAndTerm(relAndTerm) {
             return $.inArray(relAndTerm, subsetIds) != -1;
@@ -3261,7 +3261,7 @@ var annotationEvidence =
               var evConfigConstraint = evConfig.constraint;
               var evConfigCodes = evConfig.evidence_codes;
 
-              if ($scope.evidenceCodes != null) {
+              if (newEvidenceCodes != null) {
                 return;
               }
 
@@ -3280,15 +3280,16 @@ var annotationEvidence =
                 checkForRelAndTerm(includedRelAndTerm) &&
                 $.grep(excludedRelAndTerms, checkForRelAndTerm).length == 0
               ) {
-                $scope.evidenceCodes = evConfigCodes;
+                newEvidenceCodes = evConfigCodes;
               }
             }
           );
 
-          if ($scope.evidenceCodes) {
-            $scope.evidenceCodes.sort();
+          if (newEvidenceCodes) {
+            newEvidenceCodes.sort();
+            $scope.evidenceCodes = newEvidenceCodes;
           } else {
-            $scope.evidenceCodes = [];
+            $scope.evidenceCodes = $scope.defaultEvidenceCodes;
           }
         }
 
