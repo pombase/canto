@@ -5010,7 +5010,7 @@ function editBackgroundDialog($uibModal, genotype) {
 
 var alleleNotesEditDialogCtrl =
   function ($scope, $uibModalInstance, $http, $q, toaster, CantoConfig, Curs, args) {
-    $scope.noteTypes = {};
+    $scope.noteTypes = [];
 
     var notesCopy = {};
     copyObject(args.allele.notes, notesCopy);
@@ -5018,10 +5018,10 @@ var alleleNotesEditDialogCtrl =
     CantoConfig.get('allele_note_types')
       .then(function (results) {
         $scope.noteTypes = results;
-        $.map(Object.keys(results),
-              function(noteTypeName) {
-                if (!notesCopy[noteTypeName]) {
-                  notesCopy[noteTypeName] = '';
+        $.map(results,
+              function(noteTypeConf) {
+                if (!notesCopy[noteTypeConf.name]) {
+                  notesCopy[noteTypeConf.name] = '';
                 }
               });
       });
@@ -5033,8 +5033,9 @@ var alleleNotesEditDialogCtrl =
     $scope.finish = function () {
       var promises = [];
 
-      $.map(Object.keys($scope.noteTypes),
-            function(noteTypeName) {
+      $.map($scope.noteTypes,
+            function(noteTypeConf) {
+              var noteTypeName = noteTypeConf.name;
               if ($scope.data.notes[noteTypeName].trim().length == 0) {
                 delete $scope.data.notes[noteTypeName];
               }
@@ -5294,7 +5295,10 @@ var genotypeListRowLinksCtrl =
 
         CantoConfig.get('allele_note_types')
           .then(function (results) {
-            noteTypeNames = Object.keys(results);
+            noteTypeNames = $.map(results,
+                                  function(noteTypeConf) {
+                                    return noteTypeConf.name;
+                                  });
           });
 
         $scope.showNotesEdit = function () {

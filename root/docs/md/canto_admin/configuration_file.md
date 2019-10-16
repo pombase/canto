@@ -90,14 +90,15 @@ non-wildtype expression allele from the same gene.
 If 1, allow diploids to be created and used in genotypes.
 
 ### allele_note_types
-A map from allele note type name to note config.  At the moment the only
-configuration for each note type is the `display_name` to show in the
-note editing dialog.  Example configuration:
+A list of allele note type name and display names.  The `display_name`
+is shown in the note editing dialog.  Example configuration:
 
 ```
 allele_note_types:
-  phenotype:
+  - name: phenotype
     display_name: Phenotype
+  - name: interaction_comment
+    display_name: Interaction coment
 ```
 
 ### db_initial_data

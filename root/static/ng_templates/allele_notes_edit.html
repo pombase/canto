@@ -5,10 +5,11 @@
     </h4>
   </div>
   <div class="modal-body">
-    <div ng-repeat="(noteTypeName, noteTypeConf) in noteTypes">
+    <div ng-repeat="noteTypeConf in noteTypes">
       <div class="allele-note-type">{{noteTypeConf.display_name}}:</div>
       <textarea class="form-control" type="text" cols="60" rows="3"
-                name="{{noteType}}" ng-model="data.notes[noteTypeName]"></textarea>
+                name="{{noteTypeConf.name}}" ng-model="data.notes[noteTypeConf.name]">
+      </textarea>
     </div>
   </div>
   <div class="modal-footer">
