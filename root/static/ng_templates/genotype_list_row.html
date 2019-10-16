@@ -31,14 +31,14 @@
       </span>
     </span>
 
-    <span class="curs-genotype-comment-indicator"
+    <span class="curs-genotype-notes-indicator"
           ng-if="showEditNotesLink()">
-      <a title="Click to view and edit notes" ng-click="editNotes()">notes</a>
+      <a title="Click to view and edit notes" ng-click="editNotes()">new notes</a>
     </span>
 
     <span class="curs-genotype-comment-indicator"
           ng-if="userIsAdmin && firstLocus.comment">
-      <a title="{{firstLocus.comment}}" ng-click="viewAlleleComment(genotype.alleles[0])">note</a>
+      <a title="{{firstLocus.comment}}" ng-click="viewAlleleComment(genotype.alleles[0])">old note</a>
     </span>
   </td>
   <td rowspan="{{genotype.alleles.length}}" ng-hide="columnsToHide.strain">{{ strain }}</td>
@@ -95,7 +95,7 @@
 
       <span class="curs-genotype-comment-indicator"
             ng-if="userIsAdmin && currentAllele.comment">
-        <a title="{{currentAllele.comment}}" ng-click="viewAlleleComment(currentAllele)">note</a>
+        <a title="{{currentAllele.comment}}" ng-click="viewAlleleComment(currentAllele)">old note</a>
       </span>
     </td>
   </tr>

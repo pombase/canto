@@ -1597,14 +1597,28 @@ a:not([href]) {
   margin-left: 1em;
 }
 
-.curs-genotype-comment-indicator {
-  color: #99f;
-  background: #eee;
+.curs-genotype-notes-indicator, .curs-genotype-comment-indicator {
   border: 1px solid #e0e0e5;
   margin: 0 0.2em 0 1em;
   padding: 0 0.2em;
   border-radius: 3px;
   white-space: nowrap;
+}
+
+.curs-genotype-notes-indicator {
+  background: #f3f3fa;
+}
+
+.curs-genotype-notes-indicator a {
+  color: #23527c;
+}
+
+.curs-genotype-comment-indicator {
+  background: #f2f2f2;
+}
+
+.curs-genotype-comment-indicator a {
+  color: #43525c;
 }
 
 .curs-diploid-constructor-choices {
