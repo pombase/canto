@@ -28,8 +28,7 @@
         <table ng-switch-when="ontology" class="list">
           <thead>
             <tr>
-              <th ng-if="multiOrganismMode && annotationType.feature_type !== 'metagenotype'">Organism</th>
-              <th ng-if="multiOrganismMode && annotationType.feature_type === 'genotype'&& !data.hideColumns.strain_name">Strain</th>
+              <th ng-if="multiOrganismMode && annotationType.feature_type !== 'metagenotype'">Organism (strain)</th>
               <th ng-if="annotationType.feature_type == 'genotype'">Genes</th>
               <th ng-if="annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_background">Background</th>
               <th ng-if="annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_name">Genotype name</th>

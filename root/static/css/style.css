@@ -1081,6 +1081,10 @@ fieldset.curs-genes span {
   
 }
 
+.curs-annotation-row-strain {
+  white-space: nowrap
+}
+
 .curs-annotation-table .term-warning {
   color: #f00;
   font-weight: bold;
