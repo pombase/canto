@@ -74,7 +74,6 @@ sub parse_results
   my @ret = ();
 
   for my $entry (@{$res_hash->{entry}}) {
-    my $name = _content($entry->{name}->[0]);
     my $full_name_parent_element;
     if ($entry->{protein}->[0]->{recommendedName}) {
       $full_name_parent_element = $entry->{protein}->[0]->{recommendedName};
@@ -86,6 +85,8 @@ sub parse_results
 
     my @synonyms = ();
 
+    my $name;
+
     if (defined $entry->{gene}->[0]->{name}) {
       for my $synonym (@{$entry->{gene}->[0]->{name}}) {
         my $synonym_content = _content($synonym);
@@ -96,6 +97,21 @@ sub parse_results
           push @synonyms, $synonym_content;
         }
       }
+
+      if (!defined $name) {
+        for my $synonym (@{$entry->{gene}->[0]->{name}}) {
+          my $synonym_content = _content($synonym);
+
+          if ($synonym->{type} eq 'ORF') {
+            $name = $synonym_content;
+            last;
+          }
+        }
+      }
+    }
+
+    if (!defined $name) {
+      $name = _content($entry->{name}->[0]);
     }
 
     my $accession = _content($entry->{accession}->[0]);

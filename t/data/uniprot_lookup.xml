@@ -1886,6 +1886,134 @@
       WAVPSLGIKCDCIPGRLNQVSA
     </sequence>
   </entry>
+
+  <entry dataset="TrEMBL" created="2017-04-12" modified="2017-06-07" version="3">
+    <accession>A0A1Q4I1Y1</accession>
+    <name>A0A1Q4I1Y1_9MYCO</name>
+    <protein>
+      <submittedName>
+        <fullName evidence="4">Mammalian cell entry protein</fullName>
+      </submittedName>
+    </protein>
+    <gene>
+      <name type="ORF" evidence="4">BRW65_00080</name>
+    </gene>
+    <organism evidence="4 5">
+      <name type="scientific">Mycobacterium paraffinicum</name>
+      <dbReference type="NCBI Taxonomy" id="53378"/>
+      <lineage>
+        <taxon>Bacteria</taxon>
+        <taxon>Actinobacteria</taxon>
+        <taxon>Corynebacteriales</taxon>
+        <taxon>Mycobacteriaceae</taxon>
+        <taxon>Mycobacterium</taxon>
+      </lineage>
+    </organism>
+    <reference key="1" evidence="4 5">
+      <citation type="submission" date="2016-11" db="EMBL/GenBank/DDBJ databases">
+        <title>Genome sequences of unsequenced Mycobacteria.</title>
+        <authorList>
+          <person name="Greninger A.L."/>
+          <person name="Fang F."/>
+          <person name="Jerome K.R."/>
+        </authorList>
+      </citation>
+      <scope>NUCLEOTIDE SEQUENCE [LARGE SCALE GENOMIC DNA]</scope>
+      <source>
+        <strain evidence="4 5">M11</strain>
+      </source>
+    </reference>
+    <comment type="caution">
+      <text evidence="4">The sequence shown here is derived from an EMBL/GenBank/DDBJ whole genome shotgun (WGS) entry which is preliminary data.</text>
+    </comment>
+    <dbReference type="EMBL" id="MPNT01000001">
+      <property type="protein sequence ID" value="OJZ75908.1"/>
+      <property type="molecule type" value="Genomic_DNA"/>
+    </dbReference>
+    <dbReference type="RefSeq" id="WP_073869882.1">
+      <property type="nucleotide sequence ID" value="NZ_MPNT01000001.1"/>
+    </dbReference>
+    <dbReference type="Proteomes" id="UP000186438">
+      <property type="component" value="Unassembled WGS sequence"/>
+    </dbReference>
+    <dbReference type="GO" id="GO:0016021">
+      <property type="term" value="C:integral component of membrane"/>
+      <property type="evidence" value="ECO:0000501"/>
+      <property type="project" value="UniProtKB-KW"/>
+    </dbReference>
+    <dbReference type="InterPro" id="IPR005693">
+      <property type="entry name" value="Mce"/>
+    </dbReference>
+    <dbReference type="InterPro" id="IPR003399">
+      <property type="entry name" value="Mce/MlaD"/>
+    </dbReference>
+    <dbReference type="InterPro" id="IPR024516">
+      <property type="entry name" value="Mce_C"/>
+    </dbReference>
+    <dbReference type="Pfam" id="PF11887">
+      <property type="entry name" value="Mce4_CUP1"/>
+      <property type="match status" value="1"/>
+    </dbReference>
+    <dbReference type="Pfam" id="PF02470">
+      <property type="entry name" value="MlaD"/>
+      <property type="match status" value="1"/>
+    </dbReference>
+    <dbReference type="TIGRFAMs" id="TIGR00996">
+      <property type="entry name" value="Mtu_fam_mce"/>
+      <property type="match status" value="1"/>
+    </dbReference>
+    <proteinExistence type="predicted"/>
+    <keyword id="KW-0181" evidence="5">Complete proteome</keyword>
+    <keyword id="KW-0472" evidence="1">Membrane</keyword>
+    <keyword id="KW-0812" evidence="1">Transmembrane</keyword>
+    <keyword id="KW-1133" evidence="1">Transmembrane helix</keyword>
+    <feature type="transmembrane region" description="Helical" evidence="1">
+      <location>
+        <begin position="12"/>
+        <end position="33"/>
+      </location>
+    </feature>
+    <feature type="domain" description="MlaD" evidence="2">
+      <location>
+        <begin position="39"/>
+        <end position="114"/>
+      </location>
+    </feature>
+    <feature type="domain" description="Mce4_CUP1" evidence="3">
+      <location>
+        <begin position="147"/>
+        <end position="279"/>
+      </location>
+    </feature>
+    <evidence key="1" type="ECO:0000256">
+      <source>
+        <dbReference type="SAM" id="Phobius"/>
+      </source>
+    </evidence>
+    <evidence key="2" type="ECO:0000259">
+      <source>
+        <dbReference type="Pfam" id="PF02470"/>
+      </source>
+    </evidence>
+    <evidence key="3" type="ECO:0000259">
+      <source>
+        <dbReference type="Pfam" id="PF11887"/>
+      </source>
+    </evidence>
+    <evidence key="4" type="ECO:0000313">
+      <source>
+        <dbReference type="EMBL" id="OJZ75908.1"/>
+      </source>
+    </evidence>
+    <evidence key="5" type="ECO:0000313">
+      <source>
+        <dbReference type="Proteomes" id="U100  4772    0  4772    0     0   3435      0 --:--:--  0:00:01 --:--:--  3435
+                                          P000186438"/>
+      </source>
+    </evidence>
+    <sequence length="342" mass="36353" checksum="2095A3E7AEDFF583" modified="2017-04-12" version="1">MHNRAFGTLWRLAVYAAVCLAGTFALIAIYGQWRFQKETTYNAVFSSVSGLKGGNFVRIAGVEVGKVKAIKIQDDATAKVTFSADDSVILTHGTKAVIRYDDLIGGRYLALEEGPGDPKKLPPGATIALSQTAPALDLDALIGGFRPLFRALDPQQVNALSGQLIAAFQGEGPTIGSILSQTAALTNTLADRDDLIGQVVVNLNTVLGSLGDRTDKLGSAIDSLSQLVHGLENRRQDIANSVAYADAAAGGIADLLAQARPPLQKVVHETDRTAGNVLADHDYFDDLLRTLPEAYQVLGRQGLQGDFFSFYLCDLVLKVNGKGGQPVFIKVAGQDSGRCTPQ</sequence>
+  </entry>
+
   <copyright>
     Copyrighted by the UniProt Consortium, see http://www.uniprot.org/terms
     Distributed under the Creative Commons Attribution-NoDerivs License

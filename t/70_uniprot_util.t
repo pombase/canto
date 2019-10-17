@@ -37,4 +37,4 @@ is ($results[1]->{synonyms}->[0], 'SPCC1739.11c');
 is ($results[2]->{primary_identifier}, 'Q06Y82');
 is ($results[2]->{product}, 'Cytochrome c oxidase subunit 2');
 
-is (@results, 3);
+is (@results, 4);

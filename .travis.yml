@@ -6,10 +6,5 @@ services:
 before_install:
   - docker pull pombase/canto-base:v8
 
-branches:
-  only:
-    - master
-    - testing
-
 # this runs "make test" inside a Docker container
 script: ./etc/docker-run-tests.sh
