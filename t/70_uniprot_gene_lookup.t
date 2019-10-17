@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 8;
+use Test::More tests => 10;
 
 use Try::Tiny;
 
@@ -31,11 +31,13 @@ $gene_lookup->meta()->add_method('_get_results',
 
 my $res_from_xml = $gene_lookup->lookup(['P15436', 'O74473', 'Q06Y82', 'MISSING_ID']);
 
-is (scalar @{$res_from_xml->{found}}, 3);
+is (scalar @{$res_from_xml->{found}}, 4);
 is (scalar @{$res_from_xml->{missing}}, 1);
 
 is ($res_from_xml->{found}->[0]->{primary_name}, "POL3");
+is ($res_from_xml->{found}->[1]->{primary_name}, "cdc11");
 is ($res_from_xml->{found}->[2]->{organism_taxonid}, "4896");
+is ($res_from_xml->{found}->[3]->{primary_name}, "BRW65_00080");
 
 
 # The genes should now be in the TrackDB so _get_results() won't be called.
@@ -48,11 +50,11 @@ $gene_lookup->meta()->add_method('_get_results',
 
 my $res_from_track = $gene_lookup->lookup(['P15436', 'O74473', 'Q06Y82', 'MISSING_ID']);
 
-is (scalar @{$res_from_track->{found}}, 3);
+is (scalar @{$res_from_track->{found}}, 4);
 is (scalar @{$res_from_track->{missing}}, 1);
 
 my $organism_count_after = $track_schema->resultset('Organism')->count();
-is ($organism_count_before + 2, $organism_count_after);
+is ($organism_count_before + 3, $organism_count_after);
 
 my $gene_count_after = $track_schema->resultset('Gene')->count();
-is ($gene_count_before + 3, $gene_count_after);
+is ($gene_count_before + 4, $gene_count_after);
