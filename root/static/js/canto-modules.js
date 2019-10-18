@@ -5062,8 +5062,6 @@ var alleleNotesEditDialogCtrl =
       $q.all(promises).then(function () {
         $uibModalInstance.close();
       });
-
-      console.log($scope.data);
     };
 
     $scope.cancel = function () {
