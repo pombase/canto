@@ -778,7 +778,7 @@ CREATE TABLE metagenotype_temp (
 CREATE TABLE allele_note (
        allele_note_id integer PRIMARY KEY,
        allele integer REFERENCES allele(allele_id),
-       key text NOT NULL UNIQUE,
+       key text NOT NULL,
        value text
 );
 ");
