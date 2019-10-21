@@ -294,6 +294,12 @@ canto.filter('formatExpression', function () {
   };
 });
 
+canto.filter('abbreviateGenus', function () {
+  return function (scientificName) {
+    return scientificName.replace(/^([a-z])\w+/i, '$1.')
+  };
+});
+
 // from: https://stackoverflow.com/questions/15604140/replace-multiple-strings-with-multiple-other-strings
 function multiReplaceAll(str,mapObj){
   var re = new RegExp(Object.keys(mapObj).join("|"),"gi");
