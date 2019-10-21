@@ -1,13 +1,13 @@
 <tbody>
     <tr>
         <td>
-          <b>{{ getOrganismName('pathogen') | abbreviateGenus }}</b>
+          {{ getOrganismName('pathogen') | abbreviateGenus }}
           <span class="metagenotype-list-strain">{{ getStrainName('pathogen') }}</span>
         </td>
         <td>{{ metagenotype.pathogen_genotype.display_name }}</td>
         <td ng-if="showBackground.pathogen">{{ metagenotype.pathogen_genotype.background }}</td>
         <td>
-          <b>{{ getOrganismName('host') | abbreviateGenus }}</b>
+          {{ getOrganismName('host') | abbreviateGenus }}
           <span class="metagenotype-list-strain">{{ getStrainName('host') }}</span>
         </td>
         <td>{{ metagenotype.host_genotype.display_name }}</td>
