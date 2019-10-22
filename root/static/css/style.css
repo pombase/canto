@@ -1657,3 +1657,7 @@ a:not([href]) {
   list-style-type: circle;
   color: grey;
 }
+
+.curs-strain-name-inline {
+  display: inline-block;
+}
