@@ -1412,11 +1412,6 @@ a.curs-editable-table-field img, a.curs-editable-table-long-field img
   font-style: italic;
 }
 
-.curs-annotation-table .organism-and-strain {
-/*  white-space: nowrap; */
-  font-weight: bold;
-}
-
 .screenshot {
   border: 1px solid black;
 }
