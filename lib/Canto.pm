@@ -185,5 +185,6 @@ around 'uri_for' => sub {
 };
 
 Canto::DBUtil::check_schema_version($config, schema(__PACKAGE__, 'track'));
+Canto::DBUtil::check_db_organism($config, schema(__PACKAGE__, 'track'));
 
 1;
