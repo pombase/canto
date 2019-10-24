@@ -1652,3 +1652,6 @@ a:not([href]) {
 .curs-strain-name-inline {
   display: inline-block;
 }
+.curs-genotype-picker {
+  padding-top: 10px;
+} 
