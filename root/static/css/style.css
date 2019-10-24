@@ -1080,7 +1080,6 @@ fieldset.curs-genes span {
 .curs-annotation-table {
   
 }
-
 .curs-annotation-table .term-warning {
   color: #f00;
   font-weight: bold;
@@ -1411,11 +1410,6 @@ a.curs-editable-table-field img, a.curs-editable-table-long-field img
 
 .organism-name {
   font-style: italic;
-}
-
-.curs-annotation-table .organism-and-strain {
-/*  white-space: nowrap; */
-  font-weight: bold;
 }
 
 .screenshot {

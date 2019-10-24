@@ -6321,6 +6321,7 @@ var annotationTableCtrl =
         $scope.isActiveSession = isActiveSession($scope.curs_session_state);
 
         $scope.multiOrganismMode = false;
+        $scope.strainsMode = CantoGlobals.strains_mode;
 
         $scope.data = {};
 
@@ -6526,6 +6527,7 @@ var annotationTableRow =
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.multiOrganismMode = false;
+        $scope.showStrain = $scope.strainsMode && $scope.annotationType.feature_type == 'genotype';
         $scope.sessionState = 'UNKNOWN';
 
         CursSessionDetails.get()
