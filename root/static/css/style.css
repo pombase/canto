@@ -1659,5 +1659,5 @@ a:not([href]) {
 }
 
 .curs-strain-name-inline {
-  display: inline-block;
+  display: block;
 }
