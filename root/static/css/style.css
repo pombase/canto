@@ -1564,9 +1564,6 @@ a:not([href]) {
   padding: 3.5px 0;
 }
 
-.metagenotype-genotype-shortcut {
-  padding-top: 20px;
-}
 .metagenotype-list-strain {
   display: inline-block;
 }

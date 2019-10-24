@@ -1,9 +1,6 @@
 <div>
 <div ng-if="selectedOrganism">
     <div>
-        <p class="metagenotype-genotype-shortcut">
-          <a href="{{genotypeShortcutUrl}}">Add another {{organismType}} genotype</a>
-        </p>
         <div>
           
             <div ng-show="genotypes.single.length > 0">
@@ -35,6 +32,9 @@
                 </wild-genotype-view>
             </div>
         </div>
+        <p class="metagenotype-genotype-shortcut">
+            <a href="{{genotypeShortcutUrl}}">Add another {{organismType}} genotype</a>
+        </p>
     </div>
 </div>
 </div>
