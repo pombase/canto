@@ -1650,7 +1650,7 @@ a:not([href]) {
 }
 
 .curs-strain-name-inline {
-  display: inline-block;
+  display: block;
 }
 .curs-genotype-picker {
   padding-top: 10px;
