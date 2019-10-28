@@ -2804,6 +2804,9 @@ var extensionOrGroupDisplay =
           });
 
         $scope.isHiddenRelName = function (relName) {
+          if (!$scope.hideRelationNames) {
+            return false;
+          }
           return $.grep($scope.hideRelationNames,
                         function(hideRelName) {
                           return hideRelName == relName;
