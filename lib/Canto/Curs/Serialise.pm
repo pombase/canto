@@ -390,7 +390,7 @@ sub _get_alleles
 
     my $note_types = $config->{allele_note_types};
 
-    if ($note_types && scalar(keys %{$note_types}) > 0) {
+    if ($note_types && scalar(@{$note_types}) > 0) {
       $allele_data{notes} = {};
 
       my @notes = $allele->allele_notes()->all();
