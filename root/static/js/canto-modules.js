@@ -6537,11 +6537,14 @@ var annotationTableRow =
 
         var annotation = $scope.annotation;
 
-        if (annotation.alleles) {
-          $scope.displayLoci = getDisplayLoci(annotation.alleles);
-        } else {
-          $scope.displayLoci = null;
-        }
+        $scope.$watchCollection('annotation.alleles',
+                                function(newAlleles) {
+                                  if (newAlleles) {
+                                    $scope.displayLoci = getDisplayLoci(newAlleles);
+                                  } else {
+                                    $scope.displayLoci = null;
+                                  }
+                                });
 
         $scope.checked = annotation['checked'] || 'no';
 
