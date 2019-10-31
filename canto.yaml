@@ -98,7 +98,7 @@ show_genotype_management_genes_list: 1
 flybase_mode: 0
 
 # a map of allele note types eg. { phenotype: { display_name: Phenotype } }
-allele_note_types: {}
+allele_note_types: []
 
 # from_address - used as the "from" field is all outgoing messages
 # admin_address - the contact address of the admin curators, used to

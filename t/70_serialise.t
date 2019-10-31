@@ -23,11 +23,12 @@ my $config = $test_util->config();
 my $track_schema = Canto::TrackDB->new(config => $config);
 my $curs_schema = Canto::Curs::get_schema_for_key($config, 'aaaa0007');
 
-$config->{allele_note_types} = {
-  phenotype => {
+$config->{allele_note_types} = [
+  {
+    name => 'phenotype',
     display_name => 'Phenotype',
   },
-};
+];
 
 
 $test_util->add_metagenotype_config($config, $track_schema);
