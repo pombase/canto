@@ -1654,4 +1654,9 @@ a:not([href]) {
 }
 .curs-genotype-picker {
   padding-top: 10px;
-} 
+}
+.curs-metagenotype-picker-heading {
+  display: inline-block;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
