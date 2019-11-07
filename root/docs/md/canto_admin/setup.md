@@ -94,7 +94,7 @@ The columns are:
 - synonyms (comma separated)
 - gene product or description
 
-There is a small example file in the [https://raw.githubusercontent.com/pombase/canto/master/t/data/pombe_genes.txt](test directory).
+There is a small example file in the [test directory](https://raw.githubusercontent.com/pombase/canto/master/t/data/pombe_genes.txt).
 
 ### Ontology terms
 
