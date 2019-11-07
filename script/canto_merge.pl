@@ -95,11 +95,11 @@ if (defined $merge_person) {
     $schema->resultset('Person')->find({ email_address => $dest_person_email });
 
   if (!defined $person_to_remove) {
-    die "can't for person in the database: $person_to_remove_email\n";
+    die "can't find person in the database: $person_to_remove_email\n";
   }
 
   if (!defined $dest_person) {
-    die "can't for person in the database: $dest_person_email\n";
+    die "can't find person in the database: $dest_person_email\n";
   }
 
   my $person_to_remove_name = $person_to_remove->name();
