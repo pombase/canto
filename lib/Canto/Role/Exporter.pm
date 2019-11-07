@@ -80,6 +80,7 @@ sub BUILD
                     'dump-approved!' => \$parsed_options{dump_approved},
                     'dump-exported!' => \$parsed_options{dump_exported},
                     'export-approved!' => \$parsed_options{export_approved},
+                    'annotation-type=s' => \$parsed_options{annotation_type},
                     );
   if (!GetOptionsFromArray(\@options, @opt_config)) {
     die "option parsing failed for: @{$self->options()}\n";

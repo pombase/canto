@@ -51,9 +51,11 @@ sub export
   my $self = shift;
 
   my $config = $self->config();
-  my $curs_resultset = $self->parsed_options()->{curs_resultset};
 
-  return $self->get_all_curs_annotation_zip($config, $curs_resultset);
+  my $rs = $self->track_schema()->resultset('Curs');
+
+  return $self->get_all_curs_annotation_zip($config, $rs,
+                                            $self->parsed_options());
 }
 
 1;
