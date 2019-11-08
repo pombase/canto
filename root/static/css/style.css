@@ -1080,7 +1080,6 @@ fieldset.curs-genes span {
 .curs-annotation-table {
   
 }
-
 .curs-annotation-table .term-warning {
   color: #f00;
   font-weight: bold;
@@ -1413,11 +1412,6 @@ a.curs-editable-table-field img, a.curs-editable-table-long-field img
   font-style: italic;
 }
 
-.curs-annotation-table .organism-and-strain {
-/*  white-space: nowrap; */
-  font-weight: bold;
-}
-
 .screenshot {
   border: 1px solid black;
 }
@@ -1570,9 +1564,6 @@ a:not([href]) {
   padding: 3.5px 0;
 }
 
-.metagenotype-genotype-shortcut {
-  padding-top: 20px;
-}
 .metagenotype-list-strain {
   display: inline-block;
 }
@@ -1670,4 +1661,16 @@ a:not([href]) {
 .curs-quick-links-list > li {
   list-style-type: circle;
   color: grey;
+}
+
+.curs-strain-name-inline {
+  display: block;
+}
+.curs-genotype-picker {
+  padding-top: 10px;
+}
+.curs-metagenotype-picker-heading {
+  display: inline-block;
+  font-weight: 700;
+  margin-bottom: 10px;
 }

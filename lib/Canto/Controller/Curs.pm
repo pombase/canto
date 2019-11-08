@@ -170,6 +170,14 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
   $st->{flybase_mode} = $config->{flybase_mode};
 
+  $st->{show_metagenotype_links} = 0;
+  $st->{edit_organism_page_valid} = 0;
+
+  if ($st->{pathogen_host_mode}) {
+    ($st->{show_metagenotype_links}, $st->{edit_organism_page_valid}) =
+      _metagenotype_flags($config, $schema);
+  }
+
   my $with_gene_evidence_codes =
     { map { ( $_, 1 ) }
       grep { $config->{evidence_types}->{$_}->{with_gene} } keys %{$config->{evidence_types}} };
@@ -241,6 +249,11 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
         $path !~ m:/(ws/\w+/list):) {
     $c->detach('offline_message');
     $use_dispatch = 0;
+  }
+
+  if ($st->{pathogen_host_mode} && !$st->{edit_organism_page_valid} &&
+        $state eq CURATION_IN_PROGRESS && $path !~ m:(/ws/|/gene_upload/):) {
+    $c->detach('edit_genes');
   }
 
   if ($state eq APPROVAL_IN_PROGRESS) {
@@ -318,6 +331,45 @@ sub _unused_genotype_count
 
   return $genotype_rs->count();
 }
+
+sub _metagenotype_flags
+{
+  my $config = shift;
+  my $schema = shift;
+
+  my $organism_lookup = Canto::Track::get_adaptor($config, 'organism');
+
+  my $rs = $schema->resultset('Organism');
+
+  my $has_host = 0;
+  my $has_pathogen_genotypes = 0;
+
+  my $organism_page_valid = 1;
+
+  while (defined (my $org = $rs->next())) {
+    my $organism_details = $organism_lookup->lookup_by_taxonid($org->taxonid());
+
+    if (!defined $organism_details->{pathogen_or_host}) {
+      next;
+    }
+
+    if ($organism_details->{pathogen_or_host} eq 'host') {
+      $has_host = 1;
+    }
+
+    if ($organism_details->{pathogen_or_host} eq 'pathogen') {
+      if ($org->genotypes()->count() > 0) {
+        $has_pathogen_genotypes = 1;
+      }
+    }
+
+    if ($org->strains()->count() == 0) {
+      $organism_page_valid = 0;
+    }
+  }
+
+  return ($has_pathogen_genotypes && $has_host, $organism_page_valid);
+};
 
 sub _set_genes_in_session
 {

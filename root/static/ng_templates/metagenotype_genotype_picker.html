@@ -1,40 +1,42 @@
-<div>
-<div ng-if="selectedOrganism">
-    <div>
-        <p class="metagenotype-genotype-shortcut">
-          <a href="{{genotypeShortcutUrl}}">Add another {{organismType}} genotype</a>
-        </p>
-        <div>
-          
-            <div ng-show="genotypes.single.length > 0">
-                <div class="curs-box-title">Single locus genotypes</div>
-                <genotype-simple-list-view
-                    genotype-list="genotypes.single"
-                    is-host="isHost"
-                    show-check-box-actions="true"
-                    on-genotype-select="onGenotypeChangeSingle(genotype)">
-                </genotype-simple-list-view>
+<div class="curs-genotype-picker">
+    <div ng-if="selectedOrganism">
+        <div ng-show="genotypes.single.length > 0">
+            <div class="curs-genotype-list-instructions curs-genotype-list-view-no-checkbox">
+                <span>Single locus genotypes</span>
             </div>
-
-            <div ng-show="genotypes.multi.length > 0">
-                <div class="curs-box-title">Multi-allele genotypes</div>
-                <genotype-simple-list-view
-                    genotype-list="genotypes.multi"
-                    is-host="isHost"
-                    show-check-box-actions="true"
-                    on-genotype-select="onGenotypeChangeMulti(genotype)">
-                </genotype-simple-list-view>
-            </div>
-
-            <div ng-if="isHost">
-                <div class="curs-box-title">Wildtype genotype</div>
-                <wild-genotype-view
-                    strains="data.wildTypeStrains"
-                    show-check-box-actions="true"
-                    on-strain-select="onStrainChange(strain)">
-                </wild-genotype-view>
-            </div>
+            <genotype-simple-list-view
+                genotype-list="genotypes.single"
+                is-host="isHost"
+                show-check-box-actions="true"
+                on-genotype-select="onGenotypeChangeSingle(genotype)">
+            </genotype-simple-list-view>
         </div>
+
+        <div ng-show="genotypes.multi.length > 0">
+            <div class="curs-genotype-list-instructions curs-genotype-list-view-no-checkbox">
+                <span>Multi allele genotypes</span>
+            </div>
+            <genotype-simple-list-view
+                genotype-list="genotypes.multi"
+                is-host="isHost"
+                show-check-box-actions="true"
+                on-genotype-select="onGenotypeChangeMulti(genotype)">
+            </genotype-simple-list-view>
+        </div>
+
+        <div ng-if="isHost">
+            <div class="curs-genotype-list-instructions curs-genotype-list-view-no-checkbox">
+                <span>Wild-type genotypes</span>
+            </div>
+            <wild-genotype-view
+                strains="data.wildTypeStrains"
+                show-check-box-actions="true"
+                on-strain-select="onStrainChange(strain)">
+            </wild-genotype-view>
+        </div>
+
+        <p class="metagenotype-genotype-shortcut">
+            <a href="{{genotypeShortcutUrl}}">Add another {{organismType}} genotype</a>
+        </p>
     </div>
-</div>
 </div>

@@ -294,6 +294,12 @@ canto.filter('formatExpression', function () {
   };
 });
 
+canto.filter('abbreviateGenus', function () {
+  return function (scientificName) {
+    return scientificName.replace(/^([a-z])\w+/i, '$1.')
+  };
+});
+
 // from: https://stackoverflow.com/questions/15604140/replace-multiple-strings-with-multiple-other-strings
 function multiReplaceAll(str,mapObj){
   var re = new RegExp(Object.keys(mapObj).join("|"),"gi");
@@ -6972,6 +6978,7 @@ var annotationTableCtrl =
         $scope.isActiveSession = isActiveSession($scope.curs_session_state);
 
         $scope.multiOrganismMode = false;
+        $scope.strainsMode = CantoGlobals.strains_mode;
 
         $scope.data = {};
 
@@ -7179,6 +7186,7 @@ var annotationTableRow =
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.multiOrganismMode = false;
+        $scope.showStrain = $scope.strainsMode && $scope.annotationType.feature_type == 'genotype';
         $scope.sessionState = 'UNKNOWN';
         $scope.hideRelationNames = [];
 
@@ -7189,11 +7197,14 @@ var annotationTableRow =
 
         var annotation = $scope.annotation;
 
-        if (annotation.alleles) {
-          $scope.displayLoci = getDisplayLoci(annotation.alleles);
-        } else {
-          $scope.displayLoci = null;
-        }
+        $scope.$watchCollection('annotation.alleles',
+                                function(newAlleles) {
+                                  if (newAlleles) {
+                                    $scope.displayLoci = getDisplayLoci(newAlleles);
+                                  } else {
+                                    $scope.displayLoci = null;
+                                  }
+                                });
 
         $scope.checked = annotation['checked'] || 'no';
 
@@ -8332,8 +8343,8 @@ var metagenotypeListRow = function (CantoGlobals, Metagenotype, AnnotationTypeCo
       };
       $scope.getStrainName = function (type) {
         var metagenotype = $scope.metagenotype[type + '_genotype'];
-        var strain = metagenotype.strain_name || 'Wild type';
-        return '(strain: ' + strain + ')';
+        var strain = metagenotype.strain_name;
+        return '(' + strain + ')';
       };
 
       $scope.getScope = function (type) {

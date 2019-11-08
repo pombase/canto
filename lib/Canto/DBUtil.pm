@@ -199,4 +199,50 @@ sub check_schema_version
   }
 }
 
+=head2 check_db_organism
+
+ Usage   : Canto::DBUtil::check_db_organism($config, $track_schema);
+ Function: Check that the DB contains all the organisms mentioned in
+           the host_organism_taxonids and species_strain_map settings.
+ Args    : $config - a Canto::Config object
+           $track_schema - a TrackDB object
+ Return  : nothing, dies if there is a mismatch
+
+=cut
+
+sub check_db_organism
+{
+  my $config = shift;
+  my $schema = shift;
+
+  my %all_taxonids = ();
+  map {
+    $all_taxonids{$_->value()} = 1;
+  } $schema->resultset('Organismprop')
+    ->search({ 'type.name' => 'taxon_id' },
+             { join => 'type' })->all();
+
+  map {
+    if (!$all_taxonids{$_}) {
+      die qq("host_organism_taxonids" list in the configuration contains taxon ID "$_"
+which is not in the Track database);
+    }
+  } @{$config->{host_organism_taxonids} // []};
+
+  map {
+    if (!$all_taxonids{$_}) {
+      die qq("species_strain_map" in the configuration contains taxon ID "$_" as a key
+but that organism is not in the Track database);
+    }
+  } keys %{$config->{species_strain_map} // {}};
+
+  map {
+    my $ref_strain = $config->{species_strain_map}->{$_}->{reference_strain};
+    if (!$all_taxonids{$ref_strain}) {
+      die qq("species_strain_map" in the configuration contains taxon ID "$_" as a
+reference_strain but that organism is not in the Track database);
+    }
+  } keys %{$config->{species_strain_map} // {}};
+}
+
 1;

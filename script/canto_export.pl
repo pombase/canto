@@ -32,6 +32,7 @@ my $result = GetOptions ("help|h" => \$do_help,
 
 my %export_modules = (
   'canto-json' => 'Canto::Export::CantoJSON',
+  'gaf' => 'Canto::Export::GeneAssociationFile',
   'tab-zip' => 'Canto::Export::TabZip',
 );
 

@@ -2,6 +2,7 @@
 @annotation_type_list
 </%args>
 
+% if (!$read_only_curs) {
 <div class="curs-box">
   <div class="curs-box-title">
     Quick links
@@ -20,3 +21,8 @@
     </ul>
   </div>
 </div>
+% }
+
+<%init>
+my $read_only_curs = $c->stash()->{read_only_curs};
+</%init>
