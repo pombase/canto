@@ -1217,7 +1217,11 @@ var helpIcon = function (CantoGlobals, CantoConfig) {
 canto.directive('helpIcon', ['CantoGlobals', 'CantoConfig', helpIcon]);
 
 var cursFrontPageCtrl =
-  function ($scope, $uibModal, CursSettings, CursAnnotationDataService) {
+  function ($scope, $uibModal, CursSettings, CursAnnotationDataService,
+            AnnotationProxy, AnnotationTypeConfig) {
+    $scope.annotationTypes = [];
+    $scope.annotationsByType = {};
+
     $scope.checkAll = function () {
       CursAnnotationDataService.set('all', 'checked', 'yes').
       then(function () {
@@ -1239,6 +1243,18 @@ var cursFrontPageCtrl =
       });
     };
 
+    $scope.enableSubmitButton = function() {
+      var retVal = false;
+      $.map($scope.annotationTypes,
+            function(annotationType) {
+              if ($scope.annotationsByType[annotationType.name] &&
+                  $scope.annotationsByType[annotationType.name].length > 0) {
+                retVal = true;
+              }
+            });
+      return retVal;
+    };
+
     $scope.editMessageToCurators = function () {
       CursSettings.getAll().then(function (response) {
         editMessageForCurators($uibModal, response.data.message_for_curators)
@@ -1251,11 +1267,24 @@ var cursFrontPageCtrl =
     $scope.getAnnotationMode = function () {
       return CursSettings.getAnnotationMode();
     };
+
+    AnnotationTypeConfig.getAll().then(function (data) {
+      $scope.annotationTypes = data;
+
+      $.map($scope.annotationTypes,
+            function (annotationType) {
+              AnnotationProxy.getAnnotation(annotationType.name)
+                .then(function (annotations) {
+                  $scope.annotationsByType[annotationType.name] = annotations;
+                })
+            });
+    });
   };
 
 canto.controller('CursFrontPageCtrl',
                  ['$scope', '$uibModal', 'CursSettings',
-                  'CursAnnotationDataService', cursFrontPageCtrl]);
+                  'CursAnnotationDataService', 'AnnotationProxy', 'AnnotationTypeConfig',
+                  cursFrontPageCtrl]);
 
 
 function openSimpleDialog($uibModal, title, heading, message) {

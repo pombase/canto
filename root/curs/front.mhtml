@@ -34,11 +34,12 @@ $total_annotation_count
 %   }
 % } else {
 % if ($state eq Canto::Controller::Curs::CURATION_IN_PROGRESS) {
-%     if ($total_annotation_count > 0) {
+<div ng-if="enableSubmitButton()">
 <button type="button" id="curs-finish-session" class="btn btn-primary curs-finish-button">Submit to curators</button>
 <button type="button" id="curs-pause-session" class="btn btn-primary curs-finish-button">Pause curation</button>
-%     } else {
-<form action="<% $finish_form_url %>" class="curs-finish-buttons" method="POST"
+</div>
+<form ng-if="!enableSubmitButton()"
+      action="<% $finish_form_url %>" class="curs-finish-buttons" method="POST"
       ng-controller="SubmitToCuratorsCtrl" ng-init='init(<% $no_annotations_reasons_init_js |n%>)'>
   <div>
     <button type="button" class="btn btn-primary" id="curs-pause-session">Pause curation</button>
@@ -71,7 +72,6 @@ $total_annotation_count
     </div>
   </div>
 </form>
-%     }
 </div>
 % } else {
 
