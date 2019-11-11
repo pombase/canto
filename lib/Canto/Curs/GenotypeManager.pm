@@ -594,17 +594,6 @@ sub store_genotype_changes
   my $organism = $self->organism_manager()->add_organism_by_taxonid($genotype_taxonid);
   $genotype->organism_id($organism->organism_id());
 
-  my $allele_manager =
-    Canto::Curs::AlleleManager->new(config => $self->config(),
-                                    curs_schema => $schema);
-
-  my @alleles = ();
-  for my $allele_data (@$alleles_data) {
-    my $allele = $allele_manager->allele_from_json($allele_data, $self->curs_key(), \@alleles);
-
-    push @alleles, $allele;
-  }
-
   $self->_set_genotype_alleles($genotype, $alleles_data, $genotype->identifier());
 
   if ($strain_name) {
