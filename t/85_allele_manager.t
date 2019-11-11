@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 23;
+use Test::More tests => 25;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -38,11 +38,22 @@ my $new_allele = $allele_manager->allele_from_json(
     type => 'partial deletion, amino acid',
     description => '100-200',
     name => 'SPBC1826.01c-c1',
-    gene_id => $SPBC1826_01c->gene_id()
+    gene_id => $SPBC1826_01c->gene_id(),
+    notes => { test_key => 'test_note_value' },
   },
   'aaaa0007');
 
 is ($new_allele->primary_identifier(), 'SPBC1826.01c:aaaa0007-1');
+
+is ($new_allele->allele_notes()->count(), 1);
+
+test_notes([
+  {
+    key => 'test_key',
+    value => 'test_note_value',
+  },
+]);
+
 
 my $existing_allele_identifier = 'SPAC27D7.13c:aaaa0007-4';
 my $existing_allele = $allele_manager->allele_from_json(
@@ -131,6 +142,9 @@ sub test_notes
 
   cmp_deeply(\@db_notes, $expected);
 }
+
+$allele_manager->set_note($new_allele->primary_identifier(),
+                          'test_key', undef);
 
 test_notes([]);
 
