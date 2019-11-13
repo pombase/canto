@@ -13,7 +13,7 @@
     <li>
       <annotation-quick-add ng-if="getAnnotationMode() == 'advanced' || '<% $annotation_type->{category} %>' == 'interaction'"
                             annotation-type-name="<% $annotation_type->{name} %>"
-                            link-label="<% $annotation_type->{display_name} %> ..."
+                            link-label="<% ucfirst($annotation_type->{display_name}) %>"
                             feature-type="<% $annotation_type->{feature_type} %>">
       </annotation-quick-add>
     </li>
