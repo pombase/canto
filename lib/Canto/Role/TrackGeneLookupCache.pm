@@ -2,7 +2,8 @@ package Canto::Role::TrackGeneLookupCache;
 
 =head1 NAME
 
-Canto::Role::TrackGeneLookupCache - Look up a gene in the TrackDB
+Canto::Role::TrackGeneLookupCache - The Role will wrap a GeneLookup adaptor and then cache
+  the lookup results in the TrackDB.  Used by UniProt::GeneLookup
 
 =head1 SYNOPSIS
 
