@@ -73,20 +73,6 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("allele_note_id");
 
-=head1 UNIQUE CONSTRAINTS
-
-=head2 C<key_unique>
-
-=over 4
-
-=item * L</key>
-
-=back
-
-=cut
-
-__PACKAGE__->add_unique_constraint("key_unique", ["key"]);
-
 =head1 RELATIONS
 
 =head2 allele
@@ -110,8 +96,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2019-10-08 11:24:16
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:HJEN6jNVmeIZJWAOSzs3RA
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2019-11-13 22:55:57
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:kajBcyZr8OXS/Y2vXn0FAg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
