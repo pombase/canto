@@ -380,10 +380,12 @@ function symbolEncoder() {
 canto.filter('encodeAlleleSymbols', symbolEncoder);
 canto.filter('encodeGeneSymbols', symbolEncoder);
 
-
-canto.filter('featureChooserFilter', function () {
+canto.filter('featureChooserFilter', ['CantoGlobals', function (CantoGlobals) {
   return function (feature) {
     var ret = feature.display_name;
+    if (feature.gene_id && CantoGlobals.multi_organism_mode) {
+      ret += " (" + feature.organism.full_name + ")";
+    }
     if (feature.background) {
       ret += "  (bkg: " + feature.background.substr(0, 15);
       if (feature.background.length > 15) {
@@ -400,7 +402,7 @@ canto.filter('featureChooserFilter', function () {
     }
     return ret;
   };
-});
+}]);
 
 canto.filter('renameGenotypeType', function () {
   return function (type) {
