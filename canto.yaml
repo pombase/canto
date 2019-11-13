@@ -271,6 +271,11 @@ db_initial_data:
               accession: needs_approval_timestamp
               db:
                 name: Canto
+          - name: first_approved_timestamp
+            dbxref:
+              accession: first_approved_timestamp
+              db:
+                name: Canto
           - name: session_first_submitted_timestamp
             dbxref:
               accession: session_first_submitted_timestamp
