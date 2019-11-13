@@ -524,7 +524,6 @@ sub validate_curs
   while (defined (my $allele = $allele_rs->next())) {
     if (!$allele->primary_identifier()) {
       my $new_primary_identifier = $allele->gene()->primary_identifier() . ":$curs_key-" . $allele->allele_id();
-      warn $curs_key, " ", $allele->allele_id(), " $new_primary_identifier\n";
       $allele->primary_identifier($new_primary_identifier);
       $allele->update();
     }
