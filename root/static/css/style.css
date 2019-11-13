@@ -745,8 +745,8 @@ table td.curs-genotype-checkbox-column {
   margin-right: 0.4em;
 }
 
-.curs-genotype-edit-allele-list {
-  margin-top: 20px;
+.curs-genotype-edit-allele-list, #curs-genotype-manage .curs-genotype-edit-gene-list {
+  margin-top: 1.5em;
   margin-bottom: 2em;
 }
 
