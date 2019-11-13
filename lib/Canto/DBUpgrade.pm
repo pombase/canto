@@ -786,6 +786,20 @@ CREATE TABLE allele_note (
 
     Canto::Track::curs_map($config, $track_schema, $update_proc);
   },
+
+  32 => sub {
+    my $config = shift;
+    my $track_schema = shift;
+    my $load_util = shift;
+
+    my $dbh = $track_schema->storage()->dbh();
+
+    $load_util->get_cvterm(cv_name => 'Canto cursprop types',
+                           term_name => 'first_approved_timestamp',
+                           ontologyid => 'Canto:first_approved_timestamp');
+
+    Canto::Track::update_all_statuses($config);
+  },
 );
 
 sub upgrade_to
