@@ -297,6 +297,14 @@ sub store_statuses
                                    $needs_approval_timestamp_row->value());
   }
 
+  my $first_approved_timestamp_row =
+    $metadata_rs->search({ key => FIRST_APPROVED_TIMESTAMP_KEY })->first();
+
+  if (defined $first_approved_timestamp_row) {
+    $self->status_adaptor()->store($curs_key, 'first_approved_timestamp',
+                                   $first_approved_timestamp_row->value());
+  }
+
   my $approver_name_row = $metadata_rs->find({ key => 'approver_name' });
   if (defined $approver_name_row) {
     my $approver_name = $approver_name_row->value();
