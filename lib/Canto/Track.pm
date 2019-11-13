@@ -51,6 +51,7 @@ use Canto::Curs;
 use Canto::CursDB;
 use Canto::Util;
 use Canto::Curs::State qw/:all/;
+use Canto::Track::GeneLoad;
 
 =head2 create_curs
 
@@ -563,6 +564,72 @@ sub update_all_statuses
 
   while (my ($curs, $cursdb) = $iter->()) {
     $state->store_statuses($cursdb);
+  }
+}
+
+=head2 refresh_gene_cache
+
+ Usage   : Canto::Track::refresh_gene_cache($config, $track_schema);
+ Function: Clear cached genes, then re-fetch them
+
+=cut
+
+sub refresh_gene_cache
+{
+
+  my $config = shift;
+  my $track_schema = shift;
+
+  my $adaptor = Canto::Track::get_adaptor($config, 'gene');
+
+  if (!$adaptor->isa('Canto::UniProt::GeneLookup')) {
+    die "failed to refresh gene cache - refreshing only works for the UniProt GeneLookup\n" .
+      "adaptor\n";
+  }
+
+  my %current_genes = ();
+  my @current_gene_primary_identifiers = ();
+
+  map {
+    my $gene = $_;
+    $current_genes{$_->primary_identifier()} =
+      {
+        primary_identifier => $_->primary_identifier(),
+        primary_name => $_->primary_name(),
+        synonyms => [map {
+          my $synonym = $_;
+          $synonym->identifier();
+        } $_->genesynonyms()->all()],
+        product => $gene->product(),
+        organism_id => $gene->organism()->organism_id(),
+      };
+
+    push @current_gene_primary_identifiers, $_->primary_identifier();
+
+    } $track_schema->resultset('Gene', {}, { prefetch => 'organism' })->all();
+
+  $track_schema->resultset('Genesynonym')->delete();
+  $track_schema->resultset('Gene')->delete();
+
+  my $lookup_results = $adaptor->lookup(\@current_gene_primary_identifiers);
+
+  my @missing_ids = @{$lookup_results->{missing}};
+
+  if (@missing_ids) {
+    for my $missing_id (@missing_ids) {
+      my $saved_gene = $current_genes{$missing_id};
+      if ($saved_gene) {
+        my $organism_id = $saved_gene->{organism_id};
+
+        my $organism = $track_schema->resultset('Organism')->find($organism_id);
+
+        my $gene_load = Canto::Track::GeneLoad->new(schema => $track_schema,
+                                                    organism => $organism);
+
+        $gene_load->create_gene($saved_gene->{primary_identifier}, $saved_gene->{primary_name},
+                                $saved_gene->{synonyms}, $saved_gene->{product});
+      }
+    }
   }
 }
 
