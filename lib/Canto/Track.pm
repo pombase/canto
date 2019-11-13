@@ -42,6 +42,8 @@ use warnings;
 use Carp;
 use Moose;
 
+use List::MoreUtils qw(natatime);
+
 with 'Canto::Role::MetadataAccess';
 
 use File::Copy qw(copy);
@@ -611,9 +613,18 @@ sub refresh_gene_cache
   $track_schema->resultset('Genesynonym')->delete();
   $track_schema->resultset('Gene')->delete();
 
-  my $lookup_results = $adaptor->lookup(\@current_gene_primary_identifiers);
+  my @missing_ids = ();
 
-  my @missing_ids = @{$lookup_results->{missing}};
+  # lookup 50 genes at a time so we don't send a huge query
+  my $iter = natatime 50, @current_gene_primary_identifiers;
+
+  while (my @ids = $iter->()) {
+    my $lookup_results = $adaptor->lookup(\@ids);
+
+    if (@{$lookup_results->{missing}}) {
+      push @missing_ids, @{$lookup_results->{missing}};
+    }
+  }
 
   if (@missing_ids) {
     for my $missing_id (@missing_ids) {
@@ -626,7 +637,8 @@ sub refresh_gene_cache
         my $gene_load = Canto::Track::GeneLoad->new(schema => $track_schema,
                                                     organism => $organism);
 
-        $gene_load->create_gene($saved_gene->{primary_identifier}, $saved_gene->{primary_name},
+        $gene_load->create_gene($saved_gene->{primary_identifier},
+                                $saved_gene->{primary_name},
                                 $saved_gene->{synonyms}, $saved_gene->{product});
       }
     }
