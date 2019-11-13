@@ -723,7 +723,7 @@ sub gene_upload : Chained('top') Args(0) Form
     push @all_elements,
       {
         type => 'Block', tag => 'div',
-        content => "Create host organism list (where there are no specified host genes) for $pub_uniquename:",
+        content => "Add host organisms (where the paper has a host with no specified genes):",
       },
       {
         type => 'Block', tag => 'organism-picker',
