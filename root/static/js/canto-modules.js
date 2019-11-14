@@ -2196,8 +2196,16 @@ function parseExtensionString(extensionString) {
 }
 
 var extensionManualEditDialogCtrl =
-  function ($scope, $uibModalInstance, args) {
+  function ($scope, $uibModalInstance, CursGeneList, args) {
     $scope.currentError = "";
+    $scope.genes = {};
+
+    CursGeneList.geneList().then(function (results) {
+      $.map(results,
+            function(gene) {
+              $scope.genes[gene.primary_identifier] = gene;
+            });
+    });
 
     $scope.editExtension =
       $.map(args.extension,
@@ -2211,7 +2219,26 @@ var extensionManualEditDialogCtrl =
       return $scope.currentError.length == 0;
     };
 
+    $scope.fixGenes = function() {
+      if (Object.keys($scope.genes).length > 0) {
+        return $.map($scope.editExtension,
+                     function (orPart) {
+                       return $.map(orPart,
+                                    function (andPart) {
+                                      console.log(andPart);
+                                      var gene = $scope.genes[andPart.rangeValue];
+                                      if (gene) {
+                                        andPart.rangeDisplayName =
+                                          gene.display_name || andPart.rangeValue;
+                                      }
+                                    });
+                     });
+      }
+    };
+
     $scope.ok = function () {
+      $scope.fixGenes();
+
       $uibModalInstance.close({
         extension: $scope.editExtension,
       });
@@ -2223,7 +2250,7 @@ var extensionManualEditDialogCtrl =
   };
 
 canto.controller('ExtensionManualEditDialogCtrl',
-  ['$scope', '$uibModalInstance', 'args',
+                 ['$scope', '$uibModalInstance', 'CursGeneList', 'args',
     extensionManualEditDialogCtrl
   ]);
 
