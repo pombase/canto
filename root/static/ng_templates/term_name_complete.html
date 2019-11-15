@@ -7,16 +7,9 @@
       Configuration problem - no terms in the database for {{annotationTypeName}}
     </span>
     <span ng-show="termCount != 0">
-      <span ng-hide="allTerms.length > 0">
-        <input placeholder="{{placeholder}}" size="{{size}}" type="text"
+        <input placeholder="{{placeholder}}"
+               size="{{isShortList() ? 25 : size}}" type="text"
                class="form-control" autofocus ng-model="currentTermName"/>
-      </span>
-      <span ng-show="allTerms.length > 0">
-        <select class="form-control" ng-model="chosenTerm"
-                ng-options="term.name for term in allTerms">
-          <option value="">Choose a term...</option>
-        </select>
-      </span>
     </span>
   </span>
 </span>

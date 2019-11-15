@@ -24,6 +24,7 @@ var alleles_have_expression = <% $alleles_have_expression ? 'true' : 'false' %>;
 var allow_single_wildtype_allele = <% $allow_single_wildtype_allele ? 'true' : 'false' %>;
 var diploid_mode = <% $diploid_mode ? 'true' : 'false' %>;
 var flybase_mode = <% $flybase_mode ? 'true' : 'false' %>;
+var max_term_name_select_count = <% $max_term_name_select_count %>;
 </script>
 
 <div id="disabled-overlay"></div>
@@ -78,4 +79,5 @@ my $alleles_have_expression = $c->config()->{alleles_have_expression} || 0;
 my $allow_single_wildtype_allele = $c->config()->{allow_single_wildtype_allele} || 0;
 my $diploid_mode = $c->config()->{diploid_mode} || 0;
 my $flybase_mode = $c->config()->{flybase_mode} || 0;
+my $max_term_name_select_count = $c->config()->{max_term_name_select_count} || 20;
 </%init>

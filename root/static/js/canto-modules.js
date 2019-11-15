@@ -807,6 +807,7 @@ canto.service('CantoGlobals', function ($window) {
   this.allow_single_wildtype_allele = $window.allow_single_wildtype_allele;
   this.diploid_mode = $window.diploid_mode;
   this.flybase_mode = $window.flybase_mode;
+  this.max_term_name_select_count = $window.max_term_name_select_count;
   this.organismsAndGenes = $window.organismsAndGenes;
   this.confirmGenes = $window.confirmGenes;
   this.highlightTerms = $window.highlightTerms;
@@ -7520,27 +7521,11 @@ var termNameComplete =
 
         $scope.extensionLookup = ($scope.mode && $scope.mode == 'extension' ? 1 : 0);
 
-        CantoConfig.get('max_term_name_select_count').then(function (results) {
-          var maxCount = results.value;
-          CantoService.lookup('ontology', [$scope.annotationTypeName,
-              ':COUNT:'
-            ], {
-              extension_lookup: $scope.extensionLookup
-            })
-            .then(function (data) {
-                $scope.termCount = data.count;
-                if ($scope.termCount <= maxCount) {
-                  CantoService.lookup('ontology',
-                      [$scope.annotationTypeName, ':ALL:'], {
-                        extension_lookup: $scope.extensionLookup
-                      })
-                    .then(function (data) {
-                      // this triggers using a dropdown instead of autocomplete
-                      $scope.allTerms = data;
-                    });
-              }
-            });
-        });
+        $scope.maxTermNameSelectCount = CantoGlobals.max_term_name_select_count;
+
+        $scope.isShortList = function() {
+          return $scope.termCount && $scope.termCount < $scope.maxTermNameSelectCount;
+        };
 
         $scope.placeholder = '';
 
@@ -7658,12 +7643,36 @@ var termNameComplete =
           });
         }
 
+        function show_all() {
+          input.focus();
+          scope.$apply(function () {
+            input.autocomplete('search', ':ALL:');
+          });
+        }
+
+        CantoService.lookup('ontology', [scope.annotationTypeName,
+                                         ':COUNT:'
+                                        ], {
+                                          extension_lookup: scope.extensionLookup
+                                        })
+          .then(function (data) {
+            scope.termCount = data.count;
+            if (scope.isShortList()) {
+              setTimeout(show_all, 100);
+              scope.placeholder = 'Choose a term ...  (type to filter)';
+           }
+          });
+
         input.bind('paste', function () {
           setTimeout(do_autocomplete, 10);
         });
 
         input.bind('click', function () {
-          setTimeout(do_autocomplete, 10);
+          if (scope.isShortList()) {
+            show_all();
+          } else {
+            setTimeout(do_autocomplete, 10);
+          }
         });
 
         input.keypress(function (event) {
