@@ -1991,11 +1991,9 @@ available_annotation_type_list:
       - Synthetic Rescue
     detailed_help_path: /docs/genetic_interaction_annotation
   - name: physical_interaction
-    namespace: fission_yeast_phenotype
-    can_have_conditions: 1
     category: interaction
     display_name: 'physical interaction'
-    feature_type: 'metagenotype'
+    feature_type: 'gene'
     help_text: 'Examples: co-purification, two-hybrid, affinity capture'
     evidence_codes:
       - Affinity Capture-Luminescence

@@ -1027,15 +1027,25 @@ sub make_annotation
     }
   }
 
+  my $feature_type = $annotation_config->{feature_type};
+
   if ($category eq 'interaction') {
-    my $metagenotype =
-      $self->_process_interaction_genotypes($data->{genotype_a_id}, $data->{genotype_b_id});
+    if ($feature_type eq 'metagenotype') {
+      my $metagenotype =
+        $self->_process_interaction_genotypes($data->{genotype_a_id}, $data->{genotype_b_id});
 
-    delete $data->{genotype_a_id};
-    delete $data->{genotype_b_id};
+      delete $data->{genotype_a_id};
+      delete $data->{genotype_b_id};
 
-    $data->{feature_id} = $metagenotype->metagenotype_id();
-    $data->{feature_type} = 'metagenotype';
+      $data->{feature_id} = $metagenotype->metagenotype_id();
+      $data->{feature_type} = 'metagenotype';
+    } else {
+      if ($feature_type eq 'gene') {
+        # the interacting gene is in $data
+      } else {
+        die "unexpected feature type for interaction: $feature_type\n";
+      }
+    }
   }
 
   my $current_date = Canto::Curs::Utils::get_iso_date();
@@ -1214,6 +1224,71 @@ sub _ontology_change_keys
   )
 }
 
+sub _interaction_change_keys
+{
+  my $self = shift;
+  my $annotation = shift;
+  my $changes = shift;
+
+  my $data = $annotation->data();
+
+  return (
+    evidence_code => sub {
+      my $evidence_code = shift;
+
+      my $evidence_config = $self->config()->{evidence_types}->{$evidence_code};
+
+      if (defined $evidence_config) {
+        # do the default - set Annotation->data()->{...}
+        return 0
+      } else {
+        die "no such evidence code: $evidence_code\n";
+      }
+    },
+    feature_id => sub {
+      my $feature_id = shift;
+
+      my $gene = $self->curs_schema()->find_with_type('Gene', { gene_id => $feature_id });
+      $annotation->gene_annotations()->delete();
+      $annotation->set_genes($gene);
+
+      return 1;
+    },
+    feature_type => sub {
+      my $feature_type = shift;
+
+      if ($feature_type ne 'gene') {
+        die qq(incorrect feature_type "$feature_type" for interaction - needed "gene"\n);
+      }
+
+      return 1;
+    },
+    interacting_gene_id => sub {
+      my $gene_id = shift;
+
+      if ($gene_id) {
+        my $gene = _lookup_gene_id($self->curs_schema(), $gene_id);
+
+        if (defined $gene) {
+          $data->{interacting_genes} =
+            [
+              {
+                primary_identifier => $gene->primary_identifier(),
+              },
+            ];
+          return 1;
+        } else {
+          die "can't find gene with id: $gene_id\n";
+        }
+      } else {
+        die "no interacting_gene_id passed to service\n";
+      }
+    },
+    submitter_comment => 1,
+  );
+}
+
+
 sub _store_change_hash
 {
   my $self = shift;
@@ -1222,7 +1297,22 @@ sub _store_change_hash
 
   $self->_check_curs_key($changes);
 
-  my %valid_change_keys = $self->_ontology_change_keys($annotation, $changes);
+  my %valid_change_keys;
+
+  my $annotation_config = $self->config()->{annotation_types}->{$annotation->type()};
+
+  my $category = $self->_category_from_type($annotation->type());
+
+  if ($category eq 'ontology' ||
+      $category eq 'interaction' && $annotation_config->{feature_type} eq 'metagenotype') {
+    %valid_change_keys = $self->_ontology_change_keys($annotation, $changes);
+  } else {
+    if ($category eq 'interaction' && $annotation_config->{feature_type} eq 'gene') {
+      %valid_change_keys = $self->_interaction_change_keys($annotation, $changes);
+    } else {
+      die "can't find category for ", $annotation->type(), "\n";
+    }
+  }
 
   my $data = $annotation->data();
 
@@ -1346,7 +1436,10 @@ sub change_annotation
 
     my $orig_metagenotype = undef;
 
-    if ($self->_category_from_type($annotation->type()) eq 'interaction') {
+    my $annotation_config = $self->config()->{annotation_types}->{$annotation->type()};
+
+    if ($annotation_config->{category} eq 'interaction' &&
+      $annotation_config->{feature_type} eq 'metagenotype') {
       my $genotype_a_id = delete $changes->{genotype_a_id};
       my $genotype_b_id = delete $changes->{genotype_b_id};
 

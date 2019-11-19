@@ -422,6 +422,125 @@ sub make_ontology_annotation
  return $ret;
 }
 
+=head2 make_gene_interaction_annotation
+
+ Usage   : my $hash = Canto::Curs::Utils::make_gene_interaction_annotation(...);
+ Function: Retrieve the details of an interaction annotation from the CursDB as
+           a hash
+ Args    : $config - a Config object
+           $schema - the CursDB schema
+           $annotation - the Annotation to dump as a hash
+
+=cut
+
+sub make_gene_interaction_annotation
+{
+  my $config = shift;
+  my $schema = shift;
+  my $annotation = shift;
+  my $constrain_gene = shift;
+
+  my @annotation_genes = $annotation->genes();
+
+  if (@annotation_genes > 1) {
+    die "internal error, more than one gene for annotation: ",
+      $annotation->annotation_id();
+  }
+
+  my $gene = $annotation_genes[0];
+
+  my $is_inferred_annotation = 0;
+
+  my $gene_proxy =
+    Canto::Curs::GeneProxy->new(config => $config,
+                                 cursdb_gene => $gene);
+
+  my $data = $annotation->data();
+  my $evidence_code = $data->{evidence_code};
+  my $annotation_type = $annotation->type();
+
+  my %annotation_types_config = %{$config->{annotation_types}};
+  my $annotation_type_config = $annotation_types_config{$annotation_type};
+  my $annotation_type_display_name = $annotation_type_config->{display_name};
+
+  my $pub_uniquename = $annotation->pub()->uniquename();
+  my $curator = undef;
+  if (defined $data->{curator}) {
+    $curator = $data->{curator}->{name} . ' <' . $data->{curator}->{email} . '>';
+  }
+
+  my @interacting_genes = @{$data->{interacting_genes}};
+
+  if (@interacting_genes > 1) {
+    die "more than one interacting gene in annotation with ID: ",
+      $annotation->annotation_id(), " - update the database\n";
+  }
+
+  my @results = ();
+
+  my $interacting_gene_info = $interacting_genes[0];
+
+  my $interacting_gene_primary_identifier =
+    $interacting_gene_info->{primary_identifier};
+  my $interacting_gene =
+    $schema->find_with_type('Gene',
+                            { primary_identifier =>
+                                $interacting_gene_primary_identifier});
+  my $interacting_gene_proxy =
+    Canto::Curs::GeneProxy->new(config => $config,
+                                cursdb_gene => $interacting_gene);
+
+  my $interacting_gene_display_name =
+    $interacting_gene_proxy->display_name();
+
+  if (defined $constrain_gene) {
+    if ($constrain_gene->gene_id() != $gene->gene_id()) {
+      if ($interacting_gene->gene_id() == $constrain_gene->gene_id()) {
+        $is_inferred_annotation = 1;
+      } else {
+        # ignore bait or prey from this annotation if it isn't the
+        # current gene (on a gene page)
+        next;
+      }
+    }
+  }
+
+  my $entry =
+    {
+      annotation_type => $annotation_type,
+      annotation_type_display_name => $annotation_type_display_name,
+      gene_identifier => $gene_proxy->primary_identifier(),
+      gene_display_name => $gene_proxy->display_name(),
+      gene_taxonid => $gene_proxy->taxonid(),
+      gene_id => $gene_proxy->gene_id(),
+      feature_display_name => $gene_proxy->display_name(),
+      feature_id => $gene_proxy->gene_id(),
+      publication_uniquename => $pub_uniquename,
+      evidence_code => $evidence_code,
+      interacting_gene_identifier =>
+        $interacting_gene_primary_identifier,
+      interacting_gene_display_name =>
+        $interacting_gene_display_name,
+      interacting_gene_taxonid =>
+        $interacting_gene_info->{organism_taxon}
+          // $interacting_gene_proxy->taxonid(),
+      interacting_gene_id => $interacting_gene_proxy->gene_id(),
+      score => '',  # for biogrid format output
+      phenotypes => '',
+      submitter_comment => $data->{submitter_comment} // '',
+      completed => 1,
+      annotation_id => $annotation->annotation_id(),
+      annotation_type => $annotation_type,
+      status => $annotation->status(),
+      curator => $curator,
+      is_inferred_annotation => $is_inferred_annotation,
+      checked => $data->{checked} || 'no',
+    };
+
+  return $entry;
+};
+
+
 =head2 make_interaction_annotation
 
  Usage   : my $hash = Canto::Curs::Utils::make_interaction_annotation(...);
@@ -438,6 +557,14 @@ sub make_interaction_annotation
   my $config = shift;
   my $schema = shift;
   my $annotation = shift;
+
+  my $annotation_type = $annotation->type();
+
+  my $annotation_config = $config->{annotation_types}->{$annotation_type};
+
+  if ($annotation_config->{feature_type} eq 'gene') {
+    return make_gene_interaction_annotation($config, $schema, $annotation);
+  }
 
   my $ontology_lookup = shift //
     Canto::Track::get_adaptor($config, 'ontology');
@@ -457,11 +584,6 @@ sub make_interaction_annotation
   if (@metagenotype_annotations > 1) {
     die "internal error, more than one metagenotype for annotation: ",
       $annotation->annotation_id();
-  }
-
-  if (@metagenotype_annotations == 0) {
-    use Data::Dumper;
-    warn Dumper([$annotation->annotation_id(), $annotation->data()]);
   }
 
   my $metagenotype = $metagenotype_annotations[0]->metagenotype();
@@ -503,7 +625,6 @@ sub make_interaction_annotation
 
   my $data = $annotation->data();
   my $evidence_code = $data->{evidence_code};
-  my $annotation_type = $annotation->type();
 
   my $term_name = '';
 
