@@ -867,6 +867,7 @@ var keysForServer = {
   with_gene_id: true,
   second_feature_id: true,
   second_feature_type: true,
+  interacting_gene_id: true,
 };
 
 var annotationProxy =
@@ -6369,12 +6370,19 @@ var annotationEditDialogCtrl =
         $scope.hideRelationNames = annotationType.hide_extension_relations || [];
 
         if (annotationType.category === 'interaction') {
-          $scope.chooseFeatureType = 'genotype';
+          if (annotationType.feature_type === 'gene') {
+            $scope.chooseFeatureType = 'gene';
 
-          $scope.annotation.feature_id = $scope.annotation.genotype_a_id;
-          delete $scope.annotation.genotype_a_id;
-          $scope.annotation.second_feature_id = $scope.annotation.genotype_b_id;
-          delete $scope.annotation.genotype_b_id;
+            $scope.annotation.second_feature_id = $scope.annotation.interacting_gene_id;
+            delete $scope.annotation.interacting_gene_id;
+          } else {
+            $scope.chooseFeatureType = 'genotype';
+
+            $scope.annotation.feature_id = $scope.annotation.genotype_a_id;
+            delete $scope.annotation.genotype_a_id;
+            $scope.annotation.second_feature_id = $scope.annotation.genotype_b_id;
+            delete $scope.annotation.genotype_b_id;
+          }
         } else {
           $scope.chooseFeatureType = annotationType.feature_type;
         }
@@ -6761,10 +6769,16 @@ var annotationEditDialogCtrl =
 
     $scope.ok = function () {
       if ($scope.annotationType.category === 'interaction') {
-        $scope.annotation.genotype_a_id = $scope.annotation.feature_id;
-        delete $scope.annotation.feature_id;
-        $scope.annotation.genotype_b_id = $scope.annotation.second_feature_id;
-        delete $scope.annotation.second_feature_id;
+        if ($scope.annotationType.feature_type === 'gene') {
+          $scope.annotation.interacting_gene_id = $scope.annotation.second_feature_id;
+          delete $scope.annotation.second_feature_id;
+          delete $scope.annotation.extension;
+        } else {
+          $scope.annotation.genotype_a_id = $scope.annotation.feature_id;
+          delete $scope.annotation.feature_id;
+          $scope.annotation.genotype_b_id = $scope.annotation.second_feature_id;
+          delete $scope.annotation.second_feature_id;
+        }
       }
 
       var q = AnnotationProxy.storeChanges(args.annotation,
@@ -6974,6 +6988,10 @@ function filterAnnotations(annotations, params) {
       if (params.featureType) {
         if (params.featureType === 'gene') {
           if (annotation.gene_id == params.featureId) {
+            return true;
+          }
+          if (typeof (annotation.interacting_gene_id) !== 'undefined' &&
+            annotation.interacting_gene_id == params.featureId) {
             return true;
           }
           if (annotation.genotype_a_gene_ids &&
