@@ -42,6 +42,8 @@ use warnings;
 use Carp;
 use Moose;
 
+use List::MoreUtils qw(natatime);
+
 with 'Canto::Role::MetadataAccess';
 
 use File::Copy qw(copy);
@@ -51,6 +53,7 @@ use Canto::Curs;
 use Canto::CursDB;
 use Canto::Util;
 use Canto::Curs::State qw/:all/;
+use Canto::Track::GeneLoad;
 
 =head2 create_curs
 
@@ -321,6 +324,8 @@ sub curs_map
       Canto::Curs::get_schema_for_key($config, $curs_key,
                                       { cache_connection => 0 });
     push @ret, $func->($curs, $curs_schema, $track_schema);
+
+    $curs_schema->storage()->disconnect();
   }
 
   return @ret;
@@ -519,7 +524,6 @@ sub validate_curs
   while (defined (my $allele = $allele_rs->next())) {
     if (!$allele->primary_identifier()) {
       my $new_primary_identifier = $allele->gene()->primary_identifier() . ":$curs_key-" . $allele->allele_id();
-      warn $curs_key, " ", $allele->allele_id(), " $new_primary_identifier\n";
       $allele->primary_identifier($new_primary_identifier);
       $allele->update();
     }
@@ -532,6 +536,7 @@ sub validate_curs
                        });
 
   $alleles_with_no_genotype_rs->search_related('allelesynonyms')->delete();
+  $alleles_with_no_genotype_rs->search_related('allele_notes')->delete();
 
   $alleles_with_no_genotype_rs->delete();
 
@@ -560,6 +565,82 @@ sub update_all_statuses
 
   while (my ($curs, $cursdb) = $iter->()) {
     $state->store_statuses($cursdb);
+  }
+}
+
+=head2 refresh_gene_cache
+
+ Usage   : Canto::Track::refresh_gene_cache($config, $track_schema);
+ Function: Clear cached genes, then re-fetch them
+
+=cut
+
+sub refresh_gene_cache
+{
+
+  my $config = shift;
+  my $track_schema = shift;
+
+  my $adaptor = Canto::Track::get_adaptor($config, 'gene');
+
+  if (!$adaptor->isa('Canto::UniProt::GeneLookup')) {
+    die "failed to refresh gene cache - refreshing only works for the UniProt GeneLookup\n" .
+      "adaptor\n";
+  }
+
+  my %current_genes = ();
+  my @current_gene_primary_identifiers = ();
+
+  map {
+    my $gene = $_;
+    $current_genes{$_->primary_identifier()} =
+      {
+        primary_identifier => $_->primary_identifier(),
+        primary_name => $_->primary_name(),
+        synonyms => [map {
+          my $synonym = $_;
+          $synonym->identifier();
+        } $_->genesynonyms()->all()],
+        product => $gene->product(),
+        organism_id => $gene->organism()->organism_id(),
+      };
+
+    push @current_gene_primary_identifiers, $_->primary_identifier();
+
+    } $track_schema->resultset('Gene', {}, { prefetch => 'organism' })->all();
+
+  $track_schema->resultset('Genesynonym')->delete();
+  $track_schema->resultset('Gene')->delete();
+
+  my @missing_ids = ();
+
+  # lookup 50 genes at a time so we don't send a huge query
+  my $iter = natatime 50, @current_gene_primary_identifiers;
+
+  while (my @ids = $iter->()) {
+    my $lookup_results = $adaptor->lookup(\@ids);
+
+    if (@{$lookup_results->{missing}}) {
+      push @missing_ids, @{$lookup_results->{missing}};
+    }
+  }
+
+  if (@missing_ids) {
+    for my $missing_id (@missing_ids) {
+      my $saved_gene = $current_genes{$missing_id};
+      if ($saved_gene) {
+        my $organism_id = $saved_gene->{organism_id};
+
+        my $organism = $track_schema->resultset('Organism')->find($organism_id);
+
+        my $gene_load = Canto::Track::GeneLoad->new(schema => $track_schema,
+                                                    organism => $organism);
+
+        $gene_load->create_gene($saved_gene->{primary_identifier},
+                                $saved_gene->{primary_name},
+                                $saved_gene->{synonyms}, $saved_gene->{product});
+      }
+    }
   }
 }
 

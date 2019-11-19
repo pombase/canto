@@ -22,6 +22,13 @@ CREATE TABLE allele (
        gene integer REFERENCES gene(gene_id)
 );
 
+CREATE TABLE allele_note (
+       allele_note_id integer PRIMARY KEY,
+       allele integer REFERENCES allele(allele_id),
+       key text NOT NULL,
+       value text
+);
+
 CREATE TABLE allelesynonym (
        allelesynonym integer PRIMARY KEY,
        allele integer REFERENCES allele(allele_id),
@@ -74,8 +81,9 @@ CREATE TABLE genotype (
 CREATE TABLE metagenotype (
        metagenotype_id integer PRIMARY KEY AUTOINCREMENT,
        identifier text UNIQUE NOT NULL,
-       pathogen_genotype_id integer NOT NULL REFERENCES genotype(genotype_id),
-       host_genotype_id integer NOT NULL REFERENCES genotype(genotype_id)
+       type TEXT NOT NULL CHECK(type = 'pathogen-host' OR type = 'interaction'),
+       first_genotype_id integer NOT NULL REFERENCES genotype(genotype_id),
+       second_genotype_id integer NOT NULL REFERENCES genotype(genotype_id)
 );
 
 CREATE TABLE metagenotype_annotation (

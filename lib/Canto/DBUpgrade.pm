@@ -42,6 +42,9 @@ use Canto::Track;
 use Canto::ExtensionUtil;
 use Canto::Track;
 
+use Canto::Curs::AlleleManager;
+use Canto::Curs::GenotypeManager;
+
 has config => (is => 'ro', required => 1);
 
 my %procs = (
@@ -622,6 +625,180 @@ CREATE TABLE diploid (
     };
 
     Canto::Track::curs_map($config, $track_schema, $update_proc);
+  },
+
+  30 => sub {
+    my $config = shift;
+    my $track_schema = shift;
+
+    my $dbh = $track_schema->storage()->dbh();
+
+    my $update_proc = sub {
+      my $curs = shift;
+      my $curs_schema = shift;
+      my $curs_key = $curs->curs_key();
+
+      my $curs_dbh = $curs_schema->storage()->dbh();
+
+      $curs_dbh->do("PRAGMA foreign_keys = OFF");
+
+      $curs_dbh->do("DROP TABLE if exists metagenotype_temp");
+
+      $curs_dbh->do("
+CREATE TABLE metagenotype_temp (
+       metagenotype_id integer PRIMARY KEY AUTOINCREMENT,
+       identifier text UNIQUE NOT NULL,
+       type TEXT NOT NULL CHECK(type = 'pathogen-host' OR type = 'interaction'),
+       first_genotype_id integer NOT NULL REFERENCES genotype(genotype_id),
+       second_genotype_id integer NOT NULL REFERENCES genotype(genotype_id)
+);
+      ");
+
+      $curs_dbh->do("INSERT INTO metagenotype_temp(metagenotype_id, identifier, first_genotype_id, second_genotype_id, type)
+         SELECT metagenotype_id, identifier, pathogen_genotype_id, host_genotype_id, 'pathogen-host'
+         FROM metagenotype
+      ");
+
+      $curs_dbh->do("DROP TABLE metagenotype");
+
+      $curs_dbh->do("ALTER TABLE metagenotype_temp RENAME TO metagenotype");
+
+      my $annotation_rs = $curs_schema->resultset('Annotation');
+
+      $curs_dbh->do("PRAGMA foreign_keys = ON");
+
+      my $genotype_manager = Canto::Curs::GenotypeManager->new(config => $config,
+                                                               curs_schema => $curs_schema);
+
+      my @old_interaction_annotations = grep {
+        my $old_annotation = $_;
+        $old_annotation->type() eq 'physical_interaction' ||
+          $old_annotation->type() eq 'genetic_interaction';
+      } $annotation_rs->all();
+
+      for my $old_annotation (@old_interaction_annotations) {
+          my $data = $old_annotation->data();
+          my $interacting_genes = delete $data->{interacting_genes};
+
+          map {
+            my @a_genes = $old_annotation->genes();
+
+            if (@a_genes > 1) {
+              die "can't upgrade $curs_key, interaction annotation has more than 1 gene";
+            }
+
+            if (@a_genes == 0) {
+              die "can't upgrade $curs_key, interaction annotation has no genes";
+            }
+
+            my $gene_a =
+              Canto::Curs::GeneProxy->new(config => $config, cursdb_gene => $a_genes[0]);
+
+            my $json_allele_a = {
+              name => 'unspecified-' . $gene_a->display_name(),
+              type => 'unspecified',
+              gene_id => $gene_a->gene_id(),
+            };
+
+            my $taxonid_a = $gene_a->organism_details()->{taxonid};
+
+            my $genotype_a =
+              $genotype_manager->make_genotype(undef, undef, [$json_allele_a], $taxonid_a,
+                                               undef, undef, undef);
+
+            my $gene_b_primary_identifier = $_->{primary_identifier};
+            my $curs_gene_b = $curs_schema->resultset('Gene')
+              ->find({
+                primary_identifier => $gene_b_primary_identifier,
+              }, {
+                prefetch => 'organism',
+              });
+
+            my $gene_b =
+              Canto::Curs::GeneProxy->new(config => $config, cursdb_gene => $curs_gene_b);
+
+            my $json_allele_b = {
+              name => 'unspecified-' . $gene_b->display_name(),
+              type => 'unspecified',
+              gene_id => $gene_b->gene_id(),
+            };
+
+            my $taxonid_b = $gene_a->organism_details()->{taxonid};
+
+            my $genotype_b =
+              $genotype_manager->make_genotype(undef, undef, [$json_allele_b], $taxonid_b,
+                                               undef, undef, undef);
+
+            if ($data->{evidence_code} eq 'Synthetic Lethality') {
+              $data->{term_ontid} = 'FYPO:0002059';
+            }
+
+            my $annotation =
+              $curs_schema->create_with_type('Annotation',
+                                             {
+                                               status => $old_annotation->status(),
+                                               pub => $old_annotation->pub(),
+                                               type => $old_annotation->type(),
+                                               creation_date => $old_annotation->creation_date(),
+                                               data => $data,
+                                             });
+
+            my $metagenotype =
+              $genotype_manager->make_metagenotype(interactor_a => $genotype_a,
+                                                   interactor_b => $genotype_b);
+
+            $annotation->set_metagenotypes($metagenotype);
+          } @$interacting_genes;
+      }
+
+      map {
+        my $old_annotation = $_;
+
+        $old_annotation->delete();
+      } @old_interaction_annotations;
+    };
+
+    Canto::Track::curs_map($config, $track_schema, $update_proc);
+  },
+
+  31 => sub {
+    my $config = shift;
+    my $track_schema = shift;
+
+    my $dbh = $track_schema->storage()->dbh();
+
+    my $update_proc = sub {
+      my $curs = shift;
+      my $curs_schema = shift;
+      my $curs_key = $curs->curs_key();
+
+      my $curs_dbh = $curs_schema->storage()->dbh();
+
+      $curs_dbh->do("
+CREATE TABLE allele_note (
+       allele_note_id integer PRIMARY KEY,
+       allele integer REFERENCES allele(allele_id),
+       key text NOT NULL,
+       value text
+);
+");
+    };
+
+    Canto::Track::curs_map($config, $track_schema, $update_proc);
+  },
+
+  32 => sub {
+    my $config = shift;
+    my $track_schema = shift;
+    my $load_util = shift;
+
+    my $dbh = $track_schema->storage()->dbh();
+
+    $load_util->get_cvterm(cv_name => 'Canto cursprop types',
+                           term_name => 'first_approved_timestamp',
+                           ontologyid => 'Canto:first_approved_timestamp');
+
+    Canto::Track::update_all_statuses($config);
   },
 );
 

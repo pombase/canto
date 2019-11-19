@@ -1,18 +1,33 @@
 <span class="curs-feature-chooser">
   <span ng-hide="features">
-Loading...
+    <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img>
+Loading ...
   </span>
 
-    <select class="form-control" ng-model="chosenFeatureId">
-      <option value="">Choose a {{featureType}}...</option>
+  <span ng-show="features && features.length != 0">
+    <select ng-hide="showCompleter" class="form-control" ng-model="chosenFeatureId">
+      <option value="">Choose a {{featureType}} ...</option>
       <option ng-repeat="feature in features track by feature.feature_id"
               ng-value="{{feature.feature_id}}"
               ng-bind-html="feature | featureChooserFilter | encodeAlleleSymbols | toTrusted">
       </option>
     </select>
 
-    <span ng-if="featureType === 'gene'" >
-      <a ng-click="openSingleGeneAddDialog()">Add another gene</a>
+    <span ng-if="showCompleter">
+      <feature-complete feature-type="{{featureType}}" features="features"
+                        found-callback="foundCallback(featureId)">
+      </feature-complete>
     </span>
 
+    <a ng-show="featureType == 'genotype'" href="#" ng-click="search()">
+      <img ng-show="!showCompleter"
+           ng-src="{{app_static_path + '/images/search.svg'}}"
+           title="{{'Search ' + featureType + 's'}}"
+           style="width: 1.4em; height: 1.4em;" /></img>
+      <img ng-show="showCompleter"
+           ng-src="{{app_static_path + '/images/cross.svg'}}"
+           title="Finish searching"
+           style="width: 1.4em; height: 1.4em;" />
+    </a>
+  </span>
 </span>

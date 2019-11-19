@@ -10,12 +10,12 @@
   <div class="curs-box-body">
     <ul class="curs-quick-links-list">
 % for my $annotation_type (@annotation_type_list) {
-      <li>
-        <annotation-quick-add annotation-type-name="<% $annotation_type->{name} %>"
-                              link-label="<% ucfirst($annotation_type->{display_name}) %>"
-                              feature-type="<% $annotation_type->{feature_type} %>">
-        </annotation-quick-add>
-      </li>
+    <li ng-if="getAnnotationMode() == 'advanced' || '<% $annotation_type->{category} %>' == 'interaction'">
+      <annotation-quick-add annotation-type-name="<% $annotation_type->{name} %>"
+                            link-label="<% ucfirst($annotation_type->{display_name}) %>"
+                            feature-type="<% $annotation_type->{feature_type} %>">
+      </annotation-quick-add>
+    </li>
 % }
     </ul>
   </div>

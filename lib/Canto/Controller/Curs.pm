@@ -167,7 +167,8 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{pathogen_host_mode} = $config->{pathogen_host_mode};
   $st->{split_genotypes_by_organism} = $config->{split_genotypes_by_organism};
   $st->{show_genotype_management_genes_list} = $config->{show_genotype_management_genes_list};
-  $st->{notes_on_single_allele_genotypes_only} = $config->{notes_on_single_allele_genotypes_only};
+
+  $st->{flybase_mode} = $config->{flybase_mode};
 
   $st->{show_metagenotype_links} = 0;
   $st->{edit_organism_page_valid} = 0;
@@ -722,7 +723,7 @@ sub gene_upload : Chained('top') Args(0) Form
     push @all_elements,
       {
         type => 'Block', tag => 'div',
-        content => "Create host organism list (where there are no specified host genes) for $pub_uniquename:",
+        content => "Add host organisms (where the paper has a host with no specified genes):",
       },
       {
         type => 'Block', tag => 'organism-picker',
@@ -1682,10 +1683,6 @@ sub _feature_edit_helper
 
       try {
         my $guard = $schema->txn_scope_guard();
-
-        my $allele_manager =
-          Canto::Curs::AlleleManager->new(config => $c->config(),
-                                          curs_schema => $schema);
 
         my $genotype_manager =
           Canto::Curs::GenotypeManager->new(config => $c->config(),
@@ -2875,6 +2872,54 @@ sub ws_annotation_delete : Chained('top') PathPart('ws/annotation/delete')
   my $json_data = $c->req()->body_data();
 
   $c->stash->{json_data} = $service_utils->delete_annotation($json_data);
+
+  $c->forward('View::JSON');
+}
+
+sub ws_allele_set_note : Chained('top') PathPart('ws/allele_note/set')
+{
+  my ($self, $c, $allele_primary_identifier, $key, $value) = @_;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $guard = $schema->txn_scope_guard();
+
+  my $allele_manager =
+    Canto::Curs::AlleleManager->new(config => $c->config(),
+                                    curs_schema => $schema);
+
+  $allele_manager->set_note($allele_primary_identifier, $key, $value);
+
+  $c->stash->{json_data} = {
+    status => 'success',
+  };
+
+  $guard->commit();
+
+  $c->forward('View::JSON');
+}
+
+sub ws_allele_delete_note : Chained('top') PathPart('ws/allele_note/delete')
+{
+  my ($self, $c, $allele_primary_identifier, $key) = @_;
+
+  my $st = $c->stash();
+  my $schema = $st->{schema};
+
+  my $guard = $schema->txn_scope_guard();
+
+  my $allele_manager =
+    Canto::Curs::AlleleManager->new(config => $c->config(),
+                                    curs_schema => $schema);
+
+  $allele_manager->set_note($allele_primary_identifier, $key, undef);
+
+  $c->stash->{json_data} = {
+    status => 'success',
+  };
+
+  $guard->commit();
 
   $c->forward('View::JSON');
 }

@@ -59,10 +59,12 @@ evidence_types:
 
 available_annotation_type_list:
   - name: cellular_component
+    category: ontology
     evidence_codes:
       - IDA
       - IGI
   - name: phenotype
+    category: ontology
     evidence_codes:
       - Cell growth assay
 

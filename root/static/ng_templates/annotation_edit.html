@@ -9,19 +9,25 @@
   </div>
 
   <div class="modal-body">
-    <div class="curs-dialog-body-contents" ng-switch="annotationType.category">
-    <table ng-switch-when="ontology" class="curs-definition-table">
-
-      <tr ng-if="showOrganismName">
-        <td class="title">Organism</td>
+    <div class="curs-dialog-body-contents">
+    <table class="curs-definition-table">
+      <tr ng-if="multiOrganismMode && !isMetagenotypeAnnotation"
+          ng-class="{ 'has-error': !isValidOrganism() }">
+        <td class="title">
+          Organism
+        </td>
         <td>
-          <b>{{annotation.organism.scientific_name}}</b>
-          <span ng-if="showStrainName">({{annotation.strain_name}})</span>
+          <organism-selector
+            organisms="organisms"
+            initial-selection-taxon-id="{{selectedOrganism.taxonid}}"
+            organism-selected="organismSelected(organism)">
+          </organism-selector>
+          <span ng-show="!isValidOrganism()"
+                class="help-block">Please select an organism</span>
         </td>
       </tr>
 
-      <tr ng-if="annotationType.feature_type === 'gene'"
-          ng-class="{ 'has-error': !isValidFeature() }">
+      <tr ng-class="{ 'has-error': !annotation.feature_id }">
         <td class="title">
           {{displayAnnotationFeatureType}}
         </td>
@@ -29,42 +35,47 @@
           <div ng-if="!featureEditable">
             {{currentFeatureDisplayName}}
           </div>
-          <div ng-if="featureEditable">
-            <feature-chooser feature-type="{{annotationType.feature_type}}"
+          <div ng-if="featureEditable && filteredFeatures">
+            <feature-chooser feature-type="{{chooseFeatureType}}"
+                             features="filteredFeatures"
+                             filter-organism="selectedOrganism"
                              chosen-feature-id="annotation.feature_id"></feature-chooser>
-            <span ng-show="!isValidFeature()"
-                  class="help-block">Please select a gene</span>
+            <span ng-show="filteredFeatures.length != 0 && !annotation.feature_id"
+                  class="help-block">Please select a {{chooseFeatureType}}</span>
+
+            <span ng-show="filteredFeatures.length == 0">
+              No {{chooseFeatureType}}s in this session for the selected organism
+            </span>
+
+            <div ng-if="!multiOrganismMode && chooseFeatureType == 'gene'">
+              <a ng-click="openSingleGeneAddDialog()">Add another ...</a>
+            </div>
           </div>
         </td>
       </tr>
 
-      <tr ng-if="annotationType.feature_type === 'genotype' || annotationType.feature_type === 'metagenotype'"
-          ng-class="{ 'has-error': !isValidFeature() }">
-        <td class="title">
-          {{displayAnnotationFeatureType}}
+      <tr ng-if="annotationType.namespace" ng-class="{ 'has-error': !isValidTerm() }">
+        <td ng-if="annotationType.category != 'interaction'" class="title">Term name</td>
+        <td ng-if="annotationType.category == 'interaction'" class="title">
+          Phenotype <span ng-hide="annotationType.interaction_term_required">(optional)</span>
         </td>
         <td colspan="2">
-          <div ng-if="!featureEditable">
-            {{currentFeatureDisplayName}}
+          <div ng-if="annotationType.term_suggestions_annotation_type && termSuggestions.length">
+            Suggested terms:
+            <select class="form-control" ng-model="models.chosenSuggestedTerm"
+                    ng-change="termSuggestionSelected(models.chosenSuggestedTerm)"
+                    ng-options="suggestion.display_string for suggestion in termSuggestions track by suggestion.display_string"
+                    value="{{suggestion}}">
+              <option value="">Choose a term ...</option>
+            </select>
           </div>
-          <div ng-if="featureEditable">
-            <feature-chooser feature-type="{{annotationType.feature_type}}"
-                             chosen-feature-id="annotation.feature_id"></feature-chooser>
-            <span ng-show="!isValidFeature()"
-                  class="help-block">Please select a {{annotationType.feature_type}}</span>
-          </div>
-        </td>
-      </tr>
 
-      <tr ng-class="{ 'has-error': !isValidTerm() }">
-        <td class="title">Term name</td>
-        <td colspan="2">
-          <div>
+          <div ng-if="filteredFeatures && filteredFeatures.length != 0">
             <term-name-complete current-term-name="{{annotation.term_name}}"
                                 found-callback="termFoundCallback(termId, termName, searchString, matchingSynonym)"
                                 annotation-type-name="{{annotationType.name}}">
             </term-name-complete>
-            <span ng-show="isValidFeature() && !isValidTerm()"
+            <span ng-show="!isValidTerm()"
                   class="help-block">Start typing to choose a term</span>
           </div>
           <div>
@@ -74,45 +85,96 @@
       </tr>
 
       <tr ng-if="isValidTerm() && matchingConfigurations.length > 0 || annotation.extension.length > 0">
-        <td class="title">Annotation extension</td>
+        <td ng-if="!flyBaseMode" class="title">Annotation extension</td>
+        <td ng-if="flyBaseMode" class="title">Phenotype extensions</td>
         <td>
-          <extension-display ng-if="annotation.extension.length > 0" extension="annotation.extension"></extension-display>
+          <div ng-if="filteredFeatures && filteredFeatures.length != 0">
+          <extension-display ng-if="annotation.extension.length > 0" extension="annotation.extension"
+                             hide-relation-names="hideRelationNames">
+          </extension-display>
           <span ng-show="matchingConfigurations.length > 0 || annotation.extension.length > 0">
             <button class="btn btn-default btn-xs"
                     ng-click="editExtension(annotation.term_ontid, annotation.feature_display_name)">
               <span ng-show="annotation.extension.length == 0">Add</span>
-              <span ng-show="annotation.extension.length > 0">Edit</span>
+              <span ng-show="annotation.extension.length > 0">Edit</span> ...
             </button>
           </span>
           <div ng-if="currentUserIsAdmin">
-            <a href="" ng-click="manualEdit()">Edit as text (admin only)</a>
+            <a href="" ng-click="manualEdit()">Edit as text (admin only) ...</a>
+          </div>
           </div>
         </td>
       </tr>
 
       <tr ng-if="status.showEvidence">
-        <td class="title">Evidence code</td>
+        <td ng-if="annotationType.category == 'ontology'" class="title">
+          Evidence code
+        </td>
+        <td ng-if="annotationType.category == 'interaction'" class="title">
+          Interaction type
+        </td>
         <td colspan="2">
-          <annotation-evidence evidence-code="annotation.evidence_code"
+          <annotation-evidence ng-if="filteredFeatures && filteredFeatures.length != 0"
+                               evidence-code="annotation.evidence_code"
                                show-conditions="status.showConditions"
                                with-gene-id="annotation.with_gene_id"
                                valid-evidence="status.validEvidence"
-                               annotation-type-name="{{annotationType.name}}"></annotation-evidence>
+                               annotation-type-name="{{annotationType.name}}"
+                               annotation-term-ontid="{{annotation.term_ontid}}">
+          </annotation-evidence>
         </td>
       </tr>
 
-      <tr ng-show="status.showConditions">
+      <tr ng-if="annotationType.category == 'interaction'"
+          ng-class="{ 'has-error': !annotation.second_feature_id }">
+        <td class="title">
+          Interacting {{chooseFeatureType}}
+        </td>
+        <td colspan="2">
+          <div ng-if="!featureEditable">
+            {{currentSecondFeatureDisplayName}}
+          </div>
+          <div ng-if="featureEditable && filteredFeaturesB">
+            <feature-chooser feature-type="{{chooseFeatureType}}"
+                             features="filteredFeaturesB"
+                             filter-organism="selectedOrganism"
+                             chosen-feature-id="annotation.second_feature_id"></feature-chooser>
+            <span ng-show="filteredFeaturesB.length == 0 && annotationType && annotationType.interaction_same_locus">
+              <span ng-show="annotationType.single_allele_only">
+                (there are no other single allele genotypes for
+                {{selectedFeatureA.alleles[0].gene_display_name}} in
+                this session)
+              </span>
+              <span ng-show="!annotationType.single_allele_only">
+                (there are no other genotypes for gene
+                {{selectedFeatureA.alleles[0].gene_display_name}} in
+                this session)
+              </span>
+            </span>
+            <span ng-show="filteredFeaturesB.length != 0 && !annotation.second_feature_id"
+                  class="help-block">Please select a {{chooseFeatureType}}</span>
+          </div>
+        </td>
+      </tr>
+
+      <tr ng-show="showConditions()">
         <td class="title">Conditions</td>
         <td class="curs-evidence-conditions">
+          <div ng-if="filteredFeatures && filteredFeatures.length != 0">
           Please add experimental conditions.  Conditions are the aspects of the
           experimental setup that are independent of what cells (strain, genotype,
           constructs, etc.) are used.
           <condition-picker conditions="annotation.conditions"></condition-picker>
+          </div>
         </td>
       </tr>
 
-      <tr>
-        <td class="title" rowspan="2">Term suggestion</td>
+      <tr ng-if="showSuggestionFields()">
+        <td class="title" rowspan="2">
+          <div>Term suggestion</div>
+          <div>(if the term above</div>
+          <div>is too general)</div>
+        </td>
         <td colspan="2">
           <input class="form-control curs-edit-wide-field"
                  type="text" placeholder="Name" size="60"
@@ -120,7 +182,7 @@
         </td>
       </tr>
 
-      <tr>
+      <tr ng-if="showSuggestionFields()">
         <td colspan="2">
           <textarea class="form-control curs-edit-wide-field"
                     placeholder="Definition" cols="60"
@@ -128,7 +190,7 @@
         </td>
       </tr>
 
-      <tr>
+      <tr ng-if="filteredFeatures && filteredFeatures.length != 0">
         <td class="title">Comment</td>
         <td colspan="2">
           <input class="form-control curs-edit-wide-field"
@@ -144,65 +206,6 @@
 
     </table>
 
-    <table ng-switch-when="interaction" class="curs-definition-table">
-
-      <tr ng-class="{ 'has-error': !isValidFeature() }">
-        <td class="title">
-          {{displayAnnotationFeatureType}}
-        </td>
-        <td>
-          <div ng-if="newlyAdded && currentFeatureDisplayName">
-            {{currentFeatureDisplayName}}
-          </div>
-          <div ng-if="!(newlyAdded && currentFeatureDisplayName)">
-            <feature-chooser feature-type="{{annotationType.feature_type}}"
-                             chosen-feature-id="annotation.feature_id"></feature-chooser>
-            <span ng-show="!isValidFeature()"
-                  class="help-block">Please select a gene</span>
-          </div>
-        </td>
-      </tr>
-
-      <tr>
-        <td class="title">Evidence code</td>
-        <td>
-          <annotation-evidence evidence-code="annotation.evidence_code"
-                               with-gene-id="annotation.with_gene_id"
-                               valid-evidence="status.validEvidence"
-                               annotation-type-name="{{annotationType.name}}"></annotation-evidence
-        </td>
-      </tr>
-
-      <tr ng-class="{ 'has-error': !isValidInteractingGene() }">
-        <td class="title">
-          Interacting gene
-        </td>
-        <td>
-          <div>
-            <feature-chooser feature-type="{{annotationType.feature_type}}"
-                             chosen-feature-id="annotation.interacting_gene_id"></feature-chooser>
-          </div>
-          <span ng-show="isValidFeature() && !isValidInteractingGene()"
-                class="help-block">Please select an interacting gene</span>
-        </td>
-      </tr>
-
-      <tr>
-        <td class="title">Comment</td>
-        <td>
-          <input class="form-control"
-                 type="text" size="60"
-                 ng-model="annotation.submitter_comment"
-                 value="{{annotation.submitter_comment}}"/>
-        </td>
-      </tr>
-
-      <tr>
-        <td class="title">Curator</td>
-        <td>{{annotation.curator}}</td>
-      </tr>
-
-    </table>
   </div>
 
   <div class="modal-footer">

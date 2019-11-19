@@ -13,13 +13,15 @@ $total_annotation_count
 <div ng-controller="CursFrontPageCtrl" id="curs-front-page">
 <div>
   <div class="row">
-    <div class="curs-front-gene-list {{getAnnotationMode() == 'advanced' ? 'col-sm-4 col-md-4' : 'col-sm-6 col-md-6'}}">
+    <div class="curs-front-gene-list col-sm-4 col-md-4">
 <& /curs/front_gene_section.mhtml, pub => $pub &>
     </div>
-    <div ng-if="getAnnotationMode() == 'advanced'" class="col-sm-3 col-md-3 ng-cloak">
+% if (!$read_only_curs) {
+    <div class="col-sm-3 col-md-3 ng-cloak">
 <& /curs/front_page_quick_links.mhtml, annotation_type_list => \@annotation_type_list &>
     </div>
-    <div class="curs-front-pub-details {{getAnnotationMode() == 'advanced' ? 'col-sm-5 col-md-5' : 'col-sm-6 col-md-6'}}">
+% }
+    <div class="curs-front-pub-details col-sm-5 col-md-5">
 <& /pub_details.mhtml, pub => $pub &>
    </div>
   </div>
@@ -32,11 +34,12 @@ $total_annotation_count
 %   }
 % } else {
 % if ($state eq Canto::Controller::Curs::CURATION_IN_PROGRESS) {
-%     if ($total_annotation_count > 0) {
+<div ng-show="enableSubmitButton()">
 <button type="button" id="curs-finish-session" class="btn btn-primary curs-finish-button">Submit to curators</button>
 <button type="button" id="curs-pause-session" class="btn btn-primary curs-finish-button">Pause curation</button>
-%     } else {
-<form action="<% $finish_form_url %>" class="curs-finish-buttons" method="POST"
+</div>
+<form ng-hide="enableSubmitButton()"
+      action="<% $finish_form_url %>" class="curs-finish-buttons" method="POST"
       ng-controller="SubmitToCuratorsCtrl" ng-init='init(<% $no_annotations_reasons_init_js |n%>)'>
   <div>
     <button type="button" class="btn btn-primary" id="curs-pause-session">Pause curation</button>
@@ -69,7 +72,6 @@ $total_annotation_count
     </div>
   </div>
 </form>
-%     }
 </div>
 % } else {
 

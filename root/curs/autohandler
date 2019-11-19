@@ -18,12 +18,12 @@ var curs_session_state = '<% $curs_session_state |n %>';
 var multi_organism_mode = <% $multi_organism_mode ? 'true' : 'false' %>;
 var split_genotypes_by_organism = <% $split_genotypes_by_organism ? 'true' : 'false' %>;
 var show_genotype_management_genes_list = <% $show_genotype_management_genes_list ? 'true' : 'false' %>;
-var notes_on_single_allele_genotypes_only = <% $notes_on_single_allele_genotypes_only ? 'true' : 'false' %>;
 var strains_mode = <% $strains_mode ? 'true' : 'false' %>;
 var pathogen_host_mode = <% $pathogen_host_mode ? 'true' : 'false' %>;
 var alleles_have_expression = <% $alleles_have_expression ? 'true' : 'false' %>;
 var allow_single_wildtype_allele = <% $allow_single_wildtype_allele ? 'true' : 'false' %>;
 var diploid_mode = <% $diploid_mode ? 'true' : 'false' %>;
+var flybase_mode = <% $flybase_mode ? 'true' : 'false' %>;
 </script>
 
 <div id="disabled-overlay"></div>
@@ -72,10 +72,10 @@ my $annotation_type_config_js = Data::JavaScript::Anon->anon_dump($annotation_ty
 my $multi_organism_mode = $st->{multi_organism_mode} || 0;
 my $split_genotypes_by_organism = $st->{split_genotypes_by_organism} || 0;
 my $show_genotype_management_genes_list = $st->{show_genotype_management_genes_list} || 0;
-my $notes_on_single_allele_genotypes_only = $st->{notes_on_single_allele_genotypes_only} || 0;
 my $strains_mode = $st->{strains_mode} || 0;
 my $pathogen_host_mode = $st->{pathogen_host_mode} || 0;
 my $alleles_have_expression = $c->config()->{alleles_have_expression} || 0;
 my $allow_single_wildtype_allele = $c->config()->{allow_single_wildtype_allele} || 0;
 my $diploid_mode = $c->config()->{diploid_mode} || 0;
+my $flybase_mode = $c->config()->{flybase_mode} || 0;
 </%init>

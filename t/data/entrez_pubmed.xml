@@ -10265,9 +10265,9 @@
             <Day>15</Day>
         </DateCompleted>
         <DateRevised>
-            <Year>2016</Year>
-            <Month>11</Month>
-            <Day>24</Day>
+            <Year>2019</Year>
+            <Month>09</Month>
+            <Day>10</Day>
         </DateRevised>
         <Article PubModel="Print">
             <Journal>
@@ -10523,6 +10523,7 @@
         <ArticleIdList>
             <ArticleId IdType="pubmed">10467002</ArticleId>
             <ArticleId IdType="pii">90350585.294</ArticleId>
+            <ArticleId IdType="doi">10.1007/s002940050456</ArticleId>
         </ArticleIdList>
     </PubmedData>
 </PubmedArticle>

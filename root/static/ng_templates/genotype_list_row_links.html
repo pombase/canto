@@ -28,9 +28,9 @@
     <a ng-class="{disabled: genotypeId == null }"
        ng-click="editBackground(genotypeId)">Add/edit background</a>
   </div>
-  <div ng-if="showNoteEdit()">
+  <div ng-if="showNotesEdit()">
     <a ng-class="{disabled: genotypeId == null }"
-       ng-click="editComment(genotypeId)">Add/edit new note</a>
+       ng-click="editNotes(genotypeId)">View/edit notes</a>
   </div>
   <div title="{{deleteTitle}}">
     <a ng-class="{disabled: genotypeId == null || !canDelete}"

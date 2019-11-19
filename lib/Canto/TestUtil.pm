@@ -214,6 +214,13 @@ sub new
   my $app_name = lc Canto::Config::get_application_name();
   my $config = Canto::Config->new(["$root_dir/$app_name.yaml"]);
 
+  $config->{annotation_types}->{phenotype}->{term_evidence_codes} = [
+    {
+      constraint => "is_a(FYPO:0000005)-is_a(FYPO:999999999)",
+      evidence_code => ['Microscopy', 'Other'],
+    }
+  ];
+
   my $test_config_file_name = "$root_dir/" . $config->{test_config_file};
   $config->merge_config([$test_config_file_name]);
   $config->setup();
@@ -919,6 +926,20 @@ sub _load_curs_db_data
         );
 
         my $allele = $cursdb_schema->create_with_type('Allele', \%create_args);
+
+        if ($allele_details->{allele_notes}) {
+          map {
+            my $key = $_->{key};
+            my $value = $_->{value};
+
+            $cursdb_schema->create_with_type('AlleleNote',
+                                             {
+                                               allele => $allele->allele_id(),
+                                               key => $key,
+                                               value => $value,
+                                             });
+          } @{$allele_details->{allele_notes}};
+        }
       }
     }
 
@@ -943,6 +964,12 @@ sub _load_curs_db_data
         my $method = "set_$key";
         $new_genotype->$method(@{$array_args{$key}});
       }
+    }
+
+    for my $metagenotype_details (@{$curs_config->{metagenotypes}}) {
+      my %create_args = %{_process_data($cursdb_schema, $metagenotype_details)};
+
+      $cursdb_schema->create_with_type('Metagenotype', { %create_args });
     }
 
     for my $annotation (@{$curs_config->{annotations}}) {

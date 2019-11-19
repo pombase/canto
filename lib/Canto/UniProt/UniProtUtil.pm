@@ -110,6 +110,10 @@ sub parse_results
       }
     }
 
+    if (defined $name) {
+      @synonyms = grep { $_ ne $name } @synonyms;
+    }
+
     if (!defined $name) {
       $name = _content($entry->{name}->[0]);
     }

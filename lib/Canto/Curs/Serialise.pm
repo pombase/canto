@@ -134,25 +134,6 @@ sub _get_annotations
   while (defined (my $annotation = $rs->next())) {
     my %extra_data = %{clone $annotation->data()};
 
-    if (defined $extra_data{interacting_genes}) {
-      $extra_data{interacting_genes} =
-        [
-          map {
-            my $interacting_gene =
-              $schema->resultset('Gene')->find({
-                primary_identifier => $_->{primary_identifier},
-              });
-
-            my $interacting_taxonid = $interacting_gene->organism()->taxonid();
-            my $organism_details =
-              $organism_lookup->lookup_by_taxonid($interacting_taxonid);
-            my $full_name = $organism_details->{full_name};
-
-            $full_name . ' ' . $_->{primary_identifier};
-          } @{$extra_data{interacting_genes}}
-        ]
-    }
-
     my $term_ontid = delete $extra_data{term_ontid};
     if ($term_ontid) {
       $extra_data{term} = $term_ontid;
@@ -373,10 +354,7 @@ sub _get_alleles
       $config->{allele_types}->{$allele->type()}->{export_type};
 
     if (!defined $export_type) {
-      croak "can't find the export/database type for allele: ",
-        ($allele->name() // 'noname'), "(", ($allele->description() // 'unknown'),
-        ") ", ($gene ? 'of gene: ' . $gene->primary_identifier() : ''),
-        '  type: ', $allele->type();
+      $export_type = $allele->type();
     }
 
     my %allele_data = (
@@ -408,6 +386,19 @@ sub _get_alleles
     }
     if (defined $allele->name()) {
       $allele_data{name} = $allele->name();
+    }
+
+    my $note_types = $config->{allele_note_types};
+
+    if ($note_types && scalar(@{$note_types}) > 0) {
+      $allele_data{notes} = {};
+
+      my @notes = $allele->allele_notes()->all();
+
+      map {
+        my $note = $_;
+        $allele_data{notes}->{$_->key()} = $_->value();
+      } @notes;
     }
 
     my @allelesynonyms = $allele->allelesynonyms();
@@ -503,14 +494,22 @@ sub _get_metagenotypes
   my $schema = shift;
 
   my $rs = $schema->resultset('Metagenotype',
-                              { prefetch => ['pathogen_genotype', 'host_genotype'] });
+                              { prefetch => ['first_genotype', 'second_genotype'] });
   my %ret = ();
 
   while (defined (my $metagenotype = $rs->next())) {
-    $ret{$metagenotype->identifier()} = {
-      pathogen_genotype => $metagenotype->pathogen_genotype()->identifier(),
-      host_genotype => $metagenotype->host_genotype()->identifier(),
-    };
+    if ($metagenotype->type() eq 'pathogen-host') {
+      $ret{$metagenotype->identifier()} = {
+        pathogen_genotype => $metagenotype->pathogen_genotype()->identifier(),
+        host_genotype => $metagenotype->host_genotype()->identifier(),
+      };
+    } else {
+      $ret{$metagenotype->identifier()} = {
+        genotype_a => $metagenotype->first_genotype()->identifier(),
+        genotype_b => $metagenotype->second_genotype()->identifier(),
+      };
+    }
+    $ret{$metagenotype->identifier()}->{type} = $metagenotype->type();
   }
 
   return %ret;

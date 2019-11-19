@@ -1,0 +1,17 @@
+<span class="curs-feature-complete">
+  <span ng-show="features == null">
+    <img ng-src="{{app_static_path + '/images/spinner.gif'}}"></img> Loading ...
+  </span>
+
+  <span ng-show="features != null">
+    <span ng-show="features.length == 0">
+      No {{featureType}}s
+    </span>
+    <span ng-show="features.length != 0">
+      <input placeholder="Search {{featureType}}s ..." size="30" type="text"
+             class="form-control" autofocus ng-model="selectedFeatureId"/>
+    </span>
+  </span>
+</span>
+
+</span>

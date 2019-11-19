@@ -89,6 +89,18 @@ non-wildtype expression allele from the same gene.
 ### diploid_mode
 If 1, allow diploids to be created and used in genotypes.
 
+### allele_note_types
+A list of allele note type name and display names.  The `display_name`
+is shown in the note editing dialog.  Example configuration:
+
+```
+allele_note_types:
+  - name: phenotype
+    display_name: Phenotype
+  - name: interaction_comment
+    display_name: Interaction coment
+```
+
 ### db_initial_data
 Data needed to initialise a Canto instance.
 
@@ -151,6 +163,24 @@ Example:
 In this case "Microscopy" is treated as an evidence code and an evience
 description.
 
+### namespace_term_evidence_codes
+A map of defaults for the term to evidence lists configuration.  If
+`term_evidence_codes` isn't set in an annotation type definition this
+map will be consulted to find defaults for the namespace of the
+annotation type.  See
+[`term_evidence_codes`](configuration_file#termevidencecodes) for
+details.
+
+This example will set `term_evidence_codes` for all annotation types
+that are configured with the namespace "fission_yeast_phenotype":
+
+    namespace_term_evidence_codes:
+      fission_yeast_phenotype:
+        - constraint: "is_a(FYPO:0001985)"
+          evidence_codes:
+           - Cell growth assay
+           - Chromatin immunoprecipitation experiment
+
 ### available_annotation_type_list
 List of possible annotation type and their configuration details.
 
@@ -160,15 +190,6 @@ for details.
 ### enabled_annotation_type_list
 The names of the types that are enabled in this Canto instance.  If not set
 all annotation types from `available_annotation_type_list` will be enabled.
-
-#### name
-The identifier for this annotation type, used internally and in URLs.
-
-#### category
-One of: "ontology" or "interaction", used to select which Perl package
-should be used for rendering and storing these annotation type.
-
-### messages
 
 ### test_config_file
 The path to the extra configuration file needed while testing.
@@ -253,13 +274,73 @@ Currently used only for types from GO (`molecular_function`,
 `cellular_component`, and `biological_process`), the abbreviation is used from
 exporting annotation to GAF files.  Required only if GO ontologies are enabled.
 
+### can_have_conditions
+If 1, this annotation type can have conditions as well as evidence.
+Mostly useful for phenotypes.
+
+### single_allele_only
+Only display/allow genotypes containing a single allele for this
+annotation type.
+
+### single_locus_only
+For interactions, restrict the genotype B list to contain only
+genotypes for the same locus selected in the genotype A list.
+
+### interaction_term_required
+For interactions, selecting a term is required if and only if this
+option is set to 1.
+
 ### evidence_codes
-Possible evidence codes for this annotation type.  Each evidence code must
+Possible evidence codes (or interaction types) for this annotation type.
+Each evidence code must
 appear in the [`evidence_types`](#evidence_types) list.  (Required)
 
 ### admin_evidence_codes
 Evidence codes that are only available for logged in admin user.  This
 list is added to the `evidence_codes` list.
+
+### term_evidence_codes
+Used to restrict the visible evidence codes based on a currently
+selected term (if any).  The `constraint` values are used for matching the term.  If
+the current term is a descendent of the term before the "-" in the key
+and not a descendent of the terms to the right of the "-" the given
+evidence codes are shown to the user.  The excluded terms to the right
+of the "-" are optional.
+
+The first matching configuration is used.
+If the current term doesn't match any of the keys in `term_evidence_codes`,
+the default evidence codes from `evidence_codes` are displayed.
+
+example:
+
+    term_evidence_codes:
+      - constraint: "is_a(FYPO:0001985)"
+        evidence_codes:
+        - Cell growth assay
+        - Chromatin immunoprecipitation experiment
+        - Chromatography evidence
+
+or:
+
+    term_evidence_codes:
+      - constraint: "is_a(FYPO:0001985)-is_a(FYPO:0000045)&is_a(FYPO:0000150)"
+        evidence_codes:
+        - Cell growth assay
+        - Chromatography evidence
+
+See also `namespace_term_evidence_codes`.
+
+### term_suggestions_annotation_type
+If set to the name of an ontology annotation type, use terms from the
+annotations of that type as suggestions.  For example, once a genotype is
+selected in the interaction dialog, any phenotypes annotated for that
+genotype will be shown to the user.  If unset, no suggestions will be
+shown.
+
+### hide_extension_relations
+A list of extension relation names to hide.  For hidden relations we just
+show the extension value (extension range).
+(default: empty list)
 
 ### broad_term_suggestions
 A few comma separated high level or broad term names for use in help text.
@@ -286,7 +367,7 @@ help about this type of annotation.
 Help text to show once the user finishes annotating a paper, after "Submit to
 curators".  (Optional)
 
-### host_organism_taxonids
+## host_organism_taxonids
 A list of taxon IDs for the organisms that are treated as host species
 in pathogen-host mode.  All the list taxon IDs need to match organisms
 in the organism table.  The organisms are loaded using
@@ -301,35 +382,40 @@ a list the Organism objects.  `multi_organism_mode` is also set to
 
 Note that when `pathogen_host_mode` is enabled, every organism that is in the organism table but _not_ in `host_organism_taxonids` will be assumed to be a pathogen organism.
 
-### allele_type_list
+## allele_type_list
 This list contains the configuration for each allele type
 
-#### name
+### name
 The allele type name to show in the display.  This is also the key
 when looking up configuration details so it must be unique.
 
-#### export_type
+### export_type
 The type name to use when writing the export file. See [Exporting data from Canto](data_export)
 for more.
 
-#### show_description
+### show_description
 If true, show the description input box in the allele edit dialog.
 
-#### description_required
+### description_required
 If true, an allele of this type can't be created without a description.
 
-#### allele_name_required
+### allele_name_required
 If true, alleles of this types must have a name.
 
-#### allow_expression_change
+### allow_expression_change
 If true, show the checkboxes for changing the allele expression.
 
-#### expression_required
+### expression_required
 If true, an allele of this type can't be created without setting an expression level.
 
-#### autopopulate_name
+### autopopulate_name
 This template is used when an allele name can be automatically generated
 for a given type.  For example, if the user selects "wild type" in the
 allele editing dialog, this template when set the name to something like "cdc2+".
 The string "@@gene_display_name@@" will be replaced with the current
 gene's name or systematic ID.
+
+### do_not_annotate
+If true, don't show genotypes containing just this allele in the
+genotype selectors.  And ignore alleles of this type when deciding if
+a genotype is single or multi allele.

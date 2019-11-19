@@ -131,7 +131,17 @@ sub merge_config
   for my $new_config (map { my ($file_name, $config) = %$_; $config } @$cfg) {
     if (defined $new_config) {
       my $merge = Hash::Merge->new('RIGHT_PRECEDENT');
+
+      my $new_available_annotation_type_list =
+        delete $new_config->{available_annotation_type_list};
+
       my $new = $merge->merge({%$self}, $new_config);
+
+      if (defined $new_available_annotation_type_list) {
+        # special case: replace rather than append the new available_annotation_type_list
+        $new->{available_annotation_type_list} = $new_available_annotation_type_list;
+      }
+
       %$self = %$new;
     } else {
       # empty file returns undef
@@ -288,6 +298,25 @@ sub setup
     }
   }
 
+  my $namespace_term_evidence_codes = $self->{namespace_term_evidence_codes};
+
+  if ($namespace_term_evidence_codes) {
+    while (my ($namespace, $ev_configs) = each %$namespace_term_evidence_codes) {
+      for my $ev_config (@$ev_configs) {
+        my $restriction = $ev_config->{constraint};
+        my $ev_codes = $ev_config->{evidence_codes};
+        map {
+          my $new_ev_code = $_;
+          if (!$self->{evidence_types}->{$new_ev_code}) {
+            $self->{evidence_types}->{$new_ev_code} = {
+              name => $new_ev_code,
+            };
+          }
+        } @$ev_codes;
+      }
+    }
+  }
+
   # create an inverted map of evidence types so that evidence codes
   # can be looked up by name
   if (my $evidence_types = $self->{evidence_types}) {
@@ -377,6 +406,7 @@ sub setup
 
         # handle evidence codes differently so codes don't get duplicated
         $annotation_type->{evidence_codes} = $configured_type->{evidence_codes};
+        $annotation_type->{term_evidence_codes} = $configured_type->{term_evidence_codes};
       }
 
       if (!defined $annotation_type->{ontology_size}) {
@@ -387,16 +417,35 @@ sub setup
         $annotation_type->{short_display_name} = $annotation_type->{display_name};
       }
       $self->{annotation_types}->{$annotation_type_name} = $annotation_type;
-      $annotation_type->{namespace} //= $annotation_type->{name};
+
+      if ($annotation_type->{category} eq 'ontology') {
+        $annotation_type->{namespace} //= $annotation_type->{name};
+      }
 
       my $namespace = $annotation_type->{namespace};
 
-      $self->{annotation_types_by_namespace}->{$namespace} //= [];
+      if (defined $namespace) {
+        $self->{annotation_types_by_namespace}->{$namespace} //= [];
 
-      if (!grep {
-         $_->{name} eq $annotation_type->{name}
-      } @{$self->{annotation_types_by_namespace}->{$namespace}}) {
-        push @{$self->{annotation_types_by_namespace}->{$namespace}}, $annotation_type;
+        if (!grep {
+          $_->{name} eq $annotation_type->{name}
+        } @{$self->{annotation_types_by_namespace}->{$namespace}}) {
+          push @{$self->{annotation_types_by_namespace}->{$namespace}}, $annotation_type;
+        }
+
+        if (!defined $annotation_type->{term_evidence_codes}) {
+          $annotation_type->{term_evidence_codes} =
+            $self->{namespace_term_evidence_codes}->{$namespace};
+        }
+      }
+
+      # if an evidence code is not in the main evidence_codes map, add it
+      for my $ev_code (@{$annotation_type->{evidence_codes}}) {
+        if (!defined $self->{evidence_types}->{$ev_code}) {
+          $self->{evidence_types}->{$ev_code} = {
+            name => $ev_code,
+          };
+        }
       }
 
       # if an evidence code is not in the main evidence_codes map, add it
@@ -579,14 +628,14 @@ sub get_config
   my $suffix = $ENV{"${uc_app_name}_CONFIG_LOCAL_SUFFIX"};
 
   my $file_name = "$lc_app_name.yaml";
-  my $config = __PACKAGE__->new([$file_name], $upgrading);
+  my @file_names = ($file_name);
 
   if (defined $suffix) {
     my $local_file_name = "${lc_app_name}_$suffix.yaml";
-
-    $config->merge_config([$local_file_name], $upgrading);
-    $config->setup();
+    push @file_names, $local_file_name;
   }
+
+  my $config = __PACKAGE__->new(\@file_names, $upgrading);
 
   return $config;
 }

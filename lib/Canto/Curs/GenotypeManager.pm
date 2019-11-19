@@ -229,6 +229,7 @@ sub _remove_unused_alleles
                                          });
 
   $alleles_with_no_genotype_rs->search_related('allelesynonyms')->delete();
+  $alleles_with_no_genotype_rs->search_related('allele_notes')->delete();
 
   $alleles_with_no_genotype_rs->delete();
 }
@@ -326,7 +327,8 @@ sub _set_genotype_alleles
                                             $comment, \@diploid_groups);
  Function: Create a Genotype object in the CursDB
  Args    : $name - the name for the new object
-           \@allele_objects - a list of Allele objects
+           $background
+           \@alleles - a list of JSON details for the alleles
            $genotype_taxonid - the organism of this genotype
            $identifier - the identifier of the new object if the Genotype
                          details are from an external source (Chado) or undef
@@ -480,9 +482,14 @@ sub _get_metagenotype_identifier
 
 =head2 make_metagenotype
 
- Usage   : my $metagenotype =
+ Usage   : # make a pathogen-host metagenotype:
+           my $metagenotype =
              $genotype_manager->make_metagenotype(host_genotype => $host_genotype,
                                                   pathogen_genotype => $pathogen_genotype);
+    Or   : # make an interaction:
+           my $metagenotype =
+             $genotype_manager->make_metagenotype(interactor_a => $interactor_a,
+                                                  interactor_b => $interactor_b);
  Function: Create a metagenotype from it's parts
 
 =cut
@@ -495,35 +502,52 @@ sub make_metagenotype
 
   my $organism_lookup = Canto::Track::get_adaptor($self->config(), 'organism');
 
+  my $metagenotype_identifier = $self->_get_metagenotype_identifier();
+
+  my %create_args = (identifier => $metagenotype_identifier);
+
   my $host_genotype = $args{host_genotype};
-  my $host_details =
-    $organism_lookup->lookup_by_taxonid($host_genotype->organism()->taxonid());
-
-  if ($host_details->{pathogen_or_host} ne 'host') {
-    die "organism of genotype passed with the 'host' arg isn't a host: " .
-      $host_details->{pathogen_or_host};
-  }
-
   my $pathogen_genotype = $args{pathogen_genotype};
-  my $pathogen_details =
-    $organism_lookup->lookup_by_taxonid($pathogen_genotype->organism()->taxonid());
 
-  if ($pathogen_details->{pathogen_or_host} ne 'pathogen') {
-    die "organism of genotype passed with the 'pathogen' arg isn't a pathogen: " .
-      $pathogen_details->{pathogen_or_host};
+  if ($host_genotype && $pathogen_genotype) {
+    my $host_details =
+      $organism_lookup->lookup_by_taxonid($host_genotype->organism()->taxonid());
+
+    if ($host_details->{pathogen_or_host} ne 'host') {
+      die "organism of genotype passed with the 'host' arg isn't a host: " .
+        $host_details->{pathogen_or_host};
+    }
+
+    my $pathogen_details =
+      $organism_lookup->lookup_by_taxonid($pathogen_genotype->organism()->taxonid());
+
+    if ($pathogen_details->{pathogen_or_host} ne 'pathogen') {
+      die "organism of genotype passed with the 'pathogen' arg isn't a pathogen: " .
+        $pathogen_details->{pathogen_or_host};
+    }
+
+    $create_args{type} = 'pathogen-host';
+    $create_args{first_genotype_id} = $pathogen_genotype->genotype_id();
+    $create_args{second_genotype_id} = $host_genotype->genotype_id();
+  } else {
+    my $interactor_a = $args{interactor_a};
+    if (!$interactor_a) {
+      die "missing interactor_a in call to make_metagenotype()";
+    }
+
+    my $interactor_b = $args{interactor_b};
+    if (!$interactor_b) {
+      die "missing interactor_a in call to make_metagenotype()";
+    }
+
+    $create_args{type} = 'interaction';
+    $create_args{first_genotype_id} = $interactor_a->genotype_id();
+    $create_args{second_genotype_id} = $interactor_b->genotype_id();
   }
 
   my $schema = $self->curs_schema();
 
-  my $metagenotype_identifier = $self->_get_metagenotype_identifier();
-
-  my $metagenotype =
-    $schema->create_with_type('Metagenotype',
-                              {
-                                identifier => $metagenotype_identifier,
-                                pathogen_genotype_id => $pathogen_genotype->genotype_id(),
-                                host_genotype_id => $host_genotype->genotype_id(),
-                              });
+  my $metagenotype = $schema->create_with_type('Metagenotype', \%create_args);
   return $metagenotype;
 }
 
@@ -569,17 +593,6 @@ sub store_genotype_changes
 
   my $organism = $self->organism_manager()->add_organism_by_taxonid($genotype_taxonid);
   $genotype->organism_id($organism->organism_id());
-
-  my $allele_manager =
-    Canto::Curs::AlleleManager->new(config => $self->config(),
-                                    curs_schema => $schema);
-
-  my @alleles = ();
-  for my $allele_data (@$alleles_data) {
-    my $allele = $allele_manager->allele_from_json($allele_data, $self->curs_key(), \@alleles);
-
-    push @alleles, $allele;
-  }
 
   $self->_set_genotype_alleles($genotype, $alleles_data, $genotype->identifier());
 
@@ -660,11 +673,27 @@ sub find_metagenotype
 
   my %args = @_;
 
+  my $first_genotype_id;
+
+  if ($args{pathogen_genotype}) {
+    $first_genotype_id = $args{pathogen_genotype}->genotype_id();
+  } else {
+    $first_genotype_id = $args{interactor_a}->genotype_id();
+  }
+
+  my $second_genotype_id;
+
+  if ($args{host_genotype}){
+    $second_genotype_id = $args{host_genotype}->genotype_id();
+  } else {
+    $second_genotype_id = $args{interactor_b}->genotype_id();
+  }
+
   my $schema = $self->curs_schema();
 
   my %search_args = (
-    pathogen_genotype_id => $args{pathogen_genotype}->genotype_id(),
-    host_genotype_id => $args{host_genotype}->genotype_id(),
+    first_genotype_id => $first_genotype_id,
+    second_genotype_id => $second_genotype_id,
   );
 
   return $schema->resultset('Metagenotype')->find(\%search_args);
@@ -695,7 +724,17 @@ sub delete_genotype
   }
 
   if ($genotype->is_part_of_metagenotype()) {
-    return "genotype is part of a metagenotype - delete failed";
+    my $metagenotype = ($genotype->metagenotypes())[0];
+
+    my $type;
+
+    if ($metagenotype->type() eq 'pathogen-host') {
+      $type = 'pathogen-host metagenotype';
+    } else {
+      $type = $metagenotype->type();
+    }
+
+    return "genotype is part of a $type - delete failed";
   }
 
   $genotype->delete();
