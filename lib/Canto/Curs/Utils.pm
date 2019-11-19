@@ -425,7 +425,7 @@ sub make_ontology_annotation
 =head2 make_gene_interaction_annotation
 
  Usage   : my $hash = Canto::Curs::Utils::make_gene_interaction_annotation(...);
- Function: Retrieve the details of an interaction annotation from the CursDB as
+ Function: Retrieve the details of an gene-gene interaction annotation from the CursDB as
            a hash
  Args    : $config - a Config object
            $schema - the CursDB schema
