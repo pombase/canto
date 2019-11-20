@@ -7056,6 +7056,8 @@ var annotationTableCtrl =
         $scope.multiOrganismMode = false;
         $scope.strainsMode = CantoGlobals.strains_mode;
 
+        $scope.showInteractionTermColumns = false;
+
         $scope.data = {};
 
         $scope.$watch('annotations',
@@ -7132,10 +7134,14 @@ var annotationTableCtrl =
       link: function ($scope) {
         $scope.$watch('annotations.length',
           function () {
-            AnnotationTypeConfig.getByName($scope.annotationTypeName).then(function (annotationType) {
-              $scope.annotationType = annotationType;
-              $scope.displayAnnotationFeatureType = capitalizeFirstLetter(annotationType.feature_type);
-            });
+            AnnotationTypeConfig.getByName($scope.annotationTypeName)
+              .then(function (annotationType) {
+                $scope.annotationType = annotationType;
+                $scope.displayAnnotationFeatureType = capitalizeFirstLetter(annotationType.feature_type);
+                if (annotationType.category == 'interaction') {
+                  $scope.showInteractionTermColumns = !!annotationType.namespace;
+                }
+              });
           });
       }
     };
@@ -7262,9 +7268,13 @@ var annotationTableRow =
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.multiOrganismMode = false;
-        $scope.showStrain = $scope.strainsMode && $scope.annotationType.feature_type == 'genotype';
+        $scope.showStrain = false;
+        $scope.annotationType = null;
         $scope.sessionState = 'UNKNOWN';
         $scope.hideRelationNames = [];
+        $scope.featureType = null;
+        $scope.interactionFeatureType = null;
+        $scope.showInteractionTermColumns = false;
 
         CursSessionDetails.get()
           .then(function (sessionDetails) {
@@ -7326,7 +7336,18 @@ var annotationTableRow =
         annotationTypePromise
           .then(function (annotationType) {
             $scope.annotationType = annotationType;
+            $scope.featureType = annotationType.feature_type;
             $scope.hideRelationNames = annotationType.hide_extension_relations || [];
+            $scope.showStrain =
+              $scope.strainsMode && $scope.annotationType.feature_type == 'genotype';
+            if (annotationType.category == 'interaction') {
+              $scope.showInteractionTermColumns = !!annotationType.namespace;
+              if (annotationType.feature_type == 'gene') {
+                $scope.interactionFeatureType = 'gene';
+              } else {
+                $scope.interactionFeatureType = 'genotype';
+              }
+            }
           });
 
         CantoConfig.get('instance_organism').then(function (results) {
@@ -7386,7 +7407,7 @@ var annotationTableRow =
             newAnnotation, $scope.featureFilterDisplayName,
             true, true);
         };
-        
+
         $scope.confirmDelete = function () {
           var modal = openDeleteDialog(
             $uibModal,

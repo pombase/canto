@@ -515,6 +515,11 @@ sub make_gene_interaction_annotation
       gene_id => $gene_proxy->gene_id(),
       feature_display_name => $gene_proxy->display_name(),
       feature_id => $gene_proxy->gene_id(),
+
+      feature_a_display_name => $gene_proxy->display_name(),
+      feature_a_id => $gene_proxy->gene_id(),
+      feature_a_taxonid => $gene_proxy->taxonid(),
+
       publication_uniquename => $pub_uniquename,
       evidence_code => $evidence_code,
       interacting_gene_identifier =>
@@ -525,6 +530,13 @@ sub make_gene_interaction_annotation
         $interacting_gene_info->{organism_taxon}
           // $interacting_gene_proxy->taxonid(),
       interacting_gene_id => $interacting_gene_proxy->gene_id(),
+
+      feature_b_display_name => $interacting_gene_display_name,
+      feature_b_id => $interacting_gene_proxy->gene_id(),
+      feature_b_taxonid =>
+        $interacting_gene_info->{organism_taxon}
+          // $interacting_gene_proxy->taxonid(),
+
       score => '',  # for biogrid format output
       phenotypes => '',
       submitter_comment => $data->{submitter_comment} // '',
@@ -668,12 +680,18 @@ sub make_interaction_annotation
       genotype_a_display_name => $genotype_a->display_name($config),
       genotype_a_id => $genotype_a->genotype_id(),
       genotype_a_taxonid => $organism_a->taxonid(),
+      feature_a_display_name => $genotype_a->display_name($config),
+      feature_a_id => $genotype_a->genotype_id(),
+      feature_a_taxonid => $organism_a->taxonid(),
       genotype_a_gene_ids => \@genotype_a_gene_ids,
       publication_uniquename => $pub_uniquename,
       evidence_code => $evidence_code,
       genotype_b_display_name => $genotype_b->display_name($config),
       genotype_b_id => $genotype_b->genotype_id(),
       genotype_b_taxonid => $organism_b->taxonid(),
+      feature_b_display_name => $genotype_b->display_name($config),
+      feature_b_id => $genotype_b->genotype_id(),
+      feature_b_taxonid => $organism_b->taxonid(),
       genotype_b_gene_ids => \@genotype_b_gene_ids,
       score => '',  # for biogrid format output
       submitter_comment => $data->{submitter_comment} // '',
