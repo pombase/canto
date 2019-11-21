@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 122;
+use Test::More tests => 140;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -69,7 +69,7 @@ sub check_new_annotations
 
     my @annotations = @$annotations_ref;
 
-    is (@annotations, 2);
+    is (@annotations, 1);
 
     my $interacting_gene_count = 0;
 
@@ -88,7 +88,43 @@ sub check_new_annotations
       }
     }
 
-    is ($interacting_gene_count, 2);
+    is ($interacting_gene_count, 1);
+  }
+
+  {
+    my ($completed_count, $annotations_ref) =
+      Canto::Curs::Utils::get_annotation_table($config, $curs_schema,
+                                               'physical_interaction');
+
+    my @annotations = @$annotations_ref;
+
+    is (@annotations, 1);
+
+    my $interacting_gene_count = 0;
+
+    for my $annotation (@annotations) {
+      is ($annotation->{feature_a_display_name}, 'SPCC63.05');
+      is ($annotation->{feature_a_taxonid}, '4896');
+      is ($annotation->{gene_identifier}, 'SPCC63.05');
+      is ($annotation->{gene_display_name}, 'SPCC63.05');
+      is ($annotation->{gene_taxonid}, '4896');
+      is ($annotation->{feature_b_display_name}, 'ssm4');
+      is ($annotation->{feature_b_taxonid}, '4896');
+      is ($annotation->{interacting_gene_display_name}, 'ssm4');
+      is ($annotation->{interacting_gene_taxonid}, '4896');
+      is ($annotation->{publication_uniquename}, 'PMID:19756689');
+      if ($annotation->{evidence_code} eq 'Synthetic Haploinsufficiency') {
+        $interacting_gene_count++
+      } else {
+        if ($annotation->{evidence_code} eq 'Far Western') {
+          $interacting_gene_count++
+        } else {
+          fail ("unknown interacting gene");
+        }
+      }
+    }
+
+    is ($interacting_gene_count, 1);
   }
 
   {

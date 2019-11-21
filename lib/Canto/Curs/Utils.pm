@@ -449,6 +449,10 @@ sub make_gene_interaction_annotation
 
   my $gene = $annotation_genes[0];
 
+  if (!defined $gene) {
+    confess "internal error, no interacting gene in make_gene_interaction_annotation()\n";
+  }
+
   my $is_inferred_annotation = 0;
 
   my $gene_proxy =
@@ -456,6 +460,7 @@ sub make_gene_interaction_annotation
                                  cursdb_gene => $gene);
 
   my $data = $annotation->data();
+
   my $evidence_code = $data->{evidence_code};
   my $annotation_type = $annotation->type();
 

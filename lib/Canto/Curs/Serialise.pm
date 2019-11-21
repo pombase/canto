@@ -134,6 +134,25 @@ sub _get_annotations
   while (defined (my $annotation = $rs->next())) {
     my %extra_data = %{clone $annotation->data()};
 
+    if (defined $extra_data{interacting_genes}) {
+      $extra_data{interacting_genes} =
+        [
+          map {
+            my $interacting_gene =
+              $schema->resultset('Gene')->find({
+                primary_identifier => $_->{primary_identifier},
+              });
+
+            my $interacting_taxonid = $interacting_gene->organism()->taxonid();
+            my $organism_details =
+              $organism_lookup->lookup_by_taxonid($interacting_taxonid);
+            my $full_name = $organism_details->{full_name};
+
+            $full_name . ' ' . $_->{primary_identifier};
+          } @{$extra_data{interacting_genes}}
+        ]
+    }
+
     my $term_ontid = delete $extra_data{term_ontid};
     if ($term_ontid) {
       $extra_data{term} = $term_ontid;

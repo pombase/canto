@@ -74,6 +74,8 @@ sub BUILD
   my $self = shift;
 
   if (!defined $self->cursdb_gene()) {
+    use Carp qw(longmess);
+    warn longmess();
     croak "No cursdb_gene passed to GeneProxy";
   }
 }
