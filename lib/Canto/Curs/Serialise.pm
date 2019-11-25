@@ -67,7 +67,7 @@ sub _get_metadata
   my $track_schema = shift;
   my $curs_schema = shift;
 
-  confess() unless defined $curs_schema;
+  confess("curs_schema not defined") unless defined $curs_schema;
 
   my @results = $curs_schema->resultset('Metadata')->all();
 
