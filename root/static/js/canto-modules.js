@@ -6341,7 +6341,6 @@ var annotationEditDialogCtrl =
     $scope.filteredOrganismPromise =
       $scope.allPromise.then(function([annotationType, alleleTypes, organisms,
                                        instanceOrganism, extConfig]) {
-        // create a promise of only organisms with genotypes
         return $.grep(organisms,
                       function(organism) {
                         if (!organism.full_name) {
