@@ -6281,6 +6281,22 @@ var annotationEditDialogCtrl =
     $scope.selectedOrganism = args.annotation.organism;
     $scope.hideRelationNames = [];
 
+    $scope.multiOrganismMode = CantoGlobals.multi_organism_mode;
+
+    $scope.selectedOrganism;
+    $scope.initialSelectedOrganismId = null;
+
+    if (args.annotation.feature_a_taxonid) {
+      $scope.initialSelectedOrganismId = args.annotation.feature_a_taxonid;
+    }
+
+    if (args.annotation.organism) {
+      $scope.selectedOrganism = args.annotation.organism.taxonid;
+      if (!$scope.initialSelectedOrganismId) {
+        $scope.initialSelectedOrganismId = args.annotation.organism.taxonid;
+      }
+    }
+
     $scope.models = {
       chosenSuggestedTerm: null,
     };
@@ -6289,8 +6305,6 @@ var annotationEditDialogCtrl =
     $scope.isMetagenotypeAnnotation = null;
 
     copyObject(args.annotation, $scope.annotation);
-
-    $scope.multiOrganismMode = CantoGlobals.multi_organism_mode;
 
     $scope.filteredFeatures = null;
     $scope.filteredFeaturesB = null;
@@ -6900,7 +6914,7 @@ function makeNewAnnotation(template) {
 
 
 function addAnnotation($uibModal, annotationTypeName, featureType, featureId,
-  featureDisplayName) {
+                       featureDisplayName, featureTaxonId) {
   var template = {
     annotation_type: annotationTypeName,
     feature_type: featureType,
@@ -6908,10 +6922,16 @@ function addAnnotation($uibModal, annotationTypeName, featureType, featureId,
   if (featureId) {
     template.feature_id = featureId;
   }
+  if (featureTaxonId) {
+    template.organism = {
+      taxonid: featureTaxonId
+    };
+  }
+
   var featureEditable = !featureId;
   var newAnnotation = makeNewAnnotation(template);
   startEditing($uibModal, annotationTypeName, newAnnotation,
-    featureDisplayName, true, featureEditable);
+               featureDisplayName, true, featureEditable);
 }
 
 var annotationQuickAdd =
@@ -6922,6 +6942,7 @@ var annotationQuickAdd =
         featureType: '@',
         featureId: '@',
         featureDisplayName: '@',
+        featureTaxonId: '@',
         linkLabel: '@?'
       },
       restrict: 'E',
@@ -6959,7 +6980,7 @@ var annotationQuickAdd =
           }
 
           addAnnotation($uibModal, $scope.annotationTypeName, $scope.featureType,
-            $scope.featureId, $scope.featureDisplayName);
+                        $scope.featureId, $scope.featureDisplayName, $scope.featureTaxonId);
         };
       },
     };

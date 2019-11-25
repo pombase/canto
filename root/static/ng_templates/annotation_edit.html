@@ -19,7 +19,7 @@
         <td>
           <organism-selector
             organisms="organisms"
-            initial-selection-taxon-id="{{selectedOrganism.taxonid}}"
+            initial-selection-taxon-id="{{initialSelectedOrganismId}}"
             organism-selected="organismSelected(organism)">
           </organism-selector>
           <span ng-show="!isValidOrganism()"

@@ -33,7 +33,8 @@ Add a new <% $type_display_name %> for this genotype
     <span class="curs-annotation-quick-add" ng-show="advancedMode()">
       <annotation-quick-add annotation-type-name="<% $annotation_type->{name} %>"
                             feature-type="genotype" feature-id="<% $genotype->genotype_id() %>"
-                            feature-display-name="<% $genotype->display_name($c->config()) %>">
+                            feature-display-name="<% $genotype->display_name($c->config()) %>"
+                            feature-taxon-id="<% $genotype->organism()->taxonid() %>">
       </annotation-quick-add>
     </span>
     </li>
