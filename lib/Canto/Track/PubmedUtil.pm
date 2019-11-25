@@ -230,7 +230,11 @@ sub load_pubmed_xml
                           map {
                             if (ref $_ eq 'HASH') {
                               if (defined $_->{content}) {
-                                $_->{content};
+                                if (ref $_->{content}) {
+                                  ();
+                                } else {
+                                  $_->{content};
+                                }
                               } else {
                                 ();
                               }
