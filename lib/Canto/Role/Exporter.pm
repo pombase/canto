@@ -118,7 +118,7 @@ after 'export' => sub {
       my $curs_schema = Canto::Curs::get_schema_for_key($self->config(), $curs_key);
       # this writes to the TrackDB, so we need to set the state after we finish
       # iterating with $curs_rs
-      if ($self->state() eq 'APPROVED') {
+      if (($self->state()->get_state($curs_schema))[0] eq 'APPROVED') {
         $self->state()->set_state($curs_schema, $self->state_after_export());
       }
 
