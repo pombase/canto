@@ -672,8 +672,7 @@ CREATE TABLE metagenotype_temp (
 
       my @old_interaction_annotations = grep {
         my $old_annotation = $_;
-        $old_annotation->type() eq 'physical_interaction' ||
-          $old_annotation->type() eq 'genetic_interaction';
+        $old_annotation->type() eq 'genetic_interaction';
       } $annotation_rs->all();
 
       for my $old_annotation (@old_interaction_annotations) {
