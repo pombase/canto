@@ -6782,21 +6782,24 @@ var annotationEditDialogCtrl =
     };
 
     $scope.ok = function () {
+      var objectToStore = {};
+      copyObject($scope.annotation, objectToStore);
+
       if ($scope.annotationType.category === 'interaction') {
         if ($scope.annotationType.feature_type === 'gene') {
-          $scope.annotation.interacting_gene_id = $scope.annotation.second_feature_id;
-          delete $scope.annotation.second_feature_id;
-          delete $scope.annotation.extension;
+          objectToStore.interacting_gene_id = $scope.annotation.second_feature_id;
+          delete objectToStore.second_feature_id;
+          delete objectToStore.extension;
         } else {
-          $scope.annotation.genotype_a_id = $scope.annotation.feature_id;
-          delete $scope.annotation.feature_id;
-          $scope.annotation.genotype_b_id = $scope.annotation.second_feature_id;
-          delete $scope.annotation.second_feature_id;
+          objectToStore.genotype_a_id = $scope.annotation.feature_id;
+          delete objectToStore.feature_id;
+          objectToStore.genotype_b_id = $scope.annotation.second_feature_id;
+          delete objectToStore.second_feature_id;
         }
       }
 
       var q = AnnotationProxy.storeChanges(args.annotation,
-        $scope.annotation, args.newlyAdded);
+        objectToStore, args.newlyAdded);
       loadingStart();
       var storePop = toaster.pop({
         type: 'info',
