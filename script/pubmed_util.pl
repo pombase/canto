@@ -31,9 +31,11 @@ my $schema = Canto::TrackDB->new(config => $config);
 
 
 my $do_fields = 0;
+my $dry_run = 0;
 my $do_help = 0;
 
 my $result = GetOptions ("add-missing-fields|f" => \$do_fields,
+                         "dry-run|d" => \$dry_run,
                          "help|h" => \$do_help);
 
 if (!$result || $do_help) {
@@ -43,8 +45,12 @@ if (!$result || $do_help) {
 \n";
 }
 
+my $guard = $schema->txn_scope_guard();
+
 if ($do_fields) {
   my $count = Canto::Track::PubmedUtil::add_missing_fields($config, $schema);
 
   print "added missing fields to $count publications\n";
 }
+
+$guard->commit() unless $dry_run;
