@@ -23,14 +23,14 @@ Choose curation type for <% $gene->display_name() %>:
 %   my $type_display_name = $annotation_type->{display_name};
 %   if ($annotation_type->{feature_type} eq 'gene') {
 %    if ($annotation_type->{category} eq 'interaction') {
-%#    <li class="annotation-type">
-%#      <annotation-quick-add annotation-type-name="<% $annotation_type->{name} %>"
-%#                            feature-type="gene" feature-id="<% $gene->gene_id() %>"
-%#                            feature-display-name="<% $gene_proxy->display_name() %>"
-%#                            link-label="<% ucfirst $type_display_name %>">
-%#      </annotation-quick-add>
-%#      <help-icon key="<% $annotation_type->{name} . '_definition' %>"></help-icon>
-%#    </li>
+    <li class="annotation-type">
+      <annotation-quick-add annotation-type-name="<% $annotation_type->{name} %>"
+                            link-label="<% ucfirst($annotation_type->{display_name}) %>"
+                            feature-type="<% $annotation_type->{feature_type} %>"
+                            feature-taxon-id="">
+      </annotation-quick-add>
+      <help-icon key="<% $annotation_type->{name} . '_definition' %>"></help-icon>
+    </li>
 %    } else {
 %     my $action_path = "$curs_root_uri/feature/gene/annotate/$gene_id/" .
 %       "start/$annotation_type_name";
