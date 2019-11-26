@@ -9279,8 +9279,10 @@ var genotypeAndSummaryNav = function () {
 };
 
 var genotypeAndSummaryNavCtrl = function ($scope, CantoGlobals) {
-  $scope.summaryUrl = CantoGlobals.curs_root_uri;
-  $scope.genotypeManageUrl = CantoGlobals.curs_root_uri + '/' + getGenotypeManagePath($scope.role);
+  var readOnly = CantoGlobals.read_only_curs;
+  var readOnlyFragment = readOnly ? '/ro' : ''
+  $scope.summaryUrl = CantoGlobals.curs_root_uri + readOnlyFragment;
+  $scope.genotypeManageUrl = CantoGlobals.curs_root_uri + '/' + getGenotypeManagePath($scope.role) + readOnlyFragment;
 }
 
 canto.controller('genotypeAndSummaryNavCtrl', ['$scope', 'CantoGlobals', genotypeAndSummaryNavCtrl]);
