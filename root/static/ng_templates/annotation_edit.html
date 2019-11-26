@@ -19,7 +19,7 @@
         <td>
           <organism-selector
             organisms="organisms"
-            initial-selection-taxon-id="{{selectedOrganism.taxonid}}"
+            initial-selection-taxon-id="{{initialSelectedOrganismId}}"
             organism-selected="organismSelected(organism)">
           </organism-selector>
           <span ng-show="!isValidOrganism()"
@@ -199,7 +199,7 @@
         </td>
       </tr>
 
-      <tr>
+      <tr ng-if="annotation.curator">
         <td class="title">Curator</td>
         <td colspan="2">{{annotation.curator}}</td>
       </tr>

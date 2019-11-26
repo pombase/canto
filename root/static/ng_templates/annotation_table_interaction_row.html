@@ -1,14 +1,15 @@
 <tr ng-class="{ 'curs-row-checked' : sessionState == 'APPROVAL_IN_PROGRESS' && checked == 'yes' }">
   <td>
-    <a ng-if="annotation.status === 'new'" href="{{curs_root_uri + '/feature/genotype/view/' + annotation.genotype_a_id + (read_only_curs ? '/ro' : '')}}">
-      {{annotation.genotype_a_display_name}}
+    <a ng-if="annotation.status === 'new'"
+       href="{{curs_root_uri + '/feature/' + interactionFeatureType + '/view/' + annotation.feature_a_id + (read_only_curs ? '/ro' : '')}}">
+      {{annotation.feature_a_display_name}}
     </a>
     <span ng-if="annotation.status === 'existing'">
-      {{annotation.genotype_a_display_name}}
+      {{annotation.feature_a_display_name}}
     </span>
   </td>
   <td ng-if="multiOrganismMode">
-    {{annotation.genotype_a_taxonid}}
+    {{annotation.feature_a_taxonid}}
   </td>
   <td ng-if="!data.hideColumns.evidence_code">
     {{displayEvidence}}
@@ -17,20 +18,23 @@
     <span ng-bind-html="annotation.conditionsString | toTrusted"></span>
   </td>
   <td>
-    <a ng-if="annotation.status === 'new'" href="{{curs_root_uri + '/feature/genotype/view/' + annotation.genotype_b_id + (read_only_curs ? '/ro' : '')}}">
-      {{annotation.genotype_b_display_name}}
+    <a ng-if="annotation.status === 'new'"
+       href="{{curs_root_uri + '/feature/' + interactionFeatureType + '/view/' + annotation.feature_b_id + (read_only_curs ? '/ro' : '')}}">
+      {{annotation.feature_b_display_name}}
     </a>
     <span ng-if="annotation.status === 'existing'">
-      {{annotation.genotype_b_display_name}}
+      {{annotation.feature_b_display_name}}
     </span>
   </td>
   <td ng-if="multiOrganismMode">
-    {{annotation.genotype_b_taxonid}}
+    {{annotation.feature_b_taxonid}}
   </td>
-  <td ng-class="{ 'term-warning': annotation.is_obsolete_term }">
+  <td ng-if="showInteractionTermColumns"
+      ng-class="{ 'term-warning': annotation.is_obsolete_term }">
     {{annotation.term_ontid}}
   </td>
-  <td ng-class="{ 'term-warning': annotation.is_obsolete_term }">
+  <td ng-if="showInteractionTermColumns"
+      ng-class="{ 'term-warning': annotation.is_obsolete_term }">
     {{annotation.term_name}}
   </td>
   <td ng-if="!data.hideColumns.extension">

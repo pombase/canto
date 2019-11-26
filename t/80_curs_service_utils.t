@@ -3,7 +3,6 @@ use warnings;
 use Test::More tests => 90;
 use Test::Deep;
 use JSON;
-use Data::Dumper;
 
 use Capture::Tiny 'capture_stderr';
 
@@ -518,7 +517,7 @@ is ($curs_schema->resultset('Annotation')->search({ annotation_id => $new_annota
 
 my $genetic_interaction_annotation =
   $curs_schema->resultset('Annotation')->find({ type => 'genetic_interaction',
-                                                data => { -like => '%Far Western%' } });
+                                                data => { -like => '%Synthetic Haploinsufficiency%' } });
 
 
 # test illegal field type
@@ -559,9 +558,15 @@ cmp_deeply ($res->{annotation},
               'genotype_a_id' => 1,
               'genotype_a_taxonid' => 4896,
               'genotype_a_gene_ids' => [2, 4],
+              'feature_a_display_name' => 'SPCC63.05delta ssm4KE',
+              'feature_a_id' => 1,
+              'feature_a_taxonid' => 4896,
               'genotype_b_display_name' => 'ssm4-D4(del_100-200)[Knockdown]',
               'genotype_b_id' => 2,
               'genotype_b_taxonid' => 4896,
+              'feature_b_display_name' => 'ssm4-D4(del_100-200)[Knockdown]',
+              'feature_b_id' => 2,
+              'feature_b_taxonid' => 4896,
               'genotype_b_gene_ids' => [2],
               'organism' => {
                 taxonid => '4896',
@@ -570,12 +575,15 @@ cmp_deeply ($res->{annotation},
                 common_name => 'fission yeast',
                 pathogen_or_host => 'unknown',
               },
-              'term_ontid' => 'FYPO:0000061',
-              'term_name' => 'multinucleate',
+              'term_ontid' => 'FYPO:0000114',
+              'term_name' => 'cellular process phenotype',
               'extension' => [],
-              'conditions' => [{'name' => 'rich medium'}],
+              'conditions' => [{
+                                'name' => 'glucose rich medium',
+                                'term_id' => 'PECO:0000137'
+                              }],
               'is_inferred_annotation' => 0,
-              'evidence_code' => 'Far Western',
+              'evidence_code' => 'Synthetic Haploinsufficiency',
               'status' => 'new',
               'completed' => 1,
               'submitter_comment' => '',
@@ -599,9 +607,6 @@ cmp_deeply($cond_res,
              {
                'term_id' => 'PECO:0000006',
                'name' => 'low temperature'
-             },
-             {
-               'name' => 'rich medium'
              },
              {
                'name' => 'some free text cond'
@@ -974,10 +979,16 @@ cmp_deeply($annotation_res,
               'genotype_a_display_name' => 'SPCC63.05delta ssm4KE',
               'genotype_a_id' => 1,
               'genotype_a_taxonid' => 4896,
+              'feature_a_display_name' => 'SPCC63.05delta ssm4KE',
+              'feature_a_id' => 1,
+              'feature_a_taxonid' => 4896,
               'genotype_a_gene_ids' => [2, 4],
               'genotype_b_display_name' => 'ssm4-D4(del_100-200)[Knockdown]',
               'genotype_b_id' => 2,
               'genotype_b_taxonid' => 4896,
+              'feature_b_display_name' => 'ssm4-D4(del_100-200)[Knockdown]',
+              'feature_b_id' => 2,
+              'feature_b_taxonid' => 4896,
               'genotype_b_gene_ids' => [2],
               'organism' => {
                 taxonid => '4896',
@@ -1002,39 +1013,6 @@ cmp_deeply($annotation_res,
               'annotation_type_display_name' => 'genetic interaction',
               'curator' => 'Some Testperson <some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org>',
               'completed' => 1
-            },
-            {
-              'genotype_a_display_name' => 'SPCC63.05delta ssm4KE',
-              'genotype_a_id' => 1,
-              'genotype_a_taxonid' => 4896,
-              'genotype_a_gene_ids' => [2, 4],
-              'genotype_b_display_name' => 'ssm4-D4(del_100-200)[Knockdown]',
-              'genotype_b_id' => 2,
-              'genotype_b_taxonid' => 4896,
-              'genotype_b_gene_ids' => [2],
-              'organism' => {
-                taxonid => '4896',
-                scientific_name => 'Schizosaccharomyces pombe',
-                full_name => 'Schizosaccharomyces pombe',
-                common_name => 'fission yeast',
-                pathogen_or_host => 'unknown',
-              },
-              'term_ontid' => 'FYPO:0000061',
-              'term_name' => 'multinucleate',
-              'extension' => [],
-              'conditions' => [{'name' => 'rich medium'}],
-              'completed' => 1,
-              'curator' => 'Some Testperson <some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org>',
-              'status' => 'new',
-              'annotation_type' => 'genetic_interaction',
-              'annotation_type_display_name' => 'genetic interaction',
-              'score' => '',
-              'annotation_id' => 5,
-              'publication_uniquename' => 'PMID:19756689',
-              'submitter_comment' => '',
-              'is_obsolete_term' => 0,
-              'is_inferred_annotation' => 0,
-              'evidence_code' => 'Far Western'
             },
             {
               'evidence_code' => 'Phenotypic Enhancement',
@@ -1063,6 +1041,36 @@ cmp_deeply($annotation_res,
               'interacting_gene_id' => undef,
               'annotation_type' => 'genetic_interaction',
               'gene_identifier' => 'SPBC12C2.02c'
+            },
+            {
+              'submitter_comment' => '',
+              'interacting_gene_id' => 2,
+              'completed' => 1,
+              'gene_display_name' => 'SPCC63.05',
+              'gene_id' => 4,
+              'gene_identifier' => 'SPCC63.05',
+              'annotation_id' => 5,
+              'feature_b_taxonid' => '4896',
+              'interacting_gene_taxonid' => '4896',
+              'feature_id' => 4,
+              'annotation_type' => 'physical_interaction',
+              'score' => '',
+              'evidence_code' => 'Far Western',
+              'feature_b_display_name' => 'ssm4',
+              'is_inferred_annotation' => 0,
+              'feature_a_id' => 4,
+              'publication_uniquename' => 'PMID:19756689',
+              'annotation_type_display_name' => 'physical interaction',
+              'curator' => 'Some Testperson <some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org>',
+              'feature_a_taxonid' => '4896',
+              'gene_taxonid' => '4896',
+              'feature_display_name' => 'SPCC63.05',
+              'interacting_gene_identifier' => 'SPAC27D7.13c',
+              'status' => 'new',
+              'feature_a_display_name' => 'SPCC63.05',
+              'feature_b_id' => 2,
+              'interacting_gene_display_name' => 'ssm4',
+              'phenotypes' => ''
             }
           ]);
 
@@ -1248,8 +1256,6 @@ $curs_schema->resultset('Metagenotype')->delete();
 $genotype_delete_res = $service_utils->delete_genotype($second_genotype->genotype_id(), { key => 'aaaa0007' });
 
 if ($genotype_delete_res->{status} ne 'success') {
-  warn Dumper([$genotype_delete_res]);
-
   fail($genotype_delete_res->{status});
 }
 

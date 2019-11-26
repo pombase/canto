@@ -70,8 +70,8 @@
               <th ng-if="annotationType.can_have_conditions && !data.hideColumns.conditions">Conditions</th>
               <th>Interactor B</th>
               <th ng-if="multiOrganismMode">Taxon Id B</th>
-              <th>Term ID</th>
-              <th>Phenotype</th>
+              <th ng-if="showInteractionTermColumns">Term ID</th>
+              <th ng-if="showInteractionTermColumns">Phenotype</th>
               <th ng-if="!data.hideColumns.extension">
                 <span ng-show="flyBaseMode">Phenotype extensions</span>
                 <span ng-hide="flyBaseMode">Annotation extension</span>
