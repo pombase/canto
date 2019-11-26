@@ -6343,6 +6343,16 @@ var annotationEditDialogCtrl =
                                        instanceOrganism, extConfig]) {
         return $.grep(organisms,
                       function(organism) {
+                        if (annotationType.feature_type == 'gene' &&
+                           organism.genes.length == 0) {
+                          return false;
+                        }
+
+                        if (annotationType.feature_type == 'genotype' &&
+                           organism.genotype_count == 0) {
+                          return false;
+                        }
+
                         if (!organism.full_name) {
                           return false;
                         }
