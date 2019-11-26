@@ -224,10 +224,6 @@ sub _get_organisms
         $gene_details;
       } $org->genes()->all()];
 
-    if ($include_counts) {
-      $organism_details->{genotype_counts} = $org->genotypes()->count();
-    }
-
     push @return_list, $organism_details;
   }
 
