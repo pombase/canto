@@ -6348,7 +6348,7 @@ var annotationEditDialogCtrl =
                           return false;
                         }
 
-                        if (annotationType.feature_type == 'genotype' &&
+                        if (annotationType.feature_type != 'gene' &&
                            organism.genotype_count == 0) {
                           return false;
                         }
