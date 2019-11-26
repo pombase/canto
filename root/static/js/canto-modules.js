@@ -6374,6 +6374,11 @@ var annotationEditDialogCtrl =
         if (organisms.length == 1) {
           $scope.selectedOrganism = organisms[0];
         }
+        if (args.annotationTypeName === 'host_phenotype') {
+          organisms = filterOrganisms(organisms, 'host');
+        } else if (args.annotationTypeName === 'pathogen_phenotype') {
+          organisms = filterOrganisms(organisms, 'pathogen');
+        }
         $scope.organisms = organisms;
         return organisms;
       })
