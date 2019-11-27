@@ -9213,6 +9213,13 @@ var editOrganisms = function ($window, EditOrganismsSvc, StrainsService, CantoGl
       $scope.continueUrl = curs_root_uri;
       $scope.addGenesUrl = curs_root_uri + '/gene_upload/';
 
+      $scope.getStrainNoticeClass = function () {
+        if (! $scope.isContinueUrlDisabled()) {
+          return 'invisible';
+        }
+        return '';
+      };
+
       $scope.isContinueUrlDisabled = function () {
         if ($scope.getPathogens().length == 0 &&
           $scope.getHosts().length == 0) {

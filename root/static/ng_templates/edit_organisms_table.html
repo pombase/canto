@@ -22,7 +22,7 @@
       <tbody ng-repeat="o in organisms() track by o.taxonid">
         <tr>
           <td rowspan="{{ o.genes.length === 0 ? 1 : o.genes.length }}">
-            <b>{{ o.scientific_name }}</b> <span ng-if="o.common_name">({{ o.common_name }})</span> [{{ o.taxonid }}]
+            <i>{{ o.scientific_name }}</i>
           </td>
           <td ng-if="o.genes.length > 0">{{ firstGene(o.genes).systematic_identifier }}</td>
           <td ng-if="o.genes.length > 0">{{ firstGene(o.genes).name }}</td>

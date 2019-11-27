@@ -1,7 +1,7 @@
 <div>
   <div ng-if="data.sessionStrains && data.strains">
     <div>
-        <span ng-repeat="st in data.sessionStrains track by $index" class="btn-primary btn-xs" style="margin: 2px; float: left;">
+        <span ng-repeat="st in data.sessionStrains track by $index" class="curs-strain-tag btn-primary btn-xs">
             <span style="cursor: pointer;"
             ng-click="remove(st.strain_name)">{{st.strain_name}} <span style="color: red;">x</span></span>
         </span>
@@ -9,7 +9,7 @@
     <div style="width:280px;">
         <select ng-model="data.strainSelector" ng-change="changed()">
             <optgroup>
-                <option value="">Add experimental strains for this organism</option>
+                <option value="">Add experimental strains</option>
             </optgroup>
             <optgroup label="-----------------------------">
                 <option>Type a new strain</option>
