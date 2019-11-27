@@ -1674,3 +1674,17 @@ a:not([href]) {
   font-weight: 700;
   margin-bottom: 10px;
 }
+.curs-strain-notice-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+.curs-strain-notice {
+  border-radius: 4px;
+  border: 3px solid #F6B26B;
+  display: inline-block;
+  font-size: 14.4px;
+  padding: 6px 12px;
+  text-align: center;
+  white-space: nowrap;
+}
