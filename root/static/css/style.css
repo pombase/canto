@@ -1688,3 +1688,7 @@ a:not([href]) {
   text-align: center;
   white-space: nowrap;
 }
+.curs-strain-tag {
+  margin: 2px 2px 2px 0;
+  display: inline-block;
+}
