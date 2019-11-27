@@ -6371,13 +6371,13 @@ var annotationEditDialogCtrl =
 
     $scope.filteredOrganismPromise
       .then(function (organisms) {
-        if (organisms.length == 1) {
-          $scope.selectedOrganism = organisms[0];
-        }
         if (args.annotationTypeName === 'host_phenotype') {
           organisms = filterOrganisms(organisms, 'host');
         } else if (args.annotationTypeName === 'pathogen_phenotype') {
           organisms = filterOrganisms(organisms, 'pathogen');
+        }
+        if (organisms.length == 1) {
+          $scope.selectedOrganism = organisms[0];
         }
         $scope.organisms = organisms;
         return organisms;
