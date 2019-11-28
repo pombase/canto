@@ -3,7 +3,7 @@
 </%args>
 
 % if (!$read_only_curs) {
-<div class="curs-box">
+<div ng-if="getAnnotationMode() == 'advanced'" class="curs-box">
   <div class="curs-box-title">
     Quick links
   </div>
