@@ -6390,6 +6390,10 @@ var annotationEditDialogCtrl =
     $scope.filteredFeaturesDeferred = $q.defer();
     $scope.filteredFeaturesPromise = $scope.filteredFeaturesDeferred.promise;
 
+    if (args.annotation.feature_id) {
+      featureIdWatcher(args.annotation.feature_id);
+    }
+
     $scope.annotationTypePromise
       .then(function (annotationType) {
         $scope.annotationType = annotationType;
