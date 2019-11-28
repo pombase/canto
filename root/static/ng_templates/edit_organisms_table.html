@@ -8,14 +8,13 @@
       <thead>
         <tr>
           <th>Organism</th>
-          <th class="curs-genes-and-orgs-edit-gene" colspan="4">Gene</th>
+          <th class="curs-genes-and-orgs-edit-gene" colspan="3">Gene</th>
           <th>&nbsp;</th>
         </tr>
         <tr>
             <th></th>
             <th>ID</th>
             <th>Name</th>
-            <th>Synonyms</th>
             <th>Product</th>
             <th>&nbsp;</th>
         </tr>
@@ -23,11 +22,10 @@
       <tbody ng-repeat="o in organisms() track by o.taxonid">
         <tr>
           <td rowspan="{{ o.genes.length === 0 ? 1 : o.genes.length }}">
-            <b>{{ o.scientific_name }}</b> <span ng-if="o.common_name">({{ o.common_name }})</span> [{{ o.taxonid }}]
+            <i>{{ o.scientific_name }}</i>
           </td>
           <td ng-if="o.genes.length > 0">{{ firstGene(o.genes).systematic_identifier }}</td>
           <td ng-if="o.genes.length > 0">{{ firstGene(o.genes).name }}</td>
-          <td ng-if="o.genes.length > 0">{{ firstGene(o.genes).synonyms.join(', ') }}</td>
           <td ng-if="o.genes.length > 0">{{ firstGene(o.genes).product }}</td>
           <td ng-if="o.genes.length > 0" style="vertical-align: top;"><button
             ng-disabled="firstGene(o.genes).disabled"
@@ -36,7 +34,7 @@
             ng-click="removeGene(firstGene(o.genes).gene_id)">
               <span ng-class="{'gene-button-delete-text-disabled': firstGene(o.genes).disabled}">X</span></button>
           </td>
-          <td ng-if="o.genes.length == 0" class="organism-table__no-gene-notice" colspan="4">(No genes for this organism)</td>
+          <td ng-if="o.genes.length == 0" class="organism-table__no-gene-notice" colspan="3">(No genes for this organism)</td>
           <td ng-if="o.genes.length == 0">
             <button ng-if="canRemoveHost(o)"
               title="Remove host"
@@ -52,7 +50,6 @@
           ng-repeat="g in otherGenes(o.genes) track by g.systematic_identifier">
           <td>{{ g.systematic_identifier }}</td>
           <td>{{ g.name }}</td>
-          <td>{{ g.synonyms.join(', ') }}</td>
           <td>{{ g.product }}</td>
           <td style="vertical-align: middle;"><button
             ng-disabled="g.disabled"
@@ -62,7 +59,7 @@
             <span ng-class="{'gene-button-delete-text-disabled': g.disabled}">X</span></button>
           </td>
         </tr>
-        <tr ng-if="data.strainsMode"><td colspan="6"><strain-picker taxon-id="{{ o.taxonid }}"></strain-picker></td></tr>
+        <tr ng-if="data.strainsMode"><td colspan="5"><strain-picker taxon-id="{{ o.taxonid }}"></strain-picker></td></tr>
       </tbody>
     </table>
   </div>

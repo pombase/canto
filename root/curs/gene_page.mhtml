@@ -25,9 +25,11 @@ Choose curation type for <% $gene->display_name() %>:
 %    if ($annotation_type->{category} eq 'interaction') {
     <li class="annotation-type">
       <annotation-quick-add annotation-type-name="<% $annotation_type->{name} %>"
+                            feature-id="<% $gene->gene_id() %>"
                             link-label="<% ucfirst($annotation_type->{display_name}) %>"
                             feature-type="<% $annotation_type->{feature_type} %>"
-                            feature-taxon-id="">
+                            feature-display-name="<% $gene_proxy->display_name() %>"
+                            feature-taxon-id="<% $gene_proxy->taxonid() %>">
       </annotation-quick-add>
       <help-icon key="<% $annotation_type->{name} . '_definition' %>"></help-icon>
     </li>

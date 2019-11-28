@@ -6371,7 +6371,12 @@ var annotationEditDialogCtrl =
 
     $scope.filteredOrganismPromise
       .then(function (organisms) {
-        if (organisms.length == 1) {
+        if (args.annotationTypeName === 'host_phenotype') {
+          organisms = filterOrganisms(organisms, 'host');
+        } else if (args.annotationTypeName === 'pathogen_phenotype') {
+          organisms = filterOrganisms(organisms, 'pathogen');
+        }
+        if (organisms.length === 1) {
           $scope.selectedOrganism = organisms[0];
         }
         $scope.organisms = organisms;
@@ -6384,6 +6389,10 @@ var annotationEditDialogCtrl =
 
     $scope.filteredFeaturesDeferred = $q.defer();
     $scope.filteredFeaturesPromise = $scope.filteredFeaturesDeferred.promise;
+
+    if (args.annotation.feature_id) {
+      featureIdWatcher(args.annotation.feature_id);
+    }
 
     $scope.annotationTypePromise
       .then(function (annotationType) {
@@ -9208,6 +9217,13 @@ var editOrganisms = function ($window, EditOrganismsSvc, StrainsService, CantoGl
       $scope.continueUrl = curs_root_uri;
       $scope.addGenesUrl = curs_root_uri + '/gene_upload/';
 
+      $scope.getStrainNoticeClass = function () {
+        if (! $scope.isContinueUrlDisabled()) {
+          return 'invisible';
+        }
+        return '';
+      };
+
       $scope.isContinueUrlDisabled = function () {
         if ($scope.getPathogens().length == 0 &&
           $scope.getHosts().length == 0) {
@@ -9279,8 +9295,10 @@ var genotypeAndSummaryNav = function () {
 };
 
 var genotypeAndSummaryNavCtrl = function ($scope, CantoGlobals) {
-  $scope.summaryUrl = CantoGlobals.curs_root_uri;
-  $scope.genotypeManageUrl = CantoGlobals.curs_root_uri + '/' + getGenotypeManagePath($scope.role);
+  var readOnly = CantoGlobals.read_only_curs;
+  var readOnlyFragment = readOnly ? '/ro' : ''
+  $scope.summaryUrl = CantoGlobals.curs_root_uri + readOnlyFragment;
+  $scope.genotypeManageUrl = CantoGlobals.curs_root_uri + '/' + getGenotypeManagePath($scope.role) + readOnlyFragment;
 }
 
 canto.controller('genotypeAndSummaryNavCtrl', ['$scope', 'CantoGlobals', genotypeAndSummaryNavCtrl]);

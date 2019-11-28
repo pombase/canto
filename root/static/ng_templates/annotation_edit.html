@@ -131,10 +131,10 @@
           Interacting {{chooseFeatureType}}
         </td>
         <td colspan="2">
-          <div ng-if="!featureEditable">
+          <div>
             {{currentSecondFeatureDisplayName}}
           </div>
-          <div ng-if="featureEditable && filteredFeaturesB">
+          <div ng-if="filteredFeaturesB">
             <feature-chooser feature-type="{{chooseFeatureType}}"
                              features="filteredFeaturesB"
                              filter-organism="selectedOrganism"
