@@ -3,14 +3,14 @@
 </%args>
 
 % if (!$read_only_curs) {
-<div ng-if="getAnnotationMode() == 'advanced'" class="curs-box">
+<div class="curs-box">
   <div class="curs-box-title">
     Quick links
   </div>
   <div class="curs-box-body">
     <ul class="curs-quick-links-list">
 % for my $annotation_type (@annotation_type_list) {
-    <li>
+    <li ng-if="getAnnotationMode() == 'advanced' || '<% $annotation_type->{category} %>' == 'interaction' && '<% $annotation_type->{feature_type} %>' == 'metagenotype'">
       <annotation-quick-add annotation-type-name="<% $annotation_type->{name} %>"
                             link-label="<% ucfirst($annotation_type->{display_name}) %>"
                             feature-type="<% $annotation_type->{feature_type} %>"
