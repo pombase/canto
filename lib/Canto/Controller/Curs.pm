@@ -219,7 +219,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
       $message = "Review only - this session has been exported so no changes are possible";
     } else {
       if ($state eq NEEDS_APPROVAL || $state eq APPROVAL_IN_PROGRESS) {
-        $message = "Review only - this session has been submitted for approval so no changes are possible";
+        $message = "Review only - this session has been submitted for approval.  Please contact the helpdesk to make further changes.";
       } else {
         $message = "Review only - this session can be viewed but not edited";
       }
