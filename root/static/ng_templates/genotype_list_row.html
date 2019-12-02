@@ -33,6 +33,8 @@
       <span ng-bind-html="currentLocus.gene_display_name | wrapAtSpaces | encodeGeneSymbols | toTrusted"></span>
     </a>
 
+    </span>
+
     <span class="curs-genotype-notes-indicator"
           ng-if="showEditNotesLink()">
       <a title="Click to view and edit notes" ng-click="editNotes()">new notes</a>
