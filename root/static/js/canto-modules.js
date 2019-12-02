@@ -2633,6 +2633,14 @@ var extensionRelationDialogCtrl =
       return !!$scope.data.extensionRelation.rangeValue;
     };
 
+    $scope.okTitle = function () {
+      if ($scope.isValid()) {
+        return "Add extension";
+      } else {
+        return "Make a selection to continue";
+      }
+    }
+
     $scope.$watch('selected',
       function () {
         $scope.extensionRelation.rangeType = $scope.selected.rangeType;
