@@ -1,38 +1,33 @@
 <div class="curs-genotype-list-view">
   <div ng-if="genotypeList.length != 0">
-  <table class="curs-genotype-list">
+  <table class="list curs-genotype-list">
     <thead>
       <tr>
         <th ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column" rowspan="2">
           &nbsp;
         </th>
-        <th style="border-bottom: 1px solid grey"
-            colspan="{{5 - hiddenColumnsCount}}">
-Genotype
+        <th style="border-bottom: 1px solid grey">
+Alleles
         </th>
-        <th rowspan="2">
-Annotations
-        </th>
-      </tr>
-      <tr>
         <th ng-hide="columnsToHide.name">
           Name
-        </th>
-        <th>
-          Genes
-        </th>
-        <th>
-          Alleles
         </th>
         <th ng-hide="columnsToHide.strain">
           Strain
         </th>
-        <th rowspan="2" ng-hide="columnsToHide.background">
+        <th ng-hide="columnsToHide.background">
           Background
+        </th>
+        <th>
+Annotations
         </th>
       </tr>
     </thead>
-    <tbody genotype-list-row ng-repeat="currentGenotype in genotypeList"
+    <tbody>
+      <tr>
+<!-- border fix for FireFox -->
+      </tr>
+      <tr genotype-list-row ng-repeat="currentGenotype in genotypeList"
            set-selected-genotype-id="setSelectedGenotypeId(genotypeId)"
            selected-genotype-id="{{selectedGenotypeId}}"
            show-check-box-actions="showCheckBoxActions"
@@ -41,6 +36,7 @@ Annotations
           columns-to-hide="columnsToHide"
           genotypes="genotypeList"
           genotype="currentGenotype">
+      </tr>
     </tbody>
   </table>
 
@@ -60,33 +56,28 @@ Annotations
         <th ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column" rowspan="2">
           &nbsp;
         </th>
-        <th style="border-bottom: 1px solid grey"
-            colspan="{{5 - hiddenColumnsCount}}">
-Diploid/multiploid genotype
+        <th style="border-bottom: 1px solid grey">
+          Alleles
         </th>
-        <th rowspan="2">
-Annotations
-        </th>
-      </tr>
-      <tr>
         <th ng-hide="columnsToHide.name">
           Name
-        </th>
-        <th>
-          Genes
-        </th>
-        <th>
-          Alleles
         </th>
         <th ng-hide="columnsToHide.strain">
           Strain
         </th>
-        <th rowspan="2" ng-hide="columnsToHide.background">
+        <th ng-hide="columnsToHide.background">
           Background
+        </th>
+        <th>
+Annotations
         </th>
       </tr>
     </thead>
-    <tbody genotype-list-row ng-repeat="currentGenotype in diploidList"
+    <tbody>
+      <tr>
+<!-- border fix for FireFox -->
+      </tr>
+      <tr genotype-list-row ng-repeat="currentGenotype in diploidList"
            set-selected-genotype-id="setSelectedGenotypeId(genotypeId)"
            selected-genotype-id="{{selectedGenotypeId}}"
            show-check-box-actions="showCheckBoxActions"
@@ -95,6 +86,7 @@ Annotations
            columns-to-hide="columnsToHide"
            genotypes="diploidList"
            genotype="currentGenotype">
+      </tr>
     </tbody>
   </table>
 

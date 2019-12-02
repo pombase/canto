@@ -1,23 +1,17 @@
-<tbody ng-mouseover="mouseOver($event)"
+<tr ng-mouseover="mouseOver($event)"
     ng-class="{ selected: isSelected() }">
-  <tr>
-  <td ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column"
-      rowspan="{{genotype.alleles.length}}">
+
+  <td ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column">
     <input ng-show="showCheckBoxActions" name="select-annotation" type="Checkbox" ng-model="$parent.checkBoxIsChecked"/>
   </td>
-  <td ng-hide="columnsToHide.name" rowspan="{{otherLoci.length + 1}}">
-    <span ng-bind-html="genotype.name | wrapAtSpaces | encodeAlleleSymbols | toTrusted"></span>
-  </td>
+
   <td>
-    <a ng-if="firstLocus.type != 'aberration'" href="{{curs_root_uri + '/feature/gene/view/' + firstLocus.gene_id + (read_only_curs ? '/ro' : '')}}">
-      <span ng-bind-html="firstLocus.gene_display_name | wrapAtSpaces | encodeGeneSymbols | toTrusted"></span>
-    </a>
-    <span ng-if="firstLocus.type == 'aberration'">(aberration)</span>
-  </td>
-  <td>
-    <span ng-bind-html="firstLocus.long_display_name | encodeAlleleSymbols | toTrusted"></span>
-    <span ng-if="firstLocus.synonyms && genotype.alleles.length == 1">
-      <span ng-repeat="synonym in firstLocus.synonyms" class="curs-genotype-view-allele-synonym">
+  <div class="curs-genotype-locus-alleles" ng-repeat="currentLocus in displayLoci">
+
+    <span ng-bind-html="currentLocus.long_display_name | encodeAlleleSymbols | toTrusted"></span>
+
+    <span ng-if="currentLocus.synonyms && genotype.alleles.length == 1">
+      <span ng-repeat="synonym in currentLocus.synonyms" class="curs-genotype-view-allele-synonym">
         <span ng-if="synonym.edit_status == 'existing'"
               title="Existing synonym"
               class="curs-genotype-view-allele-existing-synonym">
@@ -31,6 +25,16 @@
       </span>
     </span>
 
+    <span ng-if="currentLocus.gene_display_name" class="curs-genotype-allele-gene">
+
+      -
+
+    <a ng-if="currentLocus.type != 'aberration'" href="{{curs_root_uri + '/feature/gene/view/' + currentLocus.gene_id + (read_only_curs ? '/ro' : '')}}">
+      <span ng-bind-html="currentLocus.gene_display_name | wrapAtSpaces | encodeGeneSymbols | toTrusted"></span>
+    </a>
+
+    </span>
+
     <span class="curs-genotype-notes-indicator"
           ng-if="showEditNotesLink()">
       <a title="Click to view and edit notes" ng-click="editNotes()">new notes</a>
@@ -41,23 +45,32 @@
       <a title="{{firstLocus.comment}}" ng-click="viewAlleleComment(genotype.alleles[0])">old note</a>
     </span>
   </td>
-  <td rowspan="{{genotype.alleles.length}}" ng-hide="columnsToHide.strain">{{ strain }}</td>
-  <td rowspan="{{genotype.alleles.length}}" ng-hide="columnsToHide.background">
+
+
+  <td ng-hide="columnsToHide.name">
+    <span ng-bind-html="genotype.name | wrapAtSpaces | encodeAlleleSymbols | toTrusted"></span>
+  </td>
+
+  <td ng-hide="columnsToHide.strain">{{ strain }}</td>
+
+  <td ng-hide="columnsToHide.background">
     <span ng-bind-html="genotype.background | wrapAtSpaces | encodeAlleleSymbols | toTrusted"></span>
   </td>
-  <td style="width: 4em;" rowspan="{{genotype.alleles.length}}">
+
+  <td style="width: 4em;">
     {{genotype.annotation_count}}
     <div ng-if="navigateOnClick == 'false'" class="table-row-actions"
          style="float: right; position: relative; right: -20px">
       <img ng-show="!isSelected()" ng-src="{{app_static_path + '/images/right_triangle.png'}}"></img>
     </div>
   </td>
-  <td rowspan="{{genotype.alleles.length}}"
-      ng-if="navigateOnClick == 'true'" class="table-row-actions">
+
+  <td ng-if="navigateOnClick == 'true'" class="table-row-actions">
     <a href="{{detailsUrl}}">
       <span style="white-space: nowrap">Details</span>
     </a>
   </td>
+
   <td style="width: 0; border: 0px; padding: 0; margin: 0; background-color: white;">
     <div ng-if="isSelected()" class="curs-genotype-list-row-actions">
       <img style="position: absolute; right: -20px; padding: 4px; padding-left: 10px;"
@@ -68,35 +81,4 @@
       </genotype-list-row-links>
     </div>
   </td>
-  </tr>
-  <tr ng-repeat="currentAllele in otherLoci">
-    <td>
-      <a ng-if="currentAllele.type != 'aberration'" href="{{curs_root_uri + '/feature/gene/view/' + currentAllele.gene_id + (read_only_curs ? '/ro' : '')}}">
-        <span ng-bind-html="currentAllele.gene_display_name | wrapAtSpaces | encodeGeneSymbols | toTrusted"></span>
-      </a>
-      <span ng-if="currentAllele.type == 'aberration'">(aberration)</span>
-    </td>
-    <td>
-      <span ng-bind-html="currentAllele.long_display_name | encodeAlleleSymbols | toTrusted"></span>
-      <span ng-if="currentAllele.synonyms">
-        <span ng-repeat="synonym in currentAllele.synonyms">
-          <span ng-if="synonym.edit_status == 'existing'"
-                title="Existing synonym"
-                class="curs-genotype-view-allele-existing-synonym">
-            {{synonym.synonym}}
-          </span>
-          <span ng-if="synonym.edit_status == 'new'"
-                title="New synonym from this session"
-                class="curs-genotype-view-allele-new-synonym">
-            {{synonym.synonym}}
-          </span>
-        </span>
-      </span>
-
-      <span class="curs-genotype-comment-indicator"
-            ng-if="userIsAdmin && currentAllele.comment">
-        <a title="{{currentAllele.comment}}" ng-click="viewAlleleComment(currentAllele)">old note</a>
-      </span>
-    </td>
-  </tr>
-</tbody>
+</tr>
