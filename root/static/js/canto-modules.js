@@ -6592,21 +6592,10 @@ var annotationEditDialogCtrl =
     }
 
     $scope.annotationChanged = function () {
+      var objectToStore = $scope.getObjectToStore();
       var changesToStore = {};
-
-      if ($scope.annotation.term_suggestion_name == '') {
-        $scope.annotation.term_suggestion_name = null;
-      }
-      if ($scope.annotation.term_suggestion_definition == '') {
-        $scope.annotation.term_suggestion_definition = null;
-      }
-      if ($scope.annotation.submitter_comment == '') {
-        $scope.annotation.submitter_comment = null;
-      }
-
-      copyIfChanged(args.annotation, $scope.annotation, changesToStore);
+      copyIfChanged(args.annotation, objectToStore, changesToStore);
       delete changesToStore.feature_type;
-
       return countKeys(changesToStore) > 0;
     };
 
@@ -6799,7 +6788,7 @@ var annotationEditDialogCtrl =
       });
     };
 
-    $scope.ok = function () {
+    $scope.getObjectToStore = function(annotation) {
       var objectToStore = {};
       copyObject($scope.annotation, objectToStore);
 
@@ -6816,6 +6805,11 @@ var annotationEditDialogCtrl =
         }
       }
 
+      return objectToStore;
+    }
+
+    $scope.ok = function () {
+      var objectToStore = $scope.getObjectToStore();
       var q = AnnotationProxy.storeChanges(args.annotation,
         objectToStore, args.newlyAdded);
       loadingStart();
