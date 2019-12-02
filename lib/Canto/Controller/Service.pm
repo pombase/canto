@@ -117,6 +117,9 @@ sub _ontology_results
                                            exclude_subsets => \@exclude_subsets) };
     } else {
       my @results;
+      $search_string =~ s/^\s+//;
+      $search_string =~ s/\s+$//;
+
       if ($search_string eq ':ALL:') {
         @results =
           $lookup->get_all(ontology_name => $ontology_name,
@@ -126,7 +129,7 @@ sub _ontology_results
                            include_subset_ids => $include_subset_ids,
                            exclude_subsets => \@exclude_subsets);
       } else {
-        if (length ($search_string =~ s/^\s+//r =~ s/\s+$//r) <= 2) {
+        if (length $search_string == 0) {
           return [];
         }
 
