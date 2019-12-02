@@ -6377,6 +6377,15 @@ var annotationEditDialogCtrl =
         }
         if (organisms.length === 1) {
           $scope.selectedOrganism = organisms[0];
+        } else {
+          if (!$scope.featureEditable && args.annotation.organism) {
+            $.map(organisms,
+                  function(organism) {
+                    if (organism.taxonid == args.annotation.organism.taxonid) {
+                      $scope.selectedOrganism = organism;
+                    }
+                  });
+          }
         }
         $scope.organisms = organisms;
         return organisms;

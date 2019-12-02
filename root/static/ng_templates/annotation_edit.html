@@ -16,7 +16,7 @@
         <td class="title">
           Organism
         </td>
-        <td>
+        <td ng-if="!selectedOrganism || featureEditable">
           <organism-selector
             organisms="organisms"
             initial-selection-taxon-id="{{initialSelectedOrganismId}}"
@@ -24,6 +24,9 @@
           </organism-selector>
           <span ng-show="!isValidOrganism()"
                 class="help-block">Please select an organism</span>
+        </td>
+        <td ng-if="selectedOrganism && !featureEditable">
+          {{selectedOrganism.scientific_name}}
         </td>
       </tr>
 
