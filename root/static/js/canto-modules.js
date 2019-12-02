@@ -2226,7 +2226,6 @@ var extensionManualEditDialogCtrl =
                      function (orPart) {
                        return $.map(orPart,
                                     function (andPart) {
-                                      console.log(andPart);
                                       var gene = $scope.genes[andPart.rangeValue];
                                       if (gene) {
                                         andPart.rangeDisplayName =
