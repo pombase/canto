@@ -2,7 +2,6 @@
 $pub
 </%args>
 
-<& /linkouts.mhtml, object => $pub, context => 'pub' &>
 <table class="curs-definition-table">
   <tr>
     <td class="title"><% $uniquename_desc %></td>
