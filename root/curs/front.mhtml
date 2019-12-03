@@ -13,7 +13,7 @@ $total_annotation_count
 <div ng-controller="CursFrontPageCtrl" id="curs-front-page">
 <div>
   <div class="row">
-    <div class="curs-front-gene-list col-sm-4 col-md-4">
+    <div class="curs-front-gene-list col-sm-5 col-md-5">
 <& /curs/front_gene_section.mhtml, pub => $pub &>
     </div>
 % if (!$read_only_curs) {
@@ -21,7 +21,7 @@ $total_annotation_count
 <& /curs/front_page_quick_links.mhtml, annotation_type_list => \@annotation_type_list &>
     </div>
 % }
-    <div class="curs-front-pub-details col-sm-5 col-md-5">
+    <div class="curs-front-pub-details col-sm-4 col-md-4">
 <& /pub_details.mhtml, pub => $pub &>
    </div>
   </div>
