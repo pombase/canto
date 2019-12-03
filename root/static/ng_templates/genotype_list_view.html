@@ -49,7 +49,7 @@ Annotations
     Actions:
     <button class="btn btn-primary btn-xs"
             ng-disabled="!validForDiploid()"
-            title="{{checkedGenotypeCount() < 1 ? 'Select a single allele genotype' : 'Create a diploid genotype the includes the selected allele'}}"
+            title="{{checkedGenotypeCount() < 1 ? 'Select a single allele genotype to create a diploid' : 'Create a diploid genotype the includes the selected allele'}}"
             ng-click="createDiploid()">Create diploid locus</button>
   </div>
   </div>
@@ -106,7 +106,7 @@ Annotations
     <span ng-if="userIsAdmin && diploid_mode && diploidList.length == 0">
       <button class="btn btn-primary btn-xs"
                       ng-disabled="!validForDiploid()"
-                      title="{{checkedGenotypeCount() < 1 ? 'Select a single allele genotype' : 'Create a diploid genotype the includes the selected allele'}}"
+                      title="{{checkedGenotypeCount() < 1 ? 'Select a single allele genotype to create a diploid' : 'Create a diploid genotype the includes the selected allele'}}"
                       ng-click="createDiploid()">Create diploid locus</button>
     </span>
     <span ng-if="checkedGenotypeCount() != 0" style="padding-left: 3em">
