@@ -1268,6 +1268,13 @@ export:
       - Browser datasets, hosted
       - Method or reagent
       - Review or comment
+      - Mutagenicity or toxicity study
+      - Biotech
+      - Modelling
+      - Phylogeny and evolutionary studies
+      - Cell composition or WT feature
+      - Not physically mapped
+      - Other
 
 load:
   ontology:
