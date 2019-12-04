@@ -174,7 +174,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{edit_organism_page_valid} = 0;
 
   if ($st->{pathogen_host_mode}) {
-    ($st->{show_metagenotype_links}, $st->{edit_organism_page_valid}) =
+    ($st->{show_metagenotype_links}, $st->{show_host_genotype_link}, $st->{edit_organism_page_valid}) =
       _metagenotype_flags($config, $schema);
   }
 
@@ -368,7 +368,7 @@ sub _metagenotype_flags
     }
   }
 
-  return ($has_pathogen_genotypes && $has_host, $organism_page_valid);
+  return ($has_pathogen_genotypes && $has_host, $has_host, $organism_page_valid);
 };
 
 sub _set_genes_in_session
