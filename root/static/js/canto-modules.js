@@ -6694,7 +6694,7 @@ var annotationTableRow =
             $scope.annotation = editedAnnotation;
             if (typeof ($scope.annotation.conditions) !== 'undefined') {
               $scope.annotation.conditionsString =
-                conditionsToString($scope.annotation.conditions);
+                conditionsToStringHighlightNew($scope.annotation.conditions);
             }
           });
         };
