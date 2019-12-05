@@ -65,7 +65,13 @@ Annotate genotypes
     <a href="<% $pathogen_genotype_manage_url %>"><% $read_only_curs ? 'View pathogen genotypes' : 'Pathogen genotype management' %></a>
   </div>
   <div class="feature-list-action">
+% if ($show_host_genotype_link) {
     <a href="<% $host_genotype_manage_url %>"><% $read_only_curs ? 'View host genotypes' : 'Host genotype management' %></a>
+% } else {
+    <span style="color: #888" title="Add at least one host organism to make a host genotype">
+      <% $read_only_curs ? 'View host genotypes' : 'Host genotype management' %>
+    </span>
+% }
   </div>
   <div class="feature-list-action">
 % if ($show_metagenotype_links) {
@@ -99,6 +105,7 @@ my $multi_organism_mode = $st->{multi_organism_mode};
 my $pathogen_host_mode = $st->{pathogen_host_mode};
 
 my $show_metagenotype_links = $st->{show_metagenotype_links};
+my $show_host_genotype_link = $st->{show_host_genotype_link};
 
 my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema, config => $config);
 
