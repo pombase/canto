@@ -2931,8 +2931,6 @@ var ontologyWorkflowCtrl =
     $scope.extensionBuilderReady = false;
     $scope.matchingExtensionConfigs = null;
 
-    $scope.showConditions = false;
-
     $scope.extensionBuilderIsValid = true;
 
     $scope.doNotAnnotateCurrentTerm = false;
@@ -3109,6 +3107,11 @@ var ontologyWorkflowCtrl =
 
       return true;
     };
+
+    $scope.showConditions = function () {
+      return $scope.data.validEvidence &&
+        $scope.annotationType && $scope.annotationType.can_have_conditions;
+    }
 
     $scope.storeAnnotation = function () {
       var storePop = toaster.pop({

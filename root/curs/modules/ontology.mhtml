@@ -42,7 +42,7 @@ for annotating <% $feature_display_name %> with {{termDetails.id}}
                            valid-evidence="data.validEvidence"
                            annotation-type-name="<% $annotation_type_name %>"></annotation-evidence>
 
-      <div ng-if="showConditions" class="curs-evidence-conditions">
+      <div ng-if="showConditions()" class="curs-evidence-conditions">
         Please add experimental conditions.  Conditions are the aspects of the
         experimental setup that are independent of what cells (strain, genotype,
         constructs, etc.) are used.
