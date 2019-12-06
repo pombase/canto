@@ -142,8 +142,8 @@ File formats
                                created for alleles in the JSON file
 
   If $0 is called using "canto_docker" the JSON file can be read from the
-  "/import_export".  eg.
-     ./canto/script/canto_docker /import_export/session_data.json curator@pombase.org 4896
+  "import_export" directory.  eg.
+     ./canto/script/canto_docker /import_export/session_data.json curator\@pombase.org 4896
 
 |;
 
