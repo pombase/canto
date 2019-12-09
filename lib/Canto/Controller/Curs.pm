@@ -174,7 +174,10 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{edit_organism_page_valid} = 0;
 
   if ($st->{pathogen_host_mode}) {
-    ($st->{show_metagenotype_links}, $st->{show_host_genotype_link}, $st->{edit_organism_page_valid}) =
+    ($st->{show_metagenotype_links}, $st->{show_host_genotype_link},
+     $st->{show_pathogen_genotype_link},
+     $st->{has_host_genotypes}, $st->{has_pathogen_genotypes},
+     $st->{edit_organism_page_valid}) =
       _metagenotype_flags($config, $schema);
   }
 
@@ -342,6 +345,8 @@ sub _metagenotype_flags
   my $rs = $schema->resultset('Organism');
 
   my $has_host = 0;
+  my $has_pathogen_genes = 0;
+  my $has_host_genotypes = 0;
   my $has_pathogen_genotypes = 0;
 
   my $organism_page_valid = 1;
@@ -355,11 +360,17 @@ sub _metagenotype_flags
 
     if ($organism_details->{pathogen_or_host} eq 'host') {
       $has_host = 1;
+      if ($org->genotypes()->count() > 0) {
+        $has_host_genotypes = 1;
+      }
     }
 
     if ($organism_details->{pathogen_or_host} eq 'pathogen') {
       if ($org->genotypes()->count() > 0) {
         $has_pathogen_genotypes = 1;
+      }
+      if ($org->genes()->count() > 0) {
+        $has_pathogen_genes = 1;
       }
     }
 
@@ -368,7 +379,9 @@ sub _metagenotype_flags
     }
   }
 
-  return ($has_pathogen_genotypes && $has_host, $has_host, $organism_page_valid);
+  return ($has_pathogen_genotypes && $has_host, $has_host,
+          $has_pathogen_genes, $has_host_genotypes, $has_pathogen_genotypes,
+          $organism_page_valid);
 };
 
 sub _set_genes_in_session

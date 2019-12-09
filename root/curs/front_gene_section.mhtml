@@ -62,7 +62,13 @@ Annotate genotypes
   </div>
 %   if ($pathogen_host_mode) {
   <div class="feature-list-action">
+% if ($show_pathogen_genotype_link) {
     <a href="<% $pathogen_genotype_manage_url %>"><% $read_only_curs ? 'View pathogen genotypes' : 'Pathogen genotype management' %></a>
+% } else {
+    <span style="color: #888" title="Add at least one pathogen gene to the session to make a pathogen genotype">
+      <% $read_only_curs ? 'View pathogen genotypes' : 'Pathogen genotype management' %>
+    </span>
+% }
   </div>
   <div class="feature-list-action">
 % if ($show_host_genotype_link) {
@@ -106,6 +112,7 @@ my $pathogen_host_mode = $st->{pathogen_host_mode};
 
 my $show_metagenotype_links = $st->{show_metagenotype_links};
 my $show_host_genotype_link = $st->{show_host_genotype_link};
+my $show_pathogen_genotype_link = $st->{show_pathogen_genotype_link};
 
 my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema, config => $config);
 
