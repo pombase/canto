@@ -8,7 +8,7 @@ alters the measured molecular mass of a peptide or protein amino acid residue.
 </p>
 
 <p>
-Canto uses the <a href="http://www.psidev.info/MOD">PSI-MOD</a> ontology for
+Canto uses the <a href="http://obofoundry.org/ontology/mod.html">PSI-MOD</a> ontology for
 protein modification annotations. 
 </p>
 
@@ -34,14 +34,12 @@ that it fits your results accurately and completely.
 </p>
 
 <p>
-When you have decided which term to use, click "Proceed" on the term page. On
-the next page, select the applicable evidence from the pulldown, then
-"Proceed" again. On the final page, you can add a comment; for example, if you
-know which residues are modified, you can add a comment to indicate specific
-positions (e.g. "phosphorylated on T123"). Note that at present, Canto can
-only accept residue information in the annotation comment field or in the
-"message to curators" box (which you see when you submit your curation
-session).
+When you have decided which term to use, click "Proceed" on the term
+page. On the next page, select the applicable evidence from the
+pulldown, then "Proceed" again. On the final page, you can add a
+comment; for example, if you have any details that don't fit the
+available annotation extensions, you can put them in the "message to
+curators" box (which you see when you submit your curation session).
 </p>
 
 <p>
@@ -117,6 +115,12 @@ modifications, falling into a few categories:
 <li> for "position(s) modified", enter one or more residue
  designations, using the single-letter amino acid code and a number
  for the position (e.g. S77)
+  <ul>
+    <li>Note: for histones, residue numbering assumes that the
+    initiator methionine is removed. For example, histone H3 (hht1,
+    hht2, hht3) is methylated on residues numbered K4 and K9, not K5
+    and K10.</li>
+  </ul>
 </li>
 <li> for all other extension types, the ontology-search autocomplete
  box appears. Type text, choose from the suggestions, and drill down
