@@ -6,6 +6,7 @@ $pub
   <div class="curs-box-title">
 Publication details
   </div>
+  <& /linkouts.mhtml, object => $pub, context => 'pub' &>
   <div class="curs-box-body">
 <& /pub_details_contents.mhtml, pub => $pub &>
   </div>
