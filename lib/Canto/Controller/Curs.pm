@@ -346,6 +346,7 @@ sub _metagenotype_flags
 
   my $has_host = 0;
   my $has_pathogen_genes = 0;
+  my $has_host_genes = 0;
   my $has_host_genotypes = 0;
   my $has_pathogen_genotypes = 0;
 
@@ -363,6 +364,9 @@ sub _metagenotype_flags
       if ($org->genotypes()->count() > 0) {
         $has_host_genotypes = 1;
       }
+      if ($org->genes()->count() > 0) {
+        $has_host_genes = 1;
+      }
     }
 
     if ($organism_details->{pathogen_or_host} eq 'pathogen') {
@@ -379,7 +383,7 @@ sub _metagenotype_flags
     }
   }
 
-  return ($has_pathogen_genotypes && $has_host, $has_host,
+  return ($has_pathogen_genotypes && $has_host, $has_host_genes,
           $has_pathogen_genes, $has_host_genotypes, $has_pathogen_genotypes,
           $organism_page_valid);
 };
