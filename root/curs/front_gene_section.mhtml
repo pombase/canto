@@ -74,7 +74,7 @@ Annotate genotypes
 % if ($show_host_genotype_link) {
     <a href="<% $host_genotype_manage_url %>"><% $read_only_curs ? 'View host genotypes' : 'Host genotype management' %></a>
 % } else {
-    <span style="color: #888" title="Add at least one host organism to make a host genotype">
+    <span style="color: #888" title="Add at least one host gene to make a host genotype">
       <% $read_only_curs ? 'View host genotypes' : 'Host genotype management' %>
     </span>
 % }
