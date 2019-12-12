@@ -2906,6 +2906,11 @@ sub ws_allele_set_note : Chained('top') PathPart('ws/allele_note/set')
     Canto::Curs::AlleleManager->new(config => $c->config(),
                                     curs_schema => $schema);
 
+  if (!$value) {
+    # it's a POST
+    $value = $c->request()->body_data()->{data};
+  }
+
   $allele_manager->set_note($allele_primary_identifier, $key, $value);
 
   $c->stash->{json_data} = {

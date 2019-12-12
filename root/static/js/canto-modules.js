@@ -491,11 +491,20 @@ canto.service('Curs', function ($http, $q) {
       args = [];
     }
 
-    var url = curs_root_uri + '/ws/' + key + '/set/' + args.join('/');
-    return $http.get(url)
-      .then(function(response) {
-        return response.data;
-      });
+    var url = curs_root_uri + '/ws/' + key + '/set/';
+
+    var promise;
+
+    if (args.length > 0 && typeof (args[args.length - 1]) === 'object') {
+      var data = args.pop();
+      promise = $http.post(url + args.join('/'), data);
+    } else {
+      promise = $http.get(url + args.join('/'));
+    }
+
+    return promise.then(function(response) {
+      return response.data;
+    });
   };
 
   this.delete = function (objectType, objectId, secondaryId) {
@@ -5123,7 +5132,7 @@ var alleleNotesEditDialogCtrl =
                 var promise;
                 var newValue = $scope.data.notes[noteTypeName];
                 if (newValue) {
-                  var setArgs = [args.allele.uniquename, noteTypeName, newValue];
+                  var setArgs = [args.allele.uniquename, noteTypeName, { data: newValue }];
                   promise = Curs.set('allele_note', setArgs);
                   promise.then(function() {
                     args.allele.notes[noteTypeName] = newValue;
