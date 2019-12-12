@@ -267,8 +267,13 @@
 
                         // Autocomplete will create its own tag from a selection and close automatically.
                         if (!(that.options.autocomplete.autoFocus && that.tagInput.data('autocomplete-open'))) {
+                            var focusedItem = that.tagInput.autocomplete('widget').find('.ui-menu-item > .ui-state-focus');
+                            if (focusedItem.length > 0) {
+                                that.createTag(focusedItem[0].innerText);
+                            } else {
+                                that.createTag(that._cleanedInput());
+                            }
                             that.tagInput.autocomplete('close');
-                            that.createTag(that._cleanedInput());
                         }
                     }
                 }).blur(function(e){
