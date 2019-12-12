@@ -290,6 +290,11 @@ genotypes for the same locus selected in the genotype A list.
 For interactions, selecting a term is required if and only if this
 option is set to 1.
 
+### second_feature_organism_selector
+For interactions, if set the annotation dialog will have a independent
+organism selector for the second feature of the interaction.  Defaults
+to 0 (false).
+
 ### evidence_codes
 Possible evidence codes (or interaction types) for this annotation type.
 Each evidence code must

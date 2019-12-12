@@ -41,7 +41,6 @@
           <div ng-if="featureEditable && filteredFeatures">
             <feature-chooser feature-type="{{chooseFeatureType}}"
                              features="filteredFeatures"
-                             filter-organism="selectedOrganism"
                              chosen-feature-id="annotation.feature_id"></feature-chooser>
             <span ng-show="filteredFeatures.length != 0 && !annotation.feature_id"
                   class="help-block">Please select a {{chooseFeatureType}}</span>
@@ -128,6 +127,25 @@
         </td>
       </tr>
 
+      <tr ng-if="multiOrganismMode && annotationType.second_feature_organism_selector"
+          ng-class="{ 'has-error': !isValidOrganismB() }">
+        <td class="title">
+          Interacting organism
+        </td>
+        <td ng-if="!selectedOrganismB || featureEditable">
+          <organism-selector
+            organisms="organisms"
+            initial-selection-taxon-id="{{initialSelectedOrganismBId}}"
+            organism-selected="organismBSelected(organism)">
+          </organism-selector>
+          <span ng-show="!isValidOrganism()"
+                class="help-block">Please select an organism</span>
+        </td>
+        <td ng-if="selectedOrganismB && !featureEditable">
+          {{selectedOrganism.scientific_name}}
+        </td>
+      </tr>
+
       <tr ng-if="annotationType.category == 'interaction'"
           ng-class="{ 'has-error': !annotation.second_feature_id }">
         <td class="title">
@@ -140,7 +158,6 @@
           <div ng-if="filteredFeaturesB">
             <feature-chooser feature-type="{{chooseFeatureType}}"
                              features="filteredFeaturesB"
-                             filter-organism="selectedOrganism"
                              chosen-feature-id="annotation.second_feature_id"></feature-chooser>
             <span ng-show="filteredFeaturesB.length == 0 && annotationType && annotationType.interaction_same_locus">
               <span ng-show="annotationType.single_allele_only">
