@@ -6569,11 +6569,7 @@ var annotationEditDialogCtrl =
                 };
               filterFeatures(results, filterFunc);
 
-              if (annotationType.single_locus_only) {
-                $scope.filteredFeaturesB = null;
-              } else {
-                $scope.filteredFeaturesB = $scope.filteredFeatures;
-              }
+              $scope.filteredFeaturesB = $scope.filteredFeatures;
             });
           }).catch(function (err) {
             toaster.pop('note', "couldn't read the genotype list from the server");
