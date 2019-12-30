@@ -261,7 +261,7 @@ sub get_annotation_table_tsv
       }
 
       if (!defined $val) {
-        die "no value for field $column_name";
+        die "no value for field $column_name\n";
       }
 
       $val;

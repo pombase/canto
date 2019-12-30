@@ -449,6 +449,10 @@ sub make_interaction_annotation
 
   my $gene = $annotation_genes[0];
 
+  if (!defined $gene) {
+    die "internal error, no interacting gene in make_gene_interaction_annotation()\n";
+  }
+
   my $is_inferred_annotation = 0;
 
   my $gene_proxy =
