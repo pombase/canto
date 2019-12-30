@@ -39,6 +39,7 @@ the Free Software Foundation, either version 3 of the License, or
 
 use Moose::Role;
 use Archive::Zip qw(:CONSTANTS :ERROR_CODES);
+use Try::Tiny;
 use IO::String;
 
 use Canto::Curs::ExtensionData;
