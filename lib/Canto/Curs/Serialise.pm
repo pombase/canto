@@ -496,7 +496,8 @@ sub _get_genotypes
     my $strain = $genotype->strain();
     if (defined $strain) {
       my $strain_lookup = Canto::Track::StrainLookup->new(config => $config);
-      $ret{organism_strain} = $strain->lookup_strain_name($strain_lookup);
+      $ret{$genotype_identifier}->{organism_strain} =
+        $strain->lookup_strain_name($strain_lookup);
     }
 
     if ($genotype->name()) {
