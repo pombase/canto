@@ -67,7 +67,8 @@ sub get_all_curs_annotation_zip
 
   while (defined (my $curs = $curs_resultset->next())) {
     my $curs_key = $curs->curs_key();
-    my $cursdb = Canto::Curs::get_schema_for_key($config, $curs_key);
+    my $cursdb = Canto::Curs::get_schema_for_key($config, $curs_key,
+                                                 { cache_connection => 0 });
 
     my $results = $self->get_all_annotation_tsv($config, $cursdb);
 
