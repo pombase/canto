@@ -65,7 +65,7 @@ sub get_all_curs_annotation_zip
   my $zip = Archive::Zip->new();
   my %all_results_by_type = ();
 
-  my $session_count = $curs_resultset->count();
+  my $session_count = 0;
 
   while (defined (my $curs = $curs_resultset->next())) {
     my $curs_key = $curs->curs_key();
@@ -79,6 +79,8 @@ sub get_all_curs_annotation_zip
         $all_results_by_type{$type_name} //= '';
         $all_results_by_type{$type_name} .= $results->{$type_name}
       }
+
+      $session_count++;
     }
   }
 
@@ -94,7 +96,7 @@ sub get_all_curs_annotation_zip
   my $io = IO::String->new();
   $zip->writeToFileHandle($io);
 
-  return ${$io->string_ref()}
+  return ($session_count, ${$io->string_ref()})
 }
 
 =head2 get_curs_annotation_zip
