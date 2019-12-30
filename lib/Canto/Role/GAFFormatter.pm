@@ -161,9 +161,23 @@ sub get_annotation_table_tsv
 
   my $annotation_type = $config->{annotation_types}->{$annotation_type_name};
 
-  my ($completed_count, $annotations_ref, $columns_ref) =
-    Canto::Curs::Utils::get_annotation_table($config, $schema,
-                                              $annotation_type_name);
+
+  my ($completed_count, $annotations_ref, $columns_ref);
+
+  try {
+    ($completed_count, $annotations_ref, $columns_ref) =
+      Canto::Curs::Utils::get_annotation_table($config, $schema,
+                                               $annotation_type_name);
+
+  } catch {
+    my $conn = $schema->storage()->connect_info()->[0];
+    warn "error writing annotation table for $conn: $_";
+  };
+
+  if (!defined $completed_count) {
+    return;
+  }
+
   my @annotations = @$annotations_ref;
   my %common_values = %{$config->{export}->{gene_association_fields}};
 
@@ -206,6 +220,8 @@ sub get_annotation_table_tsv
 
   for my $annotation (@annotations) {
     next unless $annotation->{completed};
+
+    try {
 
     $results .= join "\t", map {
       my $column_name = $_;
@@ -252,6 +268,11 @@ sub get_annotation_table_tsv
       $val;
     } @column_names;
     $results .= "\n";
+
+    } catch {
+      my $conn = $schema->storage()->connect_info()->[0];
+      warn "error writing output line for $conn: $_";
+    }
   }
 
   return $results;
