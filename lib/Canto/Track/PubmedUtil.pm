@@ -60,18 +60,26 @@ sub _get_url
   $ua->agent($config->get_application_name());
 
   my $req = HTTP::Request->new(GET => $url);
-  my $res = $ua->request($req);
 
-  if ($res->is_success) {
-    if ($res->content()) {
-      my $decoded_content = $res->decoded_content();
-      return $decoded_content;
+  my $res;
+
+  for my $try (1..5) {
+    $res = $ua->request($req);
+
+    if ($res->is_success) {
+      if ($res->content()) {
+        my $decoded_content = $res->decoded_content();
+        return $decoded_content;
+      } else {
+        die "query returned no content: $url";
+      }
     } else {
-      die "query returned no content: $url";
+      # wait a bit and try again
+      sleep 1.5;
     }
-  } else {
-    die "Couldn't read from $url: ", $res->status_line, "\n";
   }
+
+  die "Couldn't read from $url: ", $res->status_line, "\n";
 }
 
 =head2 get_pubmed_xml_by_ids
