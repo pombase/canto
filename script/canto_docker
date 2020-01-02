@@ -22,7 +22,7 @@ EXTRA_ARGS=""
 
 if [ $(uname) = Linux ]
 then
-    EXTRA_ARGS=--net=host
+    EXTRA_ARGS="--net=host --env=OWLTOOLS_MEMORY"
 fi
 
 INTERACTIVE_ARGS="-ti"

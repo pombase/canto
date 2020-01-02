@@ -20,7 +20,7 @@ fi
 
 if [ $(uname) = Linux ]
 then
-    EXTRA_ARGS=--net=host
+    EXTRA_ARGS="--net=host --env=OWLTOOLS_MEMORY"
 fi
 
 if [[ "$1" == "--debug" ]]; then
