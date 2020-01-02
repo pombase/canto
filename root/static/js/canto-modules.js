@@ -6507,6 +6507,14 @@ var annotationEditDialogCtrl =
                     });
     }
 
+    // return aberrations / alleles with no gene
+    function removeAberrationAlleles(alleles) {
+      return $.grep(alleles,
+                    function(allele) {
+                      return !!allele.gene_id;
+                    });
+    }
+
     function setFilteredFeatures () {
       if ($scope.chooseFeatureType === 'gene') {
         if (!$scope.selectedOrganism) {
@@ -6542,6 +6550,10 @@ var annotationEditDialogCtrl =
                       var seenGenes = [];
                       $.map(nonAccessoryAlleles,
                             function(allele) {
+                              if (typeof (allele.gene_id) == 'undefined') {
+                                // ignore aberrations
+                                return;
+                              }
                               if (seenGenes.indexOf(allele.gene_id) == -1) {
                                 seenGenes.push(allele.gene_id);
                               }
@@ -6717,6 +6729,8 @@ var annotationEditDialogCtrl =
                     removeAccessoryAlleles(alleleTypes,
                                            selectedFeatureA.alleles);
 
+                var selectedFeatAlleles = removeAberrationAlleles(nonAccessoryAlleles);
+
                 $scope.filteredFeaturesB =
                   $.grep($scope.filteredFeatures,
                          function (testFeature) {
@@ -6724,12 +6738,14 @@ var annotationEditDialogCtrl =
                                testFeature.genotype_id) {
                              return false;
                            }
-                           var testFeatNonAccessaryAlleles =
+                           var testFeatAlleles =
                                removeAccessoryAlleles(alleleTypes,
                                                       testFeature.alleles);
 
-                           return testFeatNonAccessaryAlleles[0].gene_id ==
-                             nonAccessoryAlleles[0].gene_id;
+                           testFeatAlleles = removeAberrationAlleles(testFeatAlleles);
+
+                           return testFeatAlleles[0].gene_id ==
+                             selectedFeatAlleles[0].gene_id;
                          });
               });
           } else {
