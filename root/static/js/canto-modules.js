@@ -9273,13 +9273,13 @@ var editOrganisms = function ($window, EditOrganismsSvc, StrainsService, CantoGl
       $scope.addGenesUrl = curs_root_uri + '/gene_upload/';
 
       $scope.getStrainNoticeClass = function () {
-        if (! $scope.isContinueUrlDisabled()) {
+        if (! $scope.hasMissingStrains()) {
           return 'invisible';
         }
         return '';
       };
 
-      $scope.isContinueUrlDisabled = function () {
+      $scope.hasMissingStrains = function() {
         if ($scope.getPathogens().length == 0 &&
           $scope.getHosts().length == 0) {
           return true;
@@ -9320,7 +9320,29 @@ var editOrganisms = function ($window, EditOrganismsSvc, StrainsService, CantoGl
         return false;
       };
 
+      $scope.noPathogenGenes = function() {
+        return $scope.getPathogens().length == 0;
+      };
+
+      $scope.isContinueUrlDisabled = function () {
+        if ($scope.hasMissingStrains()) {
+          return true;
+        }
+
+        if ($scope.noPathogenGenes()) {
+          // if there are no pathogen organism in the session, then there are
+          // no genes so we can't continue
+          return true;
+        }
+
+        return false;
+      };
+
       $scope.getContinueButtonTitle = function () {
+        if ($scope.noPathogenGenes()) {
+          return 'Please add at least one pathogen gene';
+        }
+
         if ($scope.isContinueUrlDisabled()) {
           return 'Please specify which strains were used for all organisms.';
         } else {
