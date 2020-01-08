@@ -1,5 +1,16 @@
 #!/bin/bash -
 
+if [ "$1" = "-h" ]
+then
+    echo "usage:"; echo "   $0 [--debug] [--auto]"
+    echo;
+    echo "options:"
+    echo "  --debug: turn on the CANTO_DEBUG environment variable"
+    echo "  --auto: don't add the '-t' flag on the 'docker run' call so that"
+    echo "          this script can be called from a non-interactive script"
+    exit 0
+fi
+
 if [ ! -d data ]
 then
    echo 'missing "data" directory - exiting'
