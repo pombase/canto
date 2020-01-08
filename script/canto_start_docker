@@ -23,12 +23,21 @@ then
     EXTRA_ARGS="--net=host --env=OWLTOOLS_MEMORY"
 fi
 
-if [[ "$1" == "--debug" ]]; then
+if [ "$1" == "--debug" ]; then
+    shift
     DEBUG="-e CANTO_DEBUG=TRUE"
 fi
 
-CANTO_DOCKER_RUN_ARGS="$EXTRA_ARGS --rm -ti $DEBUG --security-opt seccomp=unconfined --cap-add=SYS_PTRACE --mount type=bind,source=$(pwd)/data,target=/data --mount type=bind,source=$(pwd)/import_export,target=/import_export --mount type=bind,source=$(pwd)/canto,target=/canto -w=/canto pombase/canto-run:v8"
+TTY_OPT="-t"
+
+if [ "$1" == "--auto" ]; then
+    shift
+    TTY_OPT=""
+fi
+
+
+CANTO_DOCKER_RUN_ARGS="$EXTRA_ARGS -i $TTY_OPT --rm $DEBUG --security-opt seccomp=unconfined --cap-add=SYS_PTRACE --mount type=bind,source=$(pwd)/data,target=/data --mount type=bind,source=$(pwd)/import_export,target=/import_export --mount type=bind,source=$(pwd)/canto,target=/canto -w=/canto pombase/canto-run:v8"
 
 cd canto
 
-exec docker run -it $CANTO_DOCKER_RUN_ARGS ./script/canto_start "$@"
+exec docker run $CANTO_DOCKER_RUN_ARGS ./script/canto_start "$@"
