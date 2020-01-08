@@ -6,8 +6,8 @@ then
     echo;
     echo "options:"
     echo "  --debug: turn on the CANTO_DEBUG environment variable"
-    echo "  --auto: don't add the '-t' flag on the 'docker run' call so that"
-    echo "          this script can be called from a non-interactive script"
+    echo "  --no-tty: don't add the '-t' flag on the 'docker run' call so that"
+    echo "            this script can be called from a non-interactive script"
     exit 0
 fi
 
@@ -41,7 +41,7 @@ fi
 
 TTY_OPT="-t"
 
-if [ "$1" == "--auto" ]; then
+if [ "$1" == "--no-tty" ]; then
     shift
     TTY_OPT=""
 fi
