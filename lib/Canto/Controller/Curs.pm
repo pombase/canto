@@ -292,7 +292,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   }
 
   if (($state eq NEEDS_APPROVAL || $state eq APPROVED) &&
-      $path =~ m:/(ro|finish_form|reactivate_session|begin_approval|restart_approval|annotation/zipexport|ws/):) {
+      $path =~ m:/(ro|finish_form|reactivate_session|unexport_session|begin_approval|restart_approval|annotation/zipexport|ws/):) {
     $use_dispatch = 0;
   }
 
@@ -311,7 +311,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     $use_dispatch = 0;
   }
 
-  if ($state eq EXPORTED && $path =~ m|/ro/?$|) {
+  if ($state eq EXPORTED && $path =~ m:/unexport_session|/ro/?$:) {
     $use_dispatch = 0;
   }
 
@@ -2514,6 +2514,29 @@ sub reactivate_session : Chained('top') Args(0)
   $self->state()->store_statuses($c->stash()->{schema});
 
   $c->flash()->{message} = 'Session has been reactivated';
+
+  _redirect_and_detach($c);
+}
+
+sub unexport_session : Chained('top') Args(0)
+{
+  my ($self, $c) = @_;
+
+  my $state = $c->stash()->{state};
+
+  if ($state ne EXPORTED) {
+    die qq(can't un-export a session that isn't in the "EXPORTED" state);
+  }
+
+  my $schema = $c->stash()->{schema};
+
+  my $current_user = $c->user();
+  $self->state()->set_state($schema, APPROVED,
+                            { force => $state, current_user => $current_user});
+
+  $self->state()->store_statuses($c->stash()->{schema});
+
+  $c->flash()->{message} = 'Session has been un-exported';
 
   _redirect_and_detach($c);
 }

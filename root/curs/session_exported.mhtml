@@ -31,8 +31,22 @@ were made during this session but no further changes are possible.
   </div>
 </div>
 % }
+
+% if ($c->user_exists() && $c->user()->role()->name() eq 'admin') {
+<div class="curs-box" id="curs-pub-finished-admin">
+  <div class="curs-box-title">
+    Admin only links
+  </div>
+  <div class="curs-box-body">
+    <a href="<% $unexport_session_uri %>">Un-export this session</a>
+(return the session to the "approved" state)
+  </div>
+</div>
+% }
 </div>
 
 <%init>
+my $unexport_session_uri = $curs_root_uri . '/unexport_session/';
+
 my $review_session_uri = $curs_root_uri . '/ro/';
 </%init> 

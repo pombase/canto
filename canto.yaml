@@ -269,6 +269,11 @@ db_initial_data:
               accession: session_reactivated_timestamp
               db:
                 name: Canto
+          - name: session_unexported_timestamp
+            dbxref:
+              accession: session_unexported_timestamp
+              db:
+                name: Canto
           - name: needs_approval_timestamp
             dbxref:
               accession: needs_approval_timestamp

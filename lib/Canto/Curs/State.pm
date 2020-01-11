@@ -95,6 +95,7 @@ use constant {
   APPROVER_EMAIL_KEY => 'approver_email',
   NO_ANNOTATION_REASON_KEY => 'no_annotation_reason',
   REACTIVATED_TIMESTAMP_KEY => 'reactivated_timestamp',
+  UNEXPORTED_TIMESTAMP_KEY => 'unexported_timestamp',
   SESSION_SUBMITTED_TIMESTAMP_KEY => 'session_submitted_timestamp',
   ANNOTATION_MODE_KEY => 'annotation_mode',
 };
@@ -289,6 +290,14 @@ sub store_statuses
                                    $reactivated_timestamp_row->value());
   }
 
+  my $unexported_timestamp_row =
+    $metadata_rs->search({ key => UNEXPORTED_TIMESTAMP_KEY })->first();
+
+  if (defined $unexported_timestamp_row) {
+    $self->status_adaptor()->store($curs_key, 'session_unexported_timestamp',
+                                   $unexported_timestamp_row->value());
+  }
+
   my $needs_approval_timestamp_row =
     $metadata_rs->search({ key => NEEDS_APPROVAL_TIMESTAMP_KEY })->first();
 
@@ -334,10 +343,6 @@ sub set_state
   if ($current_state eq $new_state && $force ne $current_state) {
     # nothing to do, but potentially a bug
     warn "NOOP: setting $current_state to $new_state - $force\n", longmess();
-  }
-
-  if ($current_state eq EXPORTED) {
-    croak "can't change state from ", EXPORTED;
   }
 
   my %dispatch = (
@@ -456,6 +461,12 @@ sub set_state
         carp "must be in state ", APPROVAL_IN_PROGRESS,
           " (not $current_state) to change to state ", APPROVED;
       }
+
+      if ($current_state eq EXPORTED) {
+        $self->set_metadata($schema, Canto::Curs::State::UNEXPORTED_TIMESTAMP_KEY,
+                            Canto::Util::get_current_datetime());
+      }
+
       # see: https://github.com/pombase/website/issues/592#issuecomment-341689763
       if (!$self->get_metadata($schema, FIRST_APPROVED_TIMESTAMP_KEY) &&
           !$self->get_metadata($schema, PREVIOUS_APPROVED_TIMESTAMP_KEY)) {
