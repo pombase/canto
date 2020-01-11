@@ -311,7 +311,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     $use_dispatch = 0;
   }
 
-  if ($state eq EXPORTED && $path =~ m:/unexport_session|/ro/?$:) {
+  if ($state eq EXPORTED && $path =~ m:/unexport_session|/ro/?$|/ws/:) {
     $use_dispatch = 0;
   }
 
