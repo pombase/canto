@@ -89,6 +89,7 @@ use constant {
   ACCEPTED_TIMESTAMP_KEY => 'accepted_timestamp',
   APPROVAL_IN_PROGRESS_TIMESTAMP_KEY => 'approval_in_progress_timestamp',
   EXPORTED_TIMESTAMP_KEY => 'exported_timestamp',
+  FIRST_EXPORTED_TIMESTAMP_KEY => 'first_exported_timestamp',
   TERM_SUGGESTION_COUNT_KEY => 'term_suggestion_count',
   UNKNOWN_CONDITIONS_COUNT_KEY => 'unknown_conditions_count',
   APPROVER_NAME_KEY => 'approver_name',
@@ -290,6 +291,22 @@ sub store_statuses
                                    $reactivated_timestamp_row->value());
   }
 
+  my $exported_timestamp_row =
+    $metadata_rs->search({ key => EXPORTED_TIMESTAMP_KEY })->first();
+
+  if (defined $exported_timestamp_row) {
+    $self->status_adaptor()->store($curs_key, 'session_exported_timestamp',
+                                   $exported_timestamp_row->value());
+  }
+
+  my $first_exported_timestamp_row =
+    $metadata_rs->search({ key => FIRST_EXPORTED_TIMESTAMP_KEY })->first();
+
+  if (defined $first_exported_timestamp_row) {
+    $self->status_adaptor()->store($curs_key, 'session_first_exported_timestamp',
+                                   $first_exported_timestamp_row->value());
+  }
+
   my $unexported_timestamp_row =
     $metadata_rs->search({ key => UNEXPORTED_TIMESTAMP_KEY })->first();
 
@@ -486,6 +503,10 @@ sub set_state
       if ($current_state ne APPROVED) {
         carp "must be in state ", APPROVED,
           " (not $current_state) to change to state ", EXPORTED;
+      }
+      if (!$self->get_metadata($schema, FIRST_EXPORTED_TIMESTAMP_KEY)) {
+        $self->set_metadata($schema, FIRST_EXPORTED_TIMESTAMP_KEY,
+                            Canto::Util::get_current_datetime());
       }
       $self->set_metadata($schema, EXPORTED_TIMESTAMP_KEY,
                           Canto::Util::get_current_datetime());

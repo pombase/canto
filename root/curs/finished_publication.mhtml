@@ -69,8 +69,15 @@ find more of your publications</p>
     Admin only links
   </div>
   <div class="curs-box-body">
-<a href="<% $begin_approval_uri %>"><% $approve_text %></a>
-or <a href="<% $reactivate_session_uri %>">Reactivate session</a>
+    <ul>
+      <li style="list-style-type: unset"><a href="<% $begin_approval_uri %>"><% $approve_text %></a></li>
+      <li style="list-style-type: unset"><a href="<% $reactivate_session_uri %>">Reactivate session</a></li>
+%   if ($unexported_timestamp_row && $state eq 'APPROVED') {
+      <li style="list-style-type: unset">
+        <a href="<% $set_exported_url %>">Change to exported</a>
+        (only sets the session state, doesn't export)
+      </li>
+%   }
   </div>
 </div>
 % }
@@ -79,6 +86,7 @@ or <a href="<% $reactivate_session_uri %>">Reactivate session</a>
 
 <%init>
 my $reactivate_session_uri = $curs_root_uri . '/reactivate_session/';
+my $set_exported_url = $curs_root_uri . '/set_exported_state/';
 my $review_session_uri = $curs_root_uri . '/ro/';
 my $begin_approval_uri;
 
@@ -100,4 +108,10 @@ if (defined $database_name) {
 }
 my $gene_count = $c->stash()->{gene_count};
 my $pub = $c->stash()->{pub};
+
+use Canto::Curs::State;
+my $schema = $c->stash()->{schema};
+my $metadata_rs = $schema->resultset('Metadata');
+my $unexported_timestamp_row =
+  $metadata_rs->search({ key => Canto::Curs::State::UNEXPORTED_TIMESTAMP_KEY })->first();
 </%init>
