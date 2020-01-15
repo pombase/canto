@@ -275,6 +275,15 @@ sub store_statuses
     $unknown_conditions_count = 0;
   }
 
+  warn "===========================================\n";
+  warn "\n";
+  warn "\n";
+  warn $status;
+  warn "\n";
+  warn "\n";
+  warn "\n";
+
+
   $self->status_adaptor()->store($curs_key, 'annotation_status', $status);
   $self->status_adaptor()->store($curs_key, 'annotation_status_datestamp', $datestamp);
   $self->status_adaptor()->store($curs_key, 'session_genes_count', $gene_count // 0);
