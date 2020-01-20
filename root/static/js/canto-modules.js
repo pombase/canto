@@ -9276,11 +9276,13 @@ var editOrganisms = function ($window, EditOrganismsSvc, StrainsService, CantoGl
         return $scope.getPathogens().length > 0;
       };
 
-      $scope.getWarningVisibility = function () {
-        if (! $scope.hasMissingStrains()) {
-          return 'invisible';
+      $scope.getWarningType = function () {
+        if (!$scope.pathogenGeneExists()) {
+          return 'gene';
         }
-        return '';
+        if ($scope.hasMissingStrains()) {
+          return 'strain';
+        }
       };
 
       $scope.hasMissingStrains = function() {
