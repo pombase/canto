@@ -1,8 +1,8 @@
 <div>
   <edit-organisms-table title="Pathogen genes" organisms="getPathogens"></edit-organisms-table>
   <edit-organisms-table title="Host genes" organisms="getHosts"></edit-organisms-table>
-  <div ng-class="getStrainNoticeClass()" class="curs-strain-notice-container">
-    <span class="curs-strain-notice">Specify strains for all organisms before continuing.</span>
+  <div ng-class="getWarningVisibility()" class="curs-warning-container">
+    <span class="curs-warning">Specify strains for all organisms before continuing.</span>
   </div>
   <div class="submit">
     <a href="{{addGenesUrl}}" class="btn btn-primary">Add more genes and organisms</a>&nbsp;

@@ -1686,12 +1686,12 @@ a:not([href]) {
   font-weight: 700;
   margin-bottom: 10px;
 }
-.curs-strain-notice-container {
+.curs-warning-container {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 10px;
 }
-.curs-strain-notice {
+.curs-warning {
   border-radius: 4px;
   border: 3px solid #F6B26B;
   display: inline-block;
