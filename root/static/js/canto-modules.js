@@ -9272,6 +9272,10 @@ var editOrganisms = function ($window, EditOrganismsSvc, StrainsService, CantoGl
       $scope.continueUrl = curs_root_uri;
       $scope.addGenesUrl = curs_root_uri + '/gene_upload/';
 
+      $scope.pathogenGeneExists = function () {
+        return $scope.getPathogens().length > 0;
+      };
+
       $scope.getWarningVisibility = function () {
         if (! $scope.hasMissingStrains()) {
           return 'invisible';
