@@ -700,7 +700,7 @@ sub gene_upload : Chained('top') Args(0) Form
       map { [ $_, $_ ] } @{$c->config()->{curs_config}->{no_genes_reasons}} );
 
   if ($st->{gene_count} > 0) {
-    push @submit_buttons, "Back";
+    push @submit_buttons, "Cancel";
   } else {
     @no_genes_elements = (
       {
@@ -771,6 +771,9 @@ sub gene_upload : Chained('top') Args(0) Form
         if ($_ eq 'Continue') {
           $ret->{attributes}->{'ng-disabled'} = '!isValid()';
         }
+        if ($_ eq 'Cancel') {
+          $ret->{attributes}->{'class'} = 'btn btn-warning curs-finish-button button';
+        }
         $ret;
       } @submit_buttons),
         @no_genes_elements;
@@ -783,7 +786,7 @@ sub gene_upload : Chained('top') Args(0) Form
   $st->{form} = $form;
 
   if ($form->submitted()) {
-    if (defined $c->req->param('Back')) {
+    if (defined $c->req->param('Cancel')) {
       my $return_path = $form->param_value('return_path_input');
 
       if (defined $return_path && length $return_path > 0) {
