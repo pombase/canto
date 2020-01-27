@@ -6307,15 +6307,21 @@ var annotationEditDialogCtrl =
     $scope.chooseFeatureType = null;
     $scope.organisms = [];
     $scope.selectedOrganism = args.annotation.organism;
+    $scope.selectedOrganismB = null;
     $scope.hideRelationNames = [];
 
     $scope.multiOrganismMode = CantoGlobals.multi_organism_mode;
 
     $scope.selectedOrganism;
     $scope.initialSelectedOrganismId = null;
+    $scope.initialSelectedOrganismBId = null;
 
     if (args.annotation.feature_a_taxonid) {
       $scope.initialSelectedOrganismId = args.annotation.feature_a_taxonid;
+    }
+
+    if (args.annotation.feature_b_taxonid) {
+      $scope.initialSelectedOrganismBId = args.annotation.feature_b_taxonid;
     }
 
     if (args.annotation.organism) {
@@ -6421,6 +6427,7 @@ var annotationEditDialogCtrl =
       })
       .then(function() {
         setFilteredFeatures();
+        setFilteredFeaturesB();
       });
 
 
@@ -6499,6 +6506,23 @@ var annotationEditDialogCtrl =
       $scope.filteredFeaturesDeferred.resolve($scope.filteredFeatures);
     }
 
+    function filterFeaturesB(features) {
+      if ($scope.selectedOrganismB) {
+        $scope.filteredFeaturesB =
+          $.grep(features,
+                 function(feature) {
+                   return feature.organism.taxonid === $scope.selectedOrganismB.taxonid;
+                 });
+      } else {
+        $scope.filteredFeaturesB = features;
+      }
+
+//  set the feature if there's only one possibilty:
+//      if ($scope.filteredFeaturesB.length == 1) {
+//        $scope.annotation.second_feature_id = $scope.filteredFeaturesB[0].feature_id;
+//      }
+    }
+
     function removeAccessoryAlleles(alleleTypes, alleles) {
       return $.grep(alleles,
                     function(allele) {
@@ -6566,11 +6590,7 @@ var annotationEditDialogCtrl =
                 };
               filterFeatures(results, filterFunc);
 
-              if (annotationType.single_locus_only) {
-                $scope.filteredFeaturesB = null;
-              } else {
-                $scope.filteredFeaturesB = $scope.filteredFeatures;
-              }
+              $scope.filteredFeaturesB = $scope.filteredFeatures;
             });
           }).catch(function (err) {
             toaster.pop('note', "couldn't read the genotype list from the server");
@@ -6585,10 +6605,38 @@ var annotationEditDialogCtrl =
       }
     }
 
+    function setFilteredFeaturesB () {
+      if (!$scope.annotationType.second_feature_organism_selector) {
+        return;
+      }
+
+      if ($scope.chooseFeatureType === 'gene') {
+        if (!$scope.selectedOrganismB) {
+          return null;
+        }
+
+        CursGeneList.geneList().then(function (results) {
+          filterFeaturesB(results);
+        }).catch(function (err) {
+          toaster.pop('note', "couldn't read the gene list from the server");
+        });
+      } else {
+        console.error('second_feature_organism_selector config option not implemented for: ' +
+                      $scope.chooseFeatureType);
+      }
+    }
+
     $scope.organismSelected = function (organism) {
       $scope.selectedOrganism = organism;
       $scope.allPromise.then(function () {
         setFilteredFeatures();
+      });
+    }
+
+    $scope.organismBSelected = function (organism) {
+      $scope.selectedOrganismB = organism;
+      $scope.allPromise.then(function () {
+        setFilteredFeaturesB();
       });
     }
 
@@ -6597,12 +6645,17 @@ var annotationEditDialogCtrl =
       modal.result.then(function () {
         $scope.allPromise.then(function () {
           setFilteredFeatures();
+          setFilteredFeaturesB();
         });
       });
     };
 
     $scope.isValidOrganism = function () {
       return !!$scope.selectedOrganism;
+    };
+
+    $scope.isValidOrganismB = function () {
+      return !!$scope.selectedOrganismB;
     };
 
     $scope.isValidFeature = function () {
@@ -6703,6 +6756,11 @@ var annotationEditDialogCtrl =
       $q.all([$scope.annotationTypePromise, $scope.filteredFeaturesPromise])
         .then(function (data) {
           var annotationType = data[0];
+
+          if (annotationType.second_feature_organism_selector) {
+            return;
+          }
+
           if (featureId) {
 
             if (annotationType.term_suggestions_annotation_type) {
