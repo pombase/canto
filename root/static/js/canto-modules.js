@@ -1383,7 +1383,7 @@ var pubmedIdStart =
           searchId: null,
           results: null,
         };
-        $scope.userIsAdmin = CantoGlobals.current_user_is_admin;
+        $scope.userIsAdmin = CantoGlobals.is_admin_user == "1";
         CantoConfig.get('public_mode')
           .then(function (data) {
             $scope.publicMode = data.value != "0";
