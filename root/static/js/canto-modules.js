@@ -1441,9 +1441,8 @@ var pubmedIdStart =
 
         $scope.restartApproval = function () {
           if ($scope.userIsAdmin) {
-            window.location.href =
-              CantoGlobals.application_root + '/curs/'
-              + $scope.data.results.sessions[0];
+            window.location.href = CantoGlobals.application_root + '/curs/'
+              + $scope.data.results.sessions[0]
               + '/restart_approval/';
           }
         };
