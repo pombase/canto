@@ -1438,6 +1438,15 @@ var pubmedIdStart =
               CantoGlobals.application_root + '/tools/start/' + $scope.data.results.pub.uniquename;
           }
         };
+
+        $scope.restartApproval = function () {
+          if ($scope.userIsAdmin) {
+            window.location.href =
+              CantoGlobals.application_root + '/curs/'
+              + $scope.data.results.sessions[0];
+              + '/restart_approval/';
+          }
+        };
       }
     };
   };
