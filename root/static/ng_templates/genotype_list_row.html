@@ -41,8 +41,8 @@
     </span>
 
     <span class="curs-genotype-comment-indicator"
-          ng-if="userIsAdmin && firstLocus.comment">
-      <a title="{{firstLocus.comment}}" ng-click="viewAlleleComment(genotype.alleles[0])">old note</a>
+          ng-if="userIsAdmin && firstAlleleComment">
+      <a title="{{firstAlleleComment}}" ng-click="viewAlleleComment(genotype.alleles[0])">allele note</a>
     </span>
   </td>
 

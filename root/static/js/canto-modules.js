@@ -5455,6 +5455,12 @@ var genotypeListRowCtrl =
             $scope.selectedGenotypeId == $scope.genotype.genotype_id;
         };
 
+        if ($scope.genotype.alleles.length == 1) {
+          $scope.firstAlleleComment = $scope.genotype.alleles[0].comment;
+        } else {
+          $scope.firstAlleleComment = null;
+        }
+
         $scope.encodeSymbols = encodeSymbol;
 
         $scope.clearSelection = function () {
