@@ -37,7 +37,8 @@
 
     <span class="curs-genotype-notes-indicator"
           ng-if="showEditNotesLink()">
-      <a title="Click to view and edit notes" ng-click="editNotes()">new notes</a>
+      <a ng-if="read_only_curs" title="Click to view notes" ng-click="viewNotes()">new notes</a>
+      <a ng-if="!read_only_curs" title="Click to view and edit notes" ng-click="editNotes()">new notes</a>
     </span>
 
     <span class="curs-genotype-comment-indicator"

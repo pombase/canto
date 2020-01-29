@@ -5100,6 +5100,8 @@ var alleleNotesEditDialogCtrl =
   function ($scope, $uibModalInstance, $http, $q, toaster, CantoConfig, Curs, args) {
     $scope.noteTypes = [];
 
+    $scope.readOnly = args.readOnly;
+
     var notesCopy = {};
     copyObject(args.allele.notes, notesCopy);
 
@@ -5120,6 +5122,11 @@ var alleleNotesEditDialogCtrl =
 
     $scope.finish = function () {
       var promises = [];
+
+      if ($scope.readOnly) {
+        $uibModalInstance.close();
+        return;
+      }
 
       $.map($scope.noteTypes,
             function(noteTypeConf) {
@@ -5162,7 +5169,7 @@ canto.controller('AlleleNotesEditDialogCtrl',
     alleleNotesEditDialogCtrl
   ]);
 
-function editNotesDialog($uibModal, allele) {
+function editNotesDialog($uibModal, allele, readOnly) {
   var editInstance = $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/allele_notes_edit.html',
     controller: 'AlleleNotesEditDialogCtrl',
@@ -5172,7 +5179,8 @@ function editNotesDialog($uibModal, allele) {
     resolve: {
       args: function () {
         return {
-          allele: allele
+          allele: allele,
+          readOnly: readOnly
         };
       }
     },
@@ -5180,6 +5188,10 @@ function editNotesDialog($uibModal, allele) {
   });
 
   return editInstance.result;
+}
+
+function viewNotesDialog($uibModal, allele) {
+  return editNotesDialog($uibModal, allele, true);
 }
 
 
@@ -5396,14 +5408,17 @@ var genotypeListRowLinksCtrl =
                                   });
           });
 
-        $scope.showNotesEdit = function () {
-          return !$scope.read_only_curs && genotype.alleles.length == 1 &&
-            noteTypeNames.length > 0;
+        $scope.showNotesLink = function () {
+          return genotype.alleles.length == 1 && noteTypeNames.length > 0;
         };
 
         $scope.editNotes = function () {
           editNotesDialog($uibModal, genotype.alleles[0]);
         };
+
+        $scope.viewNotes = function() {
+          viewNotesDialog($uibModal, genotype.alleles[0]);
+        }
       },
       link: function ($scope) {
         $scope.detailsUrl = '#';
@@ -5479,6 +5494,10 @@ var genotypeListRowCtrl =
         $scope.editNotes = function() {
           editNotesDialog($uibModal, $scope.genotype.alleles[0]);
         };
+
+        $scope.viewNotes = function() {
+          viewNotesDialog($uibModal, $scope.genotype.alleles[0]);
+        }
 
         $scope.viewAlleleComment = function(allele) {
           openSimpleDialog($uibModal, 'Allele comment',

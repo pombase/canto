@@ -1,19 +1,22 @@
 <div class="curs-extension-builder-dialog modal-content">
   <div class="modal-header">
-    <h4 class="modal-title">
+    <h4 ng-if="readOnly" class="modal-title">
+      View notes
+    </h4>
+    <h4 ng-if="!readOnly" class="modal-title">
       Edit notes
     </h4>
   </div>
   <div class="modal-body">
     <div ng-repeat="noteTypeConf in noteTypes">
       <div class="allele-note-type">{{noteTypeConf.display_name}}:</div>
-      <textarea class="form-control" type="text" cols="60" rows="3"
+      <textarea class="form-control" type="text" cols="60" rows="3" ng-readonly="readOnly"
                 name="{{noteTypeConf.name}}" ng-model="data.notes[noteTypeConf.name]">
       </textarea>
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    <button ng-if="!readOnly" class="btn btn-warning" ng-click="cancel()">Cancel</button>
     <button class="btn btn-primary" ng-click="finish()" ng-alt-enter="finish()">Finish</button>
   </div>
 </div>
