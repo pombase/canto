@@ -1383,7 +1383,7 @@ var pubmedIdStart =
           searchId: null,
           results: null,
         };
-        $scope.userIsAdmin = CantoGlobals.current_user_is_admin;
+        $scope.userIsAdmin = CantoGlobals.is_admin_user == "1";
         CantoConfig.get('public_mode')
           .then(function (data) {
             $scope.publicMode = data.value != "0";
@@ -1436,6 +1436,14 @@ var pubmedIdStart =
           } else {
             window.location.href =
               CantoGlobals.application_root + '/tools/start/' + $scope.data.results.pub.uniquename;
+          }
+        };
+
+        $scope.restartApproval = function () {
+          if ($scope.userIsAdmin) {
+            window.location.href = CantoGlobals.application_root + '/curs/'
+              + $scope.data.results.sessions[0]
+              + '/restart_approval/';
           }
         };
       }
