@@ -9367,11 +9367,17 @@ var editOrganisms = function ($window, EditOrganismsSvc, StrainsService, CantoGl
       $scope.continueUrl = curs_root_uri;
       $scope.addGenesUrl = curs_root_uri + '/gene_upload/';
 
-      $scope.getStrainNoticeClass = function () {
-        if (! $scope.hasMissingStrains()) {
-          return 'invisible';
+      $scope.pathogenGeneExists = function () {
+        return $scope.getPathogens().length > 0;
+      };
+
+      $scope.getWarningType = function () {
+        if (!$scope.pathogenGeneExists()) {
+          return 'gene';
         }
-        return '';
+        if ($scope.hasMissingStrains()) {
+          return 'strain';
+        }
       };
 
       $scope.hasMissingStrains = function() {
