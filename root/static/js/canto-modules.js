@@ -5108,6 +5108,7 @@ var alleleNotesEditDialogCtrl =
   function ($scope, $uibModalInstance, $http, $q, toaster, CantoConfig, Curs, args) {
     $scope.noteTypes = [];
 
+    $scope.allele = args.allele;
     $scope.readOnly = args.readOnly;
 
     var notesCopy = {};
