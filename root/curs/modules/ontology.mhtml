@@ -83,7 +83,7 @@ Annotation extensions
     <button ng-if="getState() != 'searching' || !doNotAnnotateCurrentTerm"
             type="submit" class="btn btn-primary curs-finish-button"
             title="Proceed &rarr;"
-            ng-disabled="!isValid() || postInProgress"
+            ng-disabled="!isValid() || storeInProgress"
             ng-click="proceed()" >Proceed &rarr;</button>
   </div>
 

@@ -2952,6 +2952,8 @@ var ontologyWorkflowCtrl =
 
     $scope.doNotAnnotateCurrentTerm = false;
 
+    $scope.storeInProgress = false;
+
     $scope.updateMatchingConfig = function () {
       var subset_ids = $scope.termDetails.subset_ids;
 
@@ -3049,6 +3051,7 @@ var ontologyWorkflowCtrl =
 
     $scope.proceed = function () {
       if ($scope.getState() == 'commenting') {
+        $scope.storeInProgress = true;
         CursStateService.comment = $scope.data.comment;
         $scope.storeAnnotation();
         return;
