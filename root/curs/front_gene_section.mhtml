@@ -133,7 +133,7 @@ my @gene_hashes_by_organism =
   map {
     my $organism = clone $_;
     my @gene_hashes = sort {
-      $a->{display_name} cmp $b->{display_name};
+      lc $a->{display_name} cmp lc $b->{display_name};
     } @{$organism->{genes}};
 
     delete $organism->{genes};
