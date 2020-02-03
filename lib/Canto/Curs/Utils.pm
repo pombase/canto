@@ -109,8 +109,12 @@ sub _make_genotype_details
       if ($allele->type() eq 'aberration') {
         $gene_display_name = '(aberration)';
       } else {
-        die 'internal error: no gene for allele: ', $allele->allele_id(), ' ',
-          $allele>primary_identifier(), '\n';
+        if ($allele->type() eq 'aberration wild type') {
+          $gene_display_name = '(wild type for aberration)';
+        } else {
+          die 'internal error: no gene for allele: ', $allele->allele_id(), ' ',
+            $allele>primary_identifier(), '\n';
+        }
       }
     }
 

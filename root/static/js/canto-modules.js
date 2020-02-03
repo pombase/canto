@@ -5628,10 +5628,22 @@ var diploidConstructorDialogCtrl =
 
             if ($scope.diploidType === 'wild type') {
               var geneDisplayName = $scope.startAllele.gene_display_name;
+              var otherAlleleType;
+              if ($scope.startAllele.type === 'aberration') {
+                otherAlleleType = 'aberration wild type';
+              } else {
+                otherAlleleType = 'wild type';
+              }
+              var otherAlleleName;
+              if ($scope.startAllele.type === 'aberration') {
+                otherAlleleName = makeAutopopulateName(nameTemplate, $scope.startAllele.name);
+              } else {
+                otherAlleleName = makeAutopopulateName(nameTemplate, geneDisplayName);
+              }
               otherAllele = {
-                name: makeAutopopulateName(nameTemplate, geneDisplayName),
+                name: otherAlleleName,
                 gene_id: $scope.startAllele.gene_id,
-                type: "wild type",
+                type: otherAlleleType,
               };
               if (CantoGlobals.alleles_have_expression) {
                 otherAllele['expression'] = "Wild type product level";
@@ -5885,7 +5897,7 @@ var genotypeListViewCtrl =
 
           var sameGeneAlleles = [];
 
-          if (startAllele.type !== 'aberration') {
+          if (!startAllele.type.startsWith('aberration')) {
               $.map($scope.genotypeList,
                     function(genotype) {
                       if (genotype.alleles.length !== 1) {
@@ -5910,7 +5922,7 @@ var genotypeListViewCtrl =
 
                    var allele = genotype.alleles[0];
 
-                   if (allele.type === 'aberration') {
+                   if (allele.type.startsWith('aberration')) {
                      aberrationAlleles.push(allele);
                    }
                  });

@@ -703,7 +703,7 @@ sub _allele_details_hash
     notes => \%notes,
   );
 
-  if ($allele->type() ne 'aberration') {
+  if ($allele->type() !~ /^aberration/) {
     $result{gene_id} = $allele->gene()->gene_id();
 
     my $gene_proxy =

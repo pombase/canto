@@ -98,8 +98,8 @@ Description
        <% $_proxy_gene->($allele->gene())->display_name() %>
      </span>
 %   } else {
-%     if ($allele->type() eq 'aberration') {
-     - aberration
+%     if ($allele->type() =~ /aberration/) {
+     - <% $allele->type() %>
 %     }
 %   }
    </a>

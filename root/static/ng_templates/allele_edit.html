@@ -8,11 +8,11 @@
         <span ng-if="alleleData.display_name && isCopied">
           Editing a copy of {{alleleData.display_name}}
         </span>
-        <span ng-if="!alleleData.display_name && alleleData.type != 'aberration'">
+        <span ng-if="!alleleData.display_name && (alleleData.type != 'aberration' && alleleData.type != 'aberration wild type')">
           Adding allele for {{ alleleData.gene_display_name }}
         </span>
-        <span ng-if="!alleleData.display_name && alleleData.type == 'aberration'">
-          Adding aberration
+        <span ng-if="!alleleData.display_name && (alleleData.type == 'aberration' || alleleData.type == 'aberration wild type')">
+          Adding {{ alleleData.type }}
         </span>
       </h4>
     </div>
@@ -26,13 +26,13 @@
             Allele name
           </td>
           <td ng-class="{ 'has-error': !isValidName() }">
-            <allele-name-complete ng-if="alleleData.type != 'aberration'"
+            <allele-name-complete ng-if="alleleData.type != 'aberration' && alleleData.type != 'aberration wild type'"
                                   allele-name="alleleData.name"
                                   name-selected="nameSelectedCallback(alleleData)"
                                   placeholder="{{current_type_config.name_hint}}"
                                   gene-identifier="{{alleleData.gene_systematic_id}}">
             </allele-name-complete>
-            <input ng-if="alleleData.type == 'aberration'" ng-model="alleleData.name"/>
+            <input ng-if="alleleData.type == 'aberration' || alleleData.type == 'aberration wild type'" ng-model="alleleData.name"/>
             <span ng-show="!isValidName()"
                   class="help-block">Required for this allele type</span>
           </td>
@@ -87,7 +87,10 @@
           <td ng-if="alleleData.type == 'aberration'">
             Aberration
           </td>
-          <td ng-if="alleleData.type != 'aberration'"
+          <td ng-if="alleleData.type == 'aberration wild type'">
+            Wild type for aberration
+          </td>
+          <td ng-if="alleleData.type != 'aberration' && alleleData.type != 'aberration wild type'"
               ng-class="{ 'has-error': !isValidType() }">
             <select class="form-control"
                     ng-model="alleleData.type" name="curs-allele-type"

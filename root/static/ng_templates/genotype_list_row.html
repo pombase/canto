@@ -29,7 +29,8 @@
 
       -
 
-    <a ng-if="currentLocus.type != 'aberration'" href="{{curs_root_uri + '/feature/gene/view/' + currentLocus.gene_id + (read_only_curs ? '/ro' : '')}}">
+    <a ng-if="currentLocus.type != 'aberration' && currentLocus.type != 'aberration wild type'"
+       href="{{curs_root_uri + '/feature/gene/view/' + currentLocus.gene_id + (read_only_curs ? '/ro' : '')}}">
       <span ng-bind-html="currentLocus.gene_display_name | wrapAtSpaces | encodeGeneSymbols | toTrusted"></span>
     </a>
 

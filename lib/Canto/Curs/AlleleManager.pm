@@ -67,7 +67,7 @@ sub _create_allele_uniquename
 
   my $rs;
 
-  if ($gene_primary_identifier eq 'aberration') {
+  if ($gene_primary_identifier =~ /^aberration/) {
     $rs = $schema->resultset('Allele')
       ->search({ 'me.primary_identifier' => { -like => "$prefix%" } });
   } else {
@@ -239,7 +239,7 @@ sub allele_from_json
     type => $allele_type,
   );
 
-  if ($allele_type ne 'aberration') {
+  if ($allele_type !~ /^aberration/) {
     $search_args{gene} = $gene_id;
   }
 
@@ -256,16 +256,24 @@ sub allele_from_json
     }
   }
 
-  if (!$gene_id && $allele_type ne 'aberration') {
-    use Data::Dumper;
+  if (!$gene_id && $allele_type !~ /^aberration/) {
     confess "internal error, no gene_id for: ", Dumper([$json_allele]);
   }
 
   my $new_primary_identifier;
 
-  if ($allele_type eq 'aberration') {
-    $new_primary_identifier =
-      _create_allele_uniquename('aberration', $schema, $curs_key);
+  if ($allele_type =~ /^aberration/) {
+    my $prefix;
+
+    if ($name) {
+      $prefix = "$name-$allele_type";
+    } else {
+      $prefix = $allele_type;
+    }
+
+    $prefix =~ s/\s+/_/g;
+
+    $new_primary_identifier = _create_allele_uniquename($prefix, $schema, $curs_key);
   } else {
     my $gene = $schema->find_with_type('Gene', $gene_id);
 
@@ -336,7 +344,7 @@ sub create_simple_allele
     description => $description || undef,
   );
 
-  if ($allele_type ne 'aberration') {
+  if ($allele_type !~ /^aberration/) {
     $create_args{gene} = $gene->gene_id();
   }
 
