@@ -257,6 +257,11 @@ my $proc = sub {
   if ($add_sessions_from_json) {
     my $file_name = shift @ARGV;
     # use the Person added by the add_person code
+
+    if (!-f $file_name) {
+      die "file not found ($file_name) - exiting\n";
+    }
+
     my $email_address = shift @ARGV;
     my $taxonid = shift @ARGV;
 
