@@ -772,7 +772,7 @@ sub gene_upload : Chained('top') Args(0) Form
           $ret->{attributes}->{'ng-disabled'} = '!isValid()';
         }
         if ($_ eq 'Cancel') {
-          $ret->{attributes}->{'class'} = 'btn btn-warning curs-finish-button button';
+          $ret->{attributes}->{'class'} =~ s/btn-primary/btn-warning/;
         }
         $ret;
       } @submit_buttons),
