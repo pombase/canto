@@ -261,6 +261,9 @@
                     "name": {
                       "type": "string"
                     },
+                    "organism_strain": {
+                      "type": "string"
+                    },
                     "organism_taxonid": {
                       "type": "integer"
                     }
