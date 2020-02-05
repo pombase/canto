@@ -1,0 +1,505 @@
+{
+  "definitions": {
+    "nullableString": {
+      "anyOf": [
+        {"type": "string"},
+        {"type": "null"}
+      ]
+    },
+    "stringInteger": {
+      "type": "string",
+      "pattern": "^\\d+$"
+    },
+    "dateTime": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}( \\d{2}:\\d{2}:\\d{2})?$"
+    },
+    "nullableDateTime": {
+      "anyOf": [
+        {"$ref": "#/definitions/dateTime"},
+        {"type": "null"}
+      ]
+    },
+    "sessionKey": {
+      "title": "Curation session key",
+      "description": "Unique hexadecimal identifier for Canto curation sessions. Used in Canto URLs.",
+      "type": "string",
+      "pattern": "^[a-f0-9]{,16}$"
+    },
+    "alleleId": {
+      "type": "string",
+      "pattern": "^.+:[a-f0-9]{,16}-\\d+$"
+    },
+    "genotypeId": {
+      "oneOf": [
+        {"$ref": "#/definitions/mutantGenotypeId"},
+        {"$ref": "#/definitions/wildTypeGenotypeId"}
+      ]
+    },
+    "mutantGenotypeId": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{,16}-genotype-\\d+$"
+    },
+    "wildTypeGenotypeId": {
+      "type": "string",
+      "pattern": "^.+?wild-type-genotype.+$"
+    },
+    "pmid": {
+      "title": "PMID",
+      "description": "PubMed unique identifier",
+      "type": "string",
+      "pattern": "^PMID:[1-9]\\d*$",
+      "examples": [
+        "PMID:12345"
+      ]
+    },
+    "orcid": {
+      "title": "ORCID",
+      "description": "Open Researcher and Contributor ID",
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{4}-\\d{4}-\\d{3}(\\d|X)$",
+      "examples": [
+        "0000-0002-1825-0097",
+        "0000-0002-9079-593X"
+      ]
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "curation_sessions": {
+      "type": "object",
+      "additionalProperties": false,
+      "propertyNames": {
+        "$ref": "#/definitions/sessionKey"
+      },
+      "patternProperties": {
+        ".+": {
+          "title": "Curation session",
+          "type": "object",
+          "properties": {
+            "alleles": {
+              "type": "object",
+              "additionalProperties": false,
+              "propertyNames": {
+                "$ref": "#/definitions/alleleId"
+              },
+              "patternProperties": {
+                ".+": {
+                  "type": "object",
+                  "properties": {
+                    "allele_type": {
+                      "type": "string"
+                    },
+                    "gene": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "primary_identifier": {
+                      "type": "string"
+                    },
+                    "synonyms": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "annotations": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "conditions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "creation_date": {
+                    "type": "string"
+                  },
+                  "curator": {
+                    "type": "object",
+                    "properties": {
+                      "community_curated": {
+                        "type": "boolean"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "evidence_code": {
+                    "type": "string"
+                  },
+                  "extension": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "rangeDisplayName": {
+                          "type": "string"
+                        },
+                        "rangeType": {
+                          "type": "string",
+                          "enum": ["Gene", "Ontology", "%", "Text"]
+                        },
+                        "rangeValue": {
+                          "type": "string"
+                        },
+                        "relation": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "genotype": {
+                    "type": "string"
+                  },
+                  "publication": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["new"]
+                  },
+                  "submitter_comment": {
+                    "$ref": "#/definitions/nullableString"
+                  },
+                  "term": {
+                    "type": "string"
+                  },
+                  "term_suggestion": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "definition": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      {"type": "null"}
+                    ]
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "with_gene_id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "creation_date",
+                  "curator",
+                  "publication",
+                  "type"
+                ]
+              }
+            },
+            "genes": {
+              "type": "object",
+              "patternProperties": {
+                ".+": {
+                  "type": "object",
+                  "properties": {
+                    "organism": {
+                      "type": "string"
+                    },
+                    "uniquename": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "genotypes": {
+              "type": "object",
+              "additionalProperties": false,
+              "propertyNames": {
+                "$ref": "#/definitions/genotypeId"
+              },
+              "patternProperties": {
+                ".+": {
+                  "type": "object",
+                  "properties": {
+                    "background": {
+                      "type": "string"
+                    },
+                    "comment": {
+                      "type": "string"
+                    },
+                    "loci": {
+                      "type": "array",
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "expression": {
+                              "$ref": "#/definitions/nullableString"
+                            },
+                            "id": {
+                              "$ref": "#/definitions/alleleId"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "organism_taxonid": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            },
+            "metadata": {
+              "type": "object",
+              "properties": {
+                "accepted_timestamp": {
+                  "$ref": "#/definitions/dateTime"
+                },
+                "annotation_mode": {
+                  "type": "string"
+                },
+                "annotation_status": {
+                  "type": "string"
+                },
+                "annotation_status_datestamp": {
+                  "$ref": "#/definitions/dateTime"
+                },
+                "canto_session": {
+                  "$ref": "#/definitions/sessionKey"
+                },
+                "curation_accepted_date": {
+                  "$ref": "#/definitions/nullableDateTime"
+                },
+                "curation_in_progress_timestamp": {
+                  "$ref": "#/definitions/dateTime"
+                },
+                "curation_pub_id": {
+                  "$ref": "#/definitions/pmid"
+                },
+                "curator_email": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "email"
+                    },
+                    {"type": "null"}
+                  ]
+                },
+                "curator_name": {
+                  "$ref": "#/definitions/nullableString"
+                },
+                "curator_role": {
+                  "type": "string"
+                },
+                "message_for_curators": {
+                  "type": "string"
+                },
+                "needs_approval_timestamp": {
+                  "$ref": "#/definitions/dateTime"
+                },
+                "reactivated_timestamp": {
+                  "$ref": "#/definitions/dateTime"
+                },
+                "session_created_timestamp": {
+                  "$ref": "#/definitions/dateTime"
+                },
+                "session_first_submitted_timestamp": {
+                  "$ref": "#/definitions/dateTime"
+                },
+                "session_genes_count": {
+                  "$ref": "#/definitions/stringInteger"
+                },
+                "session_reactivated_timestamp": {
+                  "$ref": "#/definitions/dateTime"
+                },
+                "session_term_suggestions_count": {
+                  "$ref": "#/definitions/stringInteger"
+                },
+                "session_unknown_conditions_count": {
+                  "$ref": "#/definitions/stringInteger"
+                },
+                "term_suggestion_count": {
+                  "$ref": "#/definitions/stringInteger"
+                },
+                "unknown_conditions_count": {
+                  "$ref": "#/definitions/stringInteger"
+                }
+              }
+            },
+            "metagenotypes": {
+              "type": "object",
+              "additionalProperties": false,
+              "patternProperties": {
+                "^[a-f0-9]{,16}-metagenotype-\\d+$": {
+                  "type": "object",
+                  "properties": {
+                    "host_genotype": {
+                      "$ref": "#/definitions/genotypeId"
+                    },
+                    "pathogen_genotype": {
+                      "$ref": "#/definitions/genotypeId"
+                    },
+                    "type": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "organisms": {
+              "type": "object",
+              "additionalProperties": false,
+              "patternProperties": {
+                "^\\d+$": {
+                  "type": "object",
+                  "properties": {
+                    "full_name": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "publications": {
+              "type": "object",
+              "additionalProperties": false,
+              "propertyNames": {
+                "$ref": "#/definitions/pmid"
+              },
+              "patternProperties": {
+                ".+": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "labs": {
+      "type": "object",
+      "patternProperties": {
+        ".+": {
+          "type": "object",
+          "properties": {
+            "head": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "people": {
+      "type": "object",
+      "additionalProperties": false,
+      "propertyNames": {
+        "format": "email"
+      },
+      "patternProperties": {
+        "^.+$": {
+          "lab": {
+            "$ref": "#/definitions/nullableString"
+          },
+          "name": {
+            "type": "string"
+          },
+          "orcid": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/orcid"
+              },
+              {
+                "type": "string",
+                "format": "email"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "password": {
+            "$ref": "#/definitions/nullableString"
+          },
+          "role": {
+            "type": "string",
+            "enum": ["admin", "user"]
+          }
+        }
+      }
+    },
+    "publications": {
+      "type": "object",
+      "additionalProperties": false,
+      "propertyNames": {
+        "$ref": "#/definitions/pmid"
+      },
+      "patternProperties": {
+        ".+": {
+          "type": "object",
+          "properties": {
+            "abstract": {
+              "$ref": "#/definitions/nullableString"
+            },
+            "added_date": {
+              "$ref": "#/definitions/nullableDateTime"
+            },
+            "affiliation": {
+              "$ref": "#/definitions/nullableString"
+            },
+            "authors": {
+              "$ref": "#/definitions/nullableString"
+            },
+            "citation": {
+              "type": "string"
+            },
+            "corresponding_author": {
+              "$ref": "#/definitions/nullableString"
+            },
+            "curation_statuses": {
+              "type": "array"
+            },
+            "properties": {
+              "type": "array"
+            },
+            "publication_date": {
+              "type": "string"
+            },
+            "title": {
+              "$ref": "#/definitions/nullableString"
+            },
+            "triage_status": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}
