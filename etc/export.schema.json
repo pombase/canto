@@ -42,7 +42,7 @@
     },
     "wildTypeGenotypeId": {
       "type": "string",
-      "pattern": "^.+?wild-type-genotype.+$"
+      "pattern": "^.+?wild-type-genotype.*$"
     },
     "pmid": {
       "title": "PMID",
