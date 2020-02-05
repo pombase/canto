@@ -857,8 +857,6 @@ sub create_sessions_from_json
 
  PUB:
   while (my ($pub_uniquename, $session_data) = each %$sessions_data) {
-    my $guard = $self->schema()->txn_scope_guard();
-
     my ($pub, $error_message) = $self->load_pub_from_pubmed($config, $pub_uniquename);
 
     if (!$pub) {
@@ -996,8 +994,6 @@ sub create_sessions_from_json
 
     print "created session: ", $curs->curs_key(), " pub: ", $pub->uniquename(),
       " for: $curator_email_address\n";
-
-    $guard->commit();
   }
 
   return @results;
