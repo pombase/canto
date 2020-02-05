@@ -254,23 +254,6 @@ my $proc = sub {
     print "created session: ", $curs->curs_key(), " pub: ", $pub->uniquename(), " for: $email_address\n";
   }
 
-  if ($add_sessions_from_json) {
-    my $file_name = shift @ARGV;
-    # use the Person added by the add_person code
-
-    if (!-f $file_name) {
-      die "file not found ($file_name) - exiting\n";
-    }
-
-    my $email_address = shift @ARGV;
-    my $taxonid = shift @ARGV;
-
-    my @new_sessions =
-      $load_util->create_sessions_from_json($config, $file_name, $email_address, $taxonid);
-
-    print "created ", scalar(@new_sessions), " sessions\n";
-  }
-
   if ($add_organism) {
     my $scientific_name = shift @ARGV;
     my $taxon_id = shift @ARGV;
@@ -305,4 +288,21 @@ if ($add_by_pubmed_query) {
       die "loading failed: $@\n";
     }
   }
+}
+
+if ($add_sessions_from_json) {
+  my $file_name = shift @ARGV;
+  # use the Person added by the add_person code
+
+  if (!-f $file_name) {
+    die "file not found ($file_name) - exiting\n";
+  }
+
+  my $email_address = shift @ARGV;
+  my $taxonid = shift @ARGV;
+
+  my @new_sessions =
+    $load_util->create_sessions_from_json($config, $file_name, $email_address, $taxonid);
+
+  print "created ", scalar(@new_sessions), " sessions\n";
 }
