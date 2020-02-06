@@ -1648,7 +1648,7 @@ sub feature_view : Chained('feature') PathPart('view')
         $st->{features} = [$metagenotype];
 
         my $display_name = $st->{feature}->display_name($config);
-        $st->{title} = "Metagenotype: $display_name";
+        $st->{title} = "Metagenotype details";
 
       } else {
         die "no such feature type: $feature_type\n";
