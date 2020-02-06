@@ -237,7 +237,7 @@ sub curated_stats
     my $where;
 
     if ($curation_status eq 'uncurated') {
-      $where = 'canto_curator_role IS NULL OR canto_approved_year IS NULL';
+      $where = q|canto_approved_year IS NULL AND canto_triage_status = 'Curatable'|;
     } else {
       if ($curation_status eq 'community') {
         $where = q|canto_curator_role = 'community' AND canto_approved_year IS NOT NULL|;
