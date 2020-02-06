@@ -97,6 +97,8 @@ my @types_to_show = grep {
 } @annotation_type_list;
 
 my $start_path = $c->stash()->{curs_root_uri};
+my $pathogen_host_mode = $c->stash()->{pathogen_host_mode};
+my $strains_mode = $c->stash()->{strains_mode};
 my $read_only_curs = $c->stash()->{read_only_curs};
 
 my $_unicode_allele_symbol = sub {
