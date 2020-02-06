@@ -9,17 +9,6 @@
       Start a {{ annotationType.display_name }} annotation
     </a>
   </div>
-  <div>
-    <a ng-class="{disabled: genotypeId == null }" href="{{viewAnnotationUri}}">
-      View annotations
-    </a>
-  </div>
-  <div>
-    <a confirm="This genotype has existing annotations.  Really edit?"
-       confirm-if="annotationCount > 0"
-       ng-class="{disabled: genotypeId == null }" ng-if="!read_only_curs"
-       ng-click="editGenotype(genotypeId)">Edit details</a>
-  </div>
   <div ng-if="!read_only_curs">
     <a ng-show="alleleCount == 1"
       ng-class="{disabled: genotypeId == null }"
@@ -27,6 +16,21 @@
     <a ng-show="alleleCount != 1"
       ng-class="{disabled: genotypeId == null }"
       href="{{curs_root_uri + '/' + genotypeManagePath + '#/duplicate/' + genotypeId}}">Copy and edit</a>
+  </div>
+  <div>
+    <a confirm="This genotype has existing annotations.  Really edit?"
+       confirm-if="annotationCount > 0"
+       ng-class="{disabled: genotypeId == null }" ng-if="!read_only_curs"
+       ng-click="editGenotype(genotypeId)">Edit details</a>
+  </div>
+  <div>
+    <a ng-class="{disabled: genotypeId == null }" href="{{viewAnnotationUri}}">
+      View annotations
+    </a>
+  </div>
+  <div ng-if="!read_only_curs">
+    <a ng-class="{disabled: genotypeId == null }"
+       ng-click="editBackground(genotypeId)">Add/edit background</a>
   </div>
   <div ng-if="showNotesLink()">
     <a ng-class="{disabled: genotypeId == null }"
