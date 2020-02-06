@@ -69,8 +69,13 @@ Details
 % } else {
           <td class="title">Genotype A</td>
 % }
-          <td><% $_unicode_allele_symbol->($interactor_a->{'genotype'}) | n %></td>
+          <td>
+            <a href="<% $genotype_link_a %>">
+              <% $_unicode_allele_symbol->($interactor_a->{'genotype'}) | n %>
+            </a>
+          </td>
         </tr>
+
         <tr>
 % if ($pathogen_host_mode) {
           <td class="title">Host</td>
@@ -95,7 +100,15 @@ Details
 % } else {
           <td class="title">Genotype B</td>
 % }
-          <td><% $_unicode_allele_symbol->($interactor_b->{'genotype'}) | n %></td>
+          <td>
+% if ($genotype_link_b) {
+            <a href="<% $genotype_link_b %>">
+% }
+              <% $_unicode_allele_symbol->($interactor_b->{'genotype'}) | n %>
+% if ($genotype_link_b) {
+            </a>
+% }
+          </td>
         </tr>
       </tbody>
     </table>
@@ -161,6 +174,9 @@ my $read_only_curs = $c->stash()->{read_only_curs};
 
 my $interactor_a = get_genotype_details($metagenotype->first_genotype());
 my $interactor_b = get_genotype_details($metagenotype->second_genotype());
+
+my $genotype_link_a = genotype_link($start_path, $metagenotype->first_genotype());
+my $genotype_link_b = genotype_link($start_path, $metagenotype->second_genotype());
 
 my $_unicode_allele_symbol = sub {
   my $text = shift;
