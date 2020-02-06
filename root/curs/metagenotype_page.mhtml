@@ -46,12 +46,56 @@ Details
     <table class="curs-definition-table">
       <tbody>
         <tr>
-          <td class="title">
-Description
-          </td>
-          <td>
-<% $_unicode_allele_symbol->($metagenotype->display_name($c->config())) |n %>
-          </td>
+% if ($pathogen_host_mode) {
+          <td class="title">Pathogen</td>
+% } else {
+          <td class="title">Organism A</td>
+% }
+          <td><% $interactor_a->{'organism'} %></td>
+        </tr>
+% if ($strains_mode) {
+        <tr>
+% if ($pathogen_host_mode) {
+          <td class="title">Pathogen strain</td>
+% } else {
+          <td class="title">Strain A</td>
+% }
+          <td><% $interactor_a->{'strain'} %></td>
+        </tr>
+% }
+        <tr>
+% if ($pathogen_host_mode) {
+          <td class="title">Pathogen genotype</td>
+% } else {
+          <td class="title">Genotype A</td>
+% }
+          <td><% $_unicode_allele_symbol->($interactor_a->{'genotype'}) | n %></td>
+        </tr>
+        <tr>
+% if ($pathogen_host_mode) {
+          <td class="title">Host</td>
+% } else {
+          <td class="title">Organism B</td>
+% }
+          <td><% $interactor_b->{'organism'} %></td>
+        </tr>
+% if ($strains_mode) {
+        <tr>
+% if ($pathogen_host_mode) {
+          <td class="title">Host strain</td>
+% } else {
+          <td class="title">Strain B</td>
+% }
+          <td><% $interactor_b->{'strain'} %></td>
+        </tr>
+% }
+        <tr>
+% if ($pathogen_host_mode) {
+          <td class="title">Host genotype</td>
+% } else {
+          <td class="title">Genotype B</td>
+% }
+          <td><% $_unicode_allele_symbol->($interactor_b->{'genotype'}) | n %></td>
         </tr>
       </tbody>
     </table>
@@ -100,6 +144,9 @@ my $start_path = $c->stash()->{curs_root_uri};
 my $pathogen_host_mode = $c->stash()->{pathogen_host_mode};
 my $strains_mode = $c->stash()->{strains_mode};
 my $read_only_curs = $c->stash()->{read_only_curs};
+
+my $interactor_a = get_genotype_details($metagenotype->first_genotype());
+my $interactor_b = get_genotype_details($metagenotype->second_genotype());
 
 my $_unicode_allele_symbol = sub {
   my $text = shift;
