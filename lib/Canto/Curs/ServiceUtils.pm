@@ -406,6 +406,8 @@ sub _genotype_details_hash
   my $genotype = shift;
   my $include_allele = shift;
 
+  my $config = $self->config();
+
   my $organism_lookup = $self->organism_lookup();
   my $organism_details = $organism_lookup->lookup_by_taxonid($genotype->organism()->taxonid());
 
@@ -434,7 +436,7 @@ sub _genotype_details_hash
     background => $genotype->background(),
     comment => $genotype->comment(),
     allele_string => $genotype->allele_string(),
-    display_name => $genotype->display_name($self->config()),
+    display_name => $genotype->display_name($config),
     genotype_id => $genotype->genotype_id(),
     annotation_count => $genotype->annotations()->count(),
     metagenotype_count_by_type => \%metagenotype_count_by_type,
@@ -463,6 +465,14 @@ sub _genotype_details_hash
 
     my @allele_hashes = map { $self->_allele_details_hash($_); } @alleles;
 
+    my %allele_type_order = ();
+
+    for (my $idx = 0; $idx < @{$config->{allele_type_list}}; $idx++) {
+      my $allele_config = $config->{allele_type_list}->[$idx];
+
+      $allele_type_order{$allele_config->{name}} = $idx;
+    }
+
     map {
       if ($diploid_names{$_->{allele_id}}) {
         my $diploid_name = pop(@{$diploid_names{$_->{allele_id}}});
@@ -470,6 +480,10 @@ sub _genotype_details_hash
           $_->{diploid_name} = $diploid_name;
         }
       }
+    } @allele_hashes;
+
+    @allele_hashes = sort {
+      ($allele_type_order{$a->{type}} // 0) <=> ($allele_type_order{$b->{type}} // 0);
     } @allele_hashes;
 
     $ret{alleles} = [@allele_hashes];
