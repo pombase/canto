@@ -71,6 +71,23 @@ Description
 </div>
 
 <%init>
+sub get_genotype_details {
+  my $genotype = shift;
+
+  my $config = $c->config();
+  my $org_lookup = Canto::Track::get_adaptor($config, 'organism');
+  my $strain_lookup = Canto::Track::get_adaptor($config, 'strain');
+
+  my $taxon_id = $genotype->organism()->taxonid();
+  my $strain = $genotype->strain();
+
+  return {
+    "organism" => $org_lookup->lookup_by_taxonid($taxon_id)->{scientific_name},
+    "strain" => $strain->lookup_strain_name($strain_lookup),
+    "genotype" => $genotype->display_name()
+  };
+}
+
 my $metagenotype_id = $metagenotype->metagenotype_id();
 
 my $st = $c->stash();
