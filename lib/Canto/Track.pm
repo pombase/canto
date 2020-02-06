@@ -54,6 +54,7 @@ use Canto::CursDB;
 use Canto::Util;
 use Canto::Curs::State qw/:all/;
 use Canto::Track::GeneLoad;
+use Canto::Track::AdaptorUtil;
 
 =head2 create_curs
 
@@ -211,29 +212,9 @@ sub create_curs_db_hook
 =cut
 sub get_adaptor
 {
-  my ($config, $adaptor_name, $args) = @_;
-
-  if (!defined $adaptor_name) {
-    croak "no adaptor_name passed to get_adaptor()\n";
-  }
-
-  my $conf_name = "${adaptor_name}_adaptor";
-
-  my $impl_class = $config->{implementation_classes}->{$conf_name};
-
-  if (!defined $impl_class) {
-    return undef;
-  }
-
-  my %args = ();
-
-  if (defined $args) {
-    %args = %$args;
-  }
-
-  eval "use $impl_class";
-  die "failed to import $impl_class: $@" if $@;
-  return $impl_class->new(config => $config, %args);
+  # Moved get_adaptor() to a separate class so that it can be used without
+  # use-ing the whole Track class.
+  return Canto::Track::AdaptorUtil::get_adaptor(@_);
 }
 
 =head2 curs_iterator

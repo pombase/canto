@@ -220,13 +220,63 @@ sub all_annotations
   return $self->annotations();
 }
 
+use feature "state";
+
+use Canto::Track::AdaptorUtil;
+
 sub display_name
 {
   my $self = shift;
   my $config = shift;
 
-  return 'pathogen: ' .$self->pathogen_genotype->display_name($config) . ' / host: ' .
-    $self->host_genotype->display_name($config);
+  state $organism_lookup = Canto::Track::AdaptorUtil::get_adaptor($config, 'organism');
+  state $strain_lookup = Canto::Track::AdaptorUtil::get_adaptor($config, 'strain');
+
+  my $first_genotype = $self->first_genotype();
+
+  my $ret = $first_genotype->display_name($config);
+
+  my $first_organism = $first_genotype->organism();
+  if ($first_organism) {
+    my $first_organism_details =
+      $organism_lookup->lookup_by_taxonid($first_organism->taxonid());
+    $ret .= ' ' . $first_organism_details->{scientific_name};
+  }
+
+  my $first_strain = $first_genotype->strain();
+
+  if ($first_strain) {
+    my $strain_name = $first_strain->lookup_strain_name($strain_lookup);
+
+    if ($strain_name) {
+      $ret .= ' (' . $strain_name . ') ';
+    }
+  }
+
+  $ret .= ' / ';
+
+  my $second_genotype = $self->second_genotype();
+
+  $ret .= $second_genotype->display_name($config);
+
+  my $second_organism = $second_genotype->organism();
+  if ($second_organism) {
+    my $second_organism_details =
+      $organism_lookup->lookup_by_taxonid($second_organism->taxonid());
+    $ret .= ' ' . $second_organism_details->{scientific_name};
+  }
+
+  my $second_strain = $second_genotype->strain();
+
+  if ($second_strain) {
+    my $strain_name = $second_strain->lookup_strain_name($strain_lookup);
+
+    if ($strain_name) {
+      $ret .= ' (' . $strain_name . ') ';
+    }
+  }
+
+  return $ret;
 }
 
 sub delete

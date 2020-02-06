@@ -7,6 +7,9 @@ $annotation_count
 </%args>
 
 <div ng-controller="MetagenotypeViewCtrl" ng-init="init(<% $annotation_count %>)">
+<div class="curs-annotate-feature-title">
+  <% $_unicode_allele_symbol->($metagenotype->display_name($c->config())) | n %>
+</div>
 % if (!$read_only_curs) {
 <div class="curs-box curs-half-width-section">
   <div class="curs-box-title">
