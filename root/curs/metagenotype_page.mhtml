@@ -132,6 +132,20 @@ sub get_genotype_details {
   };
 }
 
+sub genotype_link {
+  my $curs_root_uri = shift;
+  my $genotype = shift;
+
+  my $id = $genotype->feature_id();
+
+  my $alleles = $genotype->allele_string($c->config());
+
+  if ($alleles ne '') {
+    return $curs_root_uri . '/feature/genotype/view/' . $id;
+  }
+  return undef;
+}
+
 my $metagenotype_id = $metagenotype->metagenotype_id();
 
 my $st = $c->stash();
