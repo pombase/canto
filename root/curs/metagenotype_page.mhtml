@@ -49,11 +49,68 @@ Details
     <table class="curs-definition-table">
       <tbody>
         <tr>
-          <td class="title">
-Description
-          </td>
+% if ($pathogen_host_mode) {
+          <td class="title">Pathogen</td>
+% } else {
+          <td class="title">Organism A</td>
+% }
+          <td><% $interactor_a->{'organism'} %></td>
+        </tr>
+% if ($strains_mode) {
+        <tr>
+% if ($pathogen_host_mode) {
+          <td class="title">Pathogen strain</td>
+% } else {
+          <td class="title">Strain A</td>
+% }
+          <td><% $interactor_a->{'strain'} %></td>
+        </tr>
+% }
+        <tr>
+% if ($pathogen_host_mode) {
+          <td class="title">Pathogen genotype</td>
+% } else {
+          <td class="title">Genotype A</td>
+% }
           <td>
-<% $_unicode_allele_symbol->($metagenotype->display_name($c->config())) |n %>
+            <a href="<% $genotype_link_a %>">
+              <% $_unicode_allele_symbol->($interactor_a->{'genotype'}) | n %>
+            </a>
+          </td>
+        </tr>
+
+        <tr>
+% if ($pathogen_host_mode) {
+          <td class="title">Host</td>
+% } else {
+          <td class="title">Organism B</td>
+% }
+          <td><% $interactor_b->{'organism'} %></td>
+        </tr>
+% if ($strains_mode) {
+        <tr>
+% if ($pathogen_host_mode) {
+          <td class="title">Host strain</td>
+% } else {
+          <td class="title">Strain B</td>
+% }
+          <td><% $interactor_b->{'strain'} %></td>
+        </tr>
+% }
+        <tr>
+% if ($pathogen_host_mode) {
+          <td class="title">Host genotype</td>
+% } else {
+          <td class="title">Genotype B</td>
+% }
+          <td>
+% if ($genotype_link_b) {
+            <a href="<% $genotype_link_b %>">
+% }
+              <% $_unicode_allele_symbol->($interactor_b->{'genotype'}) | n %>
+% if ($genotype_link_b) {
+            </a>
+% }
           </td>
         </tr>
       </tbody>
@@ -74,6 +131,37 @@ Description
 </div>
 
 <%init>
+sub get_genotype_details {
+  my $genotype = shift;
+
+  my $config = $c->config();
+  my $org_lookup = Canto::Track::get_adaptor($config, 'organism');
+  my $strain_lookup = Canto::Track::get_adaptor($config, 'strain');
+
+  my $taxon_id = $genotype->organism()->taxonid();
+  my $strain = $genotype->strain();
+
+  return {
+    "organism" => $org_lookup->lookup_by_taxonid($taxon_id)->{scientific_name},
+    "strain" => $strain->lookup_strain_name($strain_lookup),
+    "genotype" => $genotype->display_name()
+  };
+}
+
+sub genotype_link {
+  my $curs_root_uri = shift;
+  my $genotype = shift;
+
+  my $id = $genotype->feature_id();
+
+  my $alleles = $genotype->allele_string($c->config());
+
+  if ($alleles ne '') {
+    return $curs_root_uri . '/feature/genotype/view/' . $id;
+  }
+  return undef;
+}
+
 my $metagenotype_id = $metagenotype->metagenotype_id();
 
 my $st = $c->stash();
@@ -83,7 +171,15 @@ my @types_to_show = grep {
 } @annotation_type_list;
 
 my $start_path = $c->stash()->{curs_root_uri};
+my $pathogen_host_mode = $c->stash()->{pathogen_host_mode};
+my $strains_mode = $c->stash()->{strains_mode};
 my $read_only_curs = $c->stash()->{read_only_curs};
+
+my $interactor_a = get_genotype_details($metagenotype->first_genotype());
+my $interactor_b = get_genotype_details($metagenotype->second_genotype());
+
+my $genotype_link_a = genotype_link($start_path, $metagenotype->first_genotype());
+my $genotype_link_b = genotype_link($start_path, $metagenotype->second_genotype());
 
 my $_unicode_allele_symbol = sub {
   my $text = shift;
