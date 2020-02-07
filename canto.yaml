@@ -1020,6 +1020,9 @@ class_info:
     curatable_publications_without_sessions:
       extends: pub
       constraint: "pub_id not in (select pub from curs) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"
+    curatable_publications_with_corresponding_author_without_sessions:
+      extends: pub
+      constraint: "pub_id not in (select pub from curs) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable') AND corresponding_author IS NOT NULL"
     publications_with_new_sessions:
       extends: pub
       constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and p.value = 'SESSION_CREATED')) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"
@@ -1230,6 +1233,7 @@ reports:
                    - report: publications_with_approved_session
                    - report: publications_with_multiple_sessions
                 - report: curatable_publications_without_sessions
+                - report: curatable_publications_with_corresponding_author_without_sessions
                 - report: curatable_publications_with_no_annotatable_genes
                 - report: triage_structure_publications
                 - report: triage_phenotype_screen_publications
