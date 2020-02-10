@@ -1028,6 +1028,9 @@ class_info:
     publications_without_corresponding_author:
       extends: pub
       constraint: "corresponding_author is null"
+    community_sessions_never_sent:
+      extends: curs
+      constraint: "me.curs_id IN (select curs from curs_curator cc join curs on curs_id = cc.curs join person on person.person_id = cc.curator join cvterm role on person.role = role.cvterm_id and role.name <> 'admin' AND cc.curs NOT IN (select curs from cursprop p, cvterm t where cc.curs = p.curs and t.cvterm_id = p.type and t.name = 'link_sent_to_curator_date'))"
     community_sessions_not_started_and_never_sent:
       extends: curs
       constraint: "me.curs_id IN (select curs from curs_curator cc join curs on curs_id = cc.curs join person on person.person_id = cc.curator join cvterm role on person.role = role.cvterm_id and role.name <> 'admin' AND cc.curs NOT IN (select curs from cursprop p, cvterm t where cc.curs = p.curs and t.cvterm_id = p.type and t.name = 'link_sent_to_curator_date') AND cc.curs IN (select p.curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and p.value = 'SESSION_CREATED'))"
@@ -1259,6 +1262,7 @@ reports:
         - report: sessions_with_term_requests
         - report: reactivated_sessions
         - report: sessions_without_a_curator
+        - report: community_sessions_never_sent
         - report: community_sessions_not_started_and_never_sent
 #        - report: sessions_needing_approval
 #    - report: named_genes
