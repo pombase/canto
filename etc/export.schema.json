@@ -24,11 +24,11 @@
       "title": "Curation session key",
       "description": "Unique hexadecimal identifier for Canto curation sessions. Used in Canto URLs.",
       "type": "string",
-      "pattern": "^[a-f0-9]{,16}$"
+      "pattern": "^[a-f0-9]{8,16}$"
     },
     "alleleId": {
       "type": "string",
-      "pattern": "^.+:[a-f0-9]{,16}-\\d+$"
+      "pattern": "^.+:[a-f0-9]{8,16}-\\d+$"
     },
     "genotypeId": {
       "oneOf": [
@@ -38,7 +38,7 @@
     },
     "mutantGenotypeId": {
       "type": "string",
-      "pattern": "^[a-f0-9]{,16}-genotype-\\d+$"
+      "pattern": "^[a-f0-9]{8,16}-genotype-\\d+$"
     },
     "wildTypeGenotypeId": {
       "type": "string",
@@ -352,7 +352,7 @@
               "type": "object",
               "additionalProperties": false,
               "patternProperties": {
-                "^[a-f0-9]{,16}-metagenotype-\\d+$": {
+                "^[a-f0-9]{8,16}-metagenotype-\\d+$": {
                   "type": "object",
                   "properties": {
                     "host_genotype": {
