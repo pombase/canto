@@ -546,6 +546,7 @@ my $full_expected_track_data =
     },
     people => \%expected_people,
     labs => \%expected_labs,
+    schema_version => 1,
   };
 
 my $small_expected_track_data =
