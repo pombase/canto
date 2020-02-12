@@ -17,13 +17,13 @@ canto.config(['$compileProvider', function ($compileProvider) {
 canto.config(['ChartJsProvider', function (ChartJsProvider) {
   ChartJsProvider.setOptions({
     chartColors: [
-      '#3060BD', // blue
       '#20C040', // green
+      '#5080DD', // blue
+      '#FDB42C', // yellow
+      '#F7565A', // red
       '#B0B0B0', // grey
-      '#FDB45C', // yellow
-      '#F7464A', // red
-      '#4D5360', // dark grey
-      '#BCACBC' // purple
+      '#CC8CCC', // purple
+      '#3D8390', // dark bluegrey
     ]
   });
 }]);
