@@ -233,11 +233,22 @@ sub curated_stats
 
   my $first_year = 1970;
 
-  for my $curation_status ('admin', 'community', 'uncurated') {
+  for my $curation_status ('admin', 'community', 'uncurated-admin',
+                           'uncurated-community', 'uncurated-unassigned',) {
     my $where;
 
-    if ($curation_status eq 'uncurated') {
-      $where = 'canto_curator_role IS NULL OR canto_approved_year IS NULL';
+    if ($curation_status =~ /^uncurated/) {
+      $where = q|canto_approved_year IS NULL AND canto_triage_status = 'Curatable' |;
+
+      if ($curation_status =~ /unassigned/) {
+        $where .= q|AND canto_curator_role IS NULL|;
+      } else {
+        if ($curation_status =~ /admin/) {
+          $where .= q|AND canto_curator_role IS NOT NULL AND canto_curator_role <> 'community'|;
+        } else {
+          $where .= q|AND canto_curator_role = 'community'|;
+        }
+      }
     } else {
       if ($curation_status eq 'community') {
         $where = q|canto_curator_role = 'community' AND canto_approved_year IS NOT NULL|;
@@ -278,9 +289,11 @@ EOF
     }
     if (defined $year_stats) {
       push @rows, [$fixed_year, $year_stats->{admin} // 0, $year_stats->{community} //0,
-                   $year_stats->{uncurated} // 0];
+                   $year_stats->{'uncurated-admin'} // 0,
+                   $year_stats->{'uncurated-community'} // 0,
+                   $year_stats->{'uncurated-unassigned'} // 0];
     } else {
-      push @rows, [$fixed_year, 0, 0, 0];
+      push @rows, [$fixed_year, 0, 0, 0, 0, 0];
     }
   }
 

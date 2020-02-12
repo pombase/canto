@@ -267,11 +267,17 @@ annotations contributed by authors.
           Community curated
         </th>
         <th>
-          Uncurated
+          Uncurated admin
+        </th>
+        <th>
+          Uncurated community
+        </th>
+        <th>
+          Unassigned
         </th>
       </tr>
     </thead>
-% my @totals = (0,0,0,0,0);
+% my @totals = (0,0,0,0,0,0,0);
 % for my $row (@curated_stats) {
 %   pairwise { $a += $b } @totals, @$row;
     <tr>
@@ -279,7 +285,7 @@ annotations contributed by authors.
         <% $row->[0] %>
       </td>
       <td>
-        <% $row->[1] + $row->[2] + $row->[3] %>
+        <% $row->[1] + $row->[2] + $row->[3] + $row->[4] + $row->[5] %>
       </td>
 %   for (my $i = 1; $i < @$row; $i++) {
 %     my $column = $row->[$i];
@@ -293,6 +299,8 @@ annotations contributed by authors.
       <td><% $totals[1] %></td>
       <td><% $totals[2] %></td>
       <td><% $totals[3] %></td>
+      <td><% $totals[4] %></td>
+      <td><% $totals[5] %></td>
     </tr>
   </table>
   </div>
@@ -301,7 +309,7 @@ annotations contributed by authors.
 </div>
 <div>
   <stacked-graph chart-labels="curationStatusLabels" chart-data="curationStatusData"
-                 chart-series="Admin curated|Community curated|Uncurated">
+                 chart-series="Admin curated|Community curated|Uncurated admin|Uncurated community|Unassigned">
   </stacked-graph>
 </div>
 </div>
