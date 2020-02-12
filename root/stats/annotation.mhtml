@@ -309,7 +309,7 @@ annotations contributed by authors.
 </div>
 <div>
   <stacked-graph chart-labels="curationStatusLabels" chart-data="curationStatusData"
-                 chart-series="Admin curated|Community curated|Uncurated admin|Uncurated community|Unassigned">
+                 chart-series="Admin curated|Community curated|Uncurated, curator assigned|Uncurated, community assigned|Uncurated, unassigned">
   </stacked-graph>
 </div>
 </div>
