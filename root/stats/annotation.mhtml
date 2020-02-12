@@ -131,6 +131,7 @@ $db_creation_datetime
     var cumulativeAnnotationTypeCounts = <% $cumulative_annotation_type_counts_js |n %>;
   </script>
   <stacked-graph chart-labels="cumulativeAnnotationTypeCountsLabels" chart-data="cumulativeAnnotationTypeCountsData"
+                 chart-colors="defaultStackedChartColors"
                  chart-series="GO|Phenotype|Modification|Gene Expression|Genetic interaction|Physical interaction|Other">
   </stacked-graph>
 </div>
@@ -309,6 +310,7 @@ annotations contributed by authors.
 </div>
 <div>
   <stacked-graph chart-labels="curationStatusLabels" chart-data="curationStatusData"
+                 chart-colors="curatedVsUncuratedChartColors"
                  chart-series="Admin curated|Community curated|Uncurated, curator assigned|Uncurated, community assigned|Uncurated, unassigned">
   </stacked-graph>
 </div>

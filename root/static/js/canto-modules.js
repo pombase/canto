@@ -14,17 +14,19 @@ canto.config(['$compileProvider', function ($compileProvider) {
   $compileProvider.debugInfoEnabled(false);
 }]);
 
+var defaultStackedChartColors = [
+  '#20C040', // green
+  '#5080DD', // blue
+  '#FDB42C', // yellow
+  '#F7565A', // red
+  '#B0B0B0', // grey
+  '#CC8CCC', // purple
+  '#3D8390', // dark bluegrey
+];
+
 canto.config(['ChartJsProvider', function (ChartJsProvider) {
   ChartJsProvider.setOptions({
-    chartColors: [
-      '#20C040', // green
-      '#5080DD', // blue
-      '#FDB42C', // yellow
-      '#F7565A', // red
-      '#B0B0B0', // grey
-      '#CC8CCC', // purple
-      '#3D8390', // dark bluegrey
-    ]
+    chartColors: defaultStackedChartColors
   });
 }]);
 
@@ -7258,6 +7260,18 @@ var AnnotationStatsCtrl =
     $scope.curationStatusData = CantoGlobals.curationStatusData.slice(1);
     $scope.cumulativeAnnotationTypeCountsLabels = CantoGlobals.cumulativeAnnotationTypeCounts[0];
     $scope.cumulativeAnnotationTypeCountsData = CantoGlobals.cumulativeAnnotationTypeCounts.slice(1);
+
+    $scope.defaultStackedChartColors = defaultStackedChartColors;
+    $scope.curatedVsUncuratedChartColors = [
+      '#109020', // green
+      '#20309D', // blue
+      '#70F570', // light green
+      '#B0B0FF', // light blue
+      '#B0B0B0', // grey
+      '#CC8CCC', // purple
+      '#3D8390', // dark bluegrey
+    ];
+
     var currentYear = (new Date()).getFullYear();
     $scope.perPub5YearStatsLabels =
       $.map(CantoGlobals.perPub5YearStatsData[0],
@@ -7310,12 +7324,13 @@ var stackedGraph =
         chartLabels: '=',
         chartData: '=',
         chartSeries: '@',
+        chartColors: '=',
       },
       restrict: 'E',
       replace: true,
       template: '<div><canvas class="chart chart-bar" chart-data="chartData" ' +
         'chart-labels="chartLabels" chart-options="options" ' +
-        'chart-colors="colours" ' +
+        'chart-colors="chartColors" ' +
         'chart-series="series"></canvas></div>',
       controller: function ($scope) {
         $scope.type = 'StackedBar';
