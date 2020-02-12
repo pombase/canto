@@ -231,7 +231,7 @@ sub curated_stats
 
   my %stats = ();
 
-  my $first_year = 1970;
+  my $first_year = 1980;
 
   for my $curation_status ('admin', 'community', 'uncurated-admin',
                            'uncurated-community', 'uncurated-unassigned',) {
