@@ -310,7 +310,7 @@ annotations contributed by authors.
 </div>
 <div>
   <stacked-graph chart-labels="curationStatusLabels" chart-data="curationStatusData"
-                 chart-colors="curatedVsUncuratedChartColors"
+                 chart-colors="defaultStackedChartColors"
                  chart-series="Admin curated|Community curated|Uncurated, curator assigned|Uncurated, community assigned|Uncurated, unassigned">
   </stacked-graph>
 </div>
