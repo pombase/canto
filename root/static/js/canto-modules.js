@@ -7262,15 +7262,6 @@ var AnnotationStatsCtrl =
     $scope.cumulativeAnnotationTypeCountsData = CantoGlobals.cumulativeAnnotationTypeCounts.slice(1);
 
     $scope.defaultStackedChartColors = defaultStackedChartColors;
-    $scope.curatedVsUncuratedChartColors = [
-      '#109020', // green
-      '#20309D', // blue
-      '#70F570', // light green
-      '#B0B0FF', // light blue
-      '#B0B0B0', // grey
-      '#CC8CCC', // purple
-      '#3D8390', // dark bluegrey
-    ];
 
     var currentYear = (new Date()).getFullYear();
     $scope.perPub5YearStatsLabels =
