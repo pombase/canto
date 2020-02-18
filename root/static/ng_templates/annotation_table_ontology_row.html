@@ -121,6 +121,10 @@
         <a title="Edit this annotation" ng-click="edit()">Edit</a>
       </div>
       <div>
+        <a title="{{'Copy this annotation to other ' + annotationType.feature_type + 's'}}"
+           ng-click="transferAnnotation()">Transfer</a>
+      </div>
+      <div>
         <a title="Make copy of this annotation and then edit the details"
            ng-click="duplicate()">Copy and edit</a>
       </div>

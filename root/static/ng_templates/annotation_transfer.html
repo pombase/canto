@@ -1,0 +1,29 @@
+<div class="curs-annotation-transfer">
+  <div class="modal-header">
+    <h4 class="modal-title">
+      Transfer this {{annotationType.display_name}} annotation
+      <span ng-show="annotation.feature_display_name">from {{annotation.feature_display_name}}</span>
+      to:
+    </h4>
+  </div>
+
+  <div class="modal-body">
+
+
+    <div ng-if="!!otherFeatures">
+      <multi-feature-chooser features="otherFeatures" feature-type="featureType"
+                             selected-feature-ids="selectedFeatureIds">
+      </multi-feature-chooser>
+    </div>
+
+
+    <div class="modal-footer">
+      <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+      <button class="btn btn-primary" ng-click="ok()" ng-alt-enter="ok()"
+              title="{{ okButtonTitleMessage() }}"
+              ng-disabled="!canTransfer()">OK</button>
+    </div>
+
+  </div>
+
+</div>
