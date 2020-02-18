@@ -9278,16 +9278,14 @@ canto.service('EditOrganismsSvc', function (toaster, $http, CantoGlobals) {
   };
 
   vm.unsetOrganismGene = function (organisms, gene_id) {
-    organisms = organisms.map(function (o) {
+    return organisms.map(function (o) {
       o.genes = o.genes.filter(function (g) {
         return g.gene_id !== gene_id;
       });
       return o;
+    }).filter(function (o) {
+      return o.pathogen_or_host === 'host' || o.genes.length > 0;
     });
-    organisms = organisms.filter(function (o) {
-      return o.genes.length > 0;
-    });
-    return organisms;
   };
 
   vm.unsetHostOrganism = function (organisms, taxon_id) {
