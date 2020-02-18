@@ -7050,7 +7050,9 @@ var annotationTransferDialogCtrl =
     $scope.annotationTypePromise = AnnotationTypeConfig.getByName($scope.annotationTypeName);
 
     function filterFeatures(features) {
-      return features;
+      return $.grep(features, function(feature) {
+        return feature.feature_id != $scope.annotation.feature_id;
+      });
     }
 
     $scope.annotationTypePromise
