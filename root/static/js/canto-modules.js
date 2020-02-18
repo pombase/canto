@@ -7048,11 +7048,12 @@ var annotationTransferDialogCtrl =
     $scope.selectedFeatureIds = [];
     $scope.transferExtension = true;
     $scope.extensionAsString = extensionAsString($scope.annotation.extension, true, true);
+
     $scope.termAndExtension = function() {
       if ($scope.extensionAsString.length > 0 && $scope.transferExtension) {
         return $scope.annotation.term_name + ' (' + $scope.extensionAsString + ')';
       } else {
-        return $scope.annotation.term_name;
+        return $scope.annotation.term_name + ' (no extension)';
       }
     }
 
