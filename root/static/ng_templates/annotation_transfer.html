@@ -1,7 +1,7 @@
 <div class="curs-annotation-transfer">
   <div class="modal-header">
     <h4 class="modal-title">
-      Transfer this {{annotationType.display_name}} annotation
+      Transfer {{termAndExtension()}}
       <span ng-show="annotation.feature_display_name">from
         <span ng-bind-html="annotation.feature_display_name | encodeAlleleSymbols | toTrusted"></span>
       </span>
@@ -12,12 +12,21 @@
   <div class="modal-body">
 
 
-    <div ng-if="!!otherFeatures">
+    <div ng-if="!!otherFeatures" class="curs-annotation-transfer-features">
       <multi-feature-chooser features="otherFeatures" feature-type="featureType"
                              selected-feature-ids="selectedFeatureIds">
       </multi-feature-chooser>
     </div>
 
+    <div class="curs-annotation-transfer-extension"
+         ng-if="hasExtension()">
+      <label>
+        <input type="checkbox" name="transferExtension"
+               ng-checked="transferExtension"
+               ng-click="toggleExtensionTransfer()" />
+        Transfer extension
+      </label>
+    </div>
 
     <div class="modal-footer">
       <button class="btn btn-warning" ng-click="cancel()">Cancel</button>

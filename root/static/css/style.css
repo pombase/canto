@@ -1704,3 +1704,12 @@ a:not([href]) {
   margin: 2px 2px 2px 0;
   display: inline-block;
 }
+
+.curs-annotation-transfer-features {
+  max-height: 70vh;
+  overflow-y: scroll;
+}
+
+.curs-annotation-transfer-extension {
+  margin-top: 1.5em;
+}

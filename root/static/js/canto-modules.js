@@ -7046,6 +7046,15 @@ var annotationTransferDialogCtrl =
     $scope.featureType = null;
     $scope.otherFeatures = null;
     $scope.selectedFeatureIds = [];
+    $scope.transferExtension = true;
+    $scope.extensionAsString = extensionAsString($scope.annotation.extension, true, true);
+    $scope.termAndExtension = function() {
+      if ($scope.extensionAsString.length > 0 && $scope.transferExtension) {
+        return $scope.annotation.term_name + ' (' + $scope.extensionAsString + ')';
+      } else {
+        return $scope.annotation.term_name;
+      }
+    }
 
     $scope.annotationTypePromise = AnnotationTypeConfig.getByName($scope.annotationTypeName);
 
@@ -7084,13 +7093,25 @@ var annotationTransferDialogCtrl =
       });
 
 
+    $scope.toggleExtensionTransfer = function() {
+      $scope.transferExtension = !$scope.transferExtension;
+    };
+
+    $scope.hasExtension = function() {
+      return $scope.extensionAsString.length > 0;
+    };
+
     $scope.canTransfer = function() {
-      return $scope.selectedFeatureIds.length > 0
+      return $scope.selectedFeatureIds.length > 0;
     }
 
     $scope.ok = function () {
       var annotationCopy = {};
       copyObject($scope.annotation, annotationCopy);
+
+      if (!$scope.transferExtension) {
+        annotationCopy.extension = [];
+      }
 
       $.map($scope.selectedFeatureIds,
             function(newId) {
