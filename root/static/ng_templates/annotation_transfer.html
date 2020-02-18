@@ -20,7 +20,7 @@
     </div>
 
     <div class="curs-annotation-transfer-extension"
-         ng-if="hasExtension()">
+         ng-if="!!otherFeatures && hasExtension()">
       <label>
         <input type="checkbox" name="transferExtension"
                ng-checked="transferExtension"
