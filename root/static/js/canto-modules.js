@@ -7036,9 +7036,10 @@ canto.controller('AnnotationEditDialogCtrl',
 
 
 var annotationTransferDialogCtrl =
-  function ($scope, $uibModal, $uibModalInstance, AnnotationProxy,
+  function ($scope, $uibModal, $uibModalInstance, $q,
+            AnnotationProxy,
             AnnotationTypeConfig, CursGenotypeList, CursGeneList,
-            Curs, toaster, args) {
+            CantoConfig, Curs, toaster, args) {
     $scope.currentFeatureDisplayName = args.currentFeatureDisplayName;
     $scope.annotation = args.annotation;
     $scope.annotationTypeName = args.annotation.annotation_type;
@@ -7058,34 +7059,47 @@ var annotationTransferDialogCtrl =
     }
 
     $scope.annotationTypePromise = AnnotationTypeConfig.getByName($scope.annotationTypeName);
+    $scope.alleleTypesPromise = CantoConfig.get('allele_types');
 
-    function filterFeatures(features) {
+    function filterFeatures(features, alleleTypes) {
       return $.grep(features, function(feature) {
+        if ($scope.featureType === 'genotype' && feature.alleles.length == 1) {
+          var allele = feature.alleles[0];
+          var alleleType = alleleTypes[allele['type']];
+          if (alleleType && alleleType['do_not_annotate']) {
+            return false;
+          }
+        }
+
         return feature.feature_id != $scope.annotation.feature_id;
       });
     }
 
-    $scope.annotationTypePromise
-      .then(function (annotationType) {
+    $q.all([$scope.annotationTypePromise, $scope.alleleTypesPromise])
+      .then(function (results) {
+        var annotationType = results[0];
+        var alleleTypes = results[1];
+
         $scope.annotationType = annotationType;
         $scope.featureType = annotationType.feature_type;
 
         if ($scope.featureType === 'gene') {
           CursGeneList.geneList().then(function (results) {
-            $scope.otherFeatures = filterFeatures(results);
+            $scope.otherFeatures = filterFeatures(results, null);
           }).catch(function (err) {
             toaster.pop('note', "couldn't read the gene list from the server");
           });
         } else {
           if ($scope.featureType === 'genotype') {
-            CursGenotypeList.cursGenotypeList().then(function (results) {
-              $scope.otherFeatures = filterFeatures(results);
-            }).catch(function (err) {
-              toaster.pop('note', "couldn't read the genotype list from the server");
-            });
+            CursGenotypeList.cursGenotypeList({include_allele: 1})
+              .then(function (results) {
+                $scope.otherFeatures = filterFeatures(results, alleleTypes);
+              }).catch(function (err) {
+                toaster.pop('note', "couldn't read the genotype list from the server");
+              });
           } else {
             Curs.list('metagenotype').then(function (results) {
-              $scope.otherFeatures = filterFeatures(results);
+              $scope.otherFeatures = filterFeatures(results, null);
             }).catch(function (err) {
               toaster.pop('note', "couldn't read the metagenotype list from the server");
             });
@@ -7152,9 +7166,10 @@ var annotationTransferDialogCtrl =
   };
 
 canto.controller('AnnotationTransferDialogCtrl',
-  ['$scope', '$uibModal', '$uibModalInstance', 'AnnotationProxy',
+  ['$scope', '$uibModal', '$uibModalInstance', '$q',
+   'AnnotationProxy',
    'AnnotationTypeConfig', 'CursGenotypeList', 'CursGeneList',
-   'Curs', 'toaster', 'args',
+   'CantoConfig', 'Curs', 'toaster', 'args',
     annotationTransferDialogCtrl
   ]);
 
