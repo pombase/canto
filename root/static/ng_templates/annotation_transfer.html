@@ -2,7 +2,9 @@
   <div class="modal-header">
     <h4 class="modal-title">
       Transfer this {{annotationType.display_name}} annotation
-      <span ng-show="annotation.feature_display_name">from {{annotation.feature_display_name}}</span>
+      <span ng-show="annotation.feature_display_name">from
+        <span ng-bind-html="annotation.feature_display_name | encodeAlleleSymbols | toTrusted"></span>
+      </span>
       to:
     </h4>
   </div>

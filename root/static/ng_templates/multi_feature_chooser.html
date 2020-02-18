@@ -5,7 +5,7 @@
       <input type="checkbox" name="selectedFeatureIds[]"
              ng-checked="selectedFeatureIds.indexOf(featurere.feature_id) > -1"
              ng-click="toggleSelection(feature.feature_id)" />
-      {{feature.display_name}}
+      <span ng-bind-html="feature.display_name | encodeAlleleSymbols | toTrusted"></span>
     </label>
   </div>
 
