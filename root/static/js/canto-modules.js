@@ -7061,10 +7061,9 @@ var annotationTransferDialogCtrl =
         if ($scope.featureType === 'gene') {
           CursGeneList.geneList().then(function (results) {
             $scope.otherFeatures = filterFeatures(results);
-          })
-            .catch(function (err) {
-              toaster.pop('note', "couldn't read the gene list from the server");
-            });
+          }).catch(function (err) {
+            toaster.pop('note', "couldn't read the gene list from the server");
+          });
         } else {
           if ($scope.featureType === 'genotype') {
             CursGenotypeList.cursGenotypeList().then(function (results) {
