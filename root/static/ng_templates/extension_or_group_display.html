@@ -1,5 +1,5 @@
 <span>
-  <span ng-repeat="andGroup in orGroup">
+  <span ng-repeat="andGroup in orGroup track by $index">
     <span ng-hide="isHiddenRelName(andGroup.relation)"
           class="curs-extension-relation">{{andGroup.relation}}</span>
     <span ng-if="andGroup.rangeType == '%'">
