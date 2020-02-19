@@ -143,7 +143,7 @@ File formats
 
   If $0 is called using "canto_docker" the JSON file can be read from the
   "/import_export".  eg.
-     ./canto/script/canto_docker /import_export/session_data.json curator@pombase.org 4896
+     ./canto/script/canto_docker /import_export/session_data.json curator\@pombase.org 4896
 
 |;
 
