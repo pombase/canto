@@ -142,7 +142,14 @@ CREATE INDEX organism_idx1 ON organism (organism_id);
 CREATE TABLE strain (
        strain_id integer NOT NULL PRIMARY KEY,
        organism_id integer NOT NULL REFERENCES organism (organism_id),
-       strain_name text NOT NULL
+       strain_name text NOT NULL,
+       strain_abbreviation text
+       sraing);
+
+CREATE TABLE strainsynonym (
+       strainsynonym_id integer NOT NULL PRIMARY KEY,
+       strain_id integer NOT NULL REFERENCES strain (strain_id),
+       synonym text NOT NULL
 );
 
 CREATE TABLE organismprop (

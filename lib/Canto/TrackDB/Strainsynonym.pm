@@ -1,12 +1,12 @@
 use utf8;
-package Canto::TrackDB::Strain;
+package Canto::TrackDB::Strainsynonym;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-Canto::TrackDB::Strain
+Canto::TrackDB::Strainsynonym
 
 =cut
 
@@ -18,97 +18,74 @@ use MooseX::NonMoose;
 use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-=head1 TABLE: C<strain>
+=head1 TABLE: C<strainsynonym>
 
 =cut
 
-__PACKAGE__->table("strain");
+__PACKAGE__->table("strainsynonym");
 
 =head1 ACCESSORS
 
-=head2 strain_id
+=head2 strainsynonym_id
 
   data_type: 'integer'
   is_auto_increment: 1
   is_nullable: 0
 
-=head2 organism_id
+=head2 strain_id
 
   data_type: 'integer'
   is_foreign_key: 1
   is_nullable: 0
 
-=head2 strain_name
+=head2 synonym
 
   data_type: 'text'
   is_nullable: 0
 
-=head2 strain_abbreviation
-
-  data_type: 'text
-       sraing'
-  is_nullable: 1
-
 =cut
 
 __PACKAGE__->add_columns(
-  "strain_id",
+  "strainsynonym_id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-  "organism_id",
+  "strain_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "strain_name",
+  "synonym",
   { data_type => "text", is_nullable => 0 },
-  "strain_abbreviation",
-  { data_type => "text\n       sraing", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
 
 =over 4
 
-=item * L</strain_id>
+=item * L</strainsynonym_id>
 
 =back
 
 =cut
 
-__PACKAGE__->set_primary_key("strain_id");
+__PACKAGE__->set_primary_key("strainsynonym_id");
 
 =head1 RELATIONS
 
-=head2 organism
+=head2 strain
 
 Type: belongs_to
 
-Related object: L<Canto::TrackDB::Organism>
+Related object: L<Canto::TrackDB::Strain>
 
 =cut
 
 __PACKAGE__->belongs_to(
-  "organism",
-  "Canto::TrackDB::Organism",
-  { organism_id => "organism_id" },
+  "strain",
+  "Canto::TrackDB::Strain",
+  { strain_id => "strain_id" },
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
-=head2 strainsynonyms
 
-Type: has_many
-
-Related object: L<Canto::TrackDB::Strainsynonym>
-
-=cut
-
-__PACKAGE__->has_many(
-  "strainsynonyms",
-  "Canto::TrackDB::Strainsynonym",
-  { "foreign.strain_id" => "self.strain_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2020-02-24 22:15:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:esROuu5ImyEsVgiad4rLmw
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2020-02-24 22:11:27
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XWh0jUe3t7dytsMLNNmH7A
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
