@@ -1685,8 +1685,6 @@ sub delete_genotype
       };
     }
   } catch {
-    warn "$_";
-
     $curs_schema->txn_rollback();
 
     chomp $_;
