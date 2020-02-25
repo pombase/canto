@@ -109,6 +109,11 @@ sub _get_metadata
       $known_as, $accepted_date, $community_curated) =
     $curator_manager->current_curator($ret{canto_session});
 
+  my @all_curators = $curator_manager->session_curators($ret{canto_session});
+
+  $ret{initial_curator_email} = $all_curators[0]->[0];
+  $ret{initial_curator_name} = $all_curators[0]->[1];
+
   $ret{curator_name} = $current_submitter_name;
   $ret{curator_email} = $current_submitter_email;
   $ret{curator_role} = $community_curated ? 'community' : $config->{database_name};
