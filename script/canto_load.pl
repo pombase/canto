@@ -272,7 +272,7 @@ if ($do_strains) {
 
     next if $line =~ /^\s*$/;
 
-    my ($taxonid, $common_name, $strain_description) = split (/,/, $line);
+    my ($taxonid, $common_name, $strain_description, $abbreviation) = split (/,/, $line);
 
     if ($taxonid !~ /^\d+$/) {
       $guard->{inactivated} = 1;
@@ -289,7 +289,15 @@ if ($do_strains) {
       die qq(load failed - no organism with taxon ID "$taxonid" found in the database\n);
     }
 
-    $load_util->get_strain($organism, $strain_description);
+    my $strain = $load_util->get_strain($organism, $strain_description);
+
+    if (defined $abbreviation) {
+      $strain->strain_abbreviation($abbreviation);
+    } else {
+      $strain->strain_abbreviation(undef);
+    }
+
+    $strain->update();
   }
 
   $guard->commit unless $dry_run;
