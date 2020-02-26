@@ -348,7 +348,7 @@ sub delete_curs
   $curs->delete();
 
   my $db_file_name = Canto::Curs::make_long_db_file_name($config, $curs_key);
-  unlink $db_file_name or die "couldn't delete session $curs_key: $!";
+  unlink $db_file_name or warn "couldn't delete session $curs_key: $!";
 
   my @suffices = qw(journal wal shm);
   for my $suffix (@suffices) {
