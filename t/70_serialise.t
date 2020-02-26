@@ -337,6 +337,8 @@ my $full_expected_curation_session =
       session_created_timestamp => '2012-02-15 13:45:00',
       curator_email => 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org',
       curator_name => 'Some Testperson',
+      initial_curator_email => 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org',
+      initial_curator_name => 'Some Testperson',
       curator_role => 'community',
       curation_accepted_date => '2012-02-15 13:45:00',
       %extra_curs_statuses,
