@@ -880,6 +880,12 @@ class_info:
     community_curatable_publications:
       extends: pub
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Curatable') and pub_id in (select pub from curs_curator cc join curs on curs_id = cc.curs join person on person.person_id = cc.curator join cvterm role on person.role = role.cvterm_id and role.name <> 'admin')"
+    publications_with_a_community_session:
+      extends: pub
+      constraint: "pub_id in (select pub from curs_curator cc join curs on curs_id = cc.curs join person on person.person_id = cc.curator join cvterm role on person.role = role.cvterm_id and role.name <> 'admin')"
+    uncuratable_publications_with_a_community_session:
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name <> 'Curatable') and pub_id in (select pub from curs_curator cc join curs on curs_id = cc.curs join person on person.person_id = cc.curator join cvterm role on person.role = role.cvterm_id and role.name <> 'admin')"
     curated_publications:
       extends: pub
       constraint: "pub_id in (select pub from curs where curs_id in (select curs from cursprop p, cvterm t where t.cvterm_id = p.type and t.name = 'annotation_status' and (p.value = 'NEEDS_APPROVAL' or p.value = 'APPROVAL_IN_PROGRESS' or p.value ='APPROVED')))"
@@ -1228,8 +1234,10 @@ reports:
                 - report: triage_phenotype_screen_publications
             - report: curatable_low_priority_publications
             - report: community_curatable_publications
+            - report: publications_with_a_community_session
             - report: uncuratable_publications
               children:
+                - report: uncuratable_publications_with_a_community_session
                 - report: triage_sequence_feature_or_region_publications
                   children:
                     - report: triage_browser_datasets_to_host
