@@ -855,9 +855,17 @@ sub create_sessions_from_json
   # load the publication in batches in advance
   PubmedUtil::load_by_ids($config, $self->schema(), [keys %$sessions_data], 'admin_load');
 
+  my $success = 0;
+  my ($curs, $cursdb, $pub) = ();
+
  PUB:
   while (my ($pub_uniquename, $session_data) = each %$sessions_data) {
-    my ($pub, $error_message) = $self->load_pub_from_pubmed($config, $pub_uniquename);
+    $pub = undef;
+    $curs = undef;
+    $cursdb = undef;
+
+    my $error_message;
+    ($pub, $error_message) = $self->load_pub_from_pubmed($config, $pub_uniquename);
 
     if (!$pub) {
       die "can't get publication details for $pub_uniquename from PubMed:\n$error_message";
@@ -875,7 +883,7 @@ sub create_sessions_from_json
       }
     }
 
-    my ($curs, $cursdb) =
+    ($curs, $cursdb) =
       Canto::Track::create_curs($config, $self->schema(), $pub, $connect_options);
 
     push @results, $curs;
@@ -992,8 +1000,19 @@ sub create_sessions_from_json
       }
     }
 
-    print "created session: ", $curs->curs_key(), " pub: ", $pub->uniquename(),
-      " for: $curator_email_address\n";
+    $success = 1;
+
+  } continue {
+
+    if ($success) {
+      print "created session: ", $curs->curs_key(), " pub: ", $pub->uniquename(),
+        " for: $curator_email_address\n";
+
+      $success = 0;
+    } else {
+      print "no session created for ", $pub->uniquename(), "\n";
+      Canto::Track::delete_curs($config, $self->schema(), $curs->curs_key());
+    }
   }
 
   return @results;
