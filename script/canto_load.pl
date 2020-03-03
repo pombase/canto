@@ -7,6 +7,7 @@ use File::Basename;
 use IO::All;
 use Getopt::Long;
 use Fcntl qw(:flock);
+use Text::CSV;
 
 BEGIN {
   my $script_name = basename $0;
@@ -265,14 +266,13 @@ if ($do_strains) {
 
   open my $fh, '<', $do_strains or die "can't open $do_strains: $!";
 
-  while (defined (my $line = <$fh>)) {
-    chomp $line;
+  my $csv = Text::CSV->new({ blank_is_undef => 1 });
 
-    next if $line =~ /strain/i && $. == 1;
+  while (my $row = $csv->getline($fh)) {
 
-    next if $line =~ /^\s*$/;
+    next if lc $row->[0] eq 'ncbitaxspeciesid' && $. == 1;
 
-    my ($taxonid, $common_name, $strain_description, $abbreviation) = split (/,/, $line);
+    my ($taxonid, $common_name, $strain_description, $abbreviation, $synonyms) = @$row;
 
     if ($taxonid !~ /^\d+$/) {
       $guard->{inactivated} = 1;
@@ -298,6 +298,20 @@ if ($do_strains) {
     }
 
     $strain->update();
+
+    $strain->strainsynonyms()->delete_all();
+
+    if (defined $synonyms) {
+      map {
+        my $synonym = $_;
+        $synonym =~ s/^\s+//;
+        $synonym =~ s/\s+$//;
+        $schema->create_with_type('Strainsynonym', {
+          strain => $strain,
+          synonym => $synonym,
+        });
+      } split /,/, $synonyms;
+    }
   }
 
   $guard->commit unless $dry_run;
