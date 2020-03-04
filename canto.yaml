@@ -1301,6 +1301,11 @@ export:
       - Phylogeny and evolutionary studies
       - Cell composition or WT feature
       - Not physically mapped
+      - Transposon related
+      - Mating-type related
+      - DNA replication related
+      - DNA recombination related
+      - Mitochondrial sequence related
       - Other
 
 load:
