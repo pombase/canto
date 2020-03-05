@@ -41,6 +41,25 @@ use Moose;
 with 'Canto::Role::Configurable';
 with 'Canto::Track::TrackAdaptor';
 
+sub _strain_details {
+  my $strain = shift;
+  my $taxon_id = shift;
+
+  my $strainsynonym_rs = $strain->strainsynonyms();
+
+  my @synonyms = map {
+    $_->synonym();
+  } $strainsynonym_rs->all();
+
+  return {
+    strain_id => $strain->strain_id(),
+    strain_name => $strain->strain_name(),
+    strain_abbreviation => $strain->strain_abbreviation(),
+    synonyms => \@synonyms,
+    taxon_id => $taxon_id,
+  };
+}
+
 =head2 lookup()
 
  Usage   : my $strain_lookup = Canto::Track::get_adaptor($config, 'strain');
@@ -48,7 +67,8 @@ with 'Canto::Track::TrackAdaptor';
  Function: Lookup the strains for an organism in TrackDB
  Args    : $organism_taxonid - The NCBI taxon ID of the organism to retrieve the
                                strains for
- Return  : A list of strains in the format:
+
+Return  : A list of strains in the format:
            ( { strain_id => 101, strain_name => 'strain name one' },
              { strain_id => 102, strain_name => 'strain name two' }, ...  )
 
@@ -71,11 +91,8 @@ sub lookup
     ->search_related('strains');
 
   return map {
-    {
-      strain_id => $_->strain_id(),
-      strain_name => $_->strain_name(),
-      taxon_id => $taxonid,
-    };
+    my $strain = $_;
+    _strain_details($strain, $taxonid);
   } $rs->all()
 }
 
@@ -119,15 +136,12 @@ sub lookup_by_strain_ids
   }, { prefetch => 'organism' });
 
   return map {
+    my $strain = $_;
     my $organism = $_->organism();
 
     my $taxon_id = _get_taxon_id($organism);
 
-    {
-      strain_id => $_->strain_id(),
-      strain_name => $_->strain_name(),
-      taxon_id => $taxon_id,
-    }
+    _strain_details($strain, $taxon_id);
   } $strains_rs->all();
 }
 
@@ -159,11 +173,7 @@ sub lookup_by_strain_name
            { join => { organism => {organismprops => 'type'} } });
 
   if ($strain) {
-    return {
-      strain_id => $strain->strain_id(),
-      strain_name => $strain->strain_name(),
-      taxon_id => $taxon_id,
-    };
+    return _strain_details($strain, $taxon_id);
   } else {
     return undef;
   }
