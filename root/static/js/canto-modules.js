@@ -1362,7 +1362,7 @@ var DeleteDialogCtrl =
   function ($scope, $uibModalInstance, args) {
     $scope.heading = args.heading;
     $scope.message = args.message;
-    
+
     $scope.onDelete = function () {
       $uibModalInstance.close('delete');
     };
@@ -3370,6 +3370,7 @@ var annotationEvidence =
           var termEvCodes = [];
           var subsetIds = termData.subset_ids;
 
+          /** @type {Array<string>} */
           var newEvidenceCodes = null;
 
           function checkForRelAndTerm(relAndTerm) {
@@ -4552,7 +4553,7 @@ var strainSelectorCtrl = function ($scope, CantoGlobals) {
   function computeStyleClass(className) {
     return className === undefined ? 'form-control' : className;
   }
-  
+
   $scope.$watch('strains', function () {
     if ($scope.strains && $scope.strains.length === 1) {
       $scope.data.selectedStrain = $scope.strains[0];
@@ -9299,7 +9300,7 @@ var summaryPageGeneList = function (CantoGlobals) {
         }
         return roles;
       }
-      
+
       function removeEmptyRoles(roles, groups) {
         return roles.filter(function(r) {
           return groups[r].length > 0;
