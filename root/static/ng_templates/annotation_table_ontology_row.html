@@ -122,7 +122,7 @@
       <div>
         <a title="Edit this annotation" ng-click="edit()">Edit</a>
       </div>
-      <div>
+      <div ng-if="showTransferLink">
         <a title="{{'Copy this annotation to other ' + annotationType.feature_type + 's'}}"
            ng-click="transferAnnotation()">Transfer</a>
       </div>
