@@ -1,9 +1,9 @@
 <div class="curs-annotation-transfer">
   <div class="modal-header">
     <h4 class="modal-title">
-      Transfer "{{termAndExtension()}}"
-      <span ng-show="annotation.feature_display_name">from
-        <span ng-bind-html="annotation.feature_display_name | encodeAlleleSymbols | toTrusted"></span>
+      Transfer <span ng-if="annotation.term_name">"{{termAndExtension()}}"</span>
+      <span ng-show="featureDisplayName">from
+        <span ng-bind-html="featureDisplayName | encodeAlleleSymbols | toTrusted"></span>
       </span>
       to:
     </h4>

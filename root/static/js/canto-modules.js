@@ -7091,11 +7091,20 @@ var annotationTransferDialogCtrl =
     $scope.transferExtension = true;
     $scope.extensionAsString = extensionAsString($scope.annotation.extension, true, true);
 
+    $scope.chooseFeatureType = null;
+
+    $scope.featureDisplayName =
+      $scope.annotation.feature_display_name || $scope.annotation.feature_a_display_name;
+
     $scope.termAndExtension = function() {
-      if ($scope.extensionAsString.length > 0 && $scope.transferExtension) {
-        return $scope.annotation.term_name + ' (' + $scope.extensionAsString + ')';
+      if ($scope.annotation.term_name) {
+        if ($scope.extensionAsString.length > 0 && $scope.transferExtension) {
+          return $scope.annotation.term_name + ' (' + $scope.extensionAsString + ')';
+        } else {
+          return $scope.annotation.term_name + ' (no extension)';
+        }
       } else {
-        return $scope.annotation.term_name + ' (no extension)';
+        return null;
       }
     }
 
@@ -7104,7 +7113,7 @@ var annotationTransferDialogCtrl =
 
     function filterFeatures(features, alleleTypes) {
       return $.grep(features, function(feature) {
-        if ($scope.featureType === 'genotype' && feature.alleles.length == 1) {
+        if ($scope.chooseFeatureType === 'genotype' && feature.alleles.length == 1) {
           var allele = feature.alleles[0];
           var alleleType = alleleTypes[allele['type']];
           if (alleleType && alleleType['do_not_annotate']) {
@@ -7138,11 +7147,21 @@ var annotationTransferDialogCtrl =
 
         $scope.annotationType = annotationType;
         $scope.featureType = annotationType.feature_type;
+        $scope.chooseFeatureType = annotationType.feature_type;
+ 
+        if (annotationType.category === 'interaction' &&
+            annotationType.feature_type !== 'gene') {
+          $scope.chooseFeatureType = 'genotype';
+        }
 
-        if ($scope.featureType === 'gene') {
-          $scope.getGeneFeatures();
+        if ($scope.chooseFeatureType === 'gene') {
+          CursGeneList.geneList().then(function (results) {
+            $scope.otherFeatures = filterFeatures(results, null);
+          }).catch(function (err) {
+            toaster.pop('note', "couldn't read the gene list from the server");
+          });
         } else {
-          if ($scope.featureType === 'genotype') {
+          if ($scope.chooseFeatureType === 'genotype') {
             CursGenotypeList.cursGenotypeList({include_allele: 1})
               .then(function (results) {
                 $scope.otherFeatures = filterFeatures(results, alleleTypes);
@@ -7150,11 +7169,8 @@ var annotationTransferDialogCtrl =
                 toaster.pop('note', "couldn't read the genotype list from the server");
               });
           } else {
-            Curs.list('metagenotype').then(function (results) {
-              $scope.otherFeatures = filterFeatures(results, null);
-            }).catch(function (err) {
-              toaster.pop('note', "couldn't read the metagenotype list from the server");
-            });
+            toaster.pop('error', "annotation transfer not available for this " +
+                        "annotation type");
           }
         }
       });
@@ -7182,7 +7198,13 @@ var annotationTransferDialogCtrl =
 
       $.map($scope.selectedFeatureIds,
             function(newId) {
-              annotationCopy.feature_id = newId;
+              if ($scope.annotationType.category === 'ontology' ||
+                  $scope.annotationType.category === 'interaction' &&
+                  $scope.annotationType.feature_type !== 'metagenotype') {
+                annotationCopy.feature_id = newId;
+              } else {
+                annotationCopy.genotype_a_id = newId;
+              }
 
               loadingStart();
               var q = AnnotationProxy.newAnnotation(annotationCopy);
@@ -7691,6 +7713,7 @@ var annotationTableRow =
         $scope.interactionFeatureType = null;
         $scope.showInteractionTermColumns = false;
         $scope.hasWildTypeHost = false;
+        $scope.showTransferLink = false;
 
         CursSessionDetails.get()
           .then(function (sessionDetails) {
@@ -7770,6 +7793,7 @@ var annotationTableRow =
                 $scope.interactionFeatureType = 'genotype';
               }
             }
+            $scope.showTransferLink = annotationType.allow_annotation_transfer;
           });
 
         CantoConfig.get('instance_organism').then(function (results) {
