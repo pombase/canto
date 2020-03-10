@@ -122,12 +122,14 @@ for (my $i = 0; $i < @ARGV; $i++) {
   }
 }
 
-if (!defined $port) {
+if (!defined $port && !defined $ENV{SERVER_STARTER_PORT}) {
   $port = 5000;
   push @ARGV, '--port', $port;
 }
 
 $runner->parse_options(@ARGV);
 
-print "\rStarting Canto server on port $port\n";
+if (!defined $ENV{SERVER_STARTER_PORT}) {
+  print "\rStarting Canto server on port $port\n";
+}
 $runner->run($app);
