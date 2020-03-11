@@ -56,4 +56,6 @@ And stop with
   /etc/init.d/canto stop
 ```
 
+For troubleshooting, a log file is written to `/var/canto-space/canto.log`.
+
 Canto will now start automatically when the machine/VM reboots.
