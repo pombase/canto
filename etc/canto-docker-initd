@@ -20,14 +20,14 @@ case "$action" in
     (date; cd $CANTO_SPACE; canto/script/canto_docker --non-interactive start_server --pid-file=/$PID_PATH --port $port -- script/canto_start --workers $WORKERS --keepalive-timeout 5 -s Starman --preload) > canto.log 2>&1 &
     ;;
   stop)
-    pid=`/bin/cat $CANTO_SPACE/import_export/$PID_PATH`
+    pid=`/bin/cat $CANTO_SPACE/$PID_PATH`
     echo stopping $pid
-    kill -TERM $pid
+    (cd $CANTO_SPACE; docker exec canto kill -TERM $pid)
     ;;
   restart)
-    pid=`/bin/cat $CANTO_SPACE/import_export/$PID_PATH`
+    pid=`/bin/cat $CANTO_SPACE/$PID_PATH`
     echo restarting $pid
-    kill -HUP $pid
+    (cd $CANTO_SPACE; docker exec canto kill -HUP $pid)
     ;;
   *)
     echo "Usage: $0 {start|restart|stop}"
