@@ -2,7 +2,7 @@
 
 This assumes you have an existing, initialised `canto-space` directory at
 `/var/canto-space`.  See the
-main Canto documentation](https://curation.pombase.org/docs/canto_admin/installation)
+[main Canto documentation](https://curation.pombase.org/docs/canto_admin/installation)
 for details.
 
 On your server you'll need to install this script somewhere:
