@@ -116,8 +116,15 @@ sub get_subset_data
   my %range_subsets_to_store = ();
   my %exclude_subsets_to_store = ();
 
+  my %seen_subset_rels = ();
+
   for my $conf (@conf) {
-    $domain_subsets_to_store{$conf->{domain}} = $conf->{subset_rel};
+    my $conf_subset_rels = $conf->{subset_rel};
+    map {
+      $seen_subset_rels{$_} = 1;
+    } @$conf_subset_rels;
+
+    $domain_subsets_to_store{$conf->{domain}} = $conf_subset_rels;
 
     if ($conf->{exclude_subset_ids}) {
       map {
@@ -158,6 +165,10 @@ eg. "is_a(GO:0055085)"];
     my ($subject, $rel_type, $depth, $object) = @$result;
 
     $rel_type =~ s/^OBO_REL://;
+
+    if (!$seen_subset_rels{$rel_type}) {
+      next;
+    }
 
     if ($domain_subsets_to_store{$object} &&
         grep { $_ eq $rel_type } @{$domain_subsets_to_store{$object}}) {
