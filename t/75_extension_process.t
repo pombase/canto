@@ -48,7 +48,7 @@ $subset_process->process_subset_data($track_schema, $subset_data);
 
 my $after_cvtermprop_count = $prop_rs->count();
 
-is ($after_cvtermprop_count, 61);
+is ($after_cvtermprop_count, 55);
 
 sub get_subset_props
 {
@@ -123,14 +123,6 @@ my @expected_subset_props =
       'is_a(GO:0034762)'
     ],
     [
-      'negative regulation of transmembrane transport',
-      'negatively_regulates(GO:0055085)'
-    ],
-    [
-      'negative regulation of transmembrane transport',
-      'regulates(GO:0055085)'
-    ],
-    [
       'nucleocytoplasmic transporter activity',
       'is_a(GO:0005215)'
     ],
@@ -141,14 +133,6 @@ my @expected_subset_props =
     [
       'positive regulation of transmembrane transport',
       'is_a(GO:0034762)'
-    ],
-    [
-      'positive regulation of transmembrane transport',
-      'positively_regulates(GO:0055085)'
-    ],
-    [
-      'positive regulation of transmembrane transport',
-      'regulates(GO:0055085)'
     ],
     [
       'protein modification',
@@ -169,10 +153,6 @@ my @expected_subset_props =
     [
       'regulation of transmembrane transport',
       'is_a(GO:0034762)'
-    ],
-    [
-      'regulation of transmembrane transport',
-      'regulates(GO:0055085)'
     ],
     [
       'rich medium',
@@ -197,10 +177,6 @@ my @expected_subset_props =
     [
       'transmembrane transporter activity',
       'is_a(GO:0022857)'
-    ],
-    [
-      'transmembrane transporter activity',
-      'part_of(GO:0055085)'
     ],
     [
       'transport',
