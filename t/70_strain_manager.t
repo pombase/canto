@@ -21,7 +21,6 @@ my $track_organism = $track_schema->resultset('Organism')->first();
 
 my $track_strain_1 = $track_schema->resultset('Strain')
   ->create({ strain_name => 'track strain name 1', strain_id => 1001,
-             strain_abbreviation => 'tsn1',
              organism_id => $track_organism->organism_id() });
 $track_schema->resultset('Strainsynonym')
   ->create({ strain => $track_strain_1, synonym => 'track_strain_1_syn' });
@@ -72,7 +71,6 @@ cmp_deeply($strain_res,
                'strain_id' => 1001,
                'taxon_id' => 4896,
                'strain_name' => 'track strain name 1',
-               'strain_abbreviation' => 'tsn1',
                'synonyms' => ['track_strain_1_syn'],
              }
            ]);
@@ -110,7 +108,6 @@ cmp_deeply($strain_res,
                'strain_id' => 1001,
                'taxon_id' => 4896,
                'strain_name' => 'track strain name 1',
-               'strain_abbreviation' => 'tsn1',
                'synonyms' => ['track_strain_1_syn'],
              },
            ]);
@@ -136,7 +133,6 @@ cmp_deeply($strain_res,
                'strain_id' => 1001,
                'taxon_id' => 4896,
                'strain_name' => 'track strain name 1',
-               'strain_abbreviation' => 'tsn1',
                'synonyms' => ['track_strain_1_syn'],
              },
            ]);
@@ -162,7 +158,6 @@ cmp_deeply($strain_res,
                'strain_id' => 1001,
                'taxon_id' => 4896,
                'strain_name' => 'track strain name 1',
-               'strain_abbreviation' => 'tsn1',
                'synonyms' => ['track_strain_1_syn'],
              },
            ]);
@@ -191,7 +186,6 @@ cmp_deeply($strain_res,
                'strain_id' => 1001,
                'taxon_id' => 4896,
                'strain_name' => 'track strain name 1',
-               'strain_abbreviation' => 'tsn1',
                'synonyms' => ['track_strain_1_syn'],
              },
            ]);

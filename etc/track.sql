@@ -143,7 +143,6 @@ CREATE TABLE strain (
        strain_id integer NOT NULL PRIMARY KEY,
        organism_id integer NOT NULL REFERENCES organism (organism_id),
        strain_name text NOT NULL,
-       strain_abbreviation text
        sraing);
 
 CREATE TABLE strainsynonym (

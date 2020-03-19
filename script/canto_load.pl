@@ -272,7 +272,7 @@ if ($do_strains) {
 
     next if lc $row->[0] eq 'ncbitaxspeciesid' && $. == 1;
 
-    my ($taxonid, $common_name, $strain_description, $abbreviation, $synonyms) = @$row;
+    my ($taxonid, $common_name, $strain_description, $synonyms) = @$row;
 
     if ($taxonid !~ /^\d+$/) {
       $guard->{inactivated} = 1;
@@ -290,14 +290,6 @@ if ($do_strains) {
     }
 
     my $strain = $load_util->get_strain($organism, $strain_description);
-
-    if (defined $abbreviation) {
-      $strain->strain_abbreviation($abbreviation);
-    } else {
-      $strain->strain_abbreviation(undef);
-    }
-
-    $strain->update();
 
     $strain->strainsynonyms()->delete_all();
 

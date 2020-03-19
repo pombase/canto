@@ -21,9 +21,6 @@ if (!$test_organism) {
 $load_util->get_strain($test_organism, 'strain 1');
 my $strain_2 = $load_util->get_strain($test_organism, 'strain 2');
 
-$strain_2->strain_abbreviation('str2');
-$strain_2->update();
-
 for my $i (1..2) {
   $schema->create_with_type('Strainsynonym', {
     strain => $strain_2,
@@ -36,11 +33,11 @@ my $strain_lookup = Canto::Track::StrainLookup->new(config => $test_util->config
 my @result_strains = $strain_lookup->lookup(4932);
 
 my $strain_1_expected = {
-  strain_id => 1, strain_name => 'strain 1', strain_abbreviation => undef,
+  strain_id => 1, strain_name => 'strain 1',
   synonyms => [], taxon_id => 4932,
 };
 my $strain_2_expected = {
- strain_id => 2, strain_name => 'strain 2', strain_abbreviation => 'str2',
+ strain_id => 2, strain_name => 'strain 2',
  synonyms => ['str2-syn-1', 'str2-syn-2'],
  taxon_id => 4932,
 };

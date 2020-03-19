@@ -54,7 +54,6 @@ sub _strain_details {
   return {
     strain_id => $strain->strain_id(),
     strain_name => $strain->strain_name(),
-    strain_abbreviation => $strain->strain_abbreviation(),
     synonyms => \@synonyms,
     taxon_id => $taxon_id,
   };
