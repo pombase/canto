@@ -871,6 +871,13 @@ sub create_sessions_from_json
       die "can't get publication details for $pub_uniquename from PubMed:\n$error_message";
     }
 
+    my $curs_rs = $pub->curs();
+
+    if ($curs_rs->count() > 0) {
+      print "$pub_uniquename already has a session - skipping\n";
+      next PUB;
+    }
+
     my @gene_lookup_results = ();
 
     for my $gene_uniquename (@{$session_data->{genes}}) {
@@ -1011,7 +1018,9 @@ sub create_sessions_from_json
       $success = 0;
     } else {
       print "no session created for ", $pub->uniquename(), "\n";
-      Canto::Track::delete_curs($config, $self->schema(), $curs->curs_key());
+      if (defined $curs) {
+        Canto::Track::delete_curs($config, $self->schema(), $curs->curs_key());
+      }
     }
   }
 
