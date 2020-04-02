@@ -112,7 +112,7 @@ sub parse {
         if (/:/) {
           push @new_ontology_range_scope, $_;
         } else {
-          if (lc $_ eq 'number') {
+          if (/^(Number|TaxonID|HostTaxonID|PathogenTaxonID)$/i) {
             if (!grep { $_->{type} eq 'Number'} @new_range_bits) {
               push @new_range_bits, {
                 type => 'Number',
