@@ -168,6 +168,8 @@ sub get_annotation_table_tsv
     die qq|no configuration for annotation type "$annotation_type_name"\n|;
   }
 
+  my $ontology_lookup = Canto::Track::get_adaptor($config, 'ontology');
+
   my ($completed_count, $annotations_ref, $columns_ref);
 
   try {
@@ -227,7 +229,20 @@ sub get_annotation_table_tsv
   for my $annotation (@annotations) {
     next unless $annotation->{completed};
 
+
+    my $extension_string = '';
+    my @extra_qualifiers = ();
+
     try {
+
+    if (defined $annotation->{extension}) {
+      my $qualifier_list;
+
+      ($extension_string, $qualifier_list) =
+        Canto::Curs::ExtensionData::as_strings($ontology_lookup, $annotation->{extension});
+
+      @extra_qualifiers = @$qualifier_list;
+    }
 
     $results .= join "\t", map {
       my $column_name = $_;
@@ -251,20 +266,19 @@ sub get_annotation_table_tsv
       }
 
       if ($column_name eq 'qualifiers') {
+        my @quals = ();
+
         if (defined $val) {
-          $val = join(",", @$val);
-        } else {
-          $val = '';
+          @quals = @$val;
         }
+
+        push @quals, @extra_qualifiers;
+
+        $val = join(",", @quals);
       }
 
       if ($column_name eq 'extension') {
-        if (defined $val) {
-          my $extension_obj = Canto::Curs::ExtensionData->new(structure => $val);
-          $val = $extension_obj->as_string();
-        } else {
-          $val = '';
-        }
+        $val = $extension_string;
       }
 
       if (!defined $val) {

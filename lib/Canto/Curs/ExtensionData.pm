@@ -36,21 +36,82 @@ under the same terms as Perl itself.
 =cut
 
 use Moose;
+use feature "state";
 
-has structure => (isa => 'ArrayRef[ArrayRef[HashRef]]',
-                  is => 'rw');
 
-sub as_string
+=head2 as_strings
+
+ Usage   : ($extension_string, $qualifier_list) =
+              $extension_data->as_strings($ontology_lookup, $extension_obj);
+ Function: Return a string representation of the qualifiers from an annotation
+           for exporting to a GAF file.  Also returns any has_qualifier()
+           extensions as text in the $qualifier_list.  eg. has_qualifier(PBHQ:002)
+           is returned as "NOT" and is removed from the extension string.
+ Args    : None
+
+=cut
+
+sub as_strings
 {
-  my $self = shift;
+  my $ontology_lookup = shift;
+  my $extension_obj = shift;
 
-  return join '|', map {
+  state $term_cache = {};
+
+  my $lookup = sub {
+    my $termid = shift;
+
+    if (defined $term_cache->{$termid}) {
+      return $term_cache->{$termid}
+    }
+
+    my $res = $ontology_lookup->lookup_by_id(id => $termid);
+
+    if (!defined $res) {
+      die "failed to find term details for id: $termid\n";
+    }
+
+    $term_cache->{$termid} = $res->{name};
+
+    return $term_cache->{$termid};
+  };
+
+  my @quals = ();
+
+  my $ext_string = join '|', map {
     my @part = @$_;
+
+    my @filtered_part = grep {
+      if ($_->{relation} eq 'has_qualifier') {
+        my $termid = $_->{rangeValue};
+
+        my $qual_string;
+
+        if ($termid =~ /:/) {
+          # eg. PBHQ:002
+          $qual_string = $lookup->($termid);
+        } else {
+          # eg. "contributes_to"
+          $qual_string = $termid;
+        }
+
+        if (!grep {
+          $_ eq $qual_string;
+        } @quals) {
+          push @quals, $qual_string;
+        }
+        0;
+      } else {
+        1;
+      }
+    } @part;
 
     join ',', map {
       $_->{relation} . '(' . $_->{rangeValue} . ')';
-    } @part;
-  } @{$self->{structure}};
+    } @filtered_part;
+  } @{$extension_obj};
+
+  return ($ext_string, \@quals);
 }
 
 1;
