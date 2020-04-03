@@ -44,6 +44,39 @@ with 'Canto::Role::Configurable';
 with 'Canto::Role::Exporter';
 with 'Canto::Role::GAFFormatter';
 
+sub _get_cursprops
+{
+  my $curs = shift;
+
+  my $rs = $curs->cursprops();
+  my @ret = ();
+
+  while (defined (my $prop = $rs->next())) {
+    push @ret, {
+      type => $prop->type()->name(),
+      value => $prop->value(),
+    };
+  }
+
+  return \@ret;
+}
+
+sub _get_cursprop
+{
+  my $curs = shift;
+  my $prop_name = shift;
+
+  my $props = _get_cursprops($curs);
+
+  for my $prop (@$props) {
+    if ($prop->{type} eq $prop_name) {
+      return $prop->{value};
+    }
+  }
+
+  return undef;
+}
+
 =head2 export
 
  Usage   : my ($count, $gaf) = $exporter->export($config);
@@ -65,20 +98,34 @@ sub export
   my $track_schema = $self->track_schema();
 
   my $annotation_type = $self->parsed_options()->{annotation_type};
+  my $dump_approved = $self->parsed_options()->{dump_approved};
 
   if (!defined $annotation_type) {
     die "needs --annotation-type=... option\n";
   }
 
+  my $exported_count = 0;
+  my $result = '';
+
   my $proc = sub {
     my $curs = shift;
     my $curs_schema = shift;
 
+    if ($dump_approved) {
+      my $curs_status = _get_cursprop($curs, 'annotation_status');
+
+      return unless defined $curs_status && $curs_status eq 'APPROVED';
+    }
+
+    $exported_count++;
+
     my $gaf = $self->get_annotation_table_tsv($config, $curs_schema, $annotation_type);
 
-    print $gaf if length $gaf > 0;
+    $result .= $gaf if length $gaf > 0;
   };
 
   Canto::Track::curs_map($config, $track_schema, $proc);
+
+  return ($exported_count, $result);
 }
 1;
