@@ -164,6 +164,9 @@ sub get_annotation_table_tsv
 
   my $annotation_type = $config->{annotation_types}->{$annotation_type_name};
 
+  if (!defined $annotation_type) {
+    die qq|no configuration for annotation type "$annotation_type_name"\n|;
+  }
 
   my ($completed_count, $annotations_ref, $columns_ref);
 
