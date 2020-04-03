@@ -454,7 +454,7 @@ sub lookup_by_name
 
 =head2 lookup_by_id
 
- Usage   : my $result = $lookup->lookup_by_id(id => $term_name);
+ Usage   : my $result = $lookup->lookup_by_id(id => $termid);
  Function: Return the detail of the with the given id
  Args    : id - the id to search for
            include_children - include data about the child terms (default: 0)
