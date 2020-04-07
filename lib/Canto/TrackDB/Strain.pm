@@ -43,11 +43,6 @@ __PACKAGE__->table("strain");
   data_type: 'text'
   is_nullable: 0
 
-=head2 sraing
-
-  data_type: (empty string)
-  is_nullable: 1
-
 =cut
 
 __PACKAGE__->add_columns(
@@ -57,8 +52,6 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "strain_name",
   { data_type => "text", is_nullable => 0 },
-  "sraing",
-  { data_type => "", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -106,8 +99,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2020-03-19 14:09:41
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:wODQQFeePlqecjCaYhKleg
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2020-04-07 14:01:02
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:89unetGNDP8AnWgf7VvoUQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
