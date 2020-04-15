@@ -266,7 +266,7 @@ if ($do_strains) {
 
   open my $fh, '<', $do_strains or die "can't open $do_strains: $!";
 
-  my $csv = Text::CSV->new({ blank_is_undef => 1 });
+  my $csv = Text::CSV->new({ blank_is_undef => 1, binary => 1, auto_diag => 1  });
 
   while (my $row = $csv->getline($fh)) {
 
