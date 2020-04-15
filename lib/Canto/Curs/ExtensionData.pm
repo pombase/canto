@@ -78,7 +78,11 @@ sub as_strings
 
   my @quals = ();
 
-  my $ext_string = join '|', map {
+  my $ext_string = join '|',
+    grep {
+      length s/^\s+$//r > 0;
+    }
+    map {
     my @part = @$_;
 
     my @filtered_part = grep {
