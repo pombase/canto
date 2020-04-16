@@ -1,0 +1,10 @@
+<!-- FLAGS: static_page use_bootstrap -->
+
+<div class="clearall"></div>
+
+<%args>
+$rendered_markdown_html
+</%args>
+
+<% $rendered_markdown_html |n %>
+

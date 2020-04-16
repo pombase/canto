@@ -49,6 +49,8 @@ instance_front_path: /docs/instance_front
 canto_front_path: /docs/canto_front
 help_path: /docs/index
 
+base_docs_path: docs
+
 # if zero, the user will need to log in before the links on the front page are
 # visible
 public_mode: 0

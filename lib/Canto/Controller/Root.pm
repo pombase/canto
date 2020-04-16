@@ -238,7 +238,11 @@ sub local : Global('local')  # local, Global, local ... oh dear
 =cut
 sub docs : Global('docs')
 {
-  _do_local_and_docs('docs', @_);
+  my ($self, $c) = @_;
+
+  my $base_docs_path = $c->config()->{base_docs_path};
+
+  _do_local_and_docs($base_docs_path, @_);
 }
 
 =head2 account

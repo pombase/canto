@@ -1,0 +1,123 @@
+<!-- PAGE_TITLE: Curating Genetic Interactions -->
+<!-- FLAGS: use_bootstrap -->
+
+<p>
+If you have genetic interactions to curate, please read the
+Directionality section carefully.
+</p>
+<p>
+When you choose 'Genetic interaction', a popup appears with two
+pulldown menus and a text field for optional comments.
+</p>
+<p>
+Choose an evidence type from the first pulldown menu. Some
+evidence types have a brief description that indicates the
+directionality. Further information on evidence supporting genetic
+interactions is available an the <a
+href="http://wiki.thebiogrid.org/doku.php/experimental_systems#genetic_interactions">BioGRID
+help wiki</a> and in the Directionality section below.
+</p>
+<p>
+Choose the interacting gene from the second pulldown menu. Click 'OK'
+to finish the annotation and close the popup.
+</p>
+<p>
+Note that only pairwise genetic interactions can be annotated in
+Canto. 
+</p>
+
+<h3>Directionality</h3>
+<p>
+Some genetic interactions have an inherent directionality. For
+example, overexpression of one gene (A) may suppress the phenotype of
+a mutation in a second gene (B), but overexpressing gene B may have no
+effect on a mutant gene A phenotype.
+</p>
+
+<p>
+For such "asymmetric" interactions, Canto allows you to curate in only
+one direction starting from the gene you have selected, as indicated
+in the evidence selector. If the evidence description looks the wrong
+way around, you can finish and then edit the annotation, or change
+genes and start again.
+</p>
+
+<p>
+In Canto, genetic interactions follow BioGRID conventions, in which
+the starting gene is known as "interactor A" or the "bait". The second
+gene, which you choose in the pulldown, is called "interactor B", the
+"hit", or the "prey".
+</p>
+<table class="table table-striped table-bordered table-condensed">
+  <thead>
+    <tr>
+      <th>Evidence</th>
+      <th>Relationship between Interactor A (bait) and Interactor B (prey)</th>
+    </tr>
+  </thead>
+  <tr>
+    <td>Synthetic Rescue</td>
+    <td>synthetically rescued by</td>
+  </tr>
+  <tr>
+    <td>Dosage Growth Defect</td>
+    <td>growth defect in presence of overexpressed</td>
+  </tr>
+  <tr>
+    <td>Dosage Lethality</td>
+    <td>inviable in presence of overexpressed</td>
+  </tr>
+  <tr>
+    <td>Dosage Rescue</td>
+    <td>rescued by overexpression of</td>
+  </tr>
+  <tr>
+    <td>Phenotypic Enhancement</td>
+    <td>phenotype enhanced by</td>
+  </tr>
+  <tr>
+    <td>Phenotypic Suppression</td>
+    <td>rescued by</td>
+  </tr>
+</table>
+
+<p>
+If you have done the experiment in both directions, you should curate
+two annotations to describe the interaction completely. Curate
+starting from one gene, then switch genes to annotate the reciprocal
+experiment.
+</p>
+<p>
+Other interactions are "symmetric" and therefore only need to be
+entered once, and you can start from either of the interacting
+genes. Symmetric genetic interactions in Canto:
+</p>
+
+<table class="table table-striped table-bordered table-condensed">
+  <thead>
+    <tr>
+      <th>Evidence</th>
+      <th>Relationship between gene A and gene B</th>
+    </tr>
+  </thead>
+  <tr>
+    <td>Negative Genetic</td>
+    <td>negative genetic interaction with</td>
+  </tr>
+  <tr>
+    <td>Positive Genetic</td>
+    <td>positive genetic interaction with</td>
+  </tr>
+  <tr>
+    <td>Synthetic Growth Defect</td>
+    <td>synthetic growth defect with</td>
+  </tr>
+  <tr>
+    <td>Synthetic Haploinsufficiency</td>
+    <td>synthetic haploinsufficient with</td>
+  </tr>
+  <tr>
+    <td>Synthetic Lethality</td>
+    <td>synthetic lethal with</td>
+  </tr>
+</table>
