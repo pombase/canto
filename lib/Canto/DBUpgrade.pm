@@ -799,6 +799,24 @@ CREATE TABLE allele_note (
 
     Canto::Track::update_all_statuses($config);
   },
+
+  33 => sub {
+    my $config = shift;
+    my $track_schema = shift;
+    my $load_util = shift;
+
+    my $dbh = $track_schema->storage()->dbh();
+
+    $dbh->do("
+CREATE TABLE strainsynonym (
+       strainsynonym_id integer NOT NULL PRIMARY KEY,
+       strain_id integer NOT NULL REFERENCES strain (strain_id),
+       synonym text NOT NULL
+);
+");
+
+    $dbh->do("ALTER TABLE strain ADD COLUMN strain_abbreviation text;");
+  },
 );
 
 sub upgrade_to

@@ -1,5 +1,5 @@
-NcbiTaxSpeciesId,CommonName,StrainCultivar
-3702,thale cress,Columbia Col-0
+NcbiTaxSpeciesId,CommonName,StrainCultivar,Synonyms
+3702,thale cress,Columbia Col-0,"col-0,columbia-0,colcol-0"
 9606,human,CFBE41o cells
 9606,human,16HBE14o cells
 9606,human,A549 cells

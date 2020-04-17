@@ -1,4 +1,4 @@
-NcbiTaxSpeciesId,CommonName,Strains
+NcbiTaxSpeciesId,SpeciesCommonName,StrainName,Synonyms
 746128,Aspergillus fumigatus,237
 746128,Aspergillus fumigatus,293.1
 746128,Aspergillus fumigatus,A1160

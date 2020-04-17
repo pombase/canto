@@ -275,6 +275,7 @@ sub _get_strains
     my $strain_details = $_;
     my $strain_res = $results_by_strain_id{$_->{strain_id}};
     $strain_res->{strain_name} = $strain_details->{strain_name};
+    $strain_res->{synonyms} = $strain_details->{synonyms};
     push @return_list, $strain_res;
   } $strain_lookup->lookup_by_strain_ids(keys %results_by_strain_id);
 
