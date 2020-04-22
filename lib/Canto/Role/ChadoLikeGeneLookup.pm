@@ -68,12 +68,17 @@ sub build_gene_constraint
   }
 
   return map {
-    {
+    my @ret = ({
       $uniquename_key => $_
-    },
-    {
-      $name_key => $_
+    });
+
+    if ($self->config()->{gene_lookup}->{query_by_name}) {
+      push @ret, {
+        $name_key => $_
+      }
     }
+
+    @ret;
   } @_;
 }
 

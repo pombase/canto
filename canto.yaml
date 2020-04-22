@@ -2258,6 +2258,10 @@ chado:
     evidence_codes_to_ignore:
       - TAS
 
+gene_lookup:
+# in Chado and TrackDB lookups, query by name as well as ID if this is 1/true:
+  query_by_name: 1
+
 curator_manager:
   accept_hooks:
 # call with args: $config, $track_schema, $curs
