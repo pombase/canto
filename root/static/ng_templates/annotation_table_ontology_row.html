@@ -1,6 +1,8 @@
 <tr ng-class="{ 'curs-row-checked' : sessionState == 'APPROVAL_IN_PROGRESS' && checked == 'yes' }">
   <td ng-if="multiOrganismMode && annotationType.feature_type !== 'metagenotype'">
-    <span class="organism-name">{{annotation.organism.scientific_name | abbreviateGenus}}</span><span class="curs-strain-name-inline" ng-if="showStrain"> ({{annotation.strain_name}})</span>
+    <span class="organism-name" ng-if="annotation.organism">{{annotation.organism.scientific_name | abbreviateGenus}}</span>
+    <span class="organism-name" ng-if="!annotation.organism">{{annotation.taxonid | abbreviateGenus}}</span>
+    <span class="curs-strain-name-inline" ng-if="showStrain"> ({{annotation.strain_name}})</span>
   </td>
   <td ng-if="annotationType.feature_type == 'genotype'">
     <div style="white-space: nowrap" ng-repeat="locus in displayLoci">

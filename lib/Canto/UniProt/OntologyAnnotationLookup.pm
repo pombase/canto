@@ -72,8 +72,16 @@ sub _cached_lookup
     $config->{webservices}->{quickgo_annotation_lookup_url} . $pub_uniquename;
 
   my $ua = LWP::UserAgent->new;
+  $ua->default_header('Accept', 'text/gaf');
   my $res = $ua->get($url);
+
+  if (!$res->is_success) {
+    warn $res->status_line;
+  }
+
   my $content = $res->decoded_content();
+
+  my $organism_lookup = Canto::Track::get_adaptor($config, 'organism');
 
   my %ontology_name_lookup = (C => 'cellular_component',
                               P => 'biological_process',
@@ -122,10 +130,6 @@ sub _cached_lookup
 
     next unless $returned_ontology_name eq $wanted_ontology_name;
 
-    my @ids = split (/\|/, $prodsyn);
-
-    my $entry_name = $ids[0];
-
     (my $taxonid = $prodtaxa) =~ s/taxon://;
 
     my $term_name = '';
@@ -136,10 +140,18 @@ sub _cached_lookup
       $term_name = $result->{name};
     }
 
+    my $gene_name;
+
+    if ($prodsymbol && length $prodsymbol > 0) {
+      $gene_name = $prodsymbol . " ($prodacc)";
+    } else {
+      $gene_name = undef;
+    }
+
     push @ret, {
       gene => {
         identifier => $prodacc,
-        name => $entry_name,
+        name => $gene_name,
         organism_taxonid => $taxonid,
       },
       ontology_term => {

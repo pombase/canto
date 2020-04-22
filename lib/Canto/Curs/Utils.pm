@@ -838,6 +838,7 @@ sub _process_existing_db_ontology
   my $config = shift;
   my $curs_schema = shift;
   my $ontology_lookup = shift;
+  my $organism_lookup = shift;
   my $row = shift;
 
   my $feature = $row->{gene} // $row->{genotype};
@@ -940,6 +941,7 @@ sub _process_existing_db_ontology
     $ret{gene_product} = $gene->{product} || '';
     $ret{gene_id} = $gene_id;
     $ret{taxonid} = $gene->{organism_taxonid};
+    $ret{organism} = $organism_lookup->lookup_by_taxonid($ret{taxonid});
     $ret{with_or_from_identifier} = $with_or_from_identifier;
     $ret{with_or_from_display_name} = $with_or_from_identifier;
     $ret{with_gene_id} = $with_gene_id;
@@ -1009,6 +1011,8 @@ sub get_existing_ontology_annotations
     Canto::Track::get_adaptor($config, 'ontology');
   my $annotation_lookup =
     Canto::Track::get_adaptor($config, 'ontology_annotation');
+  my $organism_lookup =
+    Canto::Track::get_adaptor($config, 'organism');
 
   my @res = ();
 
@@ -1020,7 +1024,8 @@ sub get_existing_ontology_annotations
       $annotation_lookup->lookup($args);
 
     @res = map {
-      my $res = _process_existing_db_ontology($config, $curs_schema, $ontology_lookup, $_);
+      my $res = _process_existing_db_ontology($config, $curs_schema, $ontology_lookup,
+                                              $organism_lookup, $_);
       if (defined $res) {
         ($res);
       } else {
