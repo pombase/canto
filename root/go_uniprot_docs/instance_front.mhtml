@@ -1,0 +1,87 @@
+<!-- PAGE_TITLE: @@long_name@@ -->
+<!-- PAGE_SUBTITLE: @@instance_front_subtitle@@ -->
+<!-- FLAGS: use_bootstrap -->
+
+<div class="row" style="padding-top: 20px">
+% if ($canto_offline && !$is_admin_user) {
+<& /curs/offline_message.mhtml &>
+% } else {
+<div class="col-sm-6 col-md-6">
+<h3>Annotate your publication using GO terms</h3>
+<div style="margin-bottom: 5px">
+  <pubmed-id-start></pubmed-id-start>
+</div>
+<p>
+Once you have found your paper, you can curate GO (Molecular
+Functions, Biological Processes or Cellular Components) or reassign
+the paper to a colleague for curation.
+See the <a href="<% $c->uri_for('docs/index') %>">help pages</a> for more information.
+</p>
+</div>
+
+% }
+
+<div class="col-sm-6 col-md-6">
+<div>
+<h3><% $docs_header %></h3>
+<a href="<% $c->uri_for('/docs/') %>" class="btn btn-primary visit">Visit ...</a>
+</div>
+<div>
+Find out about community curation and the types of data that can be curated
+by viewing our help pages:
+</div>
+% if (!$config->{demo_mode}) {
+<div style="padding: 10px 0 20px 0">
+<a href="<% $demo_url %>" class="btn btn-primary visit">Demo ...</a>
+<p>
+  Or try the demo version of Canto:
+</p>
+</div>
+% }
+
+<div>
+<h3>Paper lookup</h3>
+<p>
+Search for papers you have previously curated:
+</p>
+<user-pubs-lookup initial-email-address="<% $last_submitter_email %>"></user-pubs-lookup>
+</div>
+
+</div>
+</div>
+
+% if (defined $config->{instance_front_mhtml}) {
+<div class="row"/>
+  <div class="col-sm-10 col-md-10">
+<& $config->{instance_front_mhtml} &>
+  </div>
+</div>
+% }
+
+<%init>
+my $config = $c->config();
+my $st = $c->stash();
+
+my $tool_name = $config->{name};
+
+my $current_user = $c->user();
+my $is_admin_user = 0;
+if (defined $current_user && $current_user->is_admin()) {
+  $is_admin_user = 1;
+}
+
+my $canto_offline = $config->{canto_offline};
+
+my $last_submitter_email = $c->session->{last_submitter_email};
+
+my $docs_header;
+
+if ($last_submitter_email) {
+  $docs_header = "Documentation";
+} else {
+  $docs_header = "First time curator?";
+}
+
+my $demo_url = $c->config()->{canto_demo_url};
+
+</%init>

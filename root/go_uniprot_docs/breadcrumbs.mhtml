@@ -1,0 +1,54 @@
+<div id="breadcrumbs">
+% if ($current_path =~ m|^docs/| and $current_path !~ m|docs/canto_front|) {
+  <div class="breadcrumbs-link">
+    <a id="breadcrumbs-home-link"
+       href="<% $instance_top_uri %>" title="Go to <% $instance_text %>">
+      <% $instance_text %>
+    </a>
+
+% if (@doc_path > 1) {
+  <div class="breadcrumbs-link">
+    <a href="<% $docs_uri %>" title="Go to documentation">
+      Documentation index
+    </a>
+% }
+
+% for my $path_bit (@path_link_bits) {
+    <div class="breadcrumbs-link">
+      <a href="<% $docs_uri . $path_bit->{el} %>"
+         title="<% $path_bit->{description} %>">
+        <% $path_bit->{description} %>
+% }
+
+% for my $path_bit (@path_link_bits) {
+      </a>
+    </div>
+% }
+
+% if (@doc_path > 1) {
+  </div>
+%   }
+  </div>
+% }
+</div>
+
+<%init>
+my $config = $c->config();
+my $instance_text;
+if (defined $config->{database_name}) {
+  $instance_text = $config->{database_name} . ' ' . $config->{name};
+} else {
+  $instance_text = $config->{name};
+}
+my $instance_top_uri = $c->uri_for('/');
+my $current_path = $c->req()->path();
+
+my $base_docs_path = $config->{base_docs_path};
+
+my $docs_uri = $c->uri_for("/$base_docs_path/");
+
+my @doc_path = @{$c->stash()->{doc_path}};
+my @path_link_bits = @doc_path;
+shift @path_link_bits;
+pop @path_link_bits;
+</%init>

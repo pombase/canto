@@ -1,0 +1,60 @@
+<%args>
+$title
+$show_title => 1
+$sub_title => undef
+$error => undef
+$message => undef
+$notice => undef
+$hide_header => 0
+</%args>
+
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <& head.mhtml, title => $title &>
+  </head>
+  <body ng-app="cantoApp">
+% if (!$hide_header) {
+% # hide the head on the Canto front page
+    <& header.mhtml &>
+% }
+
+<& /browser_warning.mhtml &>
+
+    <div class="container-fluid" id="content">
+      <div id="title-nav">
+<& breadcrumbs.mhtml &>
+
+% if (!$hide_header) {
+    <span class="curs-contact-page-link"><& contact.mhtml, link_text => 'Questions? Contact curators...' &></span>
+% }
+
+<& /err_mess_notice.mhtml, error => $error, message => $message, notice => $notice &>
+
+% if ($show_title && !$hide_header) {
+  <div id="curs-page-description">
+      <% $title %>
+  </div>
+%   if (defined $sub_title) {
+    <div id="canto-sub-title">
+      <% $sub_title |n %>
+    </div>
+%   }
+  </div>
+% }
+      <div class="clearall"></div>
+      <div class="docs">
+% $m->call_next;
+      </div>
+    </div>
+    <& footer.mhtml &>
+  </body>
+</html>
+
+<%init>
+my $st = $c->stash();
+</%init>
+
+<%flags>
+inherit => undef
+</%flags>
