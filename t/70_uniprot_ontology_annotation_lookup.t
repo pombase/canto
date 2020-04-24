@@ -42,7 +42,7 @@ sub _check_res
   is ($res[0]->{ontology_term}->{term_name}, 'transmembrane transporter activity');
   is ($res[0]->{ontology_term}->{ontology_name}, 'molecular_function');
   is ($res[1]->{gene}->{identifier}, 'O74473');
-  is ($res[1]->{gene}->{name}, 'CDC11_SCHPO');
+  is ($res[1]->{gene}->{name}, 'cdc11 (O74473)');
   is ($res[1]->{gene}->{organism_taxonid}, '284812');
   is ($res[1]->{publication}, 'PMID:11676915');
 }

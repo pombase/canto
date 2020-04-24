@@ -370,6 +370,13 @@ check_new_annotations($dummy_alt_id);
                'with_or_from_identifier' => 'PomBase:SPBC2G2.01c',
                'with_gene_id' => undef,
                'extension' => undef,
+               'organism' => {
+                 'pathogen_or_host' => 'unknown',
+                 'full_name' => 'Schizosaccharomyces pombe',
+                 'taxonid' => '4896',
+                 'common_name' => 'fission yeast',
+                 'scientific_name' => 'Schizosaccharomyces pombe',
+               },
             });
 }
 
@@ -415,6 +422,13 @@ check_new_annotations($dummy_alt_id);
                      }
                    ]
                  ],
+               'organism' => {
+                 'pathogen_or_host' => 'unknown',
+                 'full_name' => 'Schizosaccharomyces pombe',
+                 'taxonid' => '4896',
+                 'common_name' => 'fission yeast',
+                 'scientific_name' => 'Schizosaccharomyces pombe'
+               },
            });
 }
 

@@ -808,6 +808,13 @@ cmp_deeply($annotation_res,
                     }
                   ]
                 ],
+               'organism' => {
+                 'pathogen_or_host' => 'unknown',
+                 'full_name' => 'Schizosaccharomyces pombe',
+                 'taxonid' => '4896',
+                 'common_name' => 'fission yeast',
+                 'scientific_name' => 'Schizosaccharomyces pombe',
+               },
             },
             {
               'evidence_code' => 'IMP',
@@ -833,6 +840,13 @@ cmp_deeply($annotation_res,
               'with_gene_id' => undef,
               'taxonid' => '4896',
               'extension' => undef,
+              'organism' => {
+                'pathogen_or_host' => 'unknown',
+                'full_name' => 'Schizosaccharomyces pombe',
+                'taxonid' => '4896',
+                'common_name' => 'fission yeast',
+                'scientific_name' => 'Schizosaccharomyces pombe',
+              },
             },
             {
               'term_ontid' => 'FYPO:0000133',
