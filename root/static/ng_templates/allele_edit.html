@@ -214,7 +214,7 @@
               <input ng-model="alleleData.expression" name="curs-allele-expression" id="allele-edit-null-expression"
                      type="radio" value="Null" />
             </div>
-            <div ng-show="alleleData.type !== 'wild type'">
+            <div ng-show="pathogenHostMode || alleleData.type !== 'wild type'">
               <label for="allele-edit-not-assayed">Not assayed</label>
               <input ng-model="alleleData.expression" name="curs-allele-expression" id="allele-edit-not-assayed"
                      type="radio" value="Not assayed" />
