@@ -5,6 +5,8 @@ use warnings;
 use Carp;
 use File::Basename;
 
+use open ':std', ':encoding(UTF-8)';
+
 use Getopt::Long qw(:config require_order);
 
 BEGIN {
