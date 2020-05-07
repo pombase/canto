@@ -77,14 +77,39 @@ box will pop up where you can add allele details:
     <b>Allele type</b>: choose an allele type in the dropdown
     menu. For some types, e.g. partial deletions or substitution,
     further specifications are needed, and in these cases an example
-    will be displayed in the box in grey text. Number nucleotide
-    positions starting with the "A" of the initiator ATG for
-    protein-coding genes. (Note that mutations in promoter regions can
-    also be specified by prefixing the numbers with a minus "-" sign.)
-    If the specific mutations are not known choose "unknown". If the
-    alterations are complex (for instance, a mixture of insertions,
-    point mutations, etc.), choose "other" and describe the changes in
-    free text.
+    will be displayed in the box in grey text. To specify positions:
+    <ol>
+      <li>
+	Number amino acid residues starting at the initiator
+	methionine for all proteins <b>except</b> histones. For
+	histones, residue numbering assumes that the initiator
+	methionine is removed.
+      </li>
+      <li>
+	For protein-coding genes, number nucleotide positions starting
+	with the "A" of the initiator ATG, and exclude introns. (See
+	below for how to describe changes in intron sequences.)
+	Mutations in promoter regions can be specified by prefixing
+	the numbers with a minus "-" sign.
+      </li>
+      <li> 
+	For non-coding RNA genes, number nucleotide positions starting
+	from the annotated 5' end of hte mature transcript, i.e. again
+	exclude introns. See below for how to describe changes in
+	intron sequences.
+      </li>
+      <li>
+	For changes in intron sequences, count nucleotide residues
+	from the starting point as described above, enter the
+	resulting position number(s), and include the suffix
+	"primary_transcript" (e.g. G234A-primary_transcript for a
+	substitution, 456-555-primary_transcript for a deletion, or
+	188-TTCC-primary_transcript for an insertiorn).
+      </li>
+    </ol>
+    If the specific mutations are not known choose "unknown". If none
+    of the available allele types fits, choose "other" and describe
+    the changes in free text.
   </li>
   <li>
     <b>Expression level</b>: You will be prompted to define the
