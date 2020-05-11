@@ -150,7 +150,8 @@ annotation extension addition steps.
 </p>
 
 <div>
-  <img src="<% $c->uri_for('/static/images/docs/ext_edit_button.png') %>" alt="button to edit annotation extensions"/>
+  <img src="<% $c->uri_for($image_path . '/go_ext_edit_button.png') %>" alt="button to edit annotation extensions"/>
+
 </div>
 
 <p>
@@ -160,7 +161,7 @@ FYPO):
 </p>
 
 <div>
-  <img src="<% $c->uri_for('/static/images/docs/edit_ext.png') %>" alt="Annotation extension editing interface"/>
+  <img src="<% $c->uri_for($image_path . '/edit_go_ext.png') %>" alt="Annotation extension editing interface"/>
 </div>
 
 <h2>Specific branches of GO</h2>

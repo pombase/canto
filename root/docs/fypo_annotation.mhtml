@@ -432,7 +432,7 @@ annotation extension addition steps.
 </p>
 
 <div>
-  <img src="<% $c->uri_for('/static/images/docs/ext_edit_button.png') %>" alt="button to edit annotation extensions"/>
+  <img src="<% $c->uri_for('/static/images/docs/fypo_ext_edit_button.png') %>" alt="button to edit annotation extensions"/>
 </div>
 
 <p>
@@ -441,7 +441,7 @@ one. Editing interface ("protein mislocalized to nucleus" example):
 </p>
 
 <div>
-  <img src="<% $c->uri_for('/static/images/docs/edit_ext.png') %>" alt="Annotation extension editing interface"/>
+  <img src="<% $c->uri_for('/static/images/docs/edit_fypo_ext.png') %>" alt="Annotation extension editing interface"/>
 </div>
 
 
