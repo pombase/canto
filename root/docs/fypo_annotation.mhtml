@@ -120,7 +120,8 @@ box will pop up where you can add allele details:
     protein), choose "Not assayed", even if a construct such as an
     inducible promoter was used to try to alter expression. If a
     wild-type allele was investigated in the absence of any other
-    changes, then an altered expression level must be set.
+    changes, then we strongly recommend setting an altered expression
+    level.
   </li>
   <li>
     <b>Descriptions for "unknown" alleles</b>: If you know the
