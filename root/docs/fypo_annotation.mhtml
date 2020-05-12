@@ -78,7 +78,7 @@ box will pop up where you can add allele details:
     menu. For some types, e.g. partial deletions or substitution,
     further specifications are needed, and in these cases an example
     will be displayed in the box in grey text. To specify positions:
-    <ol>
+    <ul>
       <li>
 	Number amino acid residues starting at the initiator
 	methionine for all proteins <b>except</b> histones. For
@@ -106,7 +106,7 @@ box will pop up where you can add allele details:
 	substitution, 456-555-primary_transcript for a deletion, or
 	188-TTCC-primary_transcript for an insertiorn).
       </li>
-    </ol>
+    </ul>
     If the specific mutations are not known choose "unknown". If none
     of the available allele types fits, choose "other" and describe
     the changes in free text.
