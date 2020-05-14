@@ -110,8 +110,11 @@ requires 'Net::Server::SS::PreFork' => 0.05;
 requires 'Server::Starter' => 0.32;
 requires 'Capture::Tiny' => 0.44;
 requires 'Carp::Always' => 0.13;
+requires 'Catalyst::Plugin::Session::State::Cookie';
+requires 'Encode::Locale';
+requires 'LWP::Protocol::PSGI';
+requires 'Data::Dump::Streamer';
 
-test_requires 'LWP::Protocol::PSGI';
 test_requires 'LWP::Protocol::https';
 test_requires 'MooseX::Test::Role' => 0.07;
 test_requires 'Test::Deep' => 1.123;
@@ -119,6 +122,9 @@ test_requires 'Test::Exception' => 0.43;
 test_requires 'Test::MockObject' => 1.20150527;
 test_requires 'Test::More' => 1.302056;
 test_requires 'Web::Scraper' => 0.38;
+test_requires 'IPC::System::Simple';
+test_requires 'Mouse';
+test_requires 'Readonly';
 
 catalyst;
 
