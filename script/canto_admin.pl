@@ -5,6 +5,8 @@ use warnings;
 use Carp;
 use feature ':5.10';
 
+use Try::Tiny;
+
 use File::Basename;
 use Getopt::Long;
 
@@ -22,6 +24,7 @@ use lib qw(lib);
 use Canto::Config;
 use Canto::TrackDB;
 use Canto::Track;
+use Canto::Track::TrackUtil;
 use Canto::Meta::Util;
 
 
@@ -30,10 +33,12 @@ if (!@ARGV) {
 }
 
 my $refresh_gene_cache = undef;
+my $rename_strain = undef;
 my $dry_run = 0;
 my $do_help = 0;
 
 my $result = GetOptions ("refresh-gene-cache" => \$refresh_gene_cache,
+                         "rename-strain" => \$rename_strain,
                          "dry-run|d" => \$dry_run,
                          "help|h" => \$do_help);
 
@@ -49,8 +54,12 @@ sub usage
 
   die qq|${message}usage:
   $0 --refresh-gene-cache
-This option will update all the name and synonyms for all genes cached by
-UniProt::GeneLookup.
+  This option will update all the name and synonyms for all genes cached by
+  UniProt::GeneLookup.
+
+  $0 --rename-strain taxonid old_name new_name
+  Rename a strain in <taxonid> from <old_name> to <new_name>
+
 |;
 }
 
@@ -69,6 +78,11 @@ if (!Canto::Meta::Util::app_initialised($app_name, $suffix)) {
     "script\n";
 }
 
+if ($rename_strain && @ARGV != 3) {
+  warn "Error: --rename-strain needs three arguments\n\n";
+  usage();
+}
+
 my $config = Canto::Config::get_config();
 my $schema = Canto::TrackDB->new(config => $config);
 
@@ -81,6 +95,20 @@ my $proc = sub {
     Canto::Track::refresh_gene_cache($config, $schema);
 
     $exit_flag = 0;
+  }
+  if (defined $rename_strain) {
+    my $util = Canto::Track::TrackUtil->new(config => $config, schema => $schema);
+
+    my $taxonid = shift @ARGV;
+    my $old_name = shift @ARGV;
+    my $new_name = shift @ARGV;
+
+    try {
+      $util->rename_strain($taxonid, $old_name, $new_name);
+      $exit_flag = 0;
+    } catch {
+      warn "rename failed: $_\n";
+    };
   }
 };
 
