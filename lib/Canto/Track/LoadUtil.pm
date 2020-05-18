@@ -858,6 +858,9 @@ sub create_sessions_from_json
   my $success = 0;
   my ($curs, $cursdb, $pub) = ();
 
+  my $triage_status_cv = $self->find_cv('Canto publication triage status');
+  my $curation_priority_cv = $self->find_cv('Canto curation priorities');
+
  PUB:
   while (my ($pub_uniquename, $session_data) = each %$sessions_data) {
     $pub = undef;
@@ -1009,6 +1012,25 @@ sub create_sessions_from_json
 
     $success = 1;
 
+    my $triage_status = $session_data->{triage_status};
+
+    if ($triage_status) {
+      my $triage_status_cvterm = $self->find_cvterm(cv => $triage_status_cv,
+                                                    name => $triage_status);
+
+      $pub->triage_status($triage_status_cvterm);
+      $pub->update();
+    }
+
+    my $curation_priority = $session_data->{curation_priority};
+
+    if ($curation_priority) {
+      my $curation_priority_cvterm = $self->find_cvterm(cv => $curation_priority_cv,
+                                                        name => $curation_priority);
+
+      $pub->curation_priority($curation_priority_cvterm);
+      $pub->update();
+    }
   } continue {
 
     if ($success) {
