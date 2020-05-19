@@ -849,6 +849,9 @@ class_info:
           editable: 1
         - name: curator
           editable: 1
+    strain:
+      class_display_name: Strain
+      editable: 0
     gene:
       editable: 1
       display_field: primary_identifier
