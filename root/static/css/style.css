@@ -1426,6 +1426,8 @@ a.curs-editable-table-field img, a.curs-editable-table-long-field img
 
 .screenshot {
   border: 1px solid black;
+  max-width: 600px;
+  margin-bottom: 10px;
 }
 
 /* Hide AngularJS stuff on startup */
