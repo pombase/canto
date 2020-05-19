@@ -167,12 +167,13 @@ sub create_curs_db
   my $curatable_cvterm =
     $track_schema->resultset('Cvterm')->find({ name => $curatable_name });
 
-  if (!defined $curatable_cvterm) {
-    croak "Can't find Cvterm with name '$curatable_name'";
+  if (defined $curatable_cvterm) {
+    $pub->triage_status($curatable_cvterm);
+    $pub->update();
+  } else {
+    warn "Can't find Cvterm with name '$curatable_name' - not setting curation " .
+      "status for ", $curs->curs_key(), "\n";
   }
-
-  $pub->triage_status($curatable_cvterm);
-  $pub->update();
 
   my $state = Canto::Curs::State->new(config => $config);
   $state->store_statuses($curs_schema);
