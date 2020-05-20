@@ -28,14 +28,14 @@ Annotate genes
 <div class="curs-front-page-gene-table">
 %   if (@gene_hashes) {
 <& /curs/front_gene_table.mhtml, gene_hashes => \@gene_hashes &>
-%   } else {
+%   }
+</div>
+% }
+%   if ($no_genes) {
   <div class="no-genes-message">
     [No genes]
   </div>
 %   }
-</div>
-% }
-
 % }
   <div style="margin-top: 20px;">
 % if (!$read_only_curs) {
@@ -120,6 +120,8 @@ my @organisms_and_genes = @{$service_utils->list_for_service('organism')};
 
 use Clone qw(clone);
 
+my $no_genes = 1;
+
 my @gene_hashes_by_organism =
   sort {
     if ($a->{organism}->{pathogen_or_host} && $b->{organism}->{pathogen_or_host}) {
@@ -137,6 +139,10 @@ my @gene_hashes_by_organism =
     } @{$organism->{genes}};
 
     delete $organism->{genes};
+
+    if (@gene_hashes) {
+      $no_genes = 0;
+    }
 
     {
       organism => $organism,
