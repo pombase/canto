@@ -57,7 +57,8 @@
 <li>Search for the author assigned gene name/primary name (e.g. Tri5) or synonyms, plus species name (e.g <em>Fusarium graminearum</em>).</li>
 <li>If the gene does not have a ‘given name’ but a locus ID is provided, search using the locus_id (e.g. FGRRES_03537) plus species name (e.g. <em>Fusarium graminearum</em>). If the entry identifier used is not the reference strain, copy the protein sequence and go to the BLAST step below.</li>
 <li>Search on a protein description (e.g. Trichodiene synthase)</li>
-<li>Obtain the protein sequence for your gene of interest and BLAST against UniprotKB (<a href="https://www.uniprot.org/blast/">https://www.uniprot.org/blast/</a>) with your protein sequence. If there are multiple entries for your gene product from the reference strain, please select the ‘Reviewed entry’. Use the left hand filter for ‘Reviewed entries’.</li>
+<li>Obtain the protein sequence for your gene of interest and BLAST against UniprotKB (<a href="https://www.uniprot.org/blast/">https://www.uniprot.org/blast/</a>) with your protein sequence. \
+<strong>Note:</strong> If there are multiple entries for your gene product from the reference strain, please select the ‘Reviewed entry’. Use the left hand filter for ‘Reviewed entries’.</li>
 <li>If the gene cannot be located in UniProt, contact the authors, UniProt, or PHI-base for help locating the canonical database entry.</li>
 <li><strong>Add the entry into PHI-Canto.</strong> Once the entry of interest is located, select the entry accession number (also called ‘Entry’) from column 1 of the results table, and use this to retrieve the entry into PHI-Canto on the gene entry page. Be careful not to confuse the ‘Entry' column with the ‘Entry name' column. PHI-Canto uses the accession number to retrieve details (such as the gene name, gene product, and organism). If PHI-Canto is unable to find your entry, check for typos (e.g. 0 for O), ensure you are using the ‘entry’ not ‘entry name’, and check that your accession is from UniProtKB, not UniParc.</li>
 </ul>
@@ -105,11 +106,11 @@
 <p>Annotations in PHI-Canto are divided into three types: gene annotations, genotype annotations, and metagenotype annotations. Follow the links below for specific instructions.</p>
 <h3>Gene annotations</h3>
 <ul>
-<li><strong>GO molecular function</strong>: A molecular function is a catalytic (e.g. protein serine/threonine kinase activity, pyruvate carboxylase activity) or binding activity, or any other activity that occurs at the molecular level.</li>
-<li><strong>GO biological process</strong>: A biological process is a series of events accomplished by one or more ordered assemblies of molecular functions, such as cell cycle regulation, ion transport, or signal transduction.</li>
-<li><strong>GO cellular component</strong>: Cellular components include subcellular structures and macromolecular complexes, such as nucleus, nuclear inner membrane, nuclear pore, and proteasome complex.</li>
-<li><strong>protein modification</strong>: A protein modification is a covalent modification or other change that alters the measured molecular mass of a peptide or protein amino acid residue.</li>
-<li><strong>physical interaction</strong>: Examples: co-purification, two-hybrid, affinity capture.</li>
+<li><strong><a href="go_annotation">GO molecular function</a></strong>: A molecular function is a catalytic (e.g. protein serine/threonine kinase activity, pyruvate carboxylase activity) or binding activity, or any other activity that occurs at the molecular level.</li>
+<li><strong><a href="go_annotation">GO biological process</a></strong>: A biological process is a series of events accomplished by one or more ordered assemblies of molecular functions, such as cell cycle regulation, ion transport, or signal transduction.</li>
+<li><strong><a href="go_annotation">GO cellular component</a></strong>: Cellular components include subcellular structures and macromolecular complexes, such as nucleus, nuclear inner membrane, nuclear pore, and proteasome complex.</li>
+<li><strong><a href="modification_annotation">protein modification</a></strong>: A protein modification is a covalent modification or other change that alters the measured molecular mass of a peptide or protein amino acid residue.</li>
+<li><strong><a href="physical_interaction_annotation">physical interaction</a></strong>: Examples: co-purification, two-hybrid, affinity capture.</li>
 </ul>
 <h3>Genotype annotations</h3>
 <p>See the <a href="genotypes">Creating alleles and genotypes</a> documentation for instructions on creating genotypes.</p>
