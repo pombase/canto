@@ -7230,7 +7230,7 @@ function startTransfer($uibModal, annotation, currentFeatureDisplayName) {
   var transferInstance = $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/annotation_transfer.html',
     controller: 'AnnotationTransferDialogCtrl',
-    title: 'Transfer annotation from ' . currentFeatureDisplayName,
+    title: 'Transfer annotation from: ' + currentFeatureDisplayName,
     animate: false,
     size: 'lg',
     resolve: {
