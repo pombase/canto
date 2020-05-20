@@ -43,7 +43,7 @@ $hide_header => 0
   </div>
 % }
       <div class="clearall"></div>
-      <div class="docs">
+      <div class="docs phi-base-docs">
 % $m->call_next;
       </div>
     </div>
