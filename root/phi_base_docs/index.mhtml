@@ -1,6 +1,5 @@
 <!-- PAGE_TITLE: @@name@@ Documentation -->
 <!-- FLAGS: use_bootstrap -->
-<div class="docs">
 <h1>Getting started</h1>
 <h2>Finding a publication</h2>
 <p>To start a curation session in Canto, enter the PubMed ID of your chosen publication in the search box on the left of the page. Note that the ‘PMID:’ prefix is optional.</p>
@@ -143,7 +142,6 @@
 </div>
 </div>
 <p>After you click ‘Finish’, you will not be able to make any further changes to your session. However, you can view the annotations in the session at any time. If you need to make any further changes to your curation session after submission, please contact the PHI-Canto curation team.</p>
-</div>
 <%init>
 my $config = $c->config();
 my $base_docs_path = $config->{base_docs_path};

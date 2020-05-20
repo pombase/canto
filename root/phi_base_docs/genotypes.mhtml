@@ -1,6 +1,5 @@
 <!-- PAGE_TITLE: @@name@@ Documentation -->
 <!-- FLAGS: use_bootstrap -->
-<div class="docs">
 <h1>Creating alleles and genotypes</h1>
 <h2>Pathogen or Host Genotype Management</h2>
 <p>The Genotype Management pages are used to create genotypes containing one or more alleles. To start creating genotypes, follow the ‘Pathogen genotype management’ link or the ‘Host genotype management’ link from the curation summary page, depending on whether you want to create genotypes for a pathogen or a host.</p>
@@ -125,7 +124,6 @@
 <p><strong>View phenotype annotations: </strong>show a details page for the selected metagenotype, plus any phenotype annotations associated with the metagenotype. You can edit, copy and edit, or delete phenotype annotations on this page. New phenotype annotations can be created by following the link in the ‘Actions’ section.</p>
 <p>(Please note that it is not possible to edit the selected metagenotype from the Metagenotype Details page. Edits can only be made to the pathogen or host parts of the metagenotype by using the Genotype Management pages.)</p>
 <p><strong>Delete:</strong> delete the selected metagenotype. The action is disabled for any metagenotype that has phenotype annotations. To delete a metagenotype with annotations, first delete the annotations (you can view the annotations with the ‘View phenotype annotations’ link, or by returning to the curation summary page).</p>
-</div>
 <%init>
 my $config = $c->config();
 my $base_docs_path = $config->{base_docs_path};
