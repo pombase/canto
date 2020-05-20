@@ -5194,7 +5194,7 @@ function editNotesDialog($uibModal, allele, readOnly) {
     controller: 'AlleleNotesEditDialogCtrl',
     title: 'Edit new note',
     animate: false,
-    //    size: 'lg',
+    size: 'lg',
     resolve: {
       args: function () {
         return {

@@ -10,7 +10,7 @@
   <div class="modal-body">
     <div ng-repeat="noteTypeConf in noteTypes">
       <div class="allele-note-type">{{noteTypeConf.display_name}}:</div>
-      <textarea class="form-control" type="text" cols="60" rows="3" ng-readonly="readOnly"
+      <textarea class="form-control" type="text" cols="80" rows="4" ng-readonly="readOnly"
                 name="{{noteTypeConf.name}}" ng-model="data.notes[noteTypeConf.name]">
       </textarea>
     </div>
