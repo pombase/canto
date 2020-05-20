@@ -1426,8 +1426,10 @@ a.curs-editable-table-field img, a.curs-editable-table-long-field img
 
 .screenshot {
   border: 1px solid black;
-  max-width: 600px;
   margin-bottom: 10px;
+}
+.phi-base-docs .screenshot {
+  max-width: 600px;
 }
 
 /* Hide AngularJS stuff on startup */
