@@ -115,13 +115,13 @@
 <h3>Genotype annotations</h3>
 <p>See the <a href="genotypes">Creating alleles and genotypes</a> documentation for instructions on creating genotypes.</p>
 <ul>
-<li><strong>pathogen phenotype</strong>: Annotate normal or abnormal phenotypes of pathogen organisms with this genotype.</li>
-<li><strong>host phenotype</strong>: Annotate normal or abnormal phenotypes of host organisms with this genotype.</li>
+<li><strong><a href="phipo_annotation">pathogen phenotype</a></strong>: Annotate normal or abnormal phenotypes of pathogen organisms with this genotype.</li>
+<li><strong><a href="phipo_annotation">host phenotype</a></strong>: Annotate normal or abnormal phenotypes of host organisms with this genotype.</li>
 </ul>
 <h3>Metagenotype annotations</h3>
 <p>See the <a href="genotypes">Creating alleles and genotypes</a> documentation for instructions on creating metagenotypes.</p>
 <ul>
-<li><strong>pathogen-host interaction phenotype</strong>: Annotate normal or abnormal phenotypes of organisms within this pathogen-host interaction (metagenotype).</li>
+<li><strong><a href="phipo_annotation">pathogen-host interaction phenotype</a></strong>: Annotate normal or abnormal phenotypes of organisms within this pathogen-host interaction (metagenotype).</li>
 </ul>
 <h2>Finishing and submitting</h2>
 <p>When you have finished entering data from your paper, click the ‘Submit to curators' button on the right-hand side of the Curation Summary page:</p>
