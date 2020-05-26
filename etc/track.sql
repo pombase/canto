@@ -189,6 +189,8 @@ CREATE TABLE curs (
        creation_date timestamp
 );
 
+CREATE INDEX curs_curs_key_idx ON curs(curs_key);
+
 CREATE TABLE curs_curator (
        curs_curator_id integer NOT NULL PRIMARY KEY,
        curs integer REFERENCES curs(curs_id) NOT NULL,
