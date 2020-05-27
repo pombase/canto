@@ -1,4 +1,4 @@
-FROM pombase/canto-base:v9
+FROM pombase/canto-base:v11
 MAINTAINER Kim Rutherford <kim@pombase.org>
 
 COPY . canto/
