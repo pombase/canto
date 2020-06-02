@@ -7076,6 +7076,21 @@ var annotationTransferDialogCtrl =
       });
     }
 
+    $scope.getGeneFeatures = function() {
+      CursGeneList.geneList().then(function (results) {
+        $scope.otherFeatures = filterFeatures(results, null);
+      }).catch(function (err) {
+        toaster.pop('note', "couldn't read the gene list from the server");
+      });
+    };
+
+    $scope.openSingleGeneAddDialog = function () {
+      var modal = openSingleGeneAddDialog($uibModal);
+      modal.result.then(function () {
+        $scope.getGeneFeatures();
+      });
+    };
+
     $q.all([$scope.annotationTypePromise, $scope.alleleTypesPromise])
       .then(function (results) {
         var annotationType = results[0];
@@ -7085,11 +7100,7 @@ var annotationTransferDialogCtrl =
         $scope.featureType = annotationType.feature_type;
 
         if ($scope.featureType === 'gene') {
-          CursGeneList.geneList().then(function (results) {
-            $scope.otherFeatures = filterFeatures(results, null);
-          }).catch(function (err) {
-            toaster.pop('note', "couldn't read the gene list from the server");
-          });
+          $scope.getGeneFeatures();
         } else {
           if ($scope.featureType === 'genotype') {
             CursGenotypeList.cursGenotypeList({include_allele: 1})

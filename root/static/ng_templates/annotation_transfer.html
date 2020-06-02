@@ -14,9 +14,13 @@
 
     <div class="curs-annotation-transfer-features">
       <multi-feature-chooser ng-if="!!otherFeatures" 
-                             features="otherFeatures" feature-type="featureType"
+                             features="otherFeatures" feature-type="{{featureType}}"
                              selected-feature-ids="selectedFeatureIds">
       </multi-feature-chooser>
+
+      <div ng-if="featureType == 'gene'" class="clearall">
+        <a ng-click="openSingleGeneAddDialog()">Add another gene</a>
+      </div>
     </div>
 
     <div class="curs-annotation-transfer-extension"
