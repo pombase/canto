@@ -382,10 +382,16 @@ function symbolEncoder() {
 canto.filter('encodeAlleleSymbols', symbolEncoder);
 canto.filter('encodeGeneSymbols', symbolEncoder);
 
-
-canto.filter('featureChooserFilter', function () {
-  return function (feature) {
+canto.filter('featureChooserFilter', ['CantoGlobals', function (CantoGlobals) {
+  return function (feature, showOrganism) {
     var ret = feature.display_name;
+    var showOrganismName = (
+      CantoGlobals.multi_organism_mode &&
+      (feature.gene_id || feature.genotype_id && showOrganism)
+    );
+    if (showOrganismName) {
+      ret += " (" + feature.organism.full_name + ")";
+    }
     if (feature.background) {
       ret += "  (bkg: " + feature.background.substr(0, 15);
       if (feature.background.length > 15) {
@@ -395,7 +401,7 @@ canto.filter('featureChooserFilter', function () {
     }
     return ret;
   };
-});
+}]);
 
 canto.filter('renameGenotypeType', function () {
   return function (type) {
