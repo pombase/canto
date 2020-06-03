@@ -383,9 +383,13 @@ canto.filter('encodeAlleleSymbols', symbolEncoder);
 canto.filter('encodeGeneSymbols', symbolEncoder);
 
 canto.filter('featureChooserFilter', ['CantoGlobals', function (CantoGlobals) {
-  return function (feature) {
+  return function (feature, showOrganism) {
     var ret = feature.display_name;
-    if (feature.gene_id && CantoGlobals.multi_organism_mode) {
+    var showOrganismName = (
+      CantoGlobals.multi_organism_mode &&
+      (feature.gene_id || feature.genotype_id && showOrganism)
+    );
+    if (showOrganismName) {
       ret += " (" + feature.organism.full_name + ")";
     }
     if (feature.background) {
