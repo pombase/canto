@@ -9185,7 +9185,7 @@ var strainPickerCtrl = function ($scope, StrainsService, CantoService) {
     newStrain: '',
     strains: null,
     sessionStrains: null,
-    strainSelector: ''
+    selectedStrain: ''
   };
 
   CantoService.lookup('strains', [$scope.taxonId]).then(function (data) {
@@ -9202,8 +9202,8 @@ var strainPickerCtrl = function ($scope, StrainsService, CantoService) {
   $scope.getSessionStrains();
 
   $scope.changed = function () {
-    if ($scope.data.strainSelector && ($scope.data.strainSelector !== 'Type a new strain')) {
-      StrainsService.addSessionStrain($scope.taxonId, $scope.data.strainSelector)
+    if ($scope.data.selectedStrain && ($scope.data.selectedStrain !== 'Type a new strain')) {
+      StrainsService.addSessionStrain($scope.taxonId, $scope.data.selectedStrain)
         .then($scope.getSessionStrains);
     }
   };
@@ -9214,7 +9214,7 @@ var strainPickerCtrl = function ($scope, StrainsService, CantoService) {
   };
 
   $scope.hideTypeStrain = function () {
-    return ($scope.data.strainSelector !== 'Type a new strain');
+    return ($scope.data.selectedStrain !== 'Type a new strain');
   };
 
   $scope.addStrain = function () {
