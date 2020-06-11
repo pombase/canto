@@ -7,24 +7,11 @@
         </span>
     </div>
     <div style="width:280px;">
-        <select ng-model="data.strainSelector" ng-change="changed()">
-            <optgroup>
-                <option value="">Add experimental strains</option>
-            </optgroup>
-            <optgroup label="-----------------------------">
-                <option>Type a new strain</option>
-            </optgroup>
-            <optgroup label="-----------------------------">
-                <option>Unknown strain</option>
-            </optgroup>
-            <optgroup label="-----------------------------">
-                <option ng-repeat="st in data.strains track by $index">{{st.strain_name}}</option>
-            </optgroup>
-        </select>
-        <div ng-hide="hideTypeStrain()">
-                <input style="display: inline" ng-model="data.newStrain" type="text" placeholder="Type strain name">
-                <button ng-click="addStrain()" style="display: inline" type="button" class="btn btn-success btn-xs">Add +</button>
-            </div>
+      <input ng-model="data.selectedStrain"
+             uib-typeahead="strain.strain_name for strain in data.strains | filter:$viewValue"
+             typeahead-min-length="0"
+             typeahead-on-select="changed()"
+             typeahead-editable="true">
     </div>
   </div>
 </div>
