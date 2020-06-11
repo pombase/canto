@@ -7,11 +7,13 @@
         </span>
     </div>
     <div style="width:280px;">
-      <input ng-model="data.selectedStrain"
-             uib-typeahead="strain.strain_name for strain in data.strains | filter:$viewValue"
-             typeahead-min-length="0"
-             typeahead-on-select="changed()"
-             typeahead-editable="true">
+      <form ng-submit="addStrain()">
+        <input ng-model="data.selectedStrain"
+               uib-typeahead="strain.strain_name for strain in data.strains | filter:$viewValue"
+               typeahead-min-length="0"
+               typeahead-on-select="changed()"
+               typeahead-editable="true">
+      </form>
     </div>
   </div>
 </div>
