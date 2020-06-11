@@ -9171,7 +9171,7 @@ var strainPicker = function () {
     },
     restrict: 'E',
     replace: true,
-    templateUrl: app_static_path + 'ng_templates/strainPicker.html',
+    templateUrl: app_static_path + 'ng_templates/strain_picker.html',
     controller: function ($scope, StrainsService, CantoService) {
       $scope.typeStrain = null;
 
