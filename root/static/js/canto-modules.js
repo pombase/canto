@@ -9172,56 +9172,59 @@ var strainPicker = function () {
     restrict: 'E',
     replace: true,
     templateUrl: app_static_path + 'ng_templates/strain_picker.html',
-    controller: function ($scope, StrainsService, CantoService) {
-      $scope.typeStrain = null;
-
-      $scope.data = {
-        newStrain: '',
-        strains: null,
-        sessionStrains: null,
-        strainSelector: ''
-      };
-
-      CantoService.lookup('strains', [$scope.taxonId]).then(function (data) {
-        $scope.data.strains = data;
-      });
-
-      $scope.getSessionStrains = function () {
-        StrainsService.getSessionStrains($scope.taxonId)
-          .then(function (sessionStrains) {
-            $scope.data.sessionStrains = sessionStrains;
-          });
-      };
-
-      $scope.getSessionStrains();
-
-      $scope.changed = function () {
-        if ($scope.data.strainSelector && ($scope.data.strainSelector !== 'Type a new strain')) {
-          StrainsService.addSessionStrain($scope.taxonId, $scope.data.strainSelector)
-            .then($scope.getSessionStrains);
-        }
-      };
-
-      $scope.remove = function (strain) {
-        StrainsService.removeSessionStrain($scope.taxonId, strain)
-          .then($scope.getSessionStrains);
-      };
-
-      $scope.hideTypeStrain = function () {
-        return ($scope.data.strainSelector !== 'Type a new strain');
-      };
-
-      $scope.addStrain = function () {
-        StrainsService.addSessionStrain($scope.taxonId, $scope.data.newStrain)
-          .then($scope.getSessionStrains);
-      };
-
-    },
+    controller: 'strainPickerCtrl'
   };
 };
 
-canto.directive('strainPicker', ['StrainsService', 'CantoService', strainPicker]);
+canto.directive('strainPicker', strainPicker)
 
+var strainPickerCtrl = function ($scope, StrainsService, CantoService) {
+  $scope.typeStrain = null;
+
+  $scope.data = {
+    newStrain: '',
+    strains: null,
+    sessionStrains: null,
+    strainSelector: ''
+  };
+
+  CantoService.lookup('strains', [$scope.taxonId]).then(function (data) {
+    $scope.data.strains = data;
+  });
+
+  $scope.getSessionStrains = function () {
+    StrainsService.getSessionStrains($scope.taxonId)
+      .then(function (sessionStrains) {
+        $scope.data.sessionStrains = sessionStrains;
+      });
+  };
+
+  $scope.getSessionStrains();
+
+  $scope.changed = function () {
+    if ($scope.data.strainSelector && ($scope.data.strainSelector !== 'Type a new strain')) {
+      StrainsService.addSessionStrain($scope.taxonId, $scope.data.strainSelector)
+        .then($scope.getSessionStrains);
+    }
+  };
+
+  $scope.remove = function (strain) {
+    StrainsService.removeSessionStrain($scope.taxonId, strain)
+      .then($scope.getSessionStrains);
+  };
+
+  $scope.hideTypeStrain = function () {
+    return ($scope.data.strainSelector !== 'Type a new strain');
+  };
+
+  $scope.addStrain = function () {
+    StrainsService.addSessionStrain($scope.taxonId, $scope.data.newStrain)
+      .then($scope.getSessionStrains);
+  };
+
+};
+
+canto.controller('strainPickerCtrl', ['$scope', 'StrainsService', 'CantoService', strainPickerCtrl])
 
 var strainPickerDialogCtrl =
   function ($scope, $uibModalInstance, args, Curs, toaster) {
