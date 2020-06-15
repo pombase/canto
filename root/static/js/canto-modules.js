@@ -9179,7 +9179,6 @@ var strainPicker = function () {
 canto.directive('strainPicker', strainPicker)
 
 var strainPickerCtrl = function ($scope, StrainsService, CantoService) {
-  $scope.typeStrain = null;
 
   $scope.data = {
     strains: null,
@@ -9210,10 +9209,6 @@ var strainPickerCtrl = function ($scope, StrainsService, CantoService) {
   $scope.remove = function (strain) {
     StrainsService.removeSessionStrain($scope.taxonId, strain)
       .then($scope.getSessionStrains);
-  };
-
-  $scope.hideTypeStrain = function () {
-    return ($scope.data.selectedStrain !== 'Type a new strain');
   };
 
   $scope.addStrain = function () {
