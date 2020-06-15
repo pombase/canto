@@ -1708,6 +1708,18 @@ a:not([href]) {
   margin: 2px 2px 2px 0;
   display: inline-block;
 }
+.curs-strain-synonyms {
+  font-size: 12px;
+}
+.curs-strain-synonyms-title {
+  font-weight: bold;
+  color: #575757;
+}
+.dropdown-menu > .active .curs-strain-synonyms-title,
+.dropdown-menu > .active .curs-strain-synonyms-title:hover,
+.dropdown-menu > .active .curs-strain-synonyms-title:focus {
+  color: #fff;
+}
 
 .curs-annotation-transfer-features {
   max-height: 70vh;

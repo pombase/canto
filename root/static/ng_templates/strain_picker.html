@@ -1,4 +1,13 @@
 <div>
+  <script type="text/ng-template" id="strainPickerItemTemplate.html">
+    <a>
+        <span ng-bind-html="match.model.strain_name | uibTypeaheadHighlight:query"></span>
+        <div class="curs-strain-synonyms" ng-if="match.model.synonyms.length > 0">
+          <span class="curs-strain-synonyms-title">synonyms:</span>
+          <span ng-repeat="synonym in match.model.synonyms">{{synonym}}<span ng-if="!$last">, </span></span>
+        </div>
+    </a>
+  </script>
   <div ng-if="data.sessionStrains && data.strains">
     <div>
         <span ng-repeat="st in data.sessionStrains track by $index" class="curs-strain-tag btn-primary btn-xs">
@@ -9,10 +18,11 @@
     <div style="width:280px;">
       <form ng-submit="addStrain()">
         <input ng-model="data.selectedStrain"
-               uib-typeahead="strain.strain_name for strain in data.strains | filter:$viewValue"
+               uib-typeahead="strain as strain.strain_name for strain in data.strains | filter:{strain_name: $viewValue}"
                typeahead-min-length="0"
                typeahead-on-select="changed()"
-               typeahead-editable="true">
+               typeahead-editable="true"
+               typeahead-template-url="strainPickerItemTemplate.html">
       </form>
     </div>
   </div>
