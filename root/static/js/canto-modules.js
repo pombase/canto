@@ -205,9 +205,8 @@ function isSingleLocusDiploid(genotype) {
 }
 
 function isWildTypeGenotype(genotype) {
-  return genotype.genotype_identifier.indexOf('wild-type-genotype') !== -1
+  return genotype.alleles.length == 0;
 }
-
 function getGenotypeManagePath(organismMode) {
   var paths = {
     'unknown': 'genotype_manage',
