@@ -206,7 +206,7 @@
               <input ng-model="alleleData.expression" name="curs-allele-expression" id="allele-edit-knockdown"
                      type="radio" value="Knockdown" />
             </div>
-            <div ng-show="alleleData.type">
+            <div ng-show="alleleData.type == 'disruption' || alleleData.type == 'other'">
               <label for="allele-edit-null-expression">Null</label>
               <input ng-model="alleleData.expression" name="curs-allele-expression" id="allele-edit-null-expression"
                      type="radio" value="Null" />
