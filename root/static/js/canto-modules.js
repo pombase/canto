@@ -9202,6 +9202,7 @@ var strainPickerCtrl = function ($scope, StrainsService, CantoService) {
   $scope.changed = function () {
     if ($scope.data.selectedStrain) {
       var strainName = $scope.data.selectedStrain.strain_name;
+      $scope.data.selectedStrain = '';
       StrainsService.addSessionStrain($scope.taxonId, strainName)
         .then($scope.getSessionStrains);
     }
@@ -9215,6 +9216,7 @@ var strainPickerCtrl = function ($scope, StrainsService, CantoService) {
   $scope.addStrain = function () {
     if ($scope.data.selectedStrain) {
       var strainName = $scope.data.selectedStrain;
+      $scope.data.selectedStrain = '';
       StrainsService.addSessionStrain($scope.taxonId, strainName)
         .then($scope.getSessionStrains);
     }

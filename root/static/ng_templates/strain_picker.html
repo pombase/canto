@@ -24,6 +24,7 @@
                uib-typeahead="strain as strain.strain_name for strain in data.strains | filter:strainFilter"
                typeahead-min-length="0"
                typeahead-on-select="changed()"
+               typeahead-focus-on-select="false"
                typeahead-editable="true"
                typeahead-template-url="strainPickerItemTemplate.html"
                typeahead-wait-ms="2">
