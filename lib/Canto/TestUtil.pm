@@ -769,7 +769,7 @@ sub make_base_track_db
                    $phenotype_obo_file, $psi_mod_obo_file, $pco_obo_file,
                    $phipo_obo_file, $so_obo_file);
 
-    $ontology_load->load(\@sources, $ontology_index, $synonym_types);
+    $ontology_load->load(\@sources, [], $ontology_index, $synonym_types);
 
     $ontology_load->finalise();
     $ontology_index->finish_index();
@@ -1337,7 +1337,7 @@ sub load_test_ontologies
   push @sources, $psi_mod_obo_file;
   push @sources, $so_obo_file;
 
-  $ontology_load->load(\@sources, $ontology_index, $synonym_types);
+  $ontology_load->load(\@sources, [], $ontology_index, $synonym_types);
 
   $ontology_load->finalise();
   $ontology_index->finish_index();
