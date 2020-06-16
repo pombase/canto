@@ -38,6 +38,7 @@ my $do_organisms = 0;
 my $do_strains = 0;
 my $for_taxon = 0;
 my @ontology_args = ();
+my @delete_ontology_args = ();
 my $do_process_extension_config = 0;
 my $dry_run = 0;
 my $verbose = 0;
@@ -49,6 +50,7 @@ if (@ARGV == 0) {
 
 my $result = GetOptions ("genes=s" => \$do_genes,
                          "ontology=s" => \@ontology_args,
+                         "delete-ontology=s" => \@delete_ontology_args,
                          "organisms=s" => \$do_organisms,
                          "strains=s" => \$do_strains,
                          "process-extension-config" => \$do_process_extension_config,
@@ -79,6 +81,7 @@ or:
   $0 --ontology ontology_file.obo --ontology another_ontology.obo
   $0 --ontology http://some_host.org/file.obo
   $0 --process-extension-config --ontology ontology_file.obo --ontology another_ontology.obo
+        --delete-ontology "some_ontology_name"
 or:
   $0 --pubmed-xml pubmed_entries.xml
 or in combination:
@@ -89,6 +92,8 @@ Options:
   --genes     - load a tab delimited gene data file, must also specify
                 the organism with --for-taxon
   --ontology  - load an ontology data file in OBO format
+  --delete-ontology - in combination with "--ontology", delete an existing
+                      ontology by name
   --pubmed-xml - load publications from a PubMed XML file; only loads
                  publications that aren't already in the database
 
@@ -330,7 +335,7 @@ if (@ontology_args) {
                                                       relationships_to_load => \@relationships_to_load);
   my $synonym_types = $config->{load}->{ontology}->{synonym_types};
 
-  $ontology_load->load([@ontology_args], $index, $synonym_types);
+  $ontology_load->load([@ontology_args], [@delete_ontology_args], $index, $synonym_types);
 
   if (!$dry_run) {
     $ontology_load->finalise();

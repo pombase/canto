@@ -212,6 +212,8 @@ sub _parse_source
            $ont_load->load($file_name, $index, [qw(exact related)]);
  Function: Load the contents an OBO file into the schema
  Args    : $source - the file name or URL of an obo format file
+           $cvs_to_delete - names of existing CVs to delete during the loading
+                            process
            $index - the index to add the terms to (optional)
            $synonym_types_ref - a array ref of synonym types that should be
                                 added to the index
@@ -222,6 +224,7 @@ sub load
 {
   my $self = shift;
   my $sources = shift;
+  my $cvs_to_delete = shift;
   my $index = shift;
   my $synonym_types_ref = shift;
 
@@ -301,7 +304,7 @@ sub load
     $cvs{$_} = 1;
   } $ontology_data->get_cv_names();
 
-  # delete existing terms
+  # delete existing terms that are in a CV we are loading
   map {
      _delete_term_by_cv($schema, $_, 0);
   } keys %cvs;
@@ -310,6 +313,14 @@ sub load
   map {
     _delete_term_by_cv($schema, $_, 1);
   } keys %cvs;
+
+  # delete terms and rels from CVs specified by the user
+  map {
+     _delete_term_by_cv($schema, $_, 0);
+  } @$cvs_to_delete;
+  map {
+    _delete_term_by_cv($schema, $_, 1);
+  } @$cvs_to_delete;
 
   # create this object after deleting as LoadUtil has a dbxref cache (that
   # is a bit ugly ...)
