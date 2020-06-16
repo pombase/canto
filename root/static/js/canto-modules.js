@@ -9220,6 +9220,21 @@ var strainPickerCtrl = function ($scope, StrainsService, CantoService) {
     }
   };
 
+  $scope.strainFilter = function (value, index, array) {
+    var searchText = $scope.data.selectedStrain.toUpperCase();
+    var strainName = value.strain_name.toUpperCase();
+    if (strainName.indexOf(searchText) !== -1) {
+      return true;
+    } else {
+      for (const synonym of value.synonyms) {
+        if (synonym.toUpperCase().indexOf(searchText) !== -1) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
 };
 
 canto.controller('strainPickerCtrl', ['$scope', 'StrainsService', 'CantoService', strainPickerCtrl])

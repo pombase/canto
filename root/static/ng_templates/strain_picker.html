@@ -4,7 +4,9 @@
         <span ng-bind-html="match.model.strain_name | uibTypeaheadHighlight:query"></span>
         <div class="curs-strain-synonyms" ng-if="match.model.synonyms.length > 0">
           <span class="curs-strain-synonyms-title">synonyms:</span>
-          <span ng-repeat="synonym in match.model.synonyms">{{synonym}}<span ng-if="!$last">, </span></span>
+          <span ng-repeat="synonym in match.model.synonyms">
+            <span ng-bind-html="synonym | uibTypeaheadHighlight:query"></span><span ng-if="!$last">, </span>
+          </span>
         </div>
     </a>
   </script>
@@ -18,11 +20,12 @@
     <div style="width:280px;">
       <form ng-submit="addStrain()">
         <input ng-model="data.selectedStrain"
-               uib-typeahead="strain as strain.strain_name for strain in data.strains | filter:{strain_name: $viewValue}"
+               uib-typeahead="strain as strain.strain_name for strain in data.strains | filter:strainFilter"
                typeahead-min-length="0"
                typeahead-on-select="changed()"
                typeahead-editable="true"
-               typeahead-template-url="strainPickerItemTemplate.html">
+               typeahead-template-url="strainPickerItemTemplate.html"
+               typeahead-wait-ms="2">
       </form>
     </div>
   </div>
