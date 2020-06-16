@@ -9221,18 +9221,21 @@ var strainPickerCtrl = function ($scope, StrainsService, CantoService) {
   };
 
   $scope.strainFilter = function (value, index, array) {
-    var searchText = $scope.data.selectedStrain.toUpperCase();
-    var strainName = value.strain_name.toUpperCase();
-    if (strainName.indexOf(searchText) !== -1) {
-      return true;
-    } else {
-      for (const synonym of value.synonyms) {
-        if (synonym.toUpperCase().indexOf(searchText) !== -1) {
-          return true;
+    if ($scope.data.selectedStrain) {
+      var searchText = $scope.data.selectedStrain.toUpperCase();
+      var strainName = value.strain_name.toUpperCase();
+      if (strainName.indexOf(searchText) !== -1) {
+        return true;
+      } else {
+        for (const synonym of value.synonyms) {
+          if (synonym.toUpperCase().indexOf(searchText) !== -1) {
+            return true;
+          }
         }
       }
+      return false;
     }
-    return false;
+    return true; // show all results if no text is entered
   }
 
 };
