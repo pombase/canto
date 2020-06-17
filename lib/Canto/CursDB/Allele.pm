@@ -211,7 +211,13 @@ sub long_identifier
 
   my $ret = $self->display_name($config);
 
-  $ret .= ($self->expression() ? '[' . $self->expression() . ']' : '');
+  my $expression = '';
+
+  if ($self->expression()) {
+    $expression = '[' . ($self->expression() =~ s/^wild type product level.*/WT product/ir) . ']';
+  }
+
+  $ret .= $expression;
 
   return $ret;
 }
