@@ -204,6 +204,9 @@ function isSingleLocusDiploid(genotype) {
   return Object.keys(diploidNames).length === 1;
 }
 
+function isWildTypeGenotype(genotype) {
+  return genotype.alleles.length == 0;
+}
 function getGenotypeManagePath(organismMode) {
   var paths = {
     'unknown': 'genotype_manage',
@@ -7654,6 +7657,7 @@ var annotationTableRow =
         $scope.featureType = null;
         $scope.interactionFeatureType = null;
         $scope.showInteractionTermColumns = false;
+        $scope.hasWildTypeHost = false;
 
         CursSessionDetails.get()
           .then(function (sessionDetails) {
@@ -7692,6 +7696,12 @@ var annotationTableRow =
         };
 
         $scope.displayEvidence = annotation.evidence_code;
+
+        $scope.hasWildTypeHost = (
+          $scope.annotation.feature_type == 'metagenotype' &&
+          CantoGlobals.pathogen_host_mode &&
+          isWildTypeGenotype($scope.annotation.host_genotype)
+        );
 
         if (typeof ($scope.annotation.conditions) !== 'undefined') {
           $scope.annotation.conditionsString =
