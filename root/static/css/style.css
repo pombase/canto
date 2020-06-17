@@ -1705,8 +1705,14 @@ a:not([href]) {
   white-space: nowrap;
 }
 .curs-strain-tag {
-  margin: 2px 2px 2px 0;
-  display: inline-block;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+.curs-strain-tag + .curs-strain-tag {
+  margin-left: 8px;
+}
+.curs-strain-tag-delete {
+  color: #990000 !important;
 }
 .curs-strain-synonyms {
   font-size: 12px;
