@@ -13,7 +13,7 @@
   <div ng-if="data.sessionStrains && data.strains">
     <div class="curs-strain-tag-container">
       <span ng-repeat="strain in data.sessionStrains track by $index" class="curs-strain-tag btn-group btn-group-xs">
-        <span class="curs-strain-tag-name btn btn-default">{{strain.strain_name}}</span>
+        <span class="curs-strain-tag-name btn btn-default fake">{{strain.strain_name}}</span>
         <button type="button" class="curs-strain-tag-delete btn btn-default" title="Delete strain" ng-click="remove(strain.strain_name)">
           <span class="glyphicon glyphicon-remove"></span>
         </button>
