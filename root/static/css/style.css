@@ -23,6 +23,29 @@ a.disabled {
 
 #heading a { color: black; }
 
+.btn.fake {
+  -ms-touch-action: none;
+      touch-action: none;
+  cursor: auto;
+  -webkit-user-select: text;
+     -moz-user-select: text;
+      -ms-user-select: text;
+          user-select: text;
+}
+.btn.fake:active {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.btn-default.fake:focus,
+.btn-default.fake:hover,
+.btn-default.fake:active,
+.btn-default.fake:active:focus,
+.btn-default.fake:active:hover {
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+}
+
 .jumbotron {
   padding: 30px;
   line-height: 1.6em;
