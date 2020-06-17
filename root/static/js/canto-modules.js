@@ -9511,7 +9511,7 @@ canto.directive('editOrganismsGenesTable', [editOrganismsGenesTable]);
 var editOrganismsTable = function (EditOrganismsSvc, CantoGlobals) {
   return {
     scope: {
-      title: '@',
+      tableTitle: '@',
       organisms: '=',
     },
     restrict: 'E',
