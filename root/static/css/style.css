@@ -23,6 +23,38 @@ a.disabled {
 
 #heading a { color: black; }
 
+.btn.fake {
+  -ms-touch-action: none;
+      touch-action: none;
+  cursor: auto;
+  -webkit-user-select: text;
+     -moz-user-select: text;
+      -ms-user-select: text;
+          user-select: text;
+}
+.btn.fake:active {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+.btn-default.fake:focus,
+.btn-default.fake:hover,
+.btn-default.fake:active,
+.btn-default.fake:active:focus,
+.btn-default.fake:active:hover {
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+}
+.btn-warning.fake:focus,
+.btn-warning.fake:hover,
+.btn-warning.fake:active,
+.btn-warning.fake:active:focus,
+.btn-warning.fake:active:hover {
+  color: #fff;
+  background-color: #f0ad4e;
+  border-color: #eea236;
+}
+
 .jumbotron {
   padding: 30px;
   line-height: 1.6em;
@@ -1705,8 +1737,39 @@ a:not([href]) {
   white-space: nowrap;
 }
 .curs-strain-tag {
-  margin: 2px 2px 2px 0;
-  display: inline-block;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+.curs-strain-tag + .curs-strain-tag {
+  margin-left: 8px;
+}
+.curs-strain-tag-name.btn-warning,
+.curs-strain-tag-name.btn-warning:hover,
+.curs-strain-tag-name.btn-warning:focus,
+.curs-strain-tag-name.btn-warning:active,
+.curs-strain-tag-name.btn-warning:active:hover,
+.curs-strain-tag-name.btn-warning:active:focus {
+  color: #333;
+}
+.curs-strain-tag-delete,
+.curs-strain-tag-delete:hover, 
+.curs-strain-tag-delete:focus,
+.curs-strain-tag-delete:active,
+.curs-strain-tag-delete:active:hover,
+.curs-strain-tag-delete:active:focus {
+  color: #990000;
+}
+.curs-strain-synonyms {
+  font-size: 12px;
+}
+.curs-strain-synonyms-title {
+  font-weight: bold;
+  color: #575757;
+}
+.dropdown-menu > .active .curs-strain-synonyms-title,
+.dropdown-menu > .active .curs-strain-synonyms-title:hover,
+.dropdown-menu > .active .curs-strain-synonyms-title:focus {
+  color: #fff;
 }
 
 .curs-annotation-transfer-features {
