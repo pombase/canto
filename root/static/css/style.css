@@ -45,6 +45,15 @@ a.disabled {
   background-color: #fff;
   border-color: #ccc;
 }
+.btn-warning.fake:focus,
+.btn-warning.fake:hover,
+.btn-warning.fake:active,
+.btn-warning.fake:active:focus,
+.btn-warning.fake:active:hover {
+  color: #fff;
+  background-color: #f0ad4e;
+  border-color: #eea236;
+}
 
 .jumbotron {
   padding: 30px;
@@ -1734,8 +1743,21 @@ a:not([href]) {
 .curs-strain-tag + .curs-strain-tag {
   margin-left: 8px;
 }
-.curs-strain-tag-delete {
-  color: #990000 !important;
+.curs-strain-tag-name.btn-warning,
+.curs-strain-tag-name.btn-warning:hover,
+.curs-strain-tag-name.btn-warning:focus,
+.curs-strain-tag-name.btn-warning:active,
+.curs-strain-tag-name.btn-warning:active:hover,
+.curs-strain-tag-name.btn-warning:active:focus {
+  color: #333;
+}
+.curs-strain-tag-delete,
+.curs-strain-tag-delete:hover, 
+.curs-strain-tag-delete:focus,
+.curs-strain-tag-delete:active,
+.curs-strain-tag-delete:active:hover,
+.curs-strain-tag-delete:active:focus {
+  color: #990000;
 }
 .curs-strain-synonyms {
   font-size: 12px;

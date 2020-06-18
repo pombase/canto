@@ -9188,16 +9188,15 @@ var strainPickerCtrl = function ($scope, StrainsService, CantoService) {
 
   CantoService.lookup('strains', [$scope.taxonId]).then(function (data) {
     $scope.data.strains = data;
+    $scope.getSessionStrains();
   });
 
   $scope.getSessionStrains = function () {
     StrainsService.getSessionStrains($scope.taxonId)
       .then(function (sessionStrains) {
-        $scope.data.sessionStrains = sessionStrains;
+        $scope.data.sessionStrains = markCustomStrains(sessionStrains);
       });
   };
-
-  $scope.getSessionStrains();
 
   $scope.changed = function () {
     if ($scope.data.selectedStrain) {
@@ -9238,6 +9237,22 @@ var strainPickerCtrl = function ($scope, StrainsService, CantoService) {
       return false;
     }
     return true; // show all results if no text is entered
+  }
+
+  function markCustomStrains(sessionStrains) {
+    return sessionStrains.map(customStrainMarker);
+    
+    function customStrainMarker(strain) {
+      var isCustom = true;
+      for (const existingStrain of $scope.data.strains) {
+        if (strain.strain_id === existingStrain.strain_id) {
+          isCustom = false;
+          break;
+        }
+      }
+      strain['is_custom'] = isCustom;
+      return strain;
+    }
   }
 
 };
