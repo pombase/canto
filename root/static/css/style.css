@@ -1718,3 +1718,48 @@ a:not([href]) {
 .curs-annotation-transfer-extension {
   margin-top: 1.5em;
 }
+
+.allele-notes-dialog .modal-body {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.allele-notes-edit-area {
+  flex-grow: 8;
+}
+
+.allele-notes-view-area {
+  flex-grow: 1;
+}
+
+.allele-notes-view-area {
+  padding: 1em;
+}
+
+.allele-notes-chosen-text, .allele-notes-chosen-label {
+  
+}
+
+.allele-notes-chosen-label {
+  margin-top: 0.5em;
+  font-weight: bold;
+}
+
+.allele-notes-chosen-label {
+  font-size: 90%;
+}
+
+.allele-notes-chosen-text {
+  font-size: 80%;
+  margin-bottom: 0.5em;
+}
+
+.allele-note-textarea {
+  width: 100%;
+  max-width: 100%;
+}
+
+.allele-notes-chosen-notes {
+  max-width: 20em;
+}

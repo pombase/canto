@@ -738,10 +738,16 @@ sub _get_alleles
   my $gene_primary_identifier = shift;
   my $search_string = shift;
   my $curs_schema = $self->curs_schema();
+  my $query = {
+    'gene.primary_identifier' => $gene_primary_identifier,
+  };
+
+  if ($search_string ne ':ALL:') {
+    $query->{name} = { -like => $search_string . '%' };
+  }
+
   my $allele_rs = $curs_schema->resultset('Allele')
-    ->search({ 'gene.primary_identifier' => $gene_primary_identifier,
-               name => { -like => $search_string . '%' },
-             },
+    ->search($query,
              {
                join => 'gene',
                # only return alleles that are part of a genotype

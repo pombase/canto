@@ -765,7 +765,11 @@ canto.service('Metagenotype', function ($rootScope, $http, toaster, Curs) {
 });
 
 canto.service('CursAlleleList', function ($q, Curs) {
-  this.alleleList = function (genePrimaryIdentifier, searchTerm) {
+  this.alleleList = function (genePrimaryIdentifier) {
+    return this.alleleNameComplete(genePrimaryIdentifier, ':ALL:');
+  }
+
+  this.alleleNameComplete = function (genePrimaryIdentifier, searchTerm) {
     var q = $q.defer();
 
     Curs.list('allele', [genePrimaryIdentifier, searchTerm])
@@ -3563,7 +3567,7 @@ var alleleNameComplete =
         };
         elem.find('input').autocomplete({
           source: function (request, response) {
-            CursAlleleList.alleleList(scope.geneIdentifier, request.term)
+            CursAlleleList.alleleNameComplete(scope.geneIdentifier, request.term)
               .then(function (lookupResponse) {
                 response(processResponse(lookupResponse));
               })
@@ -5122,7 +5126,8 @@ function editBackgroundDialog($uibModal, genotype) {
 
 
 var alleleNotesEditDialogCtrl =
-  function ($scope, $uibModalInstance, $http, $q, toaster, CantoConfig, Curs, args) {
+    function ($scope, $uibModalInstance, $http, $q, toaster, CantoConfig, Curs,
+              CursAlleleList, args) {
     $scope.noteTypes = [];
 
     $scope.allele = args.allele;
@@ -5130,6 +5135,28 @@ var alleleNotesEditDialogCtrl =
 
     var notesCopy = {};
     copyObject(args.allele.notes, notesCopy);
+
+    $scope.viewAlleles = {};
+    $scope.viewAllelesIds = [];
+    $scope.chosenViewAlleleId = null;
+    $scope.showViewAllelesPanel = true;
+
+    $scope.hideViewAllelesPanel = function() {
+      $scope.showViewAllelesPanel = false;
+    };
+
+    CursAlleleList.alleleList($scope.allele.gene_systematic_id)
+      .then(function (res) {
+        $.map(res, function(allele) {
+          if ($scope.allele.allele_id !== allele.allele_id) {
+            $scope.viewAlleles[allele.allele_id] = allele;
+            $scope.viewAllelesIds.push(allele.allele_id);
+          }
+        });
+      })
+      .catch(function () {
+        toaster.pop("failed to lookup alleles for: " + $scope.allele.gene_systematic_id);
+      });
 
     CantoConfig.get('allele_note_types')
       .then(function (results) {
@@ -5191,7 +5218,8 @@ var alleleNotesEditDialogCtrl =
   };
 
 canto.controller('AlleleNotesEditDialogCtrl',
-  ['$scope', '$uibModalInstance', '$http', '$q', 'toaster', 'CantoConfig', 'Curs', 'args',
+  ['$scope', '$uibModalInstance', '$http', '$q', 'toaster', 'CantoConfig', 'Curs',
+   'CursAlleleList', 'args',
     alleleNotesEditDialogCtrl
   ]);
 

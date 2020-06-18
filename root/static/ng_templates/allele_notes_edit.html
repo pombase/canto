@@ -1,4 +1,4 @@
-<div class="curs-extension-builder-dialog modal-content">
+<div class="allele-notes-dialog modal-content">
   <div class="modal-header">
     <h4 ng-if="readOnly" class="modal-title">
       View notes for {{allele.display_name}}
@@ -8,11 +8,44 @@
     </h4>
   </div>
   <div class="modal-body">
+    <div class="allele-notes-edit-area">
     <div ng-repeat="noteTypeConf in noteTypes">
       <div class="allele-note-type">{{noteTypeConf.display_name}}:</div>
-      <textarea class="form-control" type="text" cols="80" rows="4" ng-readonly="readOnly"
+      <textarea class="form-control allele-note-textarea"
+                type="text" rows="4" ng-readonly="readOnly"
                 name="{{noteTypeConf.name}}" ng-model="data.notes[noteTypeConf.name]">
       </textarea>
+    </div>
+    </div>
+    <div ng-if="showViewAllelesPanel && viewAllelesIds.length != 0"
+         class="allele-notes-view-area">
+      <div style="float: right"><a href="#" ng-click="hideViewAllelesPanel()">
+        <img src="http://localhost:7008/static/v1491//images/close_icon.png">
+      </a></div>
+
+      <div>View notes from another allele:</div>
+
+      <div>
+        <select class="form-control" ng-model="chosenViewAlleleId">
+          <option value="">Choose an allele ...</option>
+          <option ng-repeat="viewAlleleId in viewAllelesIds"
+                  ng-value="{{viewAlleleId}}"
+                  ng-bind-html="viewAlleles[viewAlleleId].display_name | encodeAlleleSymbols | toTrusted">
+          </option>
+        </select>
+      </div>
+      <div class="allele-notes-chosen-notes"
+           ng-if="chosenViewAlleleId && viewAlleles[chosenViewAlleleId] && viewAlleles[chosenViewAlleleId].notes">
+
+        <div ng-repeat="noteTypeConf in noteTypes">
+          <div ng-if="viewAlleles[chosenViewAlleleId].notes[noteTypeConf.name]">
+            <div class="allele-notes-chosen-label">{{noteTypeConf.display_name}}:</div>
+            <div class="allele-notes-chosen-text">
+              {{viewAlleles[chosenViewAlleleId].notes[noteTypeConf.name]}}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="modal-footer">
