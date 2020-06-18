@@ -9186,6 +9186,8 @@ var strainPickerCtrl = function ($scope, StrainsService, CantoService) {
     selectedStrain: ''
   };
 
+  $scope.unknownStrainAdded = false;
+
   CantoService.lookup('strains', [$scope.taxonId]).then(function (data) {
     $scope.data.strains = data;
     $scope.getSessionStrains();
@@ -9195,6 +9197,7 @@ var strainPickerCtrl = function ($scope, StrainsService, CantoService) {
     StrainsService.getSessionStrains($scope.taxonId)
       .then(function (sessionStrains) {
         $scope.data.sessionStrains = markCustomStrains(sessionStrains);
+        $scope.unknownStrainAdded = isUnknownStrainSet();
       });
   };
 
@@ -9221,6 +9224,14 @@ var strainPickerCtrl = function ($scope, StrainsService, CantoService) {
     }
   };
 
+  $scope.addUnknownStrain = function () {
+    if (!$scope.unknownStrainAdded) {
+      StrainsService.addSessionStrain($scope.taxonId, 'Unknown strain')
+        .then($scope.getSessionStrains);
+      $scope.unknownStrainAdded = true;
+    }
+  };
+
   $scope.strainFilter = function (value, index, array) {
     if ($scope.data.selectedStrain) {
       var searchText = $scope.data.selectedStrain.toUpperCase();
@@ -9244,15 +9255,28 @@ var strainPickerCtrl = function ($scope, StrainsService, CantoService) {
     
     function customStrainMarker(strain) {
       var isCustom = true;
-      for (const existingStrain of $scope.data.strains) {
-        if (strain.strain_id === existingStrain.strain_id) {
-          isCustom = false;
-          break;
+      if (strain.strain_name === 'Unknown strain') {
+        isCustom = false;
+      } else {
+        for (const existingStrain of $scope.data.strains) {
+          if (strain.strain_id === existingStrain.strain_id) {
+            isCustom = false;
+            break;
+          }
         }
       }
       strain['is_custom'] = isCustom;
       return strain;
     }
+  }
+
+  function isUnknownStrainSet() {
+    for (const sessionStrain of $scope.data.sessionStrains) {
+      if (sessionStrain.strain_name === 'Unknown strain') {
+        return true;
+      }
+    }
+    return false;
   }
 
 };

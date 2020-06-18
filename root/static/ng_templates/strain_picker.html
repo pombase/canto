@@ -24,7 +24,7 @@
         </button>
       </span>
     </div>
-    <div style="width:280px;">
+    <div>
       <form ng-submit="addStrain()">
         <input ng-model="data.selectedStrain"
                placeholder="Type a strain name"
@@ -37,6 +37,12 @@
                typeahead-template-url="strainPickerItemTemplate.html"
                typeahead-wait-ms="2">
         <input class="btn btn-primary btn-xs" type="submit" value="Add strain" ng-disabled="!data.selectedStrain">
+        <button type="button"
+                class="btn btn-primary btn-xs"
+                ng-click="addUnknownStrain()"
+                ng-disabled="unknownStrainAdded">
+          Unknown strain
+        </button>
       </form>
     </div>
   </div>
