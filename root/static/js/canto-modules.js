@@ -5131,7 +5131,7 @@ function editBackgroundDialog($uibModal, genotype) {
 
 var alleleNotesEditDialogCtrl =
     function ($scope, $uibModalInstance, $http, $q, toaster, CantoConfig, Curs,
-              CursAlleleList, args) {
+              CantoGlobals, CursAlleleList, args) {
     $scope.noteTypes = [];
 
     $scope.allele = args.allele;
@@ -5144,6 +5144,7 @@ var alleleNotesEditDialogCtrl =
     $scope.viewAllelesIds = [];
     $scope.chosenViewAlleleId = null;
     $scope.showViewAllelesPanel = true;
+    $scope.closeIconPath = CantoGlobals.app_static_path + '/images/close_icon.png';
 
     $scope.hideViewAllelesPanel = function() {
       $scope.showViewAllelesPanel = false;
@@ -5223,7 +5224,7 @@ var alleleNotesEditDialogCtrl =
 
 canto.controller('AlleleNotesEditDialogCtrl',
   ['$scope', '$uibModalInstance', '$http', '$q', 'toaster', 'CantoConfig', 'Curs',
-   'CursAlleleList', 'args',
+   'CantoGlobals', 'CursAlleleList', 'args',
     alleleNotesEditDialogCtrl
   ]);
 
