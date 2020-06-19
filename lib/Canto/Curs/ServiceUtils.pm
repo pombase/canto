@@ -738,9 +738,13 @@ sub _get_alleles
   my $gene_primary_identifier = shift;
   my $search_string = shift;
   my $curs_schema = $self->curs_schema();
-  my $query = {
-    'gene.primary_identifier' => $gene_primary_identifier,
-  };
+  my $query = {};
+
+  if ($gene_primary_identifier ne ':ALL:') {
+    $query = {
+      'gene.primary_identifier' => $gene_primary_identifier,
+    };
+  }
 
   if ($search_string ne ':ALL:') {
     $query->{name} = { -like => $search_string . '%' };

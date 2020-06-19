@@ -765,9 +765,13 @@ canto.service('Metagenotype', function ($rootScope, $http, toaster, Curs) {
 });
 
 canto.service('CursAlleleList', function ($q, Curs) {
+  this.allAlleles = function() {
+    return this.alleleNameComplete(':ALL:', ':ALL:');
+  };
+
   this.alleleList = function (genePrimaryIdentifier) {
     return this.alleleNameComplete(genePrimaryIdentifier, ':ALL:');
-  }
+  };
 
   this.alleleNameComplete = function (genePrimaryIdentifier, searchTerm) {
     var q = $q.defer();
@@ -5127,7 +5131,7 @@ function editBackgroundDialog($uibModal, genotype) {
 
 var alleleNotesEditDialogCtrl =
     function ($scope, $uibModalInstance, $http, $q, toaster, CantoConfig, Curs,
-              CursAlleleList, args) {
+              CantoGlobals, CursAlleleList, args) {
     $scope.noteTypes = [];
 
     $scope.allele = args.allele;
@@ -5140,12 +5144,13 @@ var alleleNotesEditDialogCtrl =
     $scope.viewAllelesIds = [];
     $scope.chosenViewAlleleId = null;
     $scope.showViewAllelesPanel = true;
+    $scope.closeIconPath = CantoGlobals.app_static_path + '/images/close_icon.png';
 
     $scope.hideViewAllelesPanel = function() {
       $scope.showViewAllelesPanel = false;
     };
 
-    CursAlleleList.alleleList($scope.allele.gene_systematic_id)
+    CursAlleleList.allAlleles()
       .then(function (res) {
         $.map(res, function(allele) {
           if ($scope.allele.allele_id !== allele.allele_id) {
@@ -5219,7 +5224,7 @@ var alleleNotesEditDialogCtrl =
 
 canto.controller('AlleleNotesEditDialogCtrl',
   ['$scope', '$uibModalInstance', '$http', '$q', 'toaster', 'CantoConfig', 'Curs',
-   'CursAlleleList', 'args',
+   'CantoGlobals', 'CursAlleleList', 'args',
     alleleNotesEditDialogCtrl
   ]);
 
@@ -9233,57 +9238,117 @@ var strainPicker = function () {
     },
     restrict: 'E',
     replace: true,
-    templateUrl: app_static_path + 'ng_templates/strainPicker.html',
-    controller: function ($scope, StrainsService, CantoService) {
-      $scope.typeStrain = null;
-
-      $scope.data = {
-        newStrain: '',
-        strains: null,
-        sessionStrains: null,
-        strainSelector: ''
-      };
-
-      CantoService.lookup('strains', [$scope.taxonId]).then(function (data) {
-        $scope.data.strains = data;
-      });
-
-      $scope.getSessionStrains = function () {
-        StrainsService.getSessionStrains($scope.taxonId)
-          .then(function (sessionStrains) {
-            $scope.data.sessionStrains = sessionStrains;
-          });
-      };
-
-      $scope.getSessionStrains();
-
-      $scope.changed = function () {
-        if ($scope.data.strainSelector && ($scope.data.strainSelector !== 'Type a new strain')) {
-          StrainsService.addSessionStrain($scope.taxonId, $scope.data.strainSelector)
-            .then($scope.getSessionStrains);
-        }
-      };
-
-      $scope.remove = function (strain) {
-        StrainsService.removeSessionStrain($scope.taxonId, strain)
-          .then($scope.getSessionStrains);
-      };
-
-      $scope.hideTypeStrain = function () {
-        return ($scope.data.strainSelector !== 'Type a new strain');
-      };
-
-      $scope.addStrain = function () {
-        StrainsService.addSessionStrain($scope.taxonId, $scope.data.newStrain)
-          .then($scope.getSessionStrains);
-      };
-
-    },
+    templateUrl: app_static_path + 'ng_templates/strain_picker.html',
+    controller: 'strainPickerCtrl'
   };
 };
 
-canto.directive('strainPicker', ['StrainsService', 'CantoService', strainPicker]);
+canto.directive('strainPicker', strainPicker)
 
+var strainPickerCtrl = function ($scope, StrainsService, CantoService) {
+
+  $scope.data = {
+    strains: null,
+    sessionStrains: null,
+    selectedStrain: ''
+  };
+
+  $scope.unknownStrainAdded = false;
+
+  CantoService.lookup('strains', [$scope.taxonId]).then(function (data) {
+    $scope.data.strains = data;
+    $scope.getSessionStrains();
+  });
+
+  $scope.getSessionStrains = function () {
+    StrainsService.getSessionStrains($scope.taxonId)
+      .then(function (sessionStrains) {
+        $scope.data.sessionStrains = markCustomStrains(sessionStrains);
+        $scope.unknownStrainAdded = isUnknownStrainSet();
+      });
+  };
+
+  $scope.changed = function () {
+    if ($scope.data.selectedStrain) {
+      var strainName = $scope.data.selectedStrain.strain_name;
+      $scope.data.selectedStrain = '';
+      StrainsService.addSessionStrain($scope.taxonId, strainName)
+        .then($scope.getSessionStrains);
+    }
+  };
+
+  $scope.remove = function (strain) {
+    StrainsService.removeSessionStrain($scope.taxonId, strain)
+      .then($scope.getSessionStrains);
+  };
+
+  $scope.addStrain = function () {
+    if ($scope.data.selectedStrain) {
+      var strainName = $scope.data.selectedStrain;
+      $scope.data.selectedStrain = '';
+      StrainsService.addSessionStrain($scope.taxonId, strainName)
+        .then($scope.getSessionStrains);
+    }
+  };
+
+  $scope.addUnknownStrain = function () {
+    if (!$scope.unknownStrainAdded) {
+      StrainsService.addSessionStrain($scope.taxonId, 'Unknown strain')
+        .then($scope.getSessionStrains);
+      $scope.unknownStrainAdded = true;
+    }
+  };
+
+  $scope.strainFilter = function (value, index, array) {
+    if ($scope.data.selectedStrain) {
+      var searchText = $scope.data.selectedStrain.toUpperCase();
+      var strainName = value.strain_name.toUpperCase();
+      if (strainName.indexOf(searchText) !== -1) {
+        return true;
+      } else {
+        for (const synonym of value.synonyms) {
+          if (synonym.toUpperCase().indexOf(searchText) !== -1) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+    return true; // show all results if no text is entered
+  }
+
+  function markCustomStrains(sessionStrains) {
+    return sessionStrains.map(customStrainMarker);
+    
+    function customStrainMarker(strain) {
+      var isCustom = true;
+      if (strain.strain_name === 'Unknown strain') {
+        isCustom = false;
+      } else {
+        for (const existingStrain of $scope.data.strains) {
+          if (strain.strain_id === existingStrain.strain_id) {
+            isCustom = false;
+            break;
+          }
+        }
+      }
+      strain['is_custom'] = isCustom;
+      return strain;
+    }
+  }
+
+  function isUnknownStrainSet() {
+    for (const sessionStrain of $scope.data.sessionStrains) {
+      if (sessionStrain.strain_name === 'Unknown strain') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+};
+
+canto.controller('strainPickerCtrl', ['$scope', 'StrainsService', 'CantoService', strainPickerCtrl])
 
 var strainPickerDialogCtrl =
   function ($scope, $uibModalInstance, args, Curs, toaster) {
@@ -9552,7 +9617,7 @@ canto.directive('editOrganismsGenesTable', [editOrganismsGenesTable]);
 var editOrganismsTable = function (EditOrganismsSvc, CantoGlobals) {
   return {
     scope: {
-      title: '@',
+      tableTitle: '@',
       organisms: '=',
     },
     restrict: 'E',
