@@ -765,9 +765,13 @@ canto.service('Metagenotype', function ($rootScope, $http, toaster, Curs) {
 });
 
 canto.service('CursAlleleList', function ($q, Curs) {
+  this.allAlleles = function() {
+    return this.alleleNameComplete(':ALL:', ':ALL:');
+  };
+
   this.alleleList = function (genePrimaryIdentifier) {
     return this.alleleNameComplete(genePrimaryIdentifier, ':ALL:');
-  }
+  };
 
   this.alleleNameComplete = function (genePrimaryIdentifier, searchTerm) {
     var q = $q.defer();
@@ -5145,7 +5149,7 @@ var alleleNotesEditDialogCtrl =
       $scope.showViewAllelesPanel = false;
     };
 
-    CursAlleleList.alleleList($scope.allele.gene_systematic_id)
+    CursAlleleList.allAlleles()
       .then(function (res) {
         $.map(res, function(allele) {
           if ($scope.allele.allele_id !== allele.allele_id) {
