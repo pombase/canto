@@ -1826,3 +1826,8 @@ a:not([href]) {
 .allele-notes-chosen-notes {
   max-width: 20em;
 }
+
+.allele-notes-chosen-notes-allele-name {
+  margin: 0.5em 0;
+  font-weight: bold;
+}

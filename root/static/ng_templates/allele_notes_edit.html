@@ -37,6 +37,10 @@
       <div class="allele-notes-chosen-notes"
            ng-if="chosenViewAlleleId && viewAlleles[chosenViewAlleleId] && viewAlleles[chosenViewAlleleId].notes">
 
+        <div class="allele-notes-chosen-notes-allele-name">
+          Allele: <span ng-bind-html="viewAlleles[chosenViewAlleleId].display_name | encodeAlleleSymbols | toTrusted"></span>
+        </div>
+
         <div ng-repeat="noteTypeConf in noteTypes">
           <div ng-if="viewAlleles[chosenViewAlleleId].notes[noteTypeConf.name]">
             <div class="allele-notes-chosen-label">{{noteTypeConf.display_name}}:</div>
