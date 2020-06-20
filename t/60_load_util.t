@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 16;
+use Test::More tests => 26;
 use Test::Exception;
 
 use Canto::TestUtil;
@@ -31,13 +31,14 @@ my $gene_load = Canto::Track::GeneLoad->new(organism => $fly, schema => $schema)
 $gene_load->create_gene('FBgn0004107', 'Dmel\Cdk2', [], 'Cyclin-dependent kinase 2');
 $gene_load->create_gene('FBgn0016131', 'Dmel\Cdk4', [], 'Cyclin-dependent kinase 4');
 my $test_json_file = $test_util->root_dir() . '/t/data/sessions_from_json_test.json';
-my @created_sessions =
+my ($created_sessions, $updated_sessions) =
   $load_util->create_sessions_from_json($config, $test_json_file,
                                         'test.user@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org', 7227);
 
-is (@created_sessions, 1);
+is (@$created_sessions, 1);
+is (@$updated_sessions, 0);
 
-my $created_curs = $created_sessions[0];
+my $created_curs = $created_sessions->[0];
 my $created_cursdb = Canto::Curs::get_schema_for_key($config, $created_curs->curs_key());
 
 my $FBal0119310_allele =
@@ -71,3 +72,33 @@ my $FBab0037918_allele = ($genotype_FBab0037918->alleles()->all())[0];
 is($FBab0037918_allele->name(), 'Df(2L)Exel7046');
 
 
+# load the same file to test session updating
+($created_sessions, $updated_sessions) =
+  $load_util->create_sessions_from_json($config, $test_json_file,
+                                        'test.user@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org', 7227);
+
+is (@$created_sessions, 0);
+is (@$updated_sessions, 0);
+
+# load an extra allele
+my $test_json_extra_allele_file =
+  $test_util->root_dir() . '/t/data/sessions_from_json_extra_allele_test.json';
+($created_sessions, $updated_sessions) =
+  $load_util->create_sessions_from_json($config, $test_json_extra_allele_file,
+                                        'test.user@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org', 7227);
+
+is (@$created_sessions, 0);
+is (@$updated_sessions, 1);
+
+my $updated_curs = $updated_sessions->[0];
+my $updated_cursdb = Canto::Curs::get_schema_for_key($config, $updated_curs->curs_key());
+
+my $FBal0098765_allele =
+  $created_cursdb->resultset('Allele')->find({ primary_identifier => "FBal0098765" });
+
+ok (defined $FBal0098765_allele);
+
+is($FBal0098765_allele->type(), 'other');
+is($FBal0098765_allele->name(), 'Dmel\Cdk4_d1234');
+is($FBal0098765_allele->description(), undef);
+is($FBal0098765_allele->comment(), undef);
