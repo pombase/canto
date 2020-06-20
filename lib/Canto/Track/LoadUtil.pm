@@ -850,13 +850,15 @@ sub create_sessions_from_json
   # disable connection caching so we don't run out of file descriptors
   my $connect_options = { cache_connection => 0 };
 
-  my @results = ();
+  my @new_sessions = ();
+  my @updated_sessions = ();
 
   # load the publication in batches in advance
   PubmedUtil::load_by_ids($config, $self->schema(), [keys %$sessions_data], 'admin_load');
 
   my $success = 0;
   my ($curs, $cursdb, $pub) = ();
+  my $using_existing_session = undef;
 
   my $triage_status_cv = $self->find_cv('Canto publication triage status');
   my $curation_priority_cv = $self->find_cv('Canto curation priorities');
@@ -866,6 +868,9 @@ sub create_sessions_from_json
     $pub = undef;
     $curs = undef;
     $cursdb = undef;
+    $using_existing_session = 0;
+
+    my $new_allele_count = 0;
 
     my $error_message;
     ($pub, $error_message) = $self->load_pub_from_pubmed($config, $pub_uniquename);
@@ -877,13 +882,43 @@ sub create_sessions_from_json
     my $curs_rs = $pub->curs();
 
     if ($curs_rs->count() > 0) {
-      print "$pub_uniquename already has a session - skipping\n";
-      next PUB;
+      if ($curs_rs->count() > 1) {
+        die "more than one session for: $pub_uniquename\n";
+      }
+      $curs = $curs_rs->first();
+      print "updating existing session ", $curs->curs_key(), " for $pub_uniquename\n";
+      $using_existing_session = 1;
     }
 
-    my @gene_lookup_results = ();
+    if ($using_existing_session) {
+      $cursdb = Canto::Curs::get_schema_for_key($config, $curs->curs_key(),
+                                                $connect_options);
+    } else {
+      ($curs, $cursdb) =
+        Canto::Track::create_curs($config, $self->schema(), $pub, $connect_options);
+      push @new_sessions, $curs;
+    }
+
+    my @gene_lookup_results =();
+
+    my %existing_session_gene_uniquenames = ();
+
+    if ($using_existing_session) {
+      my @existing_genes = $cursdb->resultset('Gene')->all();
+
+      for my $existing_gene (@existing_genes) {
+        $existing_session_gene_uniquenames{$existing_gene->primary_identifier()} = 1;
+      }
+    }
 
     for my $gene_uniquename (@{$session_data->{genes}}) {
+      if ($using_existing_session) {
+        if ($existing_session_gene_uniquenames{$gene_uniquename}) {
+          next;
+        }
+        print "adding new gene to existing session: $gene_uniquename\n";
+      }
+
       my $lookup_result = $gene_lookup->lookup([$gene_uniquename]);
       push @gene_lookup_results, $gene_lookup->lookup([$gene_uniquename]);
 
@@ -892,11 +927,6 @@ sub create_sessions_from_json
         next PUB;
       }
     }
-
-    ($curs, $cursdb) =
-      Canto::Track::create_curs($config, $self->schema(), $pub, $connect_options);
-
-    push @results, $curs;
 
     my $allele_manager =
       Canto::Curs::AlleleManager->new(config => $config, curs_schema => $cursdb);
@@ -930,12 +960,36 @@ sub create_sessions_from_json
       }
     }
 
+    for my $existing_gene_uniquename (keys %existing_session_gene_uniquenames) {
+      $db_genes{$existing_gene_uniquename} =
+        $cursdb->resultset('Gene')->find({
+          primary_identifier => $existing_gene_uniquename,
+        });
+    }
+
     my $alleles = $session_data->{alleles};
 
     if ($alleles) {
+      my %existing_allele_uniquenames = ();
+
+      if ($using_existing_session) {
+        my @existing_alleles = $cursdb->resultset('Allele')->all();
+
+        for my $existing_allele (@existing_alleles) {
+          $existing_allele_uniquenames{$existing_allele->primary_identifier()} = 1;
+        }
+      }
+
       my @genotype_details = ();
 
       while (my ($allele_uniquename, $allele_details) = each %$alleles) {
+        if ($using_existing_session) {
+          if ($existing_allele_uniquenames{$allele_uniquename}) {
+            next;
+          }
+          print "adding new allele to existing session: $allele_uniquename\n";
+        }
+
         my $allele_gene_uniquename = delete $allele_details->{gene};
 
         $allele_details->{source_identifier} = $allele_uniquename;
@@ -980,6 +1034,7 @@ sub create_sessions_from_json
                                                        $allele_details->{description},
                                                        $allele_details->{type});
 
+        $new_allele_count++;
 
         push @genotype_details, {
           allele => $allele_details,
@@ -1031,22 +1086,31 @@ sub create_sessions_from_json
       $pub->curation_priority($curation_priority_cvterm);
       $pub->update();
     }
+
+    if ($using_existing_session) {
+      if ($new_allele_count > 0) {
+        push @updated_sessions, $curs;
+      } else {
+        print "no new alleles adding to session: ", $curs->curs_key(), "\n";
+      }
+    }
   } continue {
 
-    if ($success) {
-      print "created session: ", $curs->curs_key(), " pub: ", $pub->uniquename(),
-        " for: $curator_email_address\n";
-
-      $success = 0;
-    } else {
-      print "no session created for ", $pub->uniquename(), "\n";
-      if (defined $curs) {
-        Canto::Track::delete_curs($config, $self->schema(), $curs->curs_key());
+    if (!$using_existing_session) {
+      if ($success) {
+        print "created session: ", $curs->curs_key(), " pub: ", $pub->uniquename(),
+          " for: $curator_email_address\n";
+        $success = 0;
+      } else {
+        print "no session created for ", $pub->uniquename(), " due to an error\n";
+        if (defined $curs) {
+          Canto::Track::delete_curs($config, $self->schema(), $curs->curs_key());
+        }
       }
     }
   }
 
-  return @results;
+  return (\@new_sessions, \@updated_sessions);
 }
 
 1;

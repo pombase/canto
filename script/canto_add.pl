@@ -301,8 +301,9 @@ if ($add_sessions_from_json) {
   my $email_address = shift @ARGV;
   my $taxonid = shift @ARGV;
 
-  my @new_sessions =
+  my ($new_sessions, $updated_sessions) =
     $load_util->create_sessions_from_json($config, $file_name, $email_address, $taxonid);
 
-  print "created ", scalar(@new_sessions), " sessions\n";
+  print "created ", scalar(@$new_sessions), " sessions\n";
+  print "updated ", scalar(@$updated_sessions), " sessions\n";
 }
