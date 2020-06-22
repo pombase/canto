@@ -1,4 +1,8 @@
 <div class="genotype-list-row-links">
+  <div ng-if="!read_only_curs">
+    <a ng-class="{disabled: genotypeId == null }"
+       ng-click="editBackground(genotypeId)">Add/edit background</a>
+  </div>
   <div ng-repeat="annotationType in matchingAnnotationTypes">
     <a ng-class="{disabled: genotypeId == null }" ng-if="!read_only_curs"
        href="{{curs_root_uri + '/feature/genotype/annotate/' + genotypeId + '/start/' + annotationType.name + '/'}}">
@@ -23,10 +27,6 @@
     <a ng-show="alleleCount != 1"
       ng-class="{disabled: genotypeId == null }"
       href="{{curs_root_uri + '/' + genotypeManagePath + '#/duplicate/' + genotypeId}}">Copy and edit</a>
-  </div>
-  <div ng-if="!read_only_curs">
-    <a ng-class="{disabled: genotypeId == null }"
-       ng-click="editBackground(genotypeId)">Add/edit background</a>
   </div>
   <div ng-if="showNoteEdit()">
     <a ng-class="{disabled: genotypeId == null }"
