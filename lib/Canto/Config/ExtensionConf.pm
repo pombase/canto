@@ -52,6 +52,7 @@ use warnings;
              "FeatureID" - the ID of any annotatable feature is allowed
              "TranscriptID" - only transcript IDs are allowed in the range
              "ProteinID" - only protein IDs are allowed
+             "MetagenotypeID" - only metagenotypes are allowed
 =cut
 
 sub parse {
@@ -142,7 +143,13 @@ sub parse {
                     };
                   }
                 } else {
-                  die "unsupported range part: $_\n";
+                  if (/^metagenotype/i) {
+                    push @new_range_bits, {
+                      type => 'Metagenotype',
+                    }
+                  } else {
+                    die "unsupported range part: $_\n";
+                  }
                 }
               }
             }

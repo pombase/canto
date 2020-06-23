@@ -2738,7 +2738,7 @@ function openTermConfirmDialog($uibModal, termId, initialState, featureType, isE
 
 
 var extensionRelationEdit =
-  function (CantoService, CursGeneList, toaster, $uibModal) {
+  function (CantoService, Curs, CursGeneList, toaster, $uibModal) {
     return {
       scope: {
         extensionRelation: '=',
@@ -2752,8 +2752,10 @@ var extensionRelationEdit =
       templateUrl: app_static_path + 'ng_templates/extension_relation_edit.html',
       controller: function ($scope) {
         $scope.rangeGeneId = '';
+        $scope.rangeMetagenotypeUniquename = '';
 
         $scope.genes = null;
+        $scope.metagenotypes = null;
 
         $scope.getGenesFromServer = function() {
           CursGeneList.geneList().then(function (results) {
@@ -2764,6 +2766,16 @@ var extensionRelationEdit =
         };
 
         $scope.getGenesFromServer();
+
+        $scope.getMetagenotypesFromServer = function() {
+          Curs.list('metagenotype').then(function (results) {
+            $scope.metagenotypes = results;
+          }).catch(function () {
+            toaster.pop('note', "couldn't read the metagenotype list from the server");
+          });
+        };
+
+        $scope.getMetagenotypesFromServer();
 
         $scope.openSingleGeneAddDialog = function () {
           var modal = openSingleGeneAddDialog($uibModal);
@@ -2877,7 +2889,7 @@ var extensionRelationEdit =
   };
 
 canto.directive('extensionRelationEdit',
-  ['CantoService', 'CursGeneList', 'toaster', '$uibModal',
+                ['CantoService', 'Curs', 'CursGeneList', 'toaster', '$uibModal',
     extensionRelationEdit
   ]);
 

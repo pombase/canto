@@ -8,6 +8,13 @@
                      chosen-feature-id="rangeGeneId"></feature-chooser>
     <a ng-click="openSingleGeneAddDialog()">Add another ...</a>
   </span>
+  <span ng-if="rangeConfig.type == 'Metagenotype'">
+    <span ng-if="disabled">Metagenotype</span>
+    <feature-chooser ng-if="!disabled && metagenotypes"
+                     features="metagenotypes" feature-type="'metagenotype'"
+                     chosen-feature-display-name="extensionRelation.rangeDisplayName"
+                     chosen-feature-id="extensionRelation.rangeValue"></feature-chooser>
+  </span>
   <span ng-if="rangeConfig.type == 'Ontology'">
     <span ng-if="disabled">Term name</span>
     <span ng-if="!disabled">
