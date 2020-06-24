@@ -1,0 +1,27 @@
+<div class="annotation-table annotation-single-row">
+<table ng-if="annotationType" class="list">
+  <thead>
+    <tr>
+      <th>Interactor A</th>
+      <th ng-if="multiOrganismMode">Taxon Id A</th>
+      <th ng-if="!data.hideColumns.evidence_code">Evidence</th>
+      <th ng-if="annotationType.can_have_conditions && !data.hideColumns.conditions">Conditions</th>
+      <th>Interactor B</th>
+      <th ng-if="multiOrganismMode">Taxon Id B</th>
+      <th ng-if="showInteractionTermColumns">Term ID</th>
+      <th ng-if="showInteractionTermColumns">Phenotype</th>
+      <th ng-if="!data.hideColumns.extension">
+        <span ng-show="flyBaseMode">Phenotype extensions</span>
+        <span ng-hide="flyBaseMode">Annotation extension</span>
+      </th>
+      <th ng-if="!data.hideColumns.qualifiers">Qualifiers</th>
+      <th ng-if="!data.hideColumns.submitter_comment">Comment</th>
+      <th ng-if="!data.hideColumns.curator">Curator</th>
+    </tr>
+  </thead>
+
+  <tr annotation-table-row annotation-type-name="interaction"
+      feature-status-filter="'new'">
+  </tr>
+</table>
+</div>
