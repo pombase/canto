@@ -2738,7 +2738,7 @@ function openTermConfirmDialog($uibModal, termId, initialState, featureType, isE
 
 
 var extensionRelationEdit =
-  function (CantoService, CursGeneList, toaster, $uibModal) {
+  function (CantoService, Curs, CursGeneList, toaster, $uibModal) {
     return {
       scope: {
         extensionRelation: '=',
@@ -2752,8 +2752,10 @@ var extensionRelationEdit =
       templateUrl: app_static_path + 'ng_templates/extension_relation_edit.html',
       controller: function ($scope) {
         $scope.rangeGeneId = '';
+        $scope.rangeMetagenotypeUniquename = '';
 
         $scope.genes = null;
+        $scope.metagenotypes = null;
 
         $scope.getGenesFromServer = function() {
           CursGeneList.geneList().then(function (results) {
@@ -2764,6 +2766,16 @@ var extensionRelationEdit =
         };
 
         $scope.getGenesFromServer();
+
+        $scope.getMetagenotypesFromServer = function() {
+          Curs.list('metagenotype').then(function (results) {
+            $scope.metagenotypes = results;
+          }).catch(function () {
+            toaster.pop('note', "couldn't read the metagenotype list from the server");
+          });
+        };
+
+        $scope.getMetagenotypesFromServer();
 
         $scope.openSingleGeneAddDialog = function () {
           var modal = openSingleGeneAddDialog($uibModal);
@@ -2877,7 +2889,7 @@ var extensionRelationEdit =
   };
 
 canto.directive('extensionRelationEdit',
-  ['CantoService', 'CursGeneList', 'toaster', '$uibModal',
+                ['CantoService', 'Curs', 'CursGeneList', 'toaster', '$uibModal',
     extensionRelationEdit
   ]);
 
@@ -7085,11 +7097,14 @@ var annotationTransferDialogCtrl =
     $scope.annotation = args.annotation;
     $scope.annotationTypeName = args.annotation.annotation_type;
     $scope.annotationType = null;
+    $scope.alleleTypes = null;
     $scope.featureType = null;
     $scope.otherFeatures = null;
     $scope.selectedFeatureIds = [];
     $scope.transferExtension = true;
     $scope.extensionAsString = extensionAsString($scope.annotation.extension, true, true);
+
+    $scope.interactorAorB = null;
 
     $scope.chooseFeatureType = null;
 
@@ -7106,16 +7121,16 @@ var annotationTransferDialogCtrl =
       } else {
         return null;
       }
-    }
+    };
 
     $scope.annotationTypePromise = AnnotationTypeConfig.getByName($scope.annotationTypeName);
     $scope.alleleTypesPromise = CantoConfig.get('allele_types');
 
-    function filterFeatures(features, alleleTypes) {
-      return $.grep(features, function(feature) {
+    function filterFeatures() {
+      return $.grep($scope.features, function(feature) {
         if ($scope.chooseFeatureType === 'genotype' && feature.alleles.length == 1) {
           var allele = feature.alleles[0];
-          var alleleType = alleleTypes[allele['type']];
+          var alleleType = $scope.alleleTypes[allele['type']];
           if (alleleType && alleleType['do_not_annotate']) {
             return false;
           }
@@ -7126,8 +7141,9 @@ var annotationTransferDialogCtrl =
     }
 
     $scope.getGeneFeatures = function() {
-      CursGeneList.geneList().then(function (results) {
-        $scope.otherFeatures = filterFeatures(results, null);
+      CursGeneList.geneList().then(function (features) {
+        $scope.features = features;
+        $scope.otherFeatures = filterFeatures(null);
       }).catch(function (err) {
         toaster.pop('note', "couldn't read the gene list from the server");
       });
@@ -7140,31 +7156,35 @@ var annotationTransferDialogCtrl =
       });
     };
 
+    $scope.chooseInteractor = function(interactorAorB) {
+      $scope.interactorAorB = interactorAorB;
+
+      $scope.otherFeatures = filterFeatures();
+    };
+
     $q.all([$scope.annotationTypePromise, $scope.alleleTypesPromise])
       .then(function (results) {
         var annotationType = results[0];
-        var alleleTypes = results[1];
+
+        $scope.alleleTypes = results[1];
 
         $scope.annotationType = annotationType;
         $scope.featureType = annotationType.feature_type;
         $scope.chooseFeatureType = annotationType.feature_type;
- 
+
         if (annotationType.category === 'interaction' &&
             annotationType.feature_type !== 'gene') {
           $scope.chooseFeatureType = 'genotype';
         }
 
         if ($scope.chooseFeatureType === 'gene') {
-          CursGeneList.geneList().then(function (results) {
-            $scope.otherFeatures = filterFeatures(results, null);
-          }).catch(function (err) {
-            toaster.pop('note', "couldn't read the gene list from the server");
-          });
+          $scope.getGeneFeatures();
         } else {
           if ($scope.chooseFeatureType === 'genotype') {
             CursGenotypeList.cursGenotypeList({include_allele: 1})
-              .then(function (results) {
-                $scope.otherFeatures = filterFeatures(results, alleleTypes);
+              .then(function (features) {
+                $scope.features = features;
+                $scope.otherFeatures = filterFeatures(features);
               }).catch(function (err) {
                 toaster.pop('note', "couldn't read the genotype list from the server");
               });
@@ -7186,7 +7206,7 @@ var annotationTransferDialogCtrl =
 
     $scope.canTransfer = function() {
       return $scope.selectedFeatureIds.length > 0;
-    }
+    };
 
     $scope.ok = function () {
       var annotationCopy = {};
@@ -7203,7 +7223,11 @@ var annotationTransferDialogCtrl =
                   $scope.annotationType.feature_type !== 'metagenotype') {
                 annotationCopy.feature_id = newId;
               } else {
-                annotationCopy.genotype_a_id = newId;
+                if ($scope.interactorAorB === 'A') {
+                  annotationCopy.genotype_a_id = newId;
+                } else {
+                  annotationCopy.genotype_b_id = newId;
+                }
               }
 
               loadingStart();

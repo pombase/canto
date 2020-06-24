@@ -9,8 +9,23 @@
     </h4>
   </div>
 
-  <div class="modal-body">
+  <div ng-if="!annotationType" class="modal-body">
+    (Loading annotations ...)
+  </div>
 
+  <div ng-if="annotationType" class="modal-body">
+
+    <div ng-if="annotationType.category == 'interaction' && !interactorAorB">
+      Choose interactor::
+      <div>
+        <a href="#" ng-click="chooseInteractor('A')">Interactor A</a>
+      </div>
+      <div>
+        <a href="#" ng-click="chooseInteractor('B')">Interactor B</a>
+      </div>
+    </div>
+
+    <div ng-if="annotationType.category != 'interaction' || interactorAorB">
 
     <div class="curs-annotation-transfer-features">
       <multi-feature-chooser ng-if="!!otherFeatures" 
@@ -32,10 +47,12 @@
         Transfer extension
       </label>
     </div>
+    </div>
 
     <div class="modal-footer">
       <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-      <button class="btn btn-primary" ng-click="ok()" ng-alt-enter="ok()"
+      <button ng-if="annotationType.category != 'interaction' || interactorAorB"
+              class="btn btn-primary" ng-click="ok()" ng-alt-enter="ok()"
               title="{{ okButtonTitleMessage() }}"
               ng-disabled="!canTransfer()">OK</button>
     </div>
