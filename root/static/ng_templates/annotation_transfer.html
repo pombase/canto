@@ -10,13 +10,13 @@
   </div>
 
   <div ng-if="!annotationType" class="modal-body">
-    (Loading annotations ...)
+    (Loading ...)
   </div>
 
   <div ng-if="annotationType" class="modal-body">
 
     <div ng-if="annotationType.category == 'interaction' && !interactorAorB">
-      Choose interactor::
+      Choose interactor:
       <div>
         <a href="#" ng-click="chooseInteractor('A')">Interactor A</a>
       </div>
