@@ -1,19 +1,27 @@
 <div class="curs-annotation-transfer">
   <div class="modal-header">
-    <h4 class="modal-title">
+    <h4 ng-if="!features" class="modal-title">
+      Transfer annotation
+    </h4>
+    <h4 ng-if="features" class="modal-title">
+      <span ng-if="annotationType.category == 'interaction'">
+        Transfer {{annotationType.display_name}} annotation
+      </span>
+      <span ng-if="annotationType.category != 'interaction'">
       Transfer <span ng-if="annotation.term_name">"{{termAndExtension()}}"</span>
       <span ng-show="featureDisplayName">from
         <span ng-bind-html="featureDisplayName | encodeAlleleSymbols | toTrusted"></span>
       </span>
       to:
+      </span>
     </h4>
   </div>
 
-  <div ng-if="!annotationType" class="modal-body">
+  <div ng-if="!features" class="modal-body">
     (Loading ...)
   </div>
 
-  <div ng-if="annotationType" class="modal-body">
+  <div ng-if="features" class="modal-body">
 
     <div ng-if="annotationType.category == 'interaction' && !interactorAorB">
       Choose interactor:
@@ -26,6 +34,12 @@
     </div>
 
     <div ng-if="annotationType.category != 'interaction' || interactorAorB">
+
+    <div ng-if="annotationType.category == 'interaction'">
+      <interaction-annotation-single-row annotation="annotation"
+                                         annotation-type-name="{{annotationType.name}}">
+      </interaction-annotation-single-row>
+    </div>
 
     <div class="curs-annotation-transfer-features">
       <multi-feature-chooser ng-if="!!otherFeatures" 

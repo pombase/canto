@@ -24,6 +24,21 @@ var defaultStackedChartColors = [
   '#3D8390', // dark bluegrey
 ];
 
+var initialHideColumns = { // columns to hide because they're empty
+  with_or_from_identifier: true, // set to false when a row has a non empty element
+  qualifiers: true,
+  submitter_comment: true,
+  extension: true,
+  curator: true,
+  evidence_code: true,
+  conditions: true,
+  genotype_name: true,
+  genotype_background: true,
+  term_suggestion: true,
+  gene_product_form_id: true,
+  strain_name: true,
+};
+
 canto.config(['ChartJsProvider', function (ChartJsProvider) {
   ChartJsProvider.setOptions({
     chartColors: defaultStackedChartColors
@@ -7493,6 +7508,25 @@ function filterAnnotations(annotations, params) {
   });
 }
 
+function setHideColumns(annotation, hideColumns) {
+  $.map(initialHideColumns,
+        function (prop, key) {
+          if (key == 'qualifiers' && annotation.is_not) {
+            hideColumns[key] = false;
+          }
+          if (key == 'term_suggestion') {
+            if (annotation.term_suggestion_name || annotation.term_suggestion_definition) {
+              hideColumns[key] = false;
+            }
+          }
+          if (annotation[key] &&
+              (!$.isArray(annotation[key]) || annotation[key].length > 0 &&
+               (!$.isArray(annotation[key][0]) || annotation[key][0].length > 0))) {
+            hideColumns[key] = false;
+          }
+        });
+}
+
 var annotationTableCtrl =
   function (CantoGlobals, AnnotationTypeConfig, CursGenotypeList,
     CursSessionDetails, CantoConfig) {
@@ -7529,21 +7563,6 @@ var annotationTableCtrl =
           },
           true);
 
-        var initialHideColumns = { // columns to hide because they're empty
-          with_or_from_identifier: true, // set to false when a row has a non empty element
-          qualifiers: true,
-          submitter_comment: true,
-          extension: true,
-          curator: true,
-          evidence_code: true,
-          conditions: true,
-          genotype_name: true,
-          genotype_background: true,
-          term_suggestion: true,
-          gene_product_form_id: true,
-          strain_name: true,
-        };
-
         $scope.data = {
           annotations: null,
           hideColumns: {},
@@ -7568,21 +7587,7 @@ var annotationTableCtrl =
             copyObject(initialHideColumns, $scope.data.hideColumns);
             $.map($scope.annotations,
               function (annotation) {
-                $.map(initialHideColumns,
-                  function (prop, key) {
-                    if (key == 'qualifiers' && annotation.is_not) {
-                      $scope.data.hideColumns[key] = false;
-                    }
-                    if (key == 'term_suggestion') {
-                      if (annotation.term_suggestion_name || annotation.term_suggestion_definition) {
-                        $scope.data.hideColumns[key] = false;
-                      }
-                    }
-                    if (annotation[key] &&
-                      (!$.isArray(annotation[key]) || annotation[key].length > 0)) {
-                      $scope.data.hideColumns[key] = false;
-                    }
-                  });
+                setHideColumns(annotation, $scope.data.hideColumns);
               });
           }
 
@@ -8013,6 +8018,47 @@ var annotationSingleRow =
 canto.directive('annotationSingleRow',
   ['AnnotationTypeConfig', 'CantoConfig', 'CantoService', 'Curs',
     annotationSingleRow
+  ]);
+
+
+var interactionAnnotationSingleRow =
+  function (AnnotationTypeConfig, CantoConfig, CantoService, Curs) {
+    return {
+      restrict: 'E',
+      scope: {
+        annotation: '=',
+        annotationTypeName: '@'
+      },
+      replace: true,
+      templateUrl: function () {
+        return app_static_path + 'ng_templates/interaction_annotation_single_row.html';
+      },
+      controller: function ($scope) {
+        $scope.annotationType = null;
+
+        $scope.data = {
+          hideColumns: {},
+        };
+
+        copyObject(initialHideColumns, $scope.data.hideColumns);
+
+        setHideColumns($scope.annotation, $scope.data.hideColumns);
+
+        // the curator details aren't helpful here
+        $scope.data.hideColumns['curator'] = true;
+
+        AnnotationTypeConfig.getByName($scope.annotationTypeName)
+          .then(function(results) {
+            $scope.annotationType = results;
+          });
+
+      }
+    };
+  };
+
+canto.directive('interactionAnnotationSingleRow',
+  ['AnnotationTypeConfig', 'CantoConfig', 'CantoService', 'Curs',
+    interactionAnnotationSingleRow
   ]);
 
 
