@@ -23,23 +23,27 @@
 
   <div ng-if="features" class="modal-body">
 
-    <div ng-if="annotationType.category == 'interaction' && !interactorAorB">
+    <div class="curs-annotation-transfer-choose-interactor" ng-if="annotationType.category == 'interaction' && !interactorAorB">
+      <div>
       Choose interactor:
+      </div>
+      <div>
       <div>
         <a href="#" ng-click="chooseInteractor('A')">Interactor A</a>
       </div>
       <div>
         <a href="#" ng-click="chooseInteractor('B')">Interactor B</a>
       </div>
+      </div>
     </div>
-
-    <div ng-if="annotationType.category != 'interaction' || interactorAorB">
 
     <div ng-if="annotationType.category == 'interaction'">
       <interaction-annotation-single-row annotation="annotation"
                                          annotation-type-name="{{annotationType.name}}">
       </interaction-annotation-single-row>
     </div>
+
+    <div ng-if="annotationType.category != 'interaction' || interactorAorB">
 
     <div class="curs-annotation-transfer-features">
       <multi-feature-chooser ng-if="!!otherFeatures" 

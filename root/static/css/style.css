@@ -1782,6 +1782,12 @@ a:not([href]) {
   margin-top: 1.5em;
 }
 
+.curs-annotation-transfer-choose-interactor > div {
+  display: inline-block;
+  vertical-align: top;
+  padding-right: 1em;
+}
+
 .allele-notes-dialog .modal-body {
   display: flex;
   flex-direction: row;
