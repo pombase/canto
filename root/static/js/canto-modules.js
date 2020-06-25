@@ -6109,7 +6109,7 @@ var annotationEditDialogCtrl =
         $scope.annotation.term_ontid = termId;
         $scope.annotation.term_name = termName;
 
-        if (!searchString.match(/^".*"$/) && searchString !== termId) {
+        if (searchString && !searchString.match(/^".*"$/) && searchString !== termId) {
           var termConfirm = openTermConfirmDialog($uibModal, termId, 'definition',
             $scope.annotationType.feature_type, false);
 
