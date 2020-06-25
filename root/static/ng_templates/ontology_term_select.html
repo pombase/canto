@@ -1,11 +1,14 @@
 <div id="ferret">
   <div id="ferret-term-entry" class="curs-box" ng-if="annotationType.display_name">
-    <div class="inline-help curs-box-title">
+    <div ng-if="annotationType.ontology_size == 'large'" class="inline-help curs-box-title">
 Search for {{annotationType.display_name}} term
+    </div>
+    <div ng-if="annotationType.ontology_size == 'small'" class="inline-help curs-box-title">
+Choose a {{annotationType.display_name}} term
     </div>
     <div class="ferret-term-entry-inside curs-box-body">
       <div>
-        <div>
+        <div ng-if="annotationType.help_text">
 {{annotationType.help_text}}
         </div>
         <div ng-if="annotationType.more_help_text">
@@ -34,11 +37,6 @@ Gene products may be annotated with multiple
             <div ng-if="annotationType.extra_help_text">
 {{annotationType.extra_help_text}}
             </div>
-          </div>
-        </div>
-        <div ng-if="annotationType.ontology_size == 'small'">
-          <div>
-Select {{annotationType.short_display_name}}:
           </div>
         </div>
           <term-name-complete id="ferret-term-input" name="ferret-term-entry"
