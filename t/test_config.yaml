@@ -186,15 +186,20 @@ test_config:
                extension:
                  -
                    - relation: 'exists_during'
+                     rangeType: 'Ontology'
                      rangeValue: 'GO:0051329'
                    - relation: 'has_substrate'
+                     rangeType: 'Gene'
                      rangeValue: 'PomBase:SPBC1105.11c'
                    - relation: 'requires_feature'
+                     rangeType: 'Gene'
                      rangeValue: 'Pfam:PF00564'
                  -
                    - relation: 'exists_during'
+                     rangeType: 'Ontology'
                      rangeValue: 'GO:0051329'
                    - relation: 'has_substrate'
+                     rangeType: 'Gene'
                      rangeValue: 'PomBase:SPBC1105.11c'
                curator:
                  email: "some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org"

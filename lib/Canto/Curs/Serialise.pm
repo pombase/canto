@@ -122,6 +122,15 @@ sub _get_metadata
   return \%ret;
 }
 
+sub _get_metagenotype_by_id
+{
+  my $schema = shift;
+  my $metagenotype_id = shift;
+
+  return $schema->resultset('Metagenotype')
+    ->find({ metagenotype_id => $metagenotype_id });
+}
+
 sub _get_annotations
 {
   my $config = shift;
@@ -237,8 +246,20 @@ sub _get_annotations
 
       map {
         my $extension_part = $_;
+
         my $data_clone = clone \%data;
         $data_clone->{extension} = $extension_part;
+
+        map {
+          my $extension_bit = $_;
+
+          if (lc $extension_bit->{rangeType} eq 'metagenotype') {
+            my $metagenotype =
+              _get_metagenotype_by_id($schema, $extension_bit->{rangeValue});
+
+            $extension_bit->{rangeValue} = $metagenotype->identifier();
+          }
+        } @$extension_part;
 
         push @ret, $data_clone
       } @$extension;
