@@ -76,6 +76,9 @@ sub _get_metadata
     $key = "canto_session" if $key eq "curs_key";
 
     ($key, _get_metadata_value($curs_schema, $_->key(), $_->value() ))
+  } grep {
+    my $key = $_->key();
+    $key !~ /email$/;
   } @results;
 
   if (!$ret{canto_session}) {
@@ -95,6 +98,9 @@ sub _get_metadata
 
   while (defined (my $prop = $cursprops_rs->next())) {
     my $prop_type_name = $prop->type()->name();
+
+    next if $prop_type_name =~ /email$/;
+
     if ($prop_type_name eq 'link_sent_to_curator_date' &&
           !defined $ret{first_sent_to_curator_date}) {
       $ret{first_sent_to_curator_date} = $prop->value();
@@ -111,11 +117,9 @@ sub _get_metadata
 
   my @all_curators = $curator_manager->session_curators($ret{canto_session});
 
-  $ret{initial_curator_email} = $all_curators[0]->[0];
   $ret{initial_curator_name} = $all_curators[0]->[1];
 
   $ret{curator_name} = $current_submitter_name;
-  $ret{curator_email} = $current_submitter_email;
   $ret{curator_role} = $community_curated ? 'community' : $config->{database_name};
   $ret{curation_accepted_date} = $accepted_date;
 
@@ -187,6 +191,7 @@ sub _get_annotations
     );
 
     if (defined $data{curator}) {
+      delete $data{email};
       if (defined $data{curator}->{community_curated}) {
         if ($data{curator}->{community_curated}) {
           # make sure that we have "true" in the JSON output, not "1"
@@ -223,10 +228,15 @@ sub _get_annotations
 
     rmap_hash {
       my $current = $_;
+
       if (exists $current->{email}) {
-        # this is a curator section - don't modify
+        # curator section
+        delete $current->{email};
         cut();
       }
+
+      delete $current->{curator_email};
+
       for my $key (keys %$current) {
         my $value = $current->{$key};
         if (defined $value) {
