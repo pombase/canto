@@ -149,7 +149,6 @@ my $full_expected_curation_session =
         publication => 'PMID:19756689',
         curator => {
           name => 'Some Testperson',
-          email => 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org',
           community_curated => JSON::XS::false,
         },
         term_suggestion => {
@@ -168,7 +167,6 @@ my $full_expected_curation_session =
         publication => 'PMID:19756689',
         curator => {
           name => 'Some Testperson',
-          email => 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org',
           community_curated => JSON::XS::false,
         },
         with_gene => "SPBC1826.01c",
@@ -197,7 +195,6 @@ my $full_expected_curation_session =
         publication => 'PMID:19756689',
         curator => {
           name => 'Some Testperson',
-          email => 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org',
           community_curated => JSON::XS::false,
         },
         with_gene => "SPBC1826.01c",
@@ -221,7 +218,6 @@ my $full_expected_curation_session =
         publication => 'PMID:19756689',
         curator => {
           name => 'Some Testperson',
-          email => 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org',
           community_curated => JSON::XS::false,
         },
         term => 'GO:0022857',
@@ -232,7 +228,6 @@ my $full_expected_curation_session =
         publication => 'PMID:19756689',
         curator => {
           name => 'Some Testperson',
-          email => 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org',
           community_curated => JSON::XS::false,
         },
         status => 'new',
@@ -248,7 +243,6 @@ my $full_expected_curation_session =
         publication => 'PMID:19756689',
         curator => {
           name => 'Some Testperson',
-          email => 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org',
           community_curated => JSON::XS::false,
         },
         status => 'new',
@@ -267,7 +261,6 @@ my $full_expected_curation_session =
         publication => 'PMID:19756689',
         curator => {
           name => 'Some Testperson',
-          email => 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org',
           community_curated => JSON::XS::false,
         },
         type => 'phenotype',
@@ -286,7 +279,6 @@ my $full_expected_curation_session =
         publication => 'PMID:19756689',
         curator => {
           name => 'Some Testperson',
-          email => 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org',
           community_curated => JSON::XS::false,
         },
         term => 'FYPO:0000017'
@@ -299,7 +291,6 @@ my $full_expected_curation_session =
         publication => 'PMID:19756689',
         curator => {
           name => 'Another Testperson',
-          email => 'a.n.other.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org',
           community_curated => JSON::XS::true,
         },
         term => 'MOD:01157',
@@ -319,9 +310,7 @@ my $full_expected_curation_session =
       accepted_timestamp => '2012-02-15 13:45:00',
       curation_in_progress_timestamp => '2012-02-15 13:45:00',
       session_created_timestamp => '2012-02-15 13:45:00',
-      curator_email => 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org',
       curator_name => 'Some Testperson',
-      initial_curator_email => 'some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org',
       initial_curator_name => 'Some Testperson',
       curator_role => 'community',
       curation_accepted_date => '2012-02-15 13:45:00',
