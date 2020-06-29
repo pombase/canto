@@ -9251,15 +9251,11 @@ var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Met
       }
 
       function createControlMetagenotype() {
-        var pathogenStrainTaxonId = $scope.selectedPathogenStrain.taxon_id;
-        var pathogenStrainName = $scope.selectedPathogenStrain.strain_name;
-        var hostStrainTaxonId = $scope.selectedHostStrain.taxon_id;
-        var hostStrainName = $scope.selectedHostStrain.strain_name;
         Metagenotype.create({
-          pathogen_taxon_id: hostStrainTaxonId,
-          pathogen_strain_name: hostStrainName,
-          host_taxon_id: hostStrainTaxonId,
-          host_strain_name: hostStrainName
+          pathogen_taxon_id: $scope.selectedPathogenStrain.taxon_id,
+          pathogen_strain_name: $scope.selectedPathogenStrain.strain_name,
+          host_taxon_id: $scope.selectedHostStrain.taxon_id,
+          host_strain_name: $scope.selectedHostStrain.strain_name
         });
       }
 
