@@ -7741,6 +7741,7 @@ var annotationTableRow =
         $scope.featureType = null;
         $scope.interactionFeatureType = null;
         $scope.showInteractionTermColumns = false;
+        $scope.hasWildTypePathogen = false;
         $scope.hasWildTypeHost = false;
         $scope.showTransferLink = false;
 
@@ -7781,6 +7782,12 @@ var annotationTableRow =
         };
 
         $scope.displayEvidence = annotation.evidence_code;
+
+        $scope.hasWildTypePathogen = (
+          $scope.annotation.feature_type == 'metagenotype' &&
+          CantoGlobals.pathogen_host_mode &&
+          isWildTypeGenotype($scope.annotation.pathogen_genotype)
+        );
 
         $scope.hasWildTypeHost = (
           $scope.annotation.feature_type == 'metagenotype' &&

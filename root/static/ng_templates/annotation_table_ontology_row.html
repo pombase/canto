@@ -10,9 +10,12 @@
     </div>
   </td>
   <td ng-if="annotationType.feature_type == 'metagenotype'">
-    <div>
-      <a ng-href="{{featureLink('genotype', annotation.pathogen_genotype.genotype_id)}}"><span ng-bind-html="annotation.pathogen_genotype.genotype_display_name | encodeAlleleSymbols | toTrusted"></span></a>
-    <div>
+    <div ng-switch="hasWildTypePathogen">
+      <a ng-switch-when="false" ng-href="{{featureLink('genotype', annotation.pathogen_genotype.genotype_id)}}">
+        <span ng-bind-html="annotation.pathogen_genotype.genotype_display_name | encodeAlleleSymbols | toTrusted"></span>
+      </a>
+      <span ng-switch-when="true" ng-bind-html="annotation.pathogen_genotype.genotype_display_name | encodeAlleleSymbols | toTrusted"></span>
+    </div>
       <span class="organism-name">{{annotation.pathogen_genotype.organism.scientific_name | abbreviateGenus}}</span>
       <span ng-if="annotation.pathogen_genotype.strain_name" class="curs-strain-name-inline">({{annotation.pathogen_genotype.strain_name}})</span>
     </div>
