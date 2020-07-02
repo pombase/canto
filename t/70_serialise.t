@@ -190,14 +190,17 @@ my $full_expected_curation_session =
         extension => [
           {
             relation => 'exists_during',
+            rangeType => 'Ontology',
             rangeValue => 'GO:0051329',
           },
           {
             relation => 'has_substrate',
+            rangeType => 'Gene',
             rangeValue => 'PomBase:SPBC1105.11c',
           },
           {
             relation => 'requires_feature',
+            rangeType => 'Gene',
             rangeValue => 'Pfam:PF00564',
           },
         ],
@@ -217,10 +220,12 @@ my $full_expected_curation_session =
         extension => [
           {
             relation => 'exists_during',
+            rangeType => 'Ontology',
             rangeValue => 'GO:0051329',
           },
           {
             relation => 'has_substrate',
+            rangeType => 'Gene',
             rangeValue => 'PomBase:SPBC1105.11c',
           }
         ],
@@ -241,30 +246,27 @@ my $full_expected_curation_session =
       {
         type => 'genetic_interaction',
         publication => 'PMID:19756689',
+        conditions => ['PECO:0000137'],
+        metagenotype => 'test-metagenotype-1',
+        term => 'FYPO:0000114',
         curator => {
           community_curated => JSON::XS::false,
         },
         status => 'new',
         creation_date => "2010-01-02",
         evidence_code => 'Synthetic Haploinsufficiency',
-        gene => 'Schizosaccharomyces pombe SPCC63.05',
-        interacting_genes => [
-          'Schizosaccharomyces pombe SPBC14F5.07',
-        ],
       },
       {
-        type => 'genetic_interaction',
+        type => 'physical_interaction',
         publication => 'PMID:19756689',
+        interacting_genes => ['Schizosaccharomyces pombe SPAC27D7.13c'],
+        gene => 'Schizosaccharomyces pombe SPCC63.05',
         curator => {
           community_curated => JSON::XS::false,
         },
         status => 'new',
         creation_date => "2010-01-02",
         evidence_code => 'Far Western',
-        gene => 'Schizosaccharomyces pombe SPCC63.05',
-        interacting_genes => [
-          'Schizosaccharomyces pombe SPAC27D7.13c',
-        ]
       },
       {
         status => 'new',
@@ -395,7 +397,8 @@ my $full_expected_curation_session_with_names =
         'description' => 'deletion',
         'name' => 'SPCC63.05delta',
         'synonyms' => [],
-        'allele_type' => 'deletion'
+        'allele_type' => 'deletion',
+        'notes' => {},
       },
       'SPAC27D7.13c:aaaa0007-1' => {
         'primary_identifier' => 'SPAC27D7.13c:aaaa0007-1',
@@ -403,7 +406,8 @@ my $full_expected_curation_session_with_names =
         'description' => 'deletion',
         'name' => 'ssm4delta',
         'synonyms' => [],
-        'allele_type' => 'deletion'
+        'allele_type' => 'deletion',
+        'notes' => {},
       },
       'SPAC27D7.13c:aaaa0007-3' => {
         'description' => 'del_100-200',
@@ -411,11 +415,20 @@ my $full_expected_curation_session_with_names =
         'name' => 'ssm4-D4',
         'gene' => 'Schizosaccharomyces pombe SPAC27D7.13c',
         'synonyms' => ['ssm4-c1'],
-        'primary_identifier' => 'SPAC27D7.13c:aaaa0007-3'
+        'primary_identifier' => 'SPAC27D7.13c:aaaa0007-3',
+        'notes' => {
+          'note_test_key' => 'note_test_value',
+        },
       }
     },
     metagenotypes => {
+      "test-metagenotype-1" => {
+        'type' => 'interaction',
+        'genotype_b' => 'aaaa0007-genotype-test-2',
+        'genotype_a' => 'aaaa0007-genotype-test-1'
+      },
       "aaaa0007-metagenotype-1" => {
+        type => 'pathogen-host',
         pathogen_genotype => "aaaa0007-genotype-test-1",
         host_genotype => "aaaa0007-genotype-3",
       }
@@ -608,6 +621,7 @@ my $full_expected_curation_session_with_names =
       },
     },
   };
+
 my $small_expected_curation_session = clone $full_expected_curation_session;
 $small_expected_curation_session->{publications}->{'PMID:19756689'} = {};
 
