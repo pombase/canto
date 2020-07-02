@@ -66,10 +66,13 @@ sub _get_metadata
   my $config = shift;
   my $track_schema = shift;
   my $curs_schema = shift;
+  my $options = shift;
 
   confess("curs_schema not defined") unless defined $curs_schema;
 
   my @results = $curs_schema->resultset('Metadata')->all();
+
+  my $curator_name_re = qr/(curator|approver|initial_curator|first_contact)_name$/;
 
   my %ret = map {
     my $key = $_->key();
@@ -78,7 +81,9 @@ sub _get_metadata
     ($key, _get_metadata_value($curs_schema, $_->key(), $_->value() ))
   } grep {
     my $key = $_->key();
-    $key !~ /email$/;
+    $key !~ /email$/ &&
+      ($options->{export_curator_name} ||
+       $key !~ /$curator_name_re/)
   } @results;
 
   if (!$ret{canto_session}) {
@@ -101,11 +106,16 @@ sub _get_metadata
 
     next if $prop_type_name =~ /email$/;
 
+    next if !$options->{export_curator_name} &&
+      $prop_type_name && $prop_type_name =~ /$curator_name_re/;
+
+    my $prop_value = $prop->value();
+
     if ($prop_type_name eq 'link_sent_to_curator_date' &&
           !defined $ret{first_sent_to_curator_date}) {
-      $ret{first_sent_to_curator_date} = $prop->value();
+      $ret{first_sent_to_curator_date} = $prop_value;
     }
-    $ret{$prop_type_name} = $prop->value();
+    $ret{$prop_type_name} = $prop_value;
   }
 
   my $curator_manager =
@@ -117,9 +127,11 @@ sub _get_metadata
 
   my @all_curators = $curator_manager->session_curators($ret{canto_session});
 
-  $ret{initial_curator_name} = $all_curators[0]->[1];
+  if ($options->{export_curator_name}) {
+    $ret{initial_curator_name} = $all_curators[0]->[1];
+    $ret{curator_name} = $current_submitter_name;
+  }
 
-  $ret{curator_name} = $current_submitter_name;
   $ret{curator_role} = $community_curated ? 'community' : $config->{database_name};
   $ret{curation_accepted_date} = $accepted_date;
 
@@ -140,6 +152,7 @@ sub _get_annotations
   my $config = shift;
   my $track_schema = shift;
   my $schema = shift;
+  my $options = shift;
 
   die "no schema" unless $schema;
 
@@ -200,13 +213,13 @@ sub _get_annotations
           $data{curator}->{community_curated} = JSON::false;
         }
       } else {
-        my $metadata = _get_metadata($track_schema, $schema);
+        my $metadata = _get_metadata($track_schema, $schema, $options);
         die "community_curated not set for annotation ",
           $annotation->annotation_id(), " in session ",
           $metadata->{curs_key};
       }
     } else {
-      my $metadata = _get_metadata($track_schema, $schema);
+      my $metadata = _get_metadata($track_schema, $schema, $options);
       die "community_curated not set for annotation ",
         $annotation->annotation_id(), " in session ",
         $metadata->{curs_key};
@@ -232,10 +245,17 @@ sub _get_annotations
       if (exists $current->{email}) {
         # curator section
         delete $current->{email};
+        if (!$options->{export_curator_name}) {
+          delete $current->{name};
+        }
         cut();
       }
 
       delete $current->{curator_email};
+
+      if (!$options->{export_curator_name}) {
+        delete $current->{curator_name};
+      }
 
       for my $key (keys %$current) {
         my $value = $current->{$key};
@@ -672,7 +692,7 @@ sub perl
 
   # write the metadata for all sessions
   my %ret = (
-    metadata => _get_metadata($config, $track_schema, $curs_schema),
+    metadata => _get_metadata($config, $track_schema, $curs_schema, $options),
     publications => _get_pubs($curs_schema, $options),
   );
 
@@ -684,7 +704,7 @@ sub perl
     # only write the annotations if the session is approved or we're writing
     # everything
 
-    $ret{annotations} = _get_annotations($config, $track_schema, $curs_schema);
+    $ret{annotations} = _get_annotations($config, $track_schema, $curs_schema, $options);
     $ret{organisms} = _get_organisms($config, $curs_schema, $options);
 
     my $organism_lookup = Canto::Track::get_adaptor($config, 'organism');
