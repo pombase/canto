@@ -44,20 +44,26 @@ use Getopt::Long qw(GetOptionsFromArray);
 use Canto::Curs::State qw/:all/;
 
 =head2 options
+
  possible options are:
   dump_approved - only return the approved sessions
   export_approved - only return the approved sessions, then mark those sessions
                     as exported
   all_data - return data from all the sessions and all data from the TrackDB,
              including publication and user information
+  export_curator_name - include the curator name for annotations and sessions
+
 =cut
+
 has options => (is => 'ro', isa => 'ArrayRef', required => 1);
 
 =head2 parsed_options
+
  This attribute stores the parsed versions of the options attribute.
  Parsed options available are:
   all_data - return data from all the sessions and all data from the TrackDB,
              including publication and user information
+
 =cut
 
 has parsed_options => (is => 'rw', isa => 'HashRef', init_arg => undef);
@@ -80,6 +86,7 @@ sub BUILD
                     'dump-approved!' => \$parsed_options{dump_approved},
                     'dump-exported!' => \$parsed_options{dump_exported},
                     'export-approved!' => \$parsed_options{export_approved},
+                    'export-curator-name!' => \$parsed_options{export_curator_name},
                     'annotation-type=s' => \$parsed_options{annotation_type},
                     );
   if (!GetOptionsFromArray(\@options, @opt_config)) {
