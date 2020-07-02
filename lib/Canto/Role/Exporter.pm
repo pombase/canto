@@ -51,7 +51,7 @@ use Canto::Curs::State qw/:all/;
                     as exported
   all_data - return data from all the sessions and all data from the TrackDB,
              including publication and user information
-  export_curator_name - include the curator name for annotations and sessions
+  export_curator_names - include the curator names for annotations and sessions
 
 =cut
 
@@ -86,7 +86,7 @@ sub BUILD
                     'dump-approved!' => \$parsed_options{dump_approved},
                     'dump-exported!' => \$parsed_options{dump_exported},
                     'export-approved!' => \$parsed_options{export_approved},
-                    'export-curator-name!' => \$parsed_options{export_curator_name},
+                    'export-curator-names!' => \$parsed_options{export_curator_names},
                     'annotation-type=s' => \$parsed_options{annotation_type},
                     );
   if (!GetOptionsFromArray(\@options, @opt_config)) {

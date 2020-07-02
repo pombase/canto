@@ -106,7 +106,7 @@ sub _get_metadata
 
     next if $prop_type_name =~ /email$/;
 
-    next if !$options->{export_curator_name} &&
+    next if !$options->{export_curator_names} &&
       $prop_type_name && $prop_type_name =~ /$curator_name_re/;
 
     my $prop_value = $prop->value();
@@ -127,7 +127,7 @@ sub _get_metadata
 
   my @all_curators = $curator_manager->session_curators($ret{canto_session});
 
-  if ($options->{export_curator_name}) {
+  if ($options->{export_curator_names}) {
     $ret{initial_curator_name} = $all_curators[0]->[1];
     $ret{curator_name} = $current_submitter_name;
   }
@@ -245,7 +245,7 @@ sub _get_annotations
       if (exists $current->{email}) {
         # curator section
         delete $current->{email};
-        if (!$options->{export_curator_name}) {
+        if (!$options->{export_curator_names}) {
           delete $current->{name};
         }
         cut();
@@ -253,7 +253,7 @@ sub _get_annotations
 
       delete $current->{curator_email};
 
-      if (!$options->{export_curator_name}) {
+      if (!$options->{export_curator_names}) {
         delete $current->{curator_name};
       }
 

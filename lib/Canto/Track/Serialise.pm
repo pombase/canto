@@ -56,7 +56,7 @@ sub _get_cursprops
   while (defined (my $prop = $rs->next())) {
     my $prop_type_name = $prop->type()->name();
 
-    if (!$options->{export_curator_name} &&
+    if (!$options->{export_curator_names} &&
           $prop_type_name eq 'approver_name') {
       next;
     }
