@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Test::Deep;
 
-use Test::More tests => 7;
+use Test::More tests => 8;
 
 use Clone qw(clone);
 use JSON;
@@ -54,6 +54,268 @@ my %extra_curs_statuses = (
 my $abstract =
  qr/In the fission yeast, Schizosaccharomyces pombe, synaptonemal complexes/;
 my $full_expected_curation_session =
+  {
+    genes => {
+      'Schizosaccharomyces pombe SPAC27D7.13c' => {
+        uniquename => 'SPAC27D7.13c',
+        organism => 'Schizosaccharomyces pombe',
+      },
+      'Schizosaccharomyces pombe SPBC14F5.07' => {
+        uniquename => 'SPBC14F5.07',
+        organism => 'Schizosaccharomyces pombe',
+      },
+      'Schizosaccharomyces pombe SPCC63.05' => {
+        uniquename => 'SPCC63.05',
+        organism => 'Schizosaccharomyces pombe',
+      },
+      'Schizosaccharomyces pombe SPBC1826.01c' => {
+        uniquename => 'SPBC1826.01c',
+        organism => 'Schizosaccharomyces pombe',
+      }
+    },
+    'genotypes' => {
+      'aaaa0007-genotype-test-1' => {
+        'name' => 'SPCC63.05delta ssm4KE',
+        'background' => 'h+',
+        'organism_taxonid' => 4896,
+        'loci' => [
+          [
+            {
+              'id' => 'SPAC27D7.13c:aaaa0007-1'
+            },
+          ],
+          [
+            {
+              'id' => 'SPCC63.05:aaaa0007-1'
+            }
+          ]
+        ]
+      },
+      'aaaa0007-genotype-3' => {
+        'organism_taxonid' => 4932,
+        'loci' => []
+      },
+      'aaaa0007-genotype-test-2' => {
+        'organism_taxonid' => 4896,
+        'loci' => [
+          [
+            {
+              'expression' => 'Knockdown',
+              'id' => 'SPAC27D7.13c:aaaa0007-3'
+            }
+          ]
+        ]
+      }
+    },
+    'alleles' => {
+      'SPCC63.05:aaaa0007-1' => {
+        'primary_identifier' => 'SPCC63.05:aaaa0007-1',
+        'gene' => 'Schizosaccharomyces pombe SPCC63.05',
+        'description' => 'deletion',
+        'name' => 'SPCC63.05delta',
+        'synonyms' => [],
+        'allele_type' => 'deletion'
+      },
+      'SPAC27D7.13c:aaaa0007-1' => {
+        'primary_identifier' => 'SPAC27D7.13c:aaaa0007-1',
+        'gene' => 'Schizosaccharomyces pombe SPAC27D7.13c',
+        'description' => 'deletion',
+        'name' => 'ssm4delta',
+        'synonyms' => [],
+        'allele_type' => 'deletion'
+      },
+      'SPAC27D7.13c:aaaa0007-3' => {
+        'description' => 'del_100-200',
+        'allele_type' => 'partial_nucleotide_deletion',
+        'name' => 'ssm4-D4',
+        'gene' => 'Schizosaccharomyces pombe SPAC27D7.13c',
+        'synonyms' => ['ssm4-c1'],
+        'primary_identifier' => 'SPAC27D7.13c:aaaa0007-3'
+      }
+    },
+    metagenotypes => {
+      "aaaa0007-metagenotype-1" => {
+        pathogen_genotype => "aaaa0007-genotype-test-1",
+        host_genotype => "aaaa0007-genotype-3",
+      }
+    },
+    annotations => [
+      {
+        evidence_code => "IMP",
+        creation_date => "2010-01-02",
+        term => "GO:0055085",
+        status => "new",
+        type => "biological_process",
+        publication => 'PMID:19756689',
+        curator => {
+          community_curated => JSON::XS::false,
+        },
+        term_suggestion => {
+          name => 'miscellaneous transmembrane transport',
+          definition =>
+            'The process in which miscellaneous stuff is transported from one side of a membrane to the other.',
+        },
+        gene => 'Schizosaccharomyces pombe SPAC27D7.13c',
+      },
+      {
+        evidence_code => "IPI",
+        creation_date => "2010-01-02",
+        term => "GO:0034763",
+        status => "new",
+        type => "biological_process",
+        publication => 'PMID:19756689',
+        curator => {
+          community_curated => JSON::XS::false,
+        },
+        with_gene => "SPBC1826.01c",
+        extension => [
+          {
+            relation => 'exists_during',
+            rangeValue => 'GO:0051329',
+          },
+          {
+            relation => 'has_substrate',
+            rangeValue => 'PomBase:SPBC1105.11c',
+          },
+          {
+            relation => 'requires_feature',
+            rangeValue => 'Pfam:PF00564',
+          },
+        ],
+        gene => 'Schizosaccharomyces pombe SPBC14F5.07',
+      },
+      {
+        evidence_code => "IPI",
+        creation_date => "2010-01-02",
+        term => "GO:0034763",
+        status => "new",
+        type => "biological_process",
+        publication => 'PMID:19756689',
+        curator => {
+          community_curated => JSON::XS::false,
+        },
+        with_gene => "SPBC1826.01c",
+        extension => [
+          {
+            relation => 'exists_during',
+            rangeValue => 'GO:0051329',
+          },
+          {
+            relation => 'has_substrate',
+            rangeValue => 'PomBase:SPBC1105.11c',
+          }
+        ],
+        gene => 'Schizosaccharomyces pombe SPBC14F5.07',
+      },
+      {
+        evidence_code => 'IDA',
+        creation_date => '2010-01-02',
+        status => 'new',
+        type => 'molecular_function',
+        publication => 'PMID:19756689',
+        curator => {
+          community_curated => JSON::XS::false,
+        },
+        term => 'GO:0022857',
+        gene => 'Schizosaccharomyces pombe SPBC14F5.07',
+      },
+      {
+        type => 'genetic_interaction',
+        publication => 'PMID:19756689',
+        curator => {
+          community_curated => JSON::XS::false,
+        },
+        status => 'new',
+        creation_date => "2010-01-02",
+        evidence_code => 'Synthetic Haploinsufficiency',
+        gene => 'Schizosaccharomyces pombe SPCC63.05',
+        interacting_genes => [
+          'Schizosaccharomyces pombe SPBC14F5.07',
+        ],
+      },
+      {
+        type => 'genetic_interaction',
+        publication => 'PMID:19756689',
+        curator => {
+          community_curated => JSON::XS::false,
+        },
+        status => 'new',
+        creation_date => "2010-01-02",
+        evidence_code => 'Far Western',
+        gene => 'Schizosaccharomyces pombe SPCC63.05',
+        interacting_genes => [
+          'Schizosaccharomyces pombe SPAC27D7.13c',
+        ]
+      },
+      {
+        status => 'new',
+        term => 'FYPO:0000013',
+        evidence_code => 'Epitope-tagged protein immunolocalization experiment data',
+        creation_date => '2010-01-02',
+        publication => 'PMID:19756689',
+        curator => {
+          community_curated => JSON::XS::false,
+        },
+        type => 'phenotype',
+        conditions => [
+          'PECO:0000137',
+          'rich medium',
+        ],
+        genotype => 'aaaa0007-genotype-test-1',
+      },
+      {
+        evidence_code => 'Co-immunoprecipitation experiment',
+        creation_date => '2010-01-02',
+        genotype => 'aaaa0007-genotype-test-2',
+        status => 'new',
+        type => 'phenotype',
+        publication => 'PMID:19756689',
+        curator => {
+          community_curated => JSON::XS::false,
+        },
+        term => 'FYPO:0000017'
+      },
+      {
+        type => 'post_translational_modification',
+        status => 'new',
+        creation_date => "2010-01-02",
+        evidence_code => 'ISS',
+        publication => 'PMID:19756689',
+        curator => {
+          community_curated => JSON::XS::true,
+        },
+        term => 'MOD:01157',
+        gene => 'Schizosaccharomyces pombe SPCC63.05',
+      },
+    ],
+    publications => {
+      'PMID:19756689' => {
+        title => 'SUMOylation is required for normal development of linear elements and wild-type meiotic recombination in Schizosaccharomyces pombe.',
+      },
+    },
+    metadata => {
+      canto_session => 'aaaa0007',
+      curation_pub_id => 'PMID:19756689',
+      term_suggestion_count => 1,
+      unknown_conditions_count => 1,
+      accepted_timestamp => '2012-02-15 13:45:00',
+      curation_in_progress_timestamp => '2012-02-15 13:45:00',
+      session_created_timestamp => '2012-02-15 13:45:00',
+      curator_role => 'community',
+      curation_accepted_date => '2012-02-15 13:45:00',
+      %extra_curs_statuses,
+    },
+    organisms => {
+      4896 => {
+        full_name => 'Schizosaccharomyces pombe',
+      },
+      4932 => {
+        full_name => 'Saccharomyces cerevisiae',
+      },
+    },
+  };
+
+my $full_expected_curation_session_with_names =
   {
     genes => {
       'Schizosaccharomyces pombe SPAC27D7.13c' => {
@@ -325,7 +587,6 @@ my $full_expected_curation_session =
       },
     },
   };
-
 my $small_expected_curation_session = clone $full_expected_curation_session;
 $small_expected_curation_session->{publications}->{'PMID:19756689'} = {};
 
@@ -561,6 +822,16 @@ my $small_expected_track_data =
 
 
   cmp_deeply($curs_ref, $full_expected_curation_session);
+}
+
+{
+  my $curs_json = Canto::Curs::Serialise::json($config, $track_schema,
+                                               'aaaa0007',
+                                               { all_data => 1, export_curator_names => 1 });
+  my $curs_ref = decode_json($curs_json);
+
+
+  cmp_deeply($curs_ref, $full_expected_curation_session_with_names);
 }
 
 {
