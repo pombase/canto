@@ -290,9 +290,6 @@ sub _get_annotations
 
               $extension_bit->{rangeValue} = $metagenotype->identifier();
             }
-          } else {
-            use Data::Dumper;
-            warn 'Undefined rangeType in extension: ', Dumper([$extension_bit, \%data]);
           }
         } @$extension_part;
 
