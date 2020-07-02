@@ -283,11 +283,16 @@ sub _get_annotations
         map {
           my $extension_bit = $_;
 
-          if (lc $extension_bit->{rangeType} eq 'metagenotype') {
-            my $metagenotype =
-              _get_metagenotype_by_id($schema, $extension_bit->{rangeValue});
+          if (defined $extension_bit->{rangeType}) {
+            if (lc $extension_bit->{rangeType} eq 'metagenotype') {
+              my $metagenotype =
+                _get_metagenotype_by_id($schema, $extension_bit->{rangeValue});
 
-            $extension_bit->{rangeValue} = $metagenotype->identifier();
+              $extension_bit->{rangeValue} = $metagenotype->identifier();
+            }
+          } else {
+            use Data::Dumper;
+            warn 'Undefined rangeType in extension: ', Dumper([$extension_bit, \%data]);
           }
         } @$extension_part;
 
