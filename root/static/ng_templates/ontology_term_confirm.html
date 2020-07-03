@@ -17,7 +17,7 @@ Loading details...
     </div>
     </div>
 
-    <div ng-show="termDetails && termDetails.children.length > 0" id="ferret-term-children">
+    <div ng-show="annotationType.ontology_size != 'small' && termDetails && termDetails.children.length > 0" id="ferret-term-children">
       <term-children-display term-details="termDetails" goto-child-callback="gotoChild(childId)"></term-children-display>
 
       <div class="curs-box">
