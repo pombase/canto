@@ -313,8 +313,6 @@ sub json
     $hash = {
       curation_sessions => $curation_sessions_hash,
       publications => _get_pubs($config, $schema, $options),
-      people => _get_people($schema),
-      labs => _get_labs($schema),
     };
   } else {
     $hash = {

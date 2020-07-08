@@ -796,8 +796,8 @@ my $full_expected_track_data =
       },
       aaaa0006 => ignore(),
     },
-    people => \%expected_people,
-    labs => \%expected_labs,
+#    people => \%expected_people,
+#    labs => \%expected_labs,
     schema_version => 1,
   };
 
