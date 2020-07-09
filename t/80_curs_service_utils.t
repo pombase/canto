@@ -645,24 +645,29 @@ cmp_deeply($annotation_res,
                 [
                   {
                     relation => 'exists_during',
+                    rangeType => 'Ontology',
                     rangeValue => 'GO:0051329',
                   },
                   {
                     relation => 'has_substrate',
+                    rangeType => 'Gene',
                     rangeValue => 'PomBase:SPBC1105.11c',
                   },
                   {
                     relation => 'requires_feature',
+                    rangeType => 'Gene',
                     rangeValue => 'Pfam:PF00564',
                   },
                 ],
                 [
                   {
                     relation => 'exists_during',
+                    rangeType => 'Ontology',
                     rangeValue => 'GO:0051329',
                   },
                   {
                     relation => 'has_substrate',
+                    rangeType => 'Gene',
                     rangeValue => 'PomBase:SPBC1105.11c',
                   }
                 ],

@@ -48,13 +48,21 @@ use Canto::Curs::Serialise;
 sub _get_cursprops
 {
   my $curs = shift;
+  my $options = shift;
 
   my $rs = $curs->cursprops();
   my @ret = ();
 
   while (defined (my $prop = $rs->next())) {
+    my $prop_type_name = $prop->type()->name();
+
+    if (!$options->{export_curator_names} &&
+          $prop_type_name eq 'approver_name') {
+      next;
+    }
+
     push @ret, {
-      type => $prop->type()->name(),
+      type => $prop_type_name,
       value => $prop->value(),
     };
   }
@@ -76,7 +84,7 @@ sub _get_curation_sessions
   while (defined (my $curs = $curs_rs->next())) {
     my $curs_key = $curs->curs_key();
 
-    my $props = _get_cursprops($curs);
+    my $props = _get_cursprops($curs, $options);
 
     my $curs_status = undef;
 
@@ -305,8 +313,6 @@ sub json
     $hash = {
       curation_sessions => $curation_sessions_hash,
       publications => _get_pubs($config, $schema, $options),
-      people => _get_people($schema),
-      labs => _get_labs($schema),
     };
   } else {
     $hash = {

@@ -25,7 +25,7 @@ header_image: logos/curation_tool.png
 
 canto_url: http://curation.pombase.org/
 
-app_version: v1501
+app_version: v1514
 
 schema_version: 33
 
@@ -1679,6 +1679,10 @@ evidence_types:
     non_symmetric_interaction_labels:
       interactor_a: binds activation domain construct with
       interactor_b: binds DNA-binding domain construct with
+  Northern blot: ~
+  Microarray: ~
+  Other transcript expression level assay: ~
+  Western blot: ~
   'Reporter gene assay': ~
   'Enzyme assay data': ~
   'Flow cytometry data': ~
@@ -2035,6 +2039,34 @@ available_annotation_type_list:
     evidence_codes:
       - IDA
     detailed_help_path: /docs/modification_annotation
+  - name: wt_rna_expression
+    category: ontology
+    ontology_size: small
+    namespace: PomGeneEx
+    display_name: 'RNA level'
+    feature_type: 'gene'
+    broad_term_suggestions: ~
+    specific_term_examples: ~
+    help_text: ~
+    more_help_text: ~
+    evidence_codes:
+      - Microarray
+      - Northern blot
+      - Quantitative PCR
+      - Reporter gene assay
+  - name: wt_protein_expression
+    category: ontology
+    ontology_size: small
+    namespace: PomGeneEx
+    display_name: 'Protein level'
+    feature_type: 'gene'
+    broad_term_suggestions: ~
+    specific_term_examples: ~
+    help_text: ~
+    more_help_text: ~
+    evidence_codes:
+      - Reporter gene assay
+      - Western blot
   - name: genetic_interaction
     namespace: fission_yeast_phenotype
     can_have_conditions: 1

@@ -17,7 +17,7 @@ Loading details...
     </div>
     </div>
 
-    <div ng-show="termDetails && termDetails.children.length > 0" id="ferret-term-children">
+    <div ng-show="annotationType.ontology_size != 'small' && termDetails && termDetails.children.length > 0" id="ferret-term-children">
       <term-children-display term-details="termDetails" goto-child-callback="gotoChild(childId)"></term-children-display>
 
       <div class="curs-box">
@@ -38,7 +38,8 @@ Loading details...
       </div>
     </div>
 
-    <div class="ng-cloak curs-box" ng-hide="termDetails.children && termDetails.children.length > 0" id="ferret-leaf">
+    <div class="ng-cloak curs-box"
+         ng-hide="annotationType.ontology_size == 'small' || termDetails.children && termDetails.children.length > 0" id="ferret-leaf">
       <div id="ferret-help-step-2-suggest" class="inline-help curs-box-title">
         The currently selected term has no children. If you need a more specific
         term to describe the experiment you are annotating, please follow the
@@ -67,7 +68,12 @@ Loading details...
     </div>
 
     <div ng-if="!doNotAnnotateCurrentTerm" id="ferret-accept-term-proceed-message">
-      Otherwise, use the currently selected term:
+      <div ng-if="annotationType.ontology_size == 'big'">
+        Otherwise, use the currently selected term:
+      </div>
+      <div ng-if="annotationType.ontology_size != 'big'">
+        Use this term:
+      </div>
     </div>
   </div>
 </div>

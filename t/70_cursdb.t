@@ -106,8 +106,8 @@ my $annotation_1_id = $spcc63_05->all_annotations(include_with => 1)->first()->a
 my $spbc14f5_07 = $schema->find_with_type('Gene',
                                           { primary_identifier => 'SPAC27D7.13c' });
 is ($spbc14f5_07->direct_annotations()->count(), 1);
-is ($spbc14f5_07->indirect_annotations()->count(), 0);
-is ($spbc14f5_07->all_annotations(include_with => 1)->count(), 1);
+is ($spbc14f5_07->indirect_annotations()->count(), 1);
+is ($spbc14f5_07->all_annotations(include_with => 1)->count(), 2);
 
 my $annotation_2 = $spbc14f5_07->all_annotations(include_with => 1)->first();
 my $annotation_2_id = $annotation_2->annotation_id();

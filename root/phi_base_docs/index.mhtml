@@ -87,20 +87,27 @@
 </div>
 </div>
 <p>The next step is to add one or more ‘experimental strains’ for every organism in your curation session. Note that for the purposes of PHI-Canto, the term <em>strain</em> is used broadly to refer to any taxonomic classifier more specific than a species. This includes (but is not limited to): subspecies, varieties, pathovars, cultivars, and strains in the conventional sense.</p>
-<p>You can add experimental strains using the strain picker that is located below the entry for each pathogen and host on the page:</p>
+<p>You can add experimental strains using the strain picker that is located below each pathogen and host on the page:</p>
 <div class="row-fluid">
 <div class="span6">
-<a href="<% $c->uri_for($image_path . '/strain_picker.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/strain_picker.png') %>" alt=""/></a>
+<a href="<% $c->uri_for($image_path . '/strain_dropdown.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/strain_dropdown.png') %>" alt=""/></a>
 </div>
 </div>
-<p>There are a few special options in the list for the case where the strains that are already provided are not suitable. Use the ‘Unknown strain’ option when the publication does not specify a strain for the organism (or does not describe the organism more specifically than its species). If the publication describes a strain that is <em>not</em> in the list of strains, you can use the ‘Type a new strain’ option to specify your own strain name:</p>
+<p>You can select a strain from the list by using your mouse or the arrow keys on the keyboard (use Enter or Tab to confirm a strain with the keyboard). Typing a strain name into the text input will filter to the list of strains to match what you typed:</p>
 <div class="row-fluid">
 <div class="span6">
-<a href="<% $c->uri_for($image_path . '/type_new_strain.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/type_new_strain.png') %>" alt=""/></a>
+<a href="<% $c->uri_for($image_path . '/strain_autocomplete.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/strain_autocomplete.png') %>" alt=""/></a>
 </div>
 </div>
-<p>Simply type a new strain name (following the standard nomenclature for the organism) in the input field that appears, then press the ‘Add’ button to create the strain.</p>
-<p>Note: if your new strain contains background mutations, please do not specify these in the strain name unless it is a widespread convention for the strain name to include the names of other mutations. Instead, you should specify background mutations using the ‘Background’ information on a genotype (see Creating alleles and genotypes).</p>
+<p>If you want to add a strain that is not in the list, type its name into the text input, then click the ‘Add strain’ button, or hit Enter on your keyboard. Custom strains will be highlighted in orange once added:</p>
+<div class="row-fluid">
+<div class="span6">
+<a href="<% $c->uri_for($image_path . '/custom_strain.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/custom_strain.png') %>" alt=""/></a>
+</div>
+</div>
+<p>Use the ‘Unknown strain’ button if the publication does not specify a strain for the organism (or does not describe the organism more specifically than its species).</p>
+<p>To delete a strain, click the cross symbol next to the strain name. Note that you will be unable to delete a strain if it is used by other genotypes in the curation session.</p>
+<p>Note: if your new strain contains background mutations, please do not specify these in the strain name unless it is conventional for the strain name to include the names of other mutations. Otherwise, you should specify background mutations using the ‘Background’ information on a genotype (see <a href="genotypes">Creating alleles and genotypes</a>).</p>
 <p>Once you have specified strains for each organism, you can continue to the curation summary page; from there, you can annotate genes and genotypes with the annotation types described in this article.</p>
 <h2>Curating specific data types</h2>
 <p>Annotations in PHI-Canto are divided into three types: gene annotations, genotype annotations, and metagenotype annotations. Follow the links below for specific instructions.</p>
