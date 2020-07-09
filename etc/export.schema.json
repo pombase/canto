@@ -171,7 +171,9 @@
                       "type": "string"
                     },
                     "primary_identifier": {
-                      "type": "string"
+                      "title": "Primary identifier",
+                      "description": "The primary identifier for the allele. Usually equivalent to the allele identifier.",
+                      "$ref": "#/definitions/alleleId"
                     },
                     "synonyms": {
                       "title": "Allele synonyms",
@@ -320,7 +322,8 @@
                     "type": "string"
                   },
                   "term_suggestion": {
-                    "title": "A suggestion for a term to be added to the relevant ontology for the annotation. Used when no suitable term exists for the annotation being made.",
+                    "title": "Term suggestion",
+                    "description": "A suggestion for a term to be added to the relevant ontology for the annotation. Used when no suitable term exists for the annotation being made.",
                     "anyOf": [
                       {
                         "type": "object",
@@ -499,10 +502,12 @@
                   "$ref": "#/definitions/dateTime"
                 },
                 "canto_session": {
-                  "title": "The session identifier for this curation session.",
+                  "title": "Canto session ID",
+                  "description": "The session identifier for this curation session.",
                   "$ref": "#/definitions/sessionKey"
                 },
                 "curation_accepted_date": {
+                  "title": "Curation accepted date",
                   "$ref": "#/definitions/nullableDateTime"
                 },
                 "curation_in_progress_timestamp": {
@@ -588,7 +593,7 @@
               }
             },
             "metagenotypes": {
-              "title": "Curation session metagenotypes",
+              "title": "Metagenotypes",
               "description": "A collection of metagenotypes curated in the curation session, keyed by their metagenotype identifier.",
               "type": "object",
               "additionalProperties": false,
@@ -624,7 +629,7 @@
               }
             },
             "organisms": {
-              "title": "Curation session organisms",
+              "title": "Organisms",
               "description": "A collection of organisms used in the curation session, keyed by their NCBI Taxonomy identifiers.",
               "type": "object",
               "additionalProperties": false,
@@ -633,6 +638,7 @@
               },
               "patternProperties": {
                 ".+": {
+                  "title": "Organism",
                   "type": "object",
                   "properties": {
                     "full_name": {
@@ -648,7 +654,7 @@
               }
             },
             "publications": {
-              "title": "Curation session publications",
+              "title": "Session publications",
               "description": "A collection of publications curated by the curation session, keyed by their PubMed identifier.",
               "type": "object",
               "additionalProperties": false,
@@ -657,6 +663,7 @@
               },
               "patternProperties": {
                 ".+": {
+                  "title": "Session publication",
                   "type": "object",
                   "properties": {
                     "title": {
@@ -685,6 +692,7 @@
       },
       "patternProperties": {
         ".+": {
+          "title": "Publication",
           "type": "object",
           "properties": {
             "abstract": {
