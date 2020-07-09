@@ -4,6 +4,8 @@
   "type": "object",
   "definitions": {
     "nullableString": {
+      "title": "Nullable string",
+      "description": "A text format that may have no value.",
       "anyOf": [
         {"type": "string"},
         {"type": "null"}
@@ -27,6 +29,10 @@
           "type": "string",
           "pattern": "^[1-9]\\d*$"
         }
+      ],
+      "examples": [
+        4986,
+        "5518"
       ]
     },
     "date": {
@@ -48,6 +54,8 @@
       ]
     },
     "nullableDateTime": {
+      "title": "Nullable date-time",
+      "description": "A date-time format that may have no value.",
       "anyOf": [
         {"$ref": "#/definitions/dateTime"},
         {"type": "null"}
@@ -84,19 +92,28 @@
       "title": "Mutant genotype identifier",
       "description": "A unique identifier for a mutant genotype. A mutant genotype is a genotype that contains one or more alleles. The identifier consists of: 1) the curation session identifier, 2) the string '-genotype-', and 3) a sequentially incremented integer.",
       "type": "string",
-      "pattern": "^[a-f0-9]{8,16}-genotype-\\d+$"
+      "pattern": "^[a-f0-9]{8,16}-genotype-\\d+$",
+      "examples": [
+        "807eaa3696ef0a5f-genotype-1"
+      ]
     },
     "wildTypeGenotypeId": {
       "title": "Wild-type genotype identifier",
       "description": "A unique identifier for a wild-type genotype. A wild-type genotype is a genotype that contains no alleles. The identifier consists of: 1) the species name, 2) the string 'wild-type-genotype', and 3) the strain name of the species.",
       "type": "string",
-      "pattern": "^.+?wild-type-genotype.*$"
+      "pattern": "^.+?-wild-type-genotype.*$",
+      "examples": [
+        "Hordeum-vulgare-wild-type-genotypeGolden-Promise"
+      ]
     },
     "metagenotypeId": {
       "title": "Metagenotype identifier",
       "description": "A unique identifer for a metagenotype, consisting of 1) the curation session identifier, 2) the string '-metagenotype-', and 3) a sequentially incremented integer.",
       "type": "string",
-      "pattern": "^[a-f0-9]{8,16}-metagenotype-\\d+$"
+      "pattern": "^[a-f0-9]{8,16}-metagenotype-\\d+$",
+      "examples": [
+        "807eaa3696ef0a5f-metagenotype-1"
+      ]
     },
     "pmid": {
       "title": "PMID",
