@@ -138,6 +138,7 @@ our %shared_test_results = (
     'with_gene_id' => undef,
     'gene_identifier' => 'SPCC63.05',
     'submitter_comment' => undef,
+    'figure' => undef,
     'gene_name' => '',
     'with_or_from_display_name' => undef,
     'feature_display_name' => 'SPCC63.05',

@@ -28,6 +28,7 @@ var initialHideColumns = { // columns to hide because they're empty
   with_or_from_identifier: true, // set to false when a row has a non empty element
   qualifiers: true,
   submitter_comment: true,
+  figure: true,
   extension: true,
   curator: true,
   evidence_code: true,
@@ -903,6 +904,7 @@ var keysForServer = {
   //  is_not: true,
   qualifiers: true,
   submitter_comment: true,
+  figure: true,
   term_ontid: true,
   term_suggestion_name: true,
   term_suggestion_definition: true,
@@ -1090,6 +1092,7 @@ var cursStateService =
         term_suggestion_definition: null,
         extension: this.extension,
         submitter_comment: this.comment,
+        figure: this.figure,
       };
 
       if (this.termSuggestion) {

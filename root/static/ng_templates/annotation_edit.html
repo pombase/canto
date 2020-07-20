@@ -219,6 +219,15 @@
         </td>
       </tr>
 
+      <tr ng-if="filteredFeatures && filteredFeatures.length != 0">
+        <td class="title">Figure</td>
+        <td colspan="2">
+          <input class="form-control curs-edit-wide-field"
+                 type="text" size="60"
+                 ng-model="annotation.figure"/>
+        </td>
+      </tr>
+
       <tr ng-if="annotation.curator">
         <td class="title">Curator</td>
         <td colspan="2">{{annotation.curator}}</td>
