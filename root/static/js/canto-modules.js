@@ -4367,11 +4367,7 @@ var genotypeEdit =
               $scope.reset();
             } else {
               if (data.status === "existing") {
-                toaster.pop('info', "Using existing genotype: " + data.genotype_display_name);
-                $scope.storedCallback({
-                  genotypeId: data.genotype_id
-                });
-                $scope.reset();
+                toaster.pop('error', "Can't store - there is an existing genotype with the same alleles: " + data.genotype_display_name);
               } else {
                 toaster.pop('error', data.message);
               }
