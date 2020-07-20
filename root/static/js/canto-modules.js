@@ -841,6 +841,7 @@ var keysForServer = {
   //  is_not: true,
   qualifiers: true,
   submitter_comment: true,
+  figure: true,
   term_ontid: true,
   term_suggestion_name: true,
   term_suggestion_definition: true,
@@ -1022,6 +1023,7 @@ var cursStateService =
         term_suggestion_definition: null,
         extension: this.extension,
         submitter_comment: this.comment,
+        figure: this.figure,
       };
 
       if (this.termSuggestion) {
@@ -6041,6 +6043,9 @@ var annotationEditDialogCtrl =
       if ($scope.annotation.submitter_comment == '') {
         $scope.annotation.submitter_comment = null;
       }
+      if ($scope.annotation.figure == '') {
+        $scope.annotation.figure = null;
+      }
 
       copyIfChanged(args.annotation, $scope.annotation, changesToStore);
       delete changesToStore.feature_type;
@@ -6397,6 +6402,7 @@ var annotationTableCtrl =
           with_or_from_identifier: true, // set to false when a row has a non empty element
           qualifiers: true,
           submitter_comment: true,
+          figure: true,
           extension: true,
           curator: true,
           evidence_code: true,

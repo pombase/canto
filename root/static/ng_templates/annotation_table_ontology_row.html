@@ -108,6 +108,10 @@
     <initially-hidden-text text="{{annotation.submitter_comment}}" preview-char-count="80"
                            link-label=" [more...]"></initially-hidden-text>
   </td>
+  <td ng-if="!data.hideColumns.figure">
+    <initially-hidden-text text="{{annotation.figure}}" preview-char-count="80"
+                           link-label=" [more...]"></initially-hidden-text>
+  </td>
   <td ng-if="!data.hideColumns.extension">
     <extension-display extension="annotation.extension"></extension-display>
   </td>

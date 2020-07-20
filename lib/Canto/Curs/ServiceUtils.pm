@@ -1083,6 +1083,7 @@ sub _ontology_change_keys
       return 1;
     },
     submitter_comment => 1,
+    figure => 1,
     extension => 1,
     organism => 1,
     with_gene_id => sub {
@@ -1204,6 +1205,7 @@ sub _interaction_change_keys
       }
     },
     submitter_comment => 1,
+    figure => 1,
   );
 }
 

@@ -138,6 +138,15 @@
       </tr>
 
       <tr>
+        <td class="title">Figure</td>
+        <td colspan="2">
+          <input class="form-control curs-edit-wide-field"
+                 type="text" size="60"
+                 ng-model="annotation.figure"/>
+        </td>
+      </tr>
+
+      <tr>
         <td class="title">Curator</td>
         <td colspan="2">{{annotation.curator}}</td>
       </tr>
@@ -194,6 +203,16 @@
                  type="text" size="60"
                  ng-model="annotation.submitter_comment"
                  value="{{annotation.submitter_comment}}"/>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="title">Figure</td>
+        <td>
+          <input class="form-control"
+                 type="text" size="60"
+                 ng-model="annotation.figure"
+                 value="{{annotation.figure}}"/>
         </td>
       </tr>
 

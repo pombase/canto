@@ -1397,6 +1397,10 @@ sub annotation_set_term : Chained('annotate') PathPart('set_term') Args(1)
     $annotation_data{submitter_comment} = $body_data->{submitter_comment};
   }
 
+  if ($body_data->{figure}) {
+    $annotation_data{figure} = $body_data->{figure};
+  }
+
   my $annotation =
     $self->_create_annotation($c, $annotation_type_name,
                                   $feature_type, [$feature], \%annotation_data);

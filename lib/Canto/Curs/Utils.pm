@@ -398,6 +398,7 @@ sub make_ontology_annotation
     creation_date => $annotation->creation_date(),
     creation_date_short => $short_date,
     submitter_comment => $data->{submitter_comment},
+    figure => $data->{figure},
     term_suggestion_name => $data->{term_suggestion}->{name},
     term_suggestion_definition => $data->{term_suggestion}->{definition},
     needs_with => $needs_with,
@@ -532,6 +533,7 @@ sub make_interaction_annotation
       score => '',  # for biogrid format output
       phenotypes => '',
       submitter_comment => $data->{submitter_comment} // '',
+      figure => $data->{figure} // '',
       completed => 1,
       annotation_id => $annotation->annotation_id(),
       annotation_type => $annotation_type,
