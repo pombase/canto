@@ -1677,40 +1677,66 @@ sub _feature_edit_helper
   if ($feature_type eq 'genotype') {
     my $genotype = $schema->find_with_type('Genotype', $genotype_id);
 
-    if ($c->req()->method() eq 'POST') {
-      # store the changes
-      my $body_data = _decode_json_content($c);
+    # store the changes
+    my $body_data = _decode_json_content($c);
 
-      my @alleles_data = @{$body_data->{alleles}};
-      my $genotype_name = $body_data->{genotype_name};
-      my $genotype_background = $body_data->{genotype_background};
-      my $genotype_comment = $body_data->{genotype_comment};
-      my $genotype_taxonid = $body_data->{taxonid};
-      my $strain_name = $body_data->{strain_name} || undef;
+    my @alleles_data = @{$body_data->{alleles}};
+    my $genotype_name = $body_data->{genotype_name};
+    my $genotype_background = $body_data->{genotype_background};
+    my $genotype_comment = $body_data->{genotype_comment};
+    my $genotype_taxonid = $body_data->{taxonid};
+    my $strain_name = $body_data->{strain_name} || undef;
 
-      if (defined $genotype_name && length $genotype_name > 0) {
-        my $trimmed_name = $genotype_name =~ s/^\s*(.*?)\s*$/$1/r;
-        my $existing_genotype =
-          $schema->resultset('Genotype')->find({ name => $genotype_name }) //
-          $schema->resultset('Genotype')->find({ name => $trimmed_name });
+    if (defined $genotype_name && length $genotype_name > 0) {
+      my $trimmed_name = $genotype_name =~ s/^\s*(.*?)\s*$/$1/r;
+      my $existing_genotype =
+        $schema->resultset('Genotype')->find({ name => $genotype_name }) //
+        $schema->resultset('Genotype')->find({ name => $trimmed_name });
 
-        if ($existing_genotype && $existing_genotype->genotype_id() != $genotype_id) {
-          $c->stash->{json_data} = {
-            status => "error",
-            message => "Storing changes to genotype failed: a genotype with " .
-              "that name already exists",
-          };
-          $c->forward('View::JSON');
-          return;
-        }
+      if ($existing_genotype && $existing_genotype->genotype_id() != $genotype_id) {
+        $c->stash->{json_data} = {
+          status => "error",
+          message => "Storing changes failed: a genotype with " .
+            "that name already exists",
+        };
+        $c->forward('View::JSON');
+        return;
       }
+    }
 
-      try {
+    try {
+      my $allele_manager =
+        Canto::Curs::AlleleManager->new(config => $c->config(),
+                                        curs_schema => $schema);
+
+      my $genotype_manager =
+        Canto::Curs::GenotypeManager->new(config => $c->config(),
+                                          curs_schema => $schema);
+
+      die "no genotype taxonid" unless $genotype_taxonid;
+
+      my $existing_genotype =
+        $genotype_manager->find_genotype($genotype_taxonid, $genotype_background,
+                                         $strain_name, \@alleles_data);
+
+      if ($existing_genotype &&
+            $existing_genotype->genotype_id() != $genotype->genotype_id()) {
+        my $alleles_string = "allele";
+        if (@alleles_data > 1) {
+          $alleles_string = "alleles";
+        }
+
+        $c->stash->{json_data} = {
+          status => "existing",
+          genotype_display_name => $existing_genotype->display_name($c->config(), $strain_name),
+          genotype_id => $existing_genotype->genotype_id(),
+          taxonid => $existing_genotype->organism()->taxonid(),
+          comment => $existing_genotype->comment(),
+          strain_name => $strain_name,
+        };
+
+      } else {
         my $guard = $schema->txn_scope_guard();
-
-        my $genotype_manager =
-          Canto::Curs::GenotypeManager->new(config => $c->config(),
-                                            curs_schema => $schema);
 
         $genotype_manager->store_genotype_changes($genotype,
                                                   $genotype_name, $genotype_background,
@@ -1723,37 +1749,17 @@ sub _feature_edit_helper
           status => "success",
           location => $st->{curs_root_uri} . "/genotype_manage#/select/" . $genotype->genotype_id(),
         };
-      } catch {
-        $c->stash->{json_data} = {
-          status => "error",
-          message => "Storing changes to genotype failed: internal error - " .
-            "please report this to the Canto developers",
-        };
-        warn $_;
+      }
+    } catch {
+      $c->stash->{json_data} = {
+        status => "error",
+        message => "Storing changes to genotype failed: internal error - " .
+          "please report this to the Canto developers",
       };
+      warn $_;
+    };
 
-      $c->forward('View::JSON');
-    } else {
-      $st->{genotype_id} = $genotype->id();
-
-      _set_allele_select_stash($c);
-
-      $st->{feature} = $genotype;
-      $st->{features} = [$genotype];
-
-      if ($edit_or_duplicate eq 'edit') {
-        $st->{annotation_count} = $genotype->annotations()->count();
-      }
-
-      my $display_name = $st->{feature}->display_name($c->config());
-
-      if ($edit_or_duplicate eq 'edit') {
-        $st->{title} = "Editing genotype: $display_name";
-      } else {
-        $st->{title} = "Adding a genotype";
-      }
-      $st->{template} = "curs/${feature_type}_edit.mhtml";
-    }
+    $c->forward('View::JSON');
   } else {
     die "can't edit feature type: $feature_type\n";
   }
