@@ -46,7 +46,11 @@
               <th ng-if="!data.hideColumns.qualifiers">Qualifiers</th>
               <th ng-if="!data.hideColumns.term_suggestion">Term suggestion</th>
               <th ng-if="!data.hideColumns.submitter_comment">Comment</th>
-              <th ng-if="!data.hideColumns.figure">Figure</th>
+              <th ng-if="!data.hideColumns.figure" ng-click="setSortBy('figure')">
+                <img ng-if="sortColumn == 'figure'" ng-src="{{app_static_path + '/images/descending.png'}}"></img>
+                Figure
+              </th>
+              <th ng-if="!data.hideColumns.extension">Annotation extension</th>
               <th ng-if="!data.hideColumns.extension">
                 <span ng-show="flyBaseMode">Phenotype extensions</span>
                 <span ng-hide="flyBaseMode">Annotation extension</span>
@@ -58,7 +62,7 @@
             <tr annotation-table-row add-links="addLinks()"
                 annotation-type-name="ontology"
                 feature-status-filter="{{featureStatusFilter}}"
-                ng-repeat="annotation in annotations">
+                ng-repeat="annotation in data.sortedAnnotations">
             </tr>
           </tbody>
         </table>
@@ -79,14 +83,16 @@
               </th>
               <th ng-if="!data.hideColumns.qualifiers">Qualifiers</th>
               <th ng-if="!data.hideColumns.submitter_comment">Comment</th>
-              <th ng-if="!data.hideColumns.figure">Figure</th>
+              <th ng-if="!data.hideColumns.figure" ng-click="setSortBy('figure')">
+                <img ng-if="sortColumn == 'figure'" ng-src="{{app_static_path + '/images/descending.png'}}"></img>
+                Figure</th>
               <th ng-if="!data.hideColumns.curator">Curator</th>
             </tr>
           </thead>
           <tbody>
             <tr annotation-table-row annotation-type-name="interaction"
                 feature-status-filter="{{featureStatusFilter}}"
-                ng-repeat="annotation in annotations">
+                ng-repeat="annotation in data.sortedAnnotations">
             </tr>
           </tbody>
         </table>
