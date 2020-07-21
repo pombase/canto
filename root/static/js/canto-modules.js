@@ -8088,7 +8088,7 @@ var termNameComplete =
         $scope.maxTermNameSelectCount = CantoGlobals.max_term_name_select_count;
 
         $scope.isShortList = function() {
-          return $scope.termCount && $scope.termCount < $scope.maxTermNameSelectCount;
+          return $scope.termCount && $scope.termCount <= $scope.maxTermNameSelectCount;
         };
 
         $scope.placeholder = '';
