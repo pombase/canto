@@ -6390,10 +6390,66 @@ var annotationTableCtrl =
 
         $scope.data = {};
 
+        // default is no sorting
+        $scope.sortColumn = null;
+
+        $scope.data = {
+          sortedAnnotations: null,
+          hideColumns: {},
+          publicationUniquename: null,
+        };
+
+        $scope.sortAnnotations =
+          function() {
+            if ($scope.annotations) {
+              if ($scope.sortColumn) {
+                $scope.data.sortedAnnotations = $scope.annotations.slice();
+                $scope.data.sortedAnnotations.sort(function(a, b) {
+                  if (!a[$scope.sortColumn]) {
+                    return 1;
+                  } else {
+                    if (!b[$scope.sortColumn]) {
+                      return -1;
+                    } else {
+                      var aVal = a[$scope.sortColumn].toLowerCase();
+                      var bVal = b[$scope.sortColumn].toLowerCase();
+                      if (aVal < bVal) {
+                        return -1;
+                      }
+                      if (aVal > bVal) {
+                        return 1;
+                      }
+                      return 0;
+                    }
+                  }
+                });
+              } else {
+                $scope.data.sortedAnnotations = $scope.annotations;
+              }
+            }
+          };
+
+        $scope.sortAnnotations();
+
+        $scope.setSortBy = function(col) {
+          if ($scope.sortColumn === col) {
+            $scope.setDefaulSort();
+          } else {
+            $scope.sortColumn = col;
+            $scope.sortAnnotations();
+          }
+        };
+
+        $scope.setDefaulSort = function() {
+          $scope.sortColumn = null;
+          $scope.sortAnnotations();
+        };
+
         $scope.$watch('annotations',
           function () {
             if ($scope.annotations) {
               $scope.updateColumns();
+              $scope.sortAnnotations();
             }
           },
           true);
@@ -6412,12 +6468,6 @@ var annotationTableCtrl =
           term_suggestion: true,
           gene_product_form_id: true,
           strain_name: true,
-        };
-
-        $scope.data = {
-          annotations: null,
-          hideColumns: {},
-          publicationUniquename: null,
         };
 
         CursSessionDetails.get()

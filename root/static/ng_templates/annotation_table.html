@@ -46,7 +46,10 @@
               <th ng-if="!data.hideColumns.qualifiers">Qualifiers</th>
               <th ng-if="!data.hideColumns.term_suggestion">Term suggestion</th>
               <th ng-if="!data.hideColumns.submitter_comment">Comment</th>
-              <th ng-if="!data.hideColumns.figure">Figure</th>
+              <th ng-if="!data.hideColumns.figure" ng-click="setSortBy('figure')">
+                <img ng-if="sortColumn == 'figure'" ng-src="{{app_static_path + '/images/descending.png'}}"></img>
+                Figure
+              </th>
               <th ng-if="!data.hideColumns.extension">Annotation extension</th>
               <th ng-if="!data.hideColumns.curator">Curator</th>
             </tr>
@@ -55,7 +58,7 @@
             <tr annotation-table-row add-links="addLinks()"
                 annotation-type-name="ontology"
                 feature-status-filter="{{featureStatusFilter}}"
-                ng-repeat="annotation in annotations">
+                ng-repeat="annotation in data.sortedAnnotations">
             </tr>
           </tbody>
         </table>
@@ -68,14 +71,16 @@
               <th>Interactor B</th>
               <th ng-if="multiOrganismMode">Taxon Id B</th>
               <th ng-if="!data.hideColumns.submitter_comment">Comment</th>
-              <th ng-if="!data.hideColumns.figure">Figure</th>
+              <th ng-if="!data.hideColumns.figure" ng-click="setSortBy('figure')">
+                <img ng-if="sortColumn == 'figure'" ng-src="{{app_static_path + '/images/descending.png'}}"></img>
+                Figure</th>
               <th ng-if="!data.hideColumns.curator">Curator</th>
             </tr>
           </thead>
           <tbody>
             <tr annotation-table-row annotation-type-name="interaction"
                 feature-status-filter="{{featureStatusFilter}}"
-                ng-repeat="annotation in annotations">
+                ng-repeat="annotation in data.sortedAnnotations">
             </tr>
           </tbody>
         </table>
