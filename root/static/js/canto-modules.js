@@ -7799,6 +7799,7 @@ var annotationTableRow =
         $scope.hasWildTypePathogen = false;
         $scope.hasWildTypeHost = false;
         $scope.showTransferLink = false;
+        $scope.isMetagenotypeAnnotation = false;
 
         CursSessionDetails.get()
           .then(function (sessionDetails) {
@@ -7806,6 +7807,10 @@ var annotationTableRow =
           });
 
         var annotation = $scope.annotation;
+
+        $scope.isMetagenotypeAnnotation = (
+          $scope.annotation.feature_type === 'metagenotype'
+        );
 
         $scope.$watchCollection('annotation.alleles',
                                 function(newAlleles) {
