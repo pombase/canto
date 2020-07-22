@@ -4504,9 +4504,14 @@ var metagenotypeViewCtrl =
         CantoGlobals.curs_root_uri + '/metagenotype_manage#/edit/' + metagenotypeId;
     };
 
-    $scope.backToMetagenotypes = function () {
+    $scope.toMetagenotypeManagement = function () {
       window.location.href = CantoGlobals.curs_root_uri +
         '/metagenotype_manage' + (CantoGlobals.read_only_curs ? '/ro' : '');
+    };
+
+    $scope.toSummaryPage = function () {
+      window.location.href = CantoGlobals.curs_root_uri + 
+      (CantoGlobals.read_only_curs ? '/ro' : '');
     };
   };
 
