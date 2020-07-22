@@ -131,7 +131,7 @@ WITH pub_curator_roles AS
       FROM pubprop
       JOIN cvterm ppt ON ppt.cvterm_id = pubprop.type_id
       WHERE pubprop.pub_id = pub.pub_id
-        AND ppt.name = 'canto_curator_email' LIMIT 1) AS curator,
+        AND ppt.name = 'canto_curator_name' LIMIT 1) AS curator,
      extract(YEAR
              FROM
                (SELECT value
@@ -405,14 +405,14 @@ EOF
 sub _annotator_pub_counts
 {
   my $track_schema = shift;
-  my $curator_emails = shift;
+  my $curator_names = shift;
 
   my %annual_community_pub_counts = ();
   my %annual_curator_pub_counts = ();
 
   my $dbh = $track_schema->storage()->dbh();
   my $query = <<"EOF";
-SELECT curator.email_address, p.value
+SELECT curator.name, p.value
 FROM curs_curator me
 JOIN curs curs ON curs.curs_id = me.curs
 JOIN pub pub ON pub.pub_id = curs.pub
@@ -435,10 +435,10 @@ EOF
   my $sth = $dbh->prepare($query);
   $sth->execute() or die "Couldn't execute: " . $sth->errstr;
 
-  while (my ($email_address, $approval_date) = $sth->fetchrow_array()) {
+  while (my ($curator_name, $approval_date) = $sth->fetchrow_array()) {
     if ($approval_date =~ /^(\d\d\d\d)-\d\d-\d\d/) {
       my $year = $1;
-      if ($curator_emails->{$email_address}) {
+      if ($curator_names->{$curator_name}) {
         $annual_curator_pub_counts{$year}++;
       } else {
         $annual_community_pub_counts{$year}++;
@@ -452,7 +452,7 @@ EOF
 sub _annotator_annotation_counts
 {
   my $chado_schema = shift;
-  my $curator_emails = shift;
+  my $curator_names = shift;
 
   my %annual_community_annotation_counts = ();
   my %annual_curator_annotation_counts = ();
@@ -478,31 +478,31 @@ EOF
   $sth->execute() or die "Couldn't execute: " . $sth->errstr;
 
   $query = <<"EOF";
-SELECT emailprop.value,
+SELECT nameprop.value,
        ssd.submitted_date
 FROM feature_cvterm fc
-JOIN feature_cvtermprop emailprop ON fc.feature_cvterm_id = emailprop.feature_cvterm_id
+JOIN feature_cvtermprop nameprop ON fc.feature_cvterm_id = nameprop.feature_cvterm_id
 JOIN session_submitted_dates ssd ON ssd.pub_id = fc.pub_id
-WHERE emailprop.type_id IN
+WHERE nameprop.type_id IN
     (SELECT cvterm_id
      FROM cvterm
-     WHERE name = 'curator_email')
+     WHERE name = 'curator_name')
 UNION ALL
-SELECT emailprop.value,
+SELECT nameprop.value,
        ssd.submitted_date
 FROM feature_relationship fr
 JOIN feature_relationship_pub frpub ON frpub.feature_relationship_id = fr.feature_relationship_id
-JOIN feature_relationshipprop emailprop ON emailprop.feature_relationship_id = fr.feature_relationship_id
+JOIN feature_relationshipprop nameprop ON nameprop.feature_relationship_id = fr.feature_relationship_id
 JOIN session_submitted_dates ssd ON ssd.pub_id = frpub.pub_id
 WHERE fr.type_id IN
     (SELECT cvterm_id
      FROM cvterm
      WHERE name = 'interacts_genetically'
        OR name = 'interacts_physically')
-  AND emailprop.type_id IN
+  AND nameprop.type_id IN
     (SELECT cvterm_id
      FROM cvterm
-     WHERE name = 'curator_email')
+     WHERE name = 'curator_name')
   AND fr.feature_relationship_id IN
     (SELECT inferredprop.feature_relationship_id
      FROM feature_relationshipprop inferredprop
@@ -516,10 +516,10 @@ EOF
   $sth = $dbh->prepare($query);
   $sth->execute() or die "Couldn't execute: " . $sth->errstr;
 
-  while (my ($email, $date) = $sth->fetchrow_array()) {
+  while (my ($name, $date) = $sth->fetchrow_array()) {
     if ($date =~ /(\d\d\d\d)-?(\d\d)-?(\d\d)/) {
       my $year = $1;
-      if ($curator_emails->{$email}) {
+      if ($curator_names->{$name}) {
         $annual_curator_annotation_counts{$year}++;
       } else {
         $annual_community_annotation_counts{$year}++;
@@ -536,22 +536,22 @@ sub annotation_stats_table
   my $chado_schema = shift;
   my $track_schema = shift;
 
-  my %curator_emails = ();
+  my %curator_names = ();
 
   my $curator_rs =
     $track_schema->resultset('Person')
       ->search({ 'role.name' => 'admin' }, { join => 'role' });
 
   while (defined (my $curator = $curator_rs->next())) {
-    $curator_emails{$curator->email_address()} = 1;
+    $curator_names{$curator->name()} = 1;
   }
 
   my ($annual_community_pub_counts, $annual_curator_pub_counts) =
-    _annotator_pub_counts($track_schema, \%curator_emails);
+    _annotator_pub_counts($track_schema, \%curator_names);
 
   my ($annual_community_annotation_counts,
       $annual_curator_annotation_counts) =
-    _annotator_annotation_counts($chado_schema, \%curator_emails);
+    _annotator_annotation_counts($chado_schema, \%curator_names);
 
   my $first_year = 9999;
 
