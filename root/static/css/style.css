@@ -1077,9 +1077,11 @@ fieldset.curs-genes span {
   margin-top: 5px;
   font-size: 95%;
 }
-.curs-annotation-table {
-  
+.curs-annotation-table a.curs-sort-button {
+  color: black;
 }
+
+
 .curs-annotation-table .term-warning {
   color: #f00;
   font-weight: bold;
