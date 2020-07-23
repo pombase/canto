@@ -17,6 +17,7 @@ var annotation_type_config = <% $annotation_type_config_js |n %>;
 var curs_session_state = '<% $curs_session_state |n %>';
 var multi_organism_mode = <% $multi_organism_mode ? 'true' : 'false' %>;
 var split_genotypes_by_organism = <% $split_genotypes_by_organism ? 'true' : 'false' %>;
+var annotation_figure_field = <% $annotation_figure_field ? 'true' : 'false' %>;
 var show_genotype_management_genes_list = <% $show_genotype_management_genes_list ? 'true' : 'false' %>;
 var notes_on_single_allele_genotypes_only = <% $notes_on_single_allele_genotypes_only ? 'true' : 'false' %>;
 var strains_mode = <% $strains_mode ? 'true' : 'false' %>;
@@ -71,6 +72,7 @@ my $annotation_type_config_js = Data::JavaScript::Anon->anon_dump($annotation_ty
 
 my $multi_organism_mode = $st->{multi_organism_mode} || 0;
 my $split_genotypes_by_organism = $st->{split_genotypes_by_organism} || 0;
+my $annotation_figure_field = $st->{annotation_figure_field} || 0;
 my $show_genotype_management_genes_list = $st->{show_genotype_management_genes_list} || 0;
 my $notes_on_single_allele_genotypes_only = $st->{notes_on_single_allele_genotypes_only} || 0;
 my $strains_mode = $st->{strains_mode} || 0;

@@ -90,6 +90,9 @@ allow_single_wildtype_allele: 0
 # if 1, allow diploids to be created and used in genotypes
 diploid_mode: 0
 
+# if 1, add a "Figure" field to annotations
+annotation_figure_field: 1
+
 # if 0, hide the list of genes and actions on the left hand side of
 # the genotype management page
 show_genotype_management_genes_list: 1

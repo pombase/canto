@@ -794,6 +794,7 @@ canto.service('CantoGlobals', function ($window) {
   this.highlightTerms = $window.highlightTerms;
   this.geneListData = $window.geneListData;
   this.hostsWithNoGenes = $window.hostsWithNoGenes;
+  this.annotationFigureField = $window.annotation_figure_field;
 });
 
 canto.service('CantoService', function ($http) {
@@ -5992,6 +5993,7 @@ var annotationEditDialogCtrl =
     AnnotationTypeConfig, CantoConfig,
     CursSessionDetails, CantoService, CantoGlobals, toaster, args) {
     $scope.currentUserIsAdmin = CantoGlobals.current_user_is_admin;
+    $scope.showFigureField = CantoGlobals.annotationFigureField;
     $scope.annotation = {};
     $scope.annotationTypeName = args.annotationTypeName;
     $scope.currentFeatureDisplayName = args.currentFeatureDisplayName;
@@ -6005,6 +6007,8 @@ var annotationEditDialogCtrl =
     };
 
     copyObject(args.annotation, $scope.annotation);
+
+    $scope.hasFigure = $scope.annotation.figure;
 
     $scope.showOrganismName = (
       CantoGlobals.pathogen_host_mode &&

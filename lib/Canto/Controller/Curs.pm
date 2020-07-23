@@ -168,6 +168,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{split_genotypes_by_organism} = $config->{split_genotypes_by_organism};
   $st->{show_genotype_management_genes_list} = $config->{show_genotype_management_genes_list};
   $st->{notes_on_single_allele_genotypes_only} = $config->{notes_on_single_allele_genotypes_only};
+  $st->{annotation_figure_field} = $config->{annotation_figure_field};
 
   $st->{show_metagenotype_links} = 0;
   $st->{edit_organism_page_valid} = 0;
