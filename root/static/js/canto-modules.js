@@ -7580,7 +7580,11 @@ var annotationTableCtrl =
                             return null;
                           }
                         } else {
-                          return a[column].toLowerCase();
+                          if (a[column]) {
+                            return a[column].toLowerCase();
+                          } else {
+                            return null;
+                          }
                         }
                       }
                       var column;
