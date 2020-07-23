@@ -7568,56 +7568,69 @@ var annotationTableCtrl =
           publicationUniquename: null,
         };
 
+        var baseSortFunc =
+            function(a, b, isCurrent) {
+              function getColumnValue(annotation, columnName) {
+                if (columnName === 'extension') {
+                  var extString = extensionAsString(annotation[columnName], true, false);
+                  if (extString) {
+                    return extString.toLowerCase();
+                  } else {
+                    // null for empty strings so they are sorted last
+                    return null;
+                  }
+                } else {
+                  if (annotation[columnName]) {
+                    if (columnName == 'feature_display_name' &&
+                       annotation.feature_type == 'genotype') {
+                      return $.map(getDisplayLoci(annotation.alleles),
+                                   function(locus) {
+                                     if (locus.long_display_name) {
+                                       return locus.long_display_name.toLowerCase();
+                                     } else {
+                                       return "[null]";
+                                     }
+                                   }).join(' ');
+                    } else {
+                      return annotation[columnName].toLowerCase();
+                    }
+                  } else {
+                    return null;
+                  }
+                }
+              }
+              var column;
+              if (isCurrent || !$scope.prevSortColumn) {
+                column = $scope.sortColumn;
+              } else {
+                column = $scope.prevSortColumn;
+              }
+              var aVal = getColumnValue(a, column);
+              if (!aVal) {
+                return 1;
+              } else {
+                var bVal = getColumnValue(b, column);
+                if (!bVal) {
+                  return -1;
+                } else {
+                  if (aVal < bVal) {
+                    return -1;
+                  }
+                  if (aVal > bVal) {
+                    return 1;
+                  }
+                  if (isCurrent && $scope.prevSortColumn) {
+                    // sort by the previous sort column as a tie-breaker
+                    return baseSortFunc(a, b, false);
+                  }
+                }
+              }
+            };
+
         $scope.sortAnnotations =
           function() {
             if ($scope.annotations) {
               if ($scope.sortColumn) {
-                var baseSortFunc =
-                    function(a, b, isCurrent) {
-                      function getColumnValue(annotation, columnName) {
-                        if (columnName === 'extension') {
-                          var extString = extensionAsString(annotation[columnName], true, false);
-                          if (extString) {
-                            return extString.toLowerCase();
-                          } else {
-                            // null for empty strings so they are sorted last
-                            return null;
-                          }
-                        } else {
-                          if (annotation[columnName]) {
-                            return annotation[columnName].toLowerCase();
-                          } else {
-                            return null;
-                          }
-                        }
-                      }
-                      var column;
-                      if (isCurrent || !$scope.prevSortColumn) {
-                        column = $scope.sortColumn;
-                      } else {
-                        column = $scope.prevSortColumn;
-                      }
-                      var aVal = getColumnValue(a, column);
-                      if (!aVal) {
-                        return 1;
-                      } else {
-                        var bVal = getColumnValue(b, column);
-                        if (!bVal) {
-                          return -1;
-                        } else {
-                          if (aVal < bVal) {
-                            return -1;
-                          }
-                          if (aVal > bVal) {
-                            return 1;
-                          }
-                          if (isCurrent && $scope.prevSortColumn) {
-                            // sort by the previous sort column as a tie-breaker
-                            return baseSortFunc(a, b, false);
-                          }
-                        }
-                      }
-                    };
                 $scope.data.sortedAnnotations = $scope.annotations.slice();
                 $scope.data.sortedAnnotations.sort(function(a, b) {
                   return baseSortFunc(a, b, true);
