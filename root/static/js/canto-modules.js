@@ -855,6 +855,7 @@ canto.service('CantoGlobals', function ($window) {
   this.highlightTerms = $window.highlightTerms;
   this.geneListData = $window.geneListData;
   this.hostsWithNoGenes = $window.hostsWithNoGenes;
+  this.annotationFigureField = $window.annotation_figure_field;
 });
 
 canto.service('CantoService', function ($http) {
@@ -6415,6 +6416,7 @@ var annotationEditDialogCtrl =
             CursSessionDetails, CantoService, CantoGlobals, Curs, toaster, args) {
     $scope.currentUserIsAdmin = CantoGlobals.current_user_is_admin;
     $scope.flyBaseMode = CantoGlobals.flybase_mode;
+    $scope.showFigureField = CantoGlobals.annotationFigureField;
     $scope.annotation = {};
     $scope.annotationTypeName = args.annotationTypeName;
     $scope.annotationType = null;
@@ -6464,6 +6466,8 @@ var annotationEditDialogCtrl =
 
     $scope.filteredFeatures = null;
     $scope.filteredFeaturesB = null;
+
+    $scope.hasFigure = $scope.annotation.figure;
 
     $scope.showStrainName = (
       CantoGlobals.strains_mode &&
@@ -7580,8 +7584,8 @@ var annotationTableCtrl =
                             return null;
                           }
                         } else {
-                          if (a[column]) {
-                            return a[column].toLowerCase();
+                          if (annotation[columnName]) {
+                            return annotation[columnName].toLowerCase();
                           } else {
                             return null;
                           }
@@ -7607,7 +7611,7 @@ var annotationTableCtrl =
                           if (aVal > bVal) {
                             return 1;
                           }
-                          if (isCurrent) {
+                          if (isCurrent && $scope.prevSortColumn) {
                             // sort by the previous sort column as a tie-breaker
                             return baseSortFunc(a, b, false);
                           }

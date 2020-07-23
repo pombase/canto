@@ -169,6 +169,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{show_genotype_management_genes_list} = $config->{show_genotype_management_genes_list};
 
   $st->{flybase_mode} = $config->{flybase_mode};
+  $st->{annotation_figure_field} = $config->{annotation_figure_field};
 
   $st->{show_metagenotype_links} = 0;
   $st->{edit_organism_page_valid} = 0;

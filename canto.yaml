@@ -25,7 +25,7 @@ header_image: logos/curation_tool.png
 
 canto_url: http://curation.pombase.org/
 
-app_version: v1523
+app_version: v1524
 
 schema_version: 33
 
@@ -91,6 +91,9 @@ allow_single_wildtype_allele: 0
 
 # if 1, allow diploids to be created and used in genotypes
 diploid_mode: 0
+
+# if 1, add a "Figure" field to annotations
+annotation_figure_field: 1
 
 # if 0, hide the list of genes and actions on the left hand side of
 # the genotype management page
