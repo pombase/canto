@@ -7556,6 +7556,7 @@ var annotationTableCtrl =
 
         // default is no sorting
         $scope.sortColumn = null;
+        $scope.prevSortColumn = null;
 
         $scope.data = {
           sortedAnnotations: null,
@@ -7567,25 +7568,51 @@ var annotationTableCtrl =
           function() {
             if ($scope.annotations) {
               if ($scope.sortColumn) {
+                var baseSortFunc =
+                    function(a, b, isCurrent) {
+                      function getColumnValue(annotation, columnName) {
+                        if (columnName === 'extension') {
+                          var extString = extensionAsString(annotation[columnName], true, false);
+                          if (extString) {
+                            return extString.toLowerCase();
+                          } else {
+                            // null for empty strings so they are sorted last
+                            return null;
+                          }
+                        } else {
+                          return a[column].toLowerCase();
+                        }
+                      }
+                      var column;
+                      if (isCurrent || !$scope.prevSortColumn) {
+                        column = $scope.sortColumn;
+                      } else {
+                        column = $scope.prevSortColumn;
+                      }
+                      var aVal = getColumnValue(a, column);
+                      if (!aVal) {
+                        return 1;
+                      } else {
+                        var bVal = getColumnValue(b, column);
+                        if (!bVal) {
+                          return -1;
+                        } else {
+                          if (aVal < bVal) {
+                            return -1;
+                          }
+                          if (aVal > bVal) {
+                            return 1;
+                          }
+                          if (isCurrent) {
+                            // sort by the previous sort column as a tie-breaker
+                            return baseSortFunc(a, b, false);
+                          }
+                        }
+                      }
+                    };
                 $scope.data.sortedAnnotations = $scope.annotations.slice();
                 $scope.data.sortedAnnotations.sort(function(a, b) {
-                  if (!a[$scope.sortColumn]) {
-                    return 1;
-                  } else {
-                    if (!b[$scope.sortColumn]) {
-                      return -1;
-                    } else {
-                      var aVal = a[$scope.sortColumn].toLowerCase();
-                      var bVal = b[$scope.sortColumn].toLowerCase();
-                      if (aVal < bVal) {
-                        return -1;
-                      }
-                      if (aVal > bVal) {
-                        return 1;
-                      }
-                      return 0;
-                    }
-                  }
+                  return baseSortFunc(a, b, true);
                 });
               } else {
                 $scope.data.sortedAnnotations = $scope.annotations;
@@ -7599,6 +7626,7 @@ var annotationTableCtrl =
           if ($scope.sortColumn === col) {
             $scope.setDefaulSort();
           } else {
+            $scope.prevSortColumn = $scope.sortColumn;
             $scope.sortColumn = col;
             $scope.sortAnnotations();
           }
