@@ -6423,8 +6423,8 @@ var annotationTableCtrl =
                             return null;
                           }
                         } else {
-                          if (a[column]) {
-                            return a[column].toLowerCase();
+                          if (annotation[columnName]) {
+                            return annotation[columnName].toLowerCase();
                           } else {
                             return null;
                           }
