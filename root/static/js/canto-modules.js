@@ -7611,7 +7611,7 @@ var annotationTableCtrl =
                           if (aVal > bVal) {
                             return 1;
                           }
-                          if (isCurrent) {
+                          if (isCurrent && $scope.prevSortColumn) {
                             // sort by the previous sort column as a tie-breaker
                             return baseSortFunc(a, b, false);
                           }
