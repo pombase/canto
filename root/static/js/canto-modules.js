@@ -4025,9 +4025,13 @@ var genePageCtrl =
                                            [alleleData], taxonId, strainName, undefined);
 
           storePromise.then(function (data) {
-            window.location.href =
-              CantoGlobals.curs_root_uri + '/feature/genotype/annotate/' + data.genotype_id +
-              '/start/' + annotationTypeName;
+            if (data.status === 'error') {
+              toaster.error("Storing genotype failed, message from server: " + data.message);
+            } else {
+              window.location.href =
+                CantoGlobals.curs_root_uri + '/feature/genotype/annotate/' + data.genotype_id +
+                '/start/' + annotationTypeName;
+            }
           });
         });
       };
