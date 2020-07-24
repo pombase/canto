@@ -7167,7 +7167,26 @@ var annotationTransferDialogCtrl =
           }
         }
 
-        return feature.feature_id != $scope.annotation.feature_id;
+        var featureIdField = null;
+
+        if ($scope.annotationType.category === 'ontology' ||
+            $scope.annotationType.category === 'interaction' &&
+            $scope.annotationType.feature_type !== 'metagenotype') {
+          if ($scope.annotationType.category !== 'interaction' ||
+              $scope.interactorAorB === 'A') {
+            featureIdField = 'feature_id';
+          } else {
+            featureIdField = 'interacting_gene_id';
+          }
+        } else {
+          if ($scope.interactorAorB === 'A') {
+            featureIdField = 'genotype_a_id';
+          } else {
+            featureIdField = 'genotype_b_id';
+          }
+        }
+
+        return feature.feature_id != $scope.annotation[featureIdField];
       });
     }
 
