@@ -6935,6 +6935,10 @@ var annotationEditDialogCtrl =
 
                            testFeatAlleles = removeAberrationAlleles(testFeatAlleles);
 
+                           if (testFeatAlleles.length == 0) {
+                             return false;
+                           }
+
                            return testFeatAlleles[0].gene_id ==
                              selectedFeatAlleles[0].gene_id;
                          });
