@@ -7948,7 +7948,8 @@ var annotationTableRow =
               }
             }
             $scope.showTransferLink = annotationType.allow_annotation_transfer &&
-              annotationType.feature_type !== 'metagenotype';
+              !(annotationType.category == 'ontology' &&
+                annotationType.feature_type === 'metagenotype');
           });
 
         CantoConfig.get('instance_organism').then(function (results) {
