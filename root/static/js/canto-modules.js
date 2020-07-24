@@ -7248,7 +7248,12 @@ var annotationTransferDialogCtrl =
               if ($scope.annotationType.category === 'ontology' ||
                   $scope.annotationType.category === 'interaction' &&
                   $scope.annotationType.feature_type !== 'metagenotype') {
-                annotationCopy.feature_id = newId;
+                if ($scope.annotationType.category !== 'interaction' ||
+                   $scope.interactorAorB === 'A') {
+                  annotationCopy.feature_id = newId;
+                } else {
+                  annotationCopy.interacting_gene_id = newId;
+                }
               } else {
                 if ($scope.interactorAorB === 'A') {
                   annotationCopy.genotype_a_id = newId;
