@@ -53,6 +53,7 @@
                    title="Click to sort" ng-click="setSortBy('term_ontid')">
                   <img ng-if="sortColumn == 'term_ontid'" ng-src="{{app_static_path + '/images/descending.png'}}"></img>
                   Term ID
+                </a>
               </th>
               <th>
                 <a class="curs-sort-button" href=""
@@ -74,9 +75,15 @@
               <th ng-if="annotationType.can_have_conditions && !data.hideColumns.conditions">Conditions</th>
               <th ng-if="!data.hideColumns.qualifiers">Qualifiers</th>
               <th ng-if="!data.hideColumns.term_suggestion">Term suggestion</th>
-              <th ng-if="!data.hideColumns.submitter_comment">Comment</th>
+              <th ng-if="!data.hideColumns.submitter_comment">
+               <a class="curs-sort-button" href=""
+                   title="Click to sort" ng-click="setSortBy('submitter_comment')">
+                  <img ng-if="sortColumn == 'submitter_comment'" ng-src="{{app_static_path + '/images/descending.png'}}"></img>
+                  Comment
+               </a>
+              </th>
               <th ng-if="!data.hideColumns.figure">
-                <a class="curs-sort-button" hrefa=""
+                <a class="curs-sort-button" href=""
                    title="Click to sort" ng-click="setSortBy('figure')">
                   <img ng-if="sortColumn == 'figure'" ng-src="{{app_static_path + '/images/descending.png'}}"></img>
                   Figure
@@ -104,20 +111,60 @@
         <table ng-switch-when="interaction" class="list">
           <thead>
             <tr>
-              <th>Interactor A</th>
+              <th>
+                <a class="curs-sort-button" href=""
+                   title="Click to sort" ng-click="setSortBy('feature_a_display_name')">
+                  <img ng-if="sortColumn == 'feature_a_display_name'" ng-src="{{app_static_path + '/images/descending.png'}}"></img>
+                  Interactor A
+                </a>
+              </th>
               <th ng-if="multiOrganismMode">Taxon Id A</th>
-              <th ng-if="!data.hideColumns.evidence_code">Evidence</th>
+              <th ng-if="!data.hideColumns.evidence_code">
+                <a class="curs-sort-button" href=""
+                   title="Click to sort" ng-click="setSortBy('evidence')">
+                  <img ng-if="sortColumn == 'evidence'" ng-src="{{app_static_path + '/images/descending.png'}}"></img>
+                  Evidence
+                </a>
+              </th>
               <th ng-if="annotationType.can_have_conditions && !data.hideColumns.conditions">Conditions</th>
-              <th>Interactor B</th>
+              <th>
+                <a class="curs-sort-button" href=""
+                   title="Click to sort" ng-click="setSortBy('feature_b_display_name')">
+                  <img ng-if="sortColumn == 'feature_b_display_name'" ng-src="{{app_static_path + '/images/descending.png'}}"></img>
+                  Interactor B
+                </a>
+              </th>
               <th ng-if="multiOrganismMode">Taxon Id B</th>
-              <th ng-if="showInteractionTermColumns">Term ID</th>
-              <th ng-if="showInteractionTermColumns">Phenotype</th>
+              <th ng-if="showInteractionTermColumns">
+                <a class="curs-sort-button" href=""
+                   title="Click to sort" ng-click="setSortBy('term_ontid')">
+                  <img ng-if="sortColumn == 'term_ontid'" ng-src="{{app_static_path + '/images/descending.png'}}"></img>
+                  Term ID
+                </a>
+              </th>
+              <th ng-if="showInteractionTermColumns">
+                <a class="curs-sort-button" href=""
+                   title="Click to sort" ng-click="setSortBy('term_name')">
+                  <img ng-if="sortColumn == 'term_name'" ng-src="{{app_static_path + '/images/descending.png'}}"></img>
+                  Phenotype
+                </a>
+              </th>
               <th ng-if="!data.hideColumns.extension">
-                <span ng-show="flyBaseMode">Phenotype extensions</span>
-                <span ng-hide="flyBaseMode">Annotation extension</span>
+                <a class="curs-sort-button" href=""
+                   title="Click to sort" ng-click="setSortBy('extension')">
+                  <img ng-if="sortColumn == 'extension'" ng-src="{{app_static_path + '/images/descending.png'}}"></img>
+                  <span ng-show="flyBaseMode">Phenotype extensions</span>
+                  <span ng-hide="flyBaseMode">Annotation extension</span>
+                </a>
               </th>
               <th ng-if="!data.hideColumns.qualifiers">Qualifiers</th>
-              <th ng-if="!data.hideColumns.submitter_comment">Comment</th>
+              <th ng-if="!data.hideColumns.submitter_comment">
+                <a class="curs-sort-button" href=""
+                   title="Click to sort" ng-click="setSortBy('submitter_comment')">
+                  <img ng-if="sortColumn == 'submitter_comment'" ng-src="{{app_static_path + '/images/descending.png'}}"></img>
+                  comment
+                </a>
+              </th>
               <th ng-if="!data.hideColumns.figure" ng-click="setSortBy('figure')">
                 <img ng-if="sortColumn == 'figure'" ng-src="{{app_static_path + '/images/descending.png'}}"></img>
                 Figure</th>
