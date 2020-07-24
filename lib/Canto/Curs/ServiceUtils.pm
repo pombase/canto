@@ -1037,14 +1037,16 @@ sub make_annotation
     }
   }
 
-  my $needs_with_gene = $evidence_types->{$evidence_code}->{with_gene};
-  if ($needs_with_gene) {
-    if (!$data->{with_gene_id}) {
-      die "no 'with_gene_id' with passed in the data object to make_annotation()\n";
-    }
-  } else {
-    if ($data->{with_gene_id}) {
-      die "annotation with evidence code '$evidence_code' shouldn't have a 'with_gene_id' passed in the data\n";
+  if (defined $evidence_code) {
+    my $needs_with_gene = $evidence_types->{$evidence_code}->{with_gene};
+    if ($needs_with_gene) {
+      if (!$data->{with_gene_id}) {
+        die "no 'with_gene_id' with passed in the data object to make_annotation()\n";
+      }
+    } else {
+      if ($data->{with_gene_id}) {
+        die "annotation with evidence code '$evidence_code' shouldn't have a 'with_gene_id' passed in the data\n";
+      }
     }
   }
 
