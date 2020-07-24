@@ -7050,6 +7050,10 @@ var annotationEditDialogCtrl =
         }
       }
 
+      if ($scope.annotationType.evidence_codes.length == 0) {
+        delete objectToStore.evidence_code;
+      }
+
       return objectToStore;
     }
 
