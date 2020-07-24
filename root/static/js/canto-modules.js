@@ -2172,6 +2172,10 @@ function openExtensionBuilderDialog($uibModal, extension, termId, featureDisplay
 
 
 function extensionAsString(extension, displayMode, hideRelation) {
+  if (!extension) {
+    return null;
+  }
+
   return $.map(extension,
     function (orPart) {
       return $.map(orPart,
@@ -7135,7 +7139,8 @@ var annotationTransferDialogCtrl =
 
     $scope.termAndExtension = function() {
       if ($scope.annotation.term_name) {
-        if ($scope.extensionAsString.length > 0 && $scope.transferExtension) {
+        if ($scope.extensionAsString && $scope.extensionAsString.length > 0 &&
+            $scope.transferExtension) {
           return $scope.annotation.term_name + ' (' + $scope.extensionAsString + ')';
         } else {
           return $scope.annotation.term_name + ' (no extension)';
@@ -7223,7 +7228,7 @@ var annotationTransferDialogCtrl =
     };
 
     $scope.hasExtension = function() {
-      return $scope.extensionAsString.length > 0;
+      return $scope.extensionAsString && $scope.extensionAsString.length > 0;
     };
 
     $scope.canTransfer = function() {
