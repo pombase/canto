@@ -7937,7 +7937,8 @@ var annotationTableRow =
                 $scope.interactionFeatureType = 'genotype';
               }
             }
-            $scope.showTransferLink = annotationType.allow_annotation_transfer;
+            $scope.showTransferLink = annotationType.allow_annotation_transfer &&
+              annotationType.feature_type !== 'metagenotype';
           });
 
         CantoConfig.get('instance_organism').then(function (results) {
