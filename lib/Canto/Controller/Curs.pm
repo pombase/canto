@@ -1842,6 +1842,16 @@ sub _genotype_store
   my $genotype_comment = $body_data->{genotype_comment};
   my $genotype_taxonid = $body_data->{taxonid};
 
+  my $instance_organism = $config->{instance_organism};
+
+  if (defined $instance_organism) {
+    # If this Canto is for a single organism then all genotype will be from
+    # that organism.  This handles the case where a foreign gene is used in
+    # a genotype.  eg. Gal4
+    # See: https://github.com/pombase/canto/issues/2317
+    $genotype_taxonid = $instance_organism->{taxonid};
+  }
+
   my $strain_name = $body_data->{strain_name} || undef;
 
   if ($genotype_name && $schema->resultset('Genotype')->find( { name => $genotype_name } )) {
