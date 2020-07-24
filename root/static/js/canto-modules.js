@@ -7248,7 +7248,12 @@ var annotationTransferDialogCtrl =
               if ($scope.annotationType.category === 'ontology' ||
                   $scope.annotationType.category === 'interaction' &&
                   $scope.annotationType.feature_type !== 'metagenotype') {
-                annotationCopy.feature_id = newId;
+                if ($scope.annotationType.category !== 'interaction' ||
+                   $scope.interactorAorB === 'A') {
+                  annotationCopy.feature_id = newId;
+                } else {
+                  annotationCopy.interacting_gene_id = newId;
+                }
               } else {
                 if ($scope.interactorAorB === 'A') {
                   annotationCopy.genotype_a_id = newId;
@@ -7943,7 +7948,8 @@ var annotationTableRow =
               }
             }
             $scope.showTransferLink = annotationType.allow_annotation_transfer &&
-              annotationType.feature_type !== 'metagenotype';
+              !(annotationType.category == 'ontology' &&
+                annotationType.feature_type === 'metagenotype');
           });
 
         CantoConfig.get('instance_organism').then(function (results) {
