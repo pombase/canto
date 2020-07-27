@@ -138,7 +138,7 @@
   </td>
   <td class="table-row-actions">
     <div ng-if="addLinks()">
-      <div ng-if="isMetagenotypeAnnotation">
+      <div ng-if="isMetagenotypeAnnotation && isMetagenotypeLinkEnabled()">
         <a title="View metagenotype for this annotation"
            href="{{featureLink('metagenotype', annotation.metagenotype_id)}}">View metagenotype</a>
       </div>

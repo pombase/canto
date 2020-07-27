@@ -106,7 +106,7 @@ $total_annotation_count
 % }
 </div>
 
-<annotation-table-list></annotation-table-list>
+<annotation-table-list show-metagenotype-link="true"></annotation-table-list>
 
 % if ($annotation_count > 0) {
 <div id="curs-annotation-download">

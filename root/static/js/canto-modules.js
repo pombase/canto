@@ -7540,6 +7540,7 @@ var annotationTableCtrl =
         annotations: '=',
         featureStatusFilter: '@',
         alleleCountFilter: '@',
+        showMetagenotypeLink: '<',
       },
       restrict: 'E',
       replace: true,
@@ -7687,6 +7688,7 @@ var annotationTableList =
         featureIdFilter: '@',
         featureTypeFilter: '@',
         featureFilterDisplayName: '@',
+        showMetagenotypeLink: '<?'
       },
       restrict: 'E',
       replace: true,
@@ -7698,6 +7700,7 @@ var annotationTableList =
         $scope.annotationsByType = {};
         $scope.serverErrorsByType = {};
         $scope.byTypeSplit = {};
+        $scope.showMetagenotypeLink = $scope.showMetagenotypeLink || false;
 
         $scope.capitalizeFirstLetter = capitalizeFirstLetter;
         $scope.data = {};
@@ -7925,6 +7928,10 @@ var annotationTableRow =
         $scope.addLinks = function () {
           return !CantoGlobals.read_only_curs &&
             $attrs.featureStatusFilter == 'new';
+        };
+
+        $scope.isMetagenotypeLinkEnabled = function () {
+          return $attrs.showMetagenotypeLink == 'true';
         };
 
         $scope.featureLink = function (featureType, featureId) {

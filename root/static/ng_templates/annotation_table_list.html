@@ -24,11 +24,13 @@ Annotation loading...
             <annotation-table annotation-type-name="{{annotationType.name}}"
                               annotations="byTypeSplit[annotationType.name].new"
                               feature-status-filter="new"
-                              feature-filter-display-name="{{featureFilterDisplayName}}"></annotation-table>
+                              feature-filter-display-name="{{featureFilterDisplayName}}"
+                              show-metagenotype-link="showMetagenotypeLink"></annotation-table>
             <annotation-table annotation-type-name="{{annotationType.name}}"
                               annotations="byTypeSplit[annotationType.name].existing"
                               feature-status-filter="existing"
-                              feature-filter-display-name="{{featureFilterDisplayName}}"></annotation-table>
+                              feature-filter-display-name="{{featureFilterDisplayName}}"
+                              show-metagenotype-link="showMetagenotypeLink"></annotation-table>
           </div>
           <div ng-if="annotationType.feature_type == 'genotype'">
             <annotation-table annotation-type-name="{{annotationType.name}}"
