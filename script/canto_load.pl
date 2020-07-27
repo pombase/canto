@@ -73,9 +73,9 @@ sub usage
   die qq|${message}usage:
   $0 --genes genes_file --for-taxon=<taxon_id>
 or:
-  $0 --organisms organisms_file.tsv
+  $0 --organisms organisms_file.csv
 or:
-  $0 --strains strains_files.tsv
+  $0 --strains strains_files.csv
 or:
   $0 --ontology ontology_file.obo
   $0 --ontology ontology_file.obo --ontology another_ontology.obo
@@ -112,9 +112,10 @@ The genes file should have 4 columns, separated by tabs:
 
 The ontology files should be in OBO format
 
-The organisms file have 2 columns, separated by tabs:
+The organisms file have 3 columns, separated by commas:
   scientific name (usually "Genus species")
   taxon ID
+  common name
 
 
 Extension config processing
