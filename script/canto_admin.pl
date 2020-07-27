@@ -34,11 +34,13 @@ if (!@ARGV) {
 
 my $refresh_gene_cache = undef;
 my $rename_strain = undef;
+my $delete_unused_strains = undef;
 my $dry_run = 0;
 my $do_help = 0;
 
 my $result = GetOptions ("refresh-gene-cache" => \$refresh_gene_cache,
                          "rename-strain" => \$rename_strain,
+                         "delete-unused-strains" => \$delete_unused_strains,
                          "dry-run|d" => \$dry_run,
                          "help|h" => \$do_help);
 
@@ -59,6 +61,9 @@ sub usage
 
   $0 --rename-strain taxonid old_name new_name
   Rename a strain in <taxonid> from <old_name> to <new_name>
+
+  $0 --delete-unused-strains
+  Remove all strains that are not used in any session
 
 |;
 }
@@ -83,6 +88,11 @@ if ($rename_strain && @ARGV != 3) {
   usage();
 }
 
+if ($delete_unused_strains && @ARGV > 0) {
+  warn "Error: too many arguments for --delete-unused-strains\n\n";
+  usage();
+}
+
 my $config = Canto::Config::get_config();
 my $schema = Canto::TrackDB->new(config => $config);
 
@@ -96,6 +106,7 @@ my $proc = sub {
 
     $exit_flag = 0;
   }
+
   if (defined $rename_strain) {
     my $util = Canto::Track::TrackUtil->new(config => $config, schema => $schema);
 
@@ -108,6 +119,17 @@ my $proc = sub {
       $exit_flag = 0;
     } catch {
       warn "rename failed: $_\n";
+    };
+  }
+
+  if (defined $delete_unused_strains) {
+    my $util = Canto::Track::TrackUtil->new(config => $config, schema => $schema);
+    try {
+      my $count = $util->delete_unused_strains();
+      $exit_flag = 0;
+      print "$0: deleted $count strains from the TrackDB\n";
+    } catch {
+      warn "failed to delete unused strains: $_\n";
     };
   }
 };
