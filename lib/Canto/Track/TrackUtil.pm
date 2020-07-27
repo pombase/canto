@@ -62,6 +62,18 @@ sub _get_strain_rs
     });
 }
 
+=head2 rename_strain()
+
+ Usage   : $track_util->rename_strain($taxonid, $old_name, $new_name);
+ Function: Rename a strain of the organism given by $taxonid, fails if there
+           is no strain with $old_name or there is an existing strain with
+           $new_name.
+ Args    : $old_name
+           $new_name
+ Returns : nothing
+
+=cut
+
 sub rename_strain
 {
   my $self = shift;
