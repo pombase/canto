@@ -5,7 +5,7 @@
     </h4>
     <h4 ng-if="features" class="modal-title">
       <span ng-if="annotationType.category == 'interaction'">
-        Transfer {{annotationType.display_name}} annotation
+        Transfer {{interactorAorB ? ("interactor " + interactorAorB) : ''}} {{annotationType.display_name}} annotation
       </span>
       <span ng-if="annotationType.category != 'interaction'">
       Transfer <span ng-if="annotation.term_name">"{{termAndExtension()}}"</span>
