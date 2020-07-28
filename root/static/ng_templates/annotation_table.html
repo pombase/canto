@@ -103,7 +103,13 @@ Genes
                   <span ng-hide="flyBaseMode">Annotation extension</span>
                 </a>
               </th>
-              <th ng-if="!data.hideColumns.curator">Curator</th>
+              <th ng-if="!data.hideColumns.curator">
+                <a class="curs-sort-button" href=""
+                   title="Click to sort" ng-click="setSortBy('curator')">
+                  <img ng-if="sortColumn == 'curator'" ng-src="{{app_static_path + '/images/descending.png'}}"></img>
+                  Curator
+                </a>
+              </th>
             </tr>
           </thead>
           <tbody>
