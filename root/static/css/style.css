@@ -1790,6 +1790,10 @@ a:not([href]) {
   padding-right: 1em;
 }
 
+.curs-annotation-transfer-interactor-label {
+  font-weight: bold;
+}
+
 .allele-notes-dialog .modal-body {
   display: flex;
   flex-direction: row;
