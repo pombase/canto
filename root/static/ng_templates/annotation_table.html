@@ -29,7 +29,13 @@
           <thead>
             <tr>
               <th ng-if="multiOrganismMode && annotationType.feature_type !== 'metagenotype'">Species<span ng-if="strainsMode && annotationType.feature_type === 'genotype'"> (strain)</span></th>
-              <th ng-if="annotationType.feature_type == 'genotype'">Genes</th>
+              <th ng-if="annotationType.feature_type == 'genotype'">
+                <a class="curs-sort-button" href=""
+                   title="Click to sort" ng-click="setSortBy('genotype_genes')">
+                  <img ng-if="sortColumn == 'genotype_genes'" ng-src="{{app_static_path + '/images/descending.png'}}"></img>
+Genes
+                </a>
+              </th>
               <th ng-if="annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_background">Background</th>
               <th ng-if="annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_name">
                 <a class="curs-sort-button" href=""
@@ -97,7 +103,13 @@
                   <span ng-hide="flyBaseMode">Annotation extension</span>
                 </a>
               </th>
-              <th ng-if="!data.hideColumns.curator">Curator</th>
+              <th ng-if="!data.hideColumns.curator">
+                <a class="curs-sort-button" href=""
+                   title="Click to sort" ng-click="setSortBy('curator')">
+                  <img ng-if="sortColumn == 'curator'" ng-src="{{app_static_path + '/images/descending.png'}}"></img>
+                  Curator
+                </a>
+              </th>
             </tr>
           </thead>
           <tbody>

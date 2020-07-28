@@ -7641,7 +7641,19 @@ var annotationTableCtrl =
                       return annotation[columnName].toLowerCase();
                     }
                   } else {
-                    return null;
+                    if (columnName == 'genotype_genes' &&
+                        annotation.feature_type == 'genotype') {
+                      return $.map(annotation.alleles,
+                                   function(allele) {
+                                     if (allele.gene_display_name) {
+                                       return allele.gene_display_name.toLowerCase();
+                                     } else {
+                                       return "[null]";
+                                     }
+                                   }).join(' ');
+                    } else {
+                      return null;
+                    }
                   }
                 }
               }
