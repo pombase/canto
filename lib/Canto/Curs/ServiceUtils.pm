@@ -1144,13 +1144,26 @@ sub _ontology_change_keys
     evidence_code => sub {
       my $evidence_code = shift;
 
-      my $evidence_config = $self->config()->{evidence_types}->{$evidence_code};
+      my @type_evidence_codes = $self->_evidence_codes_from_type($annotation->type());
 
-      if (defined $evidence_config) {
-        # do the default - set Annotation->data()->{...}
-        return 0
+      if (@type_evidence_codes && !$evidence_code) {
+        die "configuration error: this annotation type requires an evidence code";
+      }
+
+      if (@type_evidence_codes) {
+        my $evidence_config = $self->config()->{evidence_types}->{$evidence_code};
+
+        if (defined $evidence_config) {
+          # do the default - set Annotation->data()->{...}
+          return 0
+        } else {
+          die "no such evidence code: $evidence_code\n";
+        }
       } else {
-        die "no such evidence code: $evidence_code\n";
+        if ($evidence_code) {
+          die "configuration error: tried to store an evidence code for an " .
+            "annotation type with none configured";
+        }
       }
     },
     feature_type => sub {
@@ -1406,6 +1419,16 @@ sub _category_from_type
   my $annotation_config = $self->config()->{annotation_types}->{$type_name};
 
   return $annotation_config->{category};
+}
+
+sub _evidence_codes_from_type
+{
+  my $self = shift;
+  my $type_name = shift;
+
+  my $annotation_config = $self->config()->{annotation_types}->{$type_name};
+
+  return @{$annotation_config->{evidence_codes} || []};
 }
 
 sub _make_error
