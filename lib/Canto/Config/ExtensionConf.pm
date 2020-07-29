@@ -112,7 +112,7 @@ sub parse {
       map {
         if (/:/) {
           push @new_ontology_range_scope, $_;
-        } elsif (/^(Number|TaxonID|HostTaxonID|PathogenTaxonID)$/i) {
+        } elsif (/^Number$/i) {
           if (!grep { $_->{type} eq 'Number'} @new_range_bits) {
             push @new_range_bits, {
               type => 'Number',
@@ -141,6 +141,18 @@ sub parse {
         } elsif (/^metagenotype/i) {
           push @new_range_bits, {
             type => 'Metagenotype',
+          }
+        } elsif (/^TaxonID$/i) {
+          push @new_range_bits, {
+            type => 'TaxonID',
+          }
+        } elsif (/^PathogenTaxonID$/i) {
+          push @new_range_bits, {
+            type => 'PathogenTaxonID',
+          }
+        } elsif (/^HostTaxonID$/i) {
+          push @new_range_bits, {
+            type => 'HostTaxonID',
           }
         } else {
           die "unsupported range part: $_\n";
