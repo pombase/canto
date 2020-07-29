@@ -43,4 +43,18 @@
     <input ng-if="!disabled"
            type="number" required ng-model="extensionRelation.rangeValue"/>
   </span>
+  <span ng-if="rangeConfig.type === 'PathogenTaxonID'">
+    <feature-chooser ng-if="!disabled && pathogens"
+                     features="pathogens" feature-type="'organism'"
+                     chosen-feature-display-name="extensionRelation.rangeDisplayName"
+                     chosen-feature-id="extensionRelation.rangeValue">
+    </feature-chooser>
+  </span>
+  <span ng-if="rangeConfig.type === 'HostTaxonID'">
+    <feature-chooser ng-if="!disabled && hosts"
+                     features="pathogens" feature-type="'organism'"
+                     chosen-feature-display-name="extensionRelation.rangeDisplayName"
+                     chosen-feature-id="extensionRelation.rangeValue">
+    </feature-chooser>
+  </span>
 </span>

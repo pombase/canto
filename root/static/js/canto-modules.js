@@ -2779,6 +2779,9 @@ var extensionRelationEdit =
 
         $scope.genes = null;
         $scope.metagenotypes = null;
+        $scope.organisms = null;
+        $scope.pathogens = null;
+        $scope.hosts = null;
 
         $scope.getGenesFromServer = function() {
           CursGeneList.geneList().then(function (results) {
@@ -2798,7 +2801,26 @@ var extensionRelationEdit =
           });
         };
 
+        $scope.getOrganismsFromServer = function () {
+          Curs.list('organism').then(function (organisms) {
+            var rangeType = $scope.extensionRelation.rangeType;
+            if (rangeType === 'PathogenTaxonID') {
+              $scope.pathogens = filterOrganisms(organisms, 'pathogen');
+            } else if (rangeType === 'HostTaxonID') {
+              $scope.hosts = filterOrganisms(organisms, 'host');
+            } else {
+              $scope.organisms = organisms;
+            }
+          }).catch(function () {
+            toaster.pop('note', "couldn't read the organism list from the server");
+          });
+        }
+
         $scope.getMetagenotypesFromServer();
+
+        if ($scope.extensionRelation.rangeType.indexOf('TaxonID') !== -1) {
+          $scope.getOrganismsFromServer();
+        }
 
         $scope.openSingleGeneAddDialog = function () {
           var modal = openSingleGeneAddDialog($uibModal);
