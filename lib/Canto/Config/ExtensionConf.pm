@@ -112,48 +112,38 @@ sub parse {
       map {
         if (/:/) {
           push @new_ontology_range_scope, $_;
-        } else {
-          if (/^(Number|TaxonID|HostTaxonID|PathogenTaxonID)$/i) {
-            if (!grep { $_->{type} eq 'Number'} @new_range_bits) {
-              push @new_range_bits, {
-                type => 'Number',
-              };
-            }
-          } else {
-            if (/^text$/i) {
-              if (!grep { $_->{type} eq 'Text'} @new_range_bits) {
-                push @new_range_bits, {
-                  type => 'Text',
-                  input_type => lc $_,
-                };
-              }
-            } else {
-              if (/^(Gene|FeatureID|GeneID|ProteinID|TranscriptID|tRNAID|SP.*)$/i) {
-                # hack: treat everything else as a gene (and normalise the case)
-                if (!grep { $_->{type} eq 'Gene'} @new_range_bits) {
-                  push @new_range_bits, {
-                    type => 'Gene',
-                  }
-                }
-              } else {
-                if ($_ eq '%') {
-                  if (!grep { $_->{type} eq '%'} @new_range_bits) {
-                    push @new_range_bits, {
-                      type => '%',
-                    };
-                  }
-                } else {
-                  if (/^metagenotype/i) {
-                    push @new_range_bits, {
-                      type => 'Metagenotype',
-                    }
-                  } else {
-                    die "unsupported range part: $_\n";
-                  }
-                }
-              }
+        } elsif (/^(Number|TaxonID|HostTaxonID|PathogenTaxonID)$/i) {
+          if (!grep { $_->{type} eq 'Number'} @new_range_bits) {
+            push @new_range_bits, {
+              type => 'Number',
+            };
+          }
+        } elsif (/^text$/i) {
+          if (!grep { $_->{type} eq 'Text'} @new_range_bits) {
+            push @new_range_bits, {
+              type => 'Text',
+              input_type => lc $_,
+            };
+          }
+        } elsif (/^(Gene|FeatureID|GeneID|ProteinID|TranscriptID|tRNAID|SP.*)$/i) {
+          # hack: treat everything else as a gene (and normalise the case)
+          if (!grep { $_->{type} eq 'Gene'} @new_range_bits) {
+            push @new_range_bits, {
+              type => 'Gene',
             }
           }
+        } elsif ($_ eq '%') {
+          if (!grep { $_->{type} eq '%'} @new_range_bits) {
+            push @new_range_bits, {
+              type => '%',
+            };
+          }
+        } elsif (/^metagenotype/i) {
+          push @new_range_bits, {
+            type => 'Metagenotype',
+          }
+        } else {
+          die "unsupported range part: $_\n";
         }
       } @range_bits;
 
