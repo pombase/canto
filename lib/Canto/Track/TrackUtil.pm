@@ -158,6 +158,7 @@ sub delete_unused_strains
 
   while (defined (my $strain = $rs->next())) {
     if (!exists $used_strain_ids{$strain->strain_id()}) {
+      $strain->strainsynonyms()->delete();
       $strain->delete();
       $count++;
     }
