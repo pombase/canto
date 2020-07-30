@@ -4559,7 +4559,7 @@ var organismSelector = function () {
       organismSelected: '&',
       organisms: '<',
       initialSelectionTaxonId: '@',
-      alwaysShowSelect: '@',
+      alwaysShowSelect: '<',
       label: '@'
     },
     restrict: 'E',
