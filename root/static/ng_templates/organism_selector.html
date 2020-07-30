@@ -4,7 +4,7 @@
 </div>
 <div class="curs-organism-selector" ng-if="organisms">
   <p ng-if="::label" class="curs-organism-selector-label"><b>{{::label}}</b></p>
-  <select ng-if="organisms.length > 1"
+  <select ng-if="alwaysShowSelect || organisms.length > 1"
       class="form-control curs-organism-selector-select"
       name="select-organism"
       ng-model="data.selectedOrganism"
@@ -12,5 +12,5 @@
       ng-options="o as o.full_name for o in organisms track by o.taxonid">
     <option value="" disabled>Select an organism...</option>
   </select>
-  <span ng-if="organisms.length === 1">{{organisms[0].full_name}}</span>
+  <span ng-if="!alwaysShowSelect && organisms.length === 1">{{organisms[0].full_name}}</span>
 </div>

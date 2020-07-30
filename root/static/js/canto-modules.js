@@ -2780,8 +2780,6 @@ var extensionRelationEdit =
         $scope.genes = null;
         $scope.metagenotypes = null;
         $scope.organisms = null;
-        $scope.pathogens = null;
-        $scope.hosts = null;
 
         $scope.getGenesFromServer = function() {
           CursGeneList.geneList().then(function (results) {
@@ -2805,16 +2803,16 @@ var extensionRelationEdit =
           Curs.list('organism').then(function (organisms) {
             var rangeType = $scope.extensionRelation.rangeType;
             if (rangeType === 'PathogenTaxonID') {
-              $scope.pathogens = filterOrganisms(organisms, 'pathogen');
+              $scope.organisms = filterOrganisms(organisms, 'pathogen');
             } else if (rangeType === 'HostTaxonID') {
-              $scope.hosts = filterOrganisms(organisms, 'host');
+              $scope.organisms = filterOrganisms(organisms, 'host');
             } else {
               $scope.organisms = organisms;
             }
           }).catch(function () {
             toaster.pop('note', "couldn't read the organism list from the server");
           });
-        }
+        };
 
         $scope.getMetagenotypesFromServer();
 
@@ -2832,6 +2830,12 @@ var extensionRelationEdit =
         $scope.disableAll = function (element, disabled) {
           $(element).find('input').attr('disabled', disabled);
           $(element).find('select').attr('disabled', disabled);
+        };
+
+        $scope.organismSelected = function (organism) {
+          $scope.extensionRelation.rangeValue = organism.taxonid;
+          $scope.extensionRelation.rangeDisplayName = organism.scientific_name;
+          $scope.finishWithOrganism(organism);
         };
 
         $scope.termFoundCallback = function (termId, termName, searchString) {
@@ -4555,6 +4559,7 @@ var organismSelector = function () {
       organismSelected: '&',
       organisms: '<',
       initialSelectionTaxonId: '@',
+      alwaysShowSelect: '@',
       label: '@'
     },
     restrict: 'E',
@@ -4579,7 +4584,7 @@ var organismSelectorCtrl = function ($scope, CantoGlobals) {
 
   $scope.$watch('organisms', function () {
     if ($scope.organisms && $scope.organisms.length > 0)
-      if ($scope.organisms.length === 1) {
+      if (!$scope.alwaysShowSelect && $scope.organisms.length === 1) {
           $scope.data.selectedOrganism = $scope.organisms[0];
         $scope.organismChanged();
       } else {
