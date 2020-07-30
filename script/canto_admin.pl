@@ -34,12 +34,14 @@ if (!@ARGV) {
 
 my $refresh_gene_cache = undef;
 my $rename_strain = undef;
+my $merge_strains = undef;
 my $delete_unused_strains = undef;
 my $dry_run = 0;
 my $do_help = 0;
 
 my $result = GetOptions ("refresh-gene-cache" => \$refresh_gene_cache,
                          "rename-strain" => \$rename_strain,
+                         "merge-strains" => \$merge_strains,
                          "delete-unused-strains" => \$delete_unused_strains,
                          "dry-run|d" => \$dry_run,
                          "help|h" => \$do_help);
@@ -61,6 +63,10 @@ sub usage
 
   $0 --rename-strain taxonid old_name new_name
   Rename a strain in <taxonid> from <old_name> to <new_name>
+
+  $0 --merge-strain taxonid old_name new_name
+  Merge strain <old_name> in <taxonid> into <new_name>, <old_name> will be
+  removed and all sessions using <old_name> will be changed to use <new_name>
 
   $0 --delete-unused-strains
   Remove all strains that are not used in any session
@@ -88,6 +94,11 @@ if ($rename_strain && @ARGV != 3) {
   usage();
 }
 
+if ($merge_strains && @ARGV != 3) {
+  warn "Error: --merge-strains needs three arguments\n\n";
+  usage();
+}
+
 if ($delete_unused_strains && @ARGV > 0) {
   warn "Error: too many arguments for --delete-unused-strains\n\n";
   usage();
@@ -100,6 +111,8 @@ my $guard = $schema->txn_scope_guard;
 
 my $exit_flag = 1;
 
+my $util = Canto::Track::TrackUtil->new(config => $config, schema => $schema);
+
 my $proc = sub {
   if (defined $refresh_gene_cache) {
     Canto::Track::refresh_gene_cache($config, $schema);
@@ -108,8 +121,6 @@ my $proc = sub {
   }
 
   if (defined $rename_strain) {
-    my $util = Canto::Track::TrackUtil->new(config => $config, schema => $schema);
-
     my $taxonid = shift @ARGV;
     my $old_name = shift @ARGV;
     my $new_name = shift @ARGV;
@@ -122,8 +133,20 @@ my $proc = sub {
     };
   }
 
+  if (defined $merge_strains) {
+    my $taxonid = shift @ARGV;
+    my $old_name = shift @ARGV;
+    my $new_name = shift @ARGV;
+
+    try {
+      $util->merge_strains($taxonid, $old_name, $new_name);
+      $exit_flag = 0;
+    } catch {
+      warn "rename failed: $_\n";
+    };
+  }
+
   if (defined $delete_unused_strains) {
-    my $util = Canto::Track::TrackUtil->new(config => $config, schema => $schema);
     try {
       my $count = $util->delete_unused_strains();
       $exit_flag = 0;

@@ -107,6 +107,89 @@ sub rename_strain
   $existing_strain->update();
 }
 
+# change track_strain_id in every session from $old_strain_id to $new_strain_id
+sub _change_session_strains
+{
+  my $self = shift;
+  my $old_strain_id = shift;
+  my $new_strain_id = shift;
+
+  my $track_schema = $self->schema();
+
+  my $proc = sub {
+    my $curs = shift;
+    my $cursdb = shift;
+
+    my $rs = $cursdb->resultset('Strain');
+
+    while (defined (my $strain = $rs->next())) {
+      my $track_strain_id = $strain->track_strain_id();
+
+      if (defined $track_strain_id && $track_strain_id == $old_strain_id) {
+        $strain->track_strain_id($new_strain_id);
+        $strain->update();
+      }
+    }
+  };
+
+  Canto::Track::curs_map($self->config(), $track_schema, $proc);
+}
+
+
+=head2 merge_strains
+
+ Usage   : $track_util->merge_strains($taxonid, $old_name, $new_name);
+ Function: Merge strains $old_name and $new_name, deleting the strain named
+           $old_name.  Any strain in any sessions that uses $old_name will
+           be changed to use $new_name.  Fails if either strain doesn't exist.
+ Args    : $taxonid
+           $old_name
+           $new_name
+ Returns : nothing
+
+=cut
+
+sub merge_strains
+{
+  my $self = shift;
+
+  my $taxonid = shift;
+  my $old_name = shift;
+  my $new_name = shift;
+
+  my $schema = $self->schema();
+
+  my $old_strain_rs = _get_strain_rs($schema, $taxonid, $old_name);
+
+  if ($old_strain_rs->count() == 0) {
+    die qq|no strain found with name "$old_name" for taxon "$taxonid"\n|;
+  }
+
+  if ($old_strain_rs->count() > 1) {
+    die qq|two or more existing strains found with name "$old_name" for taxon "$taxonid"\n|;
+  }
+
+  my $old_strain = $old_strain_rs->first();
+
+  my $new_strain_rs = _get_strain_rs($schema, $taxonid, $new_name);
+
+  if ($new_strain_rs->count() == 0) {
+    die qq|no strain found with name "$new_name" for taxon "$taxonid"\n|;
+  }
+
+  if ($new_strain_rs->count() > 1) {
+    die qq|two or more existing strains found with name "$new_name" for taxon "$taxonid"\n|;
+  }
+
+  my $new_strain = $new_strain_rs->first();
+
+
+  $self->_change_session_strains($old_strain->strain_id(), $new_strain->strain_id());
+
+  $old_strain->strainsynonyms()->delete();
+  $old_strain->delete();
+}
+
 sub _find_used_strains
 {
   my $self = shift;
