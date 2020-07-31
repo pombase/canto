@@ -142,7 +142,7 @@ my $proc = sub {
       $util->merge_strains($taxonid, $old_name, $new_name);
       $exit_flag = 0;
     } catch {
-      warn "rename failed: $_\n";
+      warn "merge failed: $_\n";
     };
   }
 
