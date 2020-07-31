@@ -107,12 +107,13 @@ sub rename_strain
   $existing_strain->update();
 }
 
-# change track_strain_id in every session from $old_strain_id to $new_strain_id
+# change track_strain_id in every session from $old_track_strain_id to
+# $new_track_strain_id
 sub _change_session_strains
 {
   my $self = shift;
-  my $old_strain_id = shift;
-  my $new_strain_id = shift;
+  my $old_track_strain_id = shift;
+  my $new_track_strain_id = shift;
 
   my $track_schema = $self->schema();
 
@@ -120,14 +121,28 @@ sub _change_session_strains
     my $curs = shift;
     my $cursdb = shift;
 
-    my $rs = $cursdb->resultset('Strain');
+    my $old_strain_rs = $cursdb->resultset('Strain')
+      ->search({
+        track_strain_id => $old_track_strain_id,
+      });
 
-    while (defined (my $strain = $rs->next())) {
-      my $track_strain_id = $strain->track_strain_id();
+    my $old_strain = $old_strain_rs->first();
 
-      if (defined $track_strain_id && $track_strain_id == $old_strain_id) {
-        $strain->track_strain_id($new_strain_id);
-        $strain->update();
+    if (defined $old_strain) {
+      my $new_strain_rs = $cursdb->resultset('Strain')
+        ->search({
+          track_strain_id => $new_track_strain_id,
+        });
+
+      my $new_strain = $new_strain_rs->first();
+
+      if (defined $new_strain) {
+        $cursdb->resultset('Genotype')->search({ strain_id => $old_strain->strain_id() })
+          ->update({ strain_id => $new_strain->strain_id() });
+        $old_strain->delete();
+      } else {
+        $old_strain->track_strain_id($new_track_strain_id);
+        $old_strain->update();
       }
     }
   };
