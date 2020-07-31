@@ -450,7 +450,7 @@ sub get_wildtype_genotype
   my $identifier = $host_details->{scientific_name} =~ s/ /-/gr . '-wild-type-genotype';
 
   if ($strain_name) {
-    $identifier .= $strain_name =~ s/ /-/gr;
+    $identifier .= '-' . ($strain_name =~ s/ /-/gr);
   }
 
   return $self->make_genotype(undef, undef, [], $genotype_taxonid, $identifier, $strain_name);

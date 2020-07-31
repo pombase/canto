@@ -64,7 +64,7 @@ sub usage
   $0 --rename-strain taxonid old_name new_name
   Rename a strain in <taxonid> from <old_name> to <new_name>
 
-  $0 --merge-strain taxonid old_name new_name
+  $0 --merge-strains taxonid old_name new_name
   Merge strain <old_name> in <taxonid> into <new_name>, <old_name> will be
   removed and all sessions using <old_name> will be changed to use <new_name>
 
@@ -142,7 +142,7 @@ my $proc = sub {
       $util->merge_strains($taxonid, $old_name, $new_name);
       $exit_flag = 0;
     } catch {
-      warn "rename failed: $_\n";
+      warn "merge failed: $_\n";
     };
   }
 
