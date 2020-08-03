@@ -7228,7 +7228,7 @@ var annotationTransferDialogCtrl =
     $scope.getGeneFeatures = function() {
       CursGeneList.geneList().then(function (features) {
         $scope.features = features;
-        $scope.otherFeatures = filterFeatures(null);
+        $scope.otherFeatures = filterFeatures();
       }).catch(function (err) {
         toaster.pop('note', "couldn't read the gene list from the server");
       });
@@ -7269,7 +7269,7 @@ var annotationTransferDialogCtrl =
             CursGenotypeList.cursGenotypeList({include_allele: 1})
               .then(function (features) {
                 $scope.features = features;
-                $scope.otherFeatures = filterFeatures(features);
+                $scope.otherFeatures = filterFeatures();
               }).catch(function (err) {
                 toaster.pop('note', "couldn't read the genotype list from the server");
               });
