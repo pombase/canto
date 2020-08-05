@@ -103,6 +103,10 @@ any other gene in the gene list, by changing the top pulldown:
   <img src="<% $c->uri_for($image_path . '/go_dup_summary.png') %>" alt="GO duplication on summary page"/>
 </div>
 
+<p>
+The "quick add" links available in advanced mode open the editing pop-up without any data entered or selected.
+</p>
+
 <h2>Annotation extensions</h2>
 
 <p>
