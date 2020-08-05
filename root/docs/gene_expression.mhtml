@@ -1,0 +1,74 @@
+<!-- PAGE_TITLE: Curating Gene Expression -->
+<!-- FLAGS: use_bootstrap -->
+
+<p>
+The RNA level and protein level annotation options allow you to
+annotate descriptions that will appear in the "Qualitative gene
+expression" section of PomBase gene pages. (Quantitative gene
+expression curation will be added to Canto in the future; in the
+meantime, data for lange gene sets can be <a
+href="https://www.pombase.org/submit-data/bulk-annotation">submitted
+to PomBase in bulk</a>.)
+</p>
+
+<p>
+First, click in the box to show the pull-down menu, then select a description:
+</p>
+
+<div>
+  <img src="<% $c->uri_for('/static/images/docs/gene_exp_description.png') %>" alt="Gene expression description selection"/>
+</div>
+
+<p>
+Select evidence in the next pulldown.
+</p>
+
+<p>
+Note: The options are fixed for both descriptions and evidence; <a
+href=mailto:helpdesk@pombase.org>contact the curators</a> if you think
+anything is missing from the options.
+</p>
+
+
+<h4>Annotation extensions</h4>
+
+<p>
+You can add annotation extensions to specify when the description of
+the level applies. Use "during" to select a GO term for a cell cycle
+stage or cellular response. The "in presence of" option lets you
+choose a ChEBI term for a chemical substance. For either, type in the
+text box and then select one of the autocomplete options.
+</p>
+
+<p>
+<strong>Edit:</strong> If you want to make changes to an annotation
+you have made, use the "Edit" link next to the annotation in the
+table. In the pop-up edit the appropriate fields, then click "OK".
+</p>
+
+<div>
+  <img src="<% $c->uri_for('/static/images/docs/edit_gene_expression.png') %>" alt="Gene expression editing pop-up"/>
+</div>
+
+<p>
+<strong>Delete:</strong> The "Delete" link will ask you to confirm
+that you want to remove an annotation, and then delete it.
+</p>
+<p> 
+<strong>Copy and edit:</strong> The "Copy and edit" link in the table
+on a gene page allows you to make another annotation to the same gene.
+The interface works the same way as for editing an annotation, except
+that a new annotation is created, and the old annotation is retained
+without changes.
+</p>
+
+<p>
+On the paper summary page, the "Copy and edit" link adds one more feature:
+the annotation can be transferred, with or without other changes, to
+any other gene in the gene list, by changing the top pulldown.
+</p>
+
+<p>
+The "quick add" links available in advanced mode open the editing
+pop-up without any data entered or selected.
+</p>
