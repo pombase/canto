@@ -151,11 +151,14 @@ annotation extension addition steps.
 
 <p>
 To change an existing extension, first delete it and then add a new
-one. Editing interface ("protein mislocalized to nucleus" example from
-FYPO):
+one. Editing interface:
 </p>
 
 <div>
   <img src="<% $c->uri_for('/static/images/docs/edit_mod_ext.png') %>" alt="Annotation extension editing interface"/>
 </div>
 
+
+<p>
+The "quick add" links available in advanced mode open the editing pop-up without any data entered or selected.
+</p>
