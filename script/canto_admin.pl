@@ -35,6 +35,7 @@ if (!@ARGV) {
 my $refresh_gene_cache = undef;
 my $rename_strain = undef;
 my $merge_strains = undef;
+my $change_taxonid = undef;
 my $delete_unused_strains = undef;
 my $dry_run = 0;
 my $do_help = 0;
@@ -42,6 +43,7 @@ my $do_help = 0;
 my $result = GetOptions ("refresh-gene-cache" => \$refresh_gene_cache,
                          "rename-strain" => \$rename_strain,
                          "merge-strains" => \$merge_strains,
+                         "change-taxonid" => \$change_taxonid,
                          "delete-unused-strains" => \$delete_unused_strains,
                          "dry-run|d" => \$dry_run,
                          "help|h" => \$do_help);
@@ -67,6 +69,9 @@ sub usage
   $0 --merge-strains taxonid old_name new_name
   Merge strain <old_name> in <taxonid> into <new_name>, <old_name> will be
   removed and all sessions using <old_name> will be changed to use <new_name>
+
+  $0 --change-taxonid old_taxonid new_taxonid
+  Change <old_taxonid> to <new_taxonid> everywhere, including in the sessions
 
   $0 --delete-unused-strains
   Remove all strains that are not used in any session
@@ -96,6 +101,11 @@ if ($rename_strain && @ARGV != 3) {
 
 if ($merge_strains && @ARGV != 3) {
   warn "Error: --merge-strains needs three arguments\n\n";
+  usage();
+}
+
+if ($change_taxonid && @ARGV != 2) {
+  warn "Error: --change-taxonid needs two arguments\n\n";
   usage();
 }
 
@@ -143,6 +153,18 @@ my $proc = sub {
       $exit_flag = 0;
     } catch {
       warn "merge failed: $_\n";
+    };
+  }
+
+  if (defined $change_taxonid) {
+    my $old_taxonid = shift @ARGV;
+    my $new_taxonid = shift @ARGV;
+
+    try {
+      $util->change_taxonid($old_taxonid, $new_taxonid);
+      $exit_flag = 0;
+    } catch {
+      warn "changing taxon ID failed: $_\n";
     };
   }
 
