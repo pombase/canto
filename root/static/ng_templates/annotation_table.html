@@ -134,9 +134,9 @@
               <th ng-if="multiOrganismMode">Taxon Id A</th>
               <th ng-if="!data.hideColumns.evidence_code">
                 <a class="curs-sort-button" href=""
-                   title="Click to sort" ng-click="setSortBy('evidence')">
+                   title="Click to sort" ng-click="setSortBy('evidence_code')">
                   Evidence
-                  <img ng-src="{{app_static_path + (sortColumn == 'evidence' ? '/images/sort_up.svg' : '/images/sort_both.svg')}}"/>
+                  <img ng-src="{{app_static_path + (sortColumn == 'evidence_code' ? '/images/sort_up.svg' : '/images/sort_both.svg')}}"/>
                 </a>
               </th>
               <th ng-if="annotationType.can_have_conditions && !data.hideColumns.conditions">Conditions</th>
