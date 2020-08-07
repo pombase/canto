@@ -7677,7 +7677,11 @@ var annotationTableCtrl =
                                      }
                                    }).join(' ');
                     } else {
-                      return null;
+                      if (columnName === 'organism_full_name' && annotation.organism) {
+                        return annotation.organism.full_name;
+                      } else {
+                        return null;
+                      }
                     }
                   }
                 }

@@ -28,7 +28,13 @@
         <table ng-switch-when="ontology" class="list">
           <thead>
             <tr>
-              <th ng-if="multiOrganismMode && annotationType.feature_type !== 'metagenotype'">Species<span ng-if="strainsMode && annotationType.feature_type === 'genotype'"> (strain)</span></th>
+              <th ng-if="multiOrganismMode && annotationType.feature_type !== 'metagenotype'"> 
+                <a class="curs-sort-button" href=""
+                   title="Click to sort" ng-click="setSortBy('organism_full_name')">
+                  Species<span ng-if="strainsMode && annotationType.feature_type === 'genotype'"> (strain)</span> 
+                  <img ng-src="{{app_static_path + (sortColumn == 'organism_full_name' ? '/images/sort_up.svg' : '/images/sort_both.svg')}}"/>
+                </a>
+             </th>
               <th ng-if="annotationType.feature_type == 'genotype'">
                 <a class="curs-sort-button" href=""
                    title="{{sortColumn == 'feature_display_name' ? 'Reset sort order' : 'Sort ascending'}}"
