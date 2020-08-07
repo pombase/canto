@@ -31,7 +31,7 @@ definition.
   <li><a href=#interface>Using the interface</a>
     <ul>
     <li><a href=#single-allele-phenotypes>Single-allele phenotypes</a>  </li>
-    <li><a href=#multi-allele-phenotypes>Multi-allele phenotypes</a>  </li>
+    <li><a href=#multi-allele-phenotypes>Multi-allele phenotypes (and diploids)</a>  </li>
     </ul>
   </li>
   <li><a href=#gentips>General phenotype tips</a></li>
@@ -66,18 +66,24 @@ box will pop up where you can add allele details:
     in.
   </li>
   <li>
-    <b>Allele type</b>: As you type the allele name, an autocomplete
-    pulldown may appear if there are matches to any alleles already in
-    Canto's database. If your allele name appears, you can select it,
-    and its type and description will be filled in. You will only have
-    to choose the expression level. Otherwise, proceed to add allele
-    details:
+    <b>Allele name suggestions</b>: As you type the allele name, an
+    autocomplete pulldown may appear if there are matches to any
+    alleles already in Canto's database. If your allele name appears,
+    you can select it, and its type and description will be filled
+    in. You will only have to choose the expression level. Otherwise,
+    proceed to add allele details:
+  </li>
+  <li>
+    Synonyms: Any synonyms for the allele already in the database will
+    be listed as "Existing synonyms". You can add more in the "New
+    synonyms" box; use commas to separate multiple entries.
   </li>
   <li>
     <b>Allele type</b>: choose an allele type in the dropdown
     menu. For some types, e.g. partial deletions or substitution,
-    further specifications are needed, and in these cases an example
-    will be displayed in the box in grey text. To specify positions:
+    further specifications are needed, and in these cases an "Allele
+    description" box appears, with an example displayed below the box
+    in grey text. To specify positions:
     <ul>
       <li>
 	Number amino acid residues starting at the initiator
@@ -86,15 +92,26 @@ box will pop up where you can add allele details:
 	methionine is removed.
       </li>
       <li>
+	For insertions, enter the number of the residue before the
+	insertion, a hyphen, and the inserted sequence.
+      </li>
+      <li>
+	For combinations of substitutions, insertions, and/or
+	deletions, separate parts of the description with commas. For
+	example, "858-MKGYP,F124D" means five amino acid residues were
+	inserted after position 858, and Asp was changed to Phe at
+	position 124.
+      </li>
+      <li>
 	For protein-coding genes, number nucleotide positions starting
 	with the "A" of the initiator ATG, and exclude introns. (See
 	below for how to describe changes in intron sequences.)
 	Mutations in promoter regions can be specified by prefixing
-	the numbers with a minus "-" sign.
+	the numbers with a minus sign ("-").
       </li>
       <li> 
 	For non-coding RNA genes, number nucleotide positions starting
-	from the annotated 5' end of hte mature transcript, i.e. again
+	from the annotated 5' end of the mature transcript, i.e. again
 	exclude introns. See below for how to describe changes in
 	intron sequences.
       </li>
@@ -104,7 +121,7 @@ box will pop up where you can add allele details:
 	resulting position number(s), and include the suffix
 	"primary_transcript" (e.g. G234A-primary_transcript for a
 	substitution, 456-555-primary_transcript for a deletion, or
-	188-TTCC-primary_transcript for an insertiorn).
+	188-TTCC-primary_transcript for an insertion).
       </li>
     </ul>
     If the specific mutations are not known choose "unknown". If none
@@ -199,7 +216,6 @@ be re-used by clicking on them.
       </li>
     </ul>
 
-
 <p>
 Note: you can also enter a single allele as a genotype using the
 genotype management interface, which is described below for
@@ -209,20 +225,24 @@ specifies one or more alleles.
 </p>
 
 
-<h3><a name="multi-allele-phenotypes">Multiple-allele phenotypes and genotypes</a></h3>
+<h3><a name="multi-allele-phenotypes">Multiple-allele genotypes and diploids</a></h3>
+
+</p>
+The "Genotype management" link on the paper summary page or any gene
+page goes to the Genotypes page, which displays genes and genotypes
+added for the paper. On this page you can create single- or
+multi-allele genotypes, and create genotypes for diploids as well as
+haploids.
+<p>
 
 <p>
-Use the multi-allele phenotype option to annotate of a double mutant,
-triple mutant, or any strain in which more than one gene has its
-sequence or expression altered, including any case where you have more
-than one allele of the same gene present (e.g. one on the chromosome,
-and another on a plasmid). To do so, you must enter details of all
+Use the multi-allele genotype option to annotate phenotypes of a
+double mutant, triple mutant, or any strain in which more than one
+gene has its sequence or expression altered, including any case where
+you have more than one allele of the same gene present (e.g. one on
+the chromosome, and another on a plasmid). Enter details of all
 relevant alleles in the genotype (background details such as mating
-type and markers are optional). There are two routes to do this:
-select the "Multiple allele" phenotype option in the curation types
-list on a gene-specific page, or follow the "Genotype management" link
-on the paper summary page. Either link takes you to the Genotypes
-page, which displays genes and genotypes added for the paper. 
+type and markers are optional).
 </p>
 
 <p>
@@ -242,20 +262,39 @@ single alleles added via the "single allele phenotype" gene page
 option will also appear):
 </p>
 
+<div>
+  <img src="<% $c->uri_for('/static/images/docs/one_genotype_table.png') %>" alt="single-locus genotype table"/>
+</div>
+
+<p>
+To create a diploid genotype, select one allele in the single-locus
+genotype table. The "Create diploid locus" button becomes enabled:
+</p>
 
 <div>
-  <img src="<% $c->uri_for('/static/images/docs/one_genotype_table.png') %>" alt="single-allele genotype table"/>
+  <img src="<% $c->uri_for('/static/images/docs/diploid_button.png') %>" alt="single-locus genotype table with one selection"/>
+</div>
+
+<p>
+A pop-up appears, with options to create a diploid homozygous for the
+selected allele, or a heterozygous diploid with the wild type
+allele. If more than one allele has been entered for the gene, a
+heterozygous genotype will appear for each additional allele:
+</p>
+
+<div>
+  <img src="<% $c->uri_for('/static/images/docs/diploid_options.png') %>" alt="popup to select homozygous or heterozygous diploid"/>
 </div>
 
 <p>
 To create a multi-allele genotype, first add all of the constituent
-single alleles to the single-allele table. Then select two or more
+single alleles to the single-locus genotype table. Then select two or more
 alleles by ticking the boxes at the left side of the table. The
 "Combine selected genotypes" button becomes enabled:
 </p>
 
 <div>
-  <img src="<% $c->uri_for('/static/images/docs/single_allele_table_selections.png') %>" alt="single allele genotype table with selections"/>
+  <img src="<% $c->uri_for('/static/images/docs/single_allele_table_selections.png') %>" alt="single-locus genotype table with two selections"/>
 </div>
 
 <p>
@@ -264,8 +303,13 @@ genotypes:
 </p>
 
 <div>
-  <img src="<% $c->uri_for('/static/images/docs/two_genotype_tables.png') %>" alt="single- and multi-allele genotype tables"/>
+  <img src="<% $c->uri_for('/static/images/docs/genotype_tables.png') %>" alt="single- and multi-locus genotype tables"/>
 </div>
+
+<p>
+For multi-locus diploid genotypes, create single-locus diploid
+genotypes, which you can then select and combine.
+</p>
 
 <p>
 <strong>Using wild-type alleles in genotypes:</strong> A wild type
@@ -283,7 +327,8 @@ these multi-allele genotypes the wild-type allele can have wild type
 expression specified.
 </p>
 
-<h4>Using, editing, deleting and duplicating genotypes</h4>
+
+<h3>Using, editing, deleting and duplicating genotypes</h3>
 
 <p>
 <strong>Mouseover options:</strong> When you mouse over any genotype
@@ -295,7 +340,23 @@ in either table, a set of options appears in a popup:
 </div>
 
 <p>
-<strong>Annotate a phenotype for this genotype:</strong> The phenotype
+<strong>Add/edit background:</strong> This link pops up a text box
+where you can enter background alleles (we plan to add more
+sophisticated allele lookup later). If any background details are
+included, they appear in a column in the genotype table:
+</p>
+
+<p>
+Note:If a single allele has a background, the background will be
+included with any multi-allele genotype that uses the allele. If two
+or more alleles have backgrounds, the backgrounds will be combined in
+the multi-allele genotype (duplicate alleles will only be included
+once). To change the background, use the one of the "Add/edit
+background", "Edit details", or "Copy and edit" options.
+</p>
+
+<p>
+<strong>Start a phenotype annotation:</strong> The phenotype
 annotation procedure is identical to the single-allele curation
 interface -- find a suitable FYPO term, enter evidence and conditions,
 and finish the annotation all as described above. You can return to
@@ -304,10 +365,9 @@ phenotype for it, or to add or edit genotypes.
 </p>
 
 <p>
-<strong>View phenotype annotations:</strong> This links to a page that
-lists the genotype details, a table of phenotypes annotated for the
-genotype, and an additional link to the phenotype annotation
-interface.
+<strong>View annotations:</strong> This links to a page that lists the
+genotype details, a table of phenotypes annotated for the genotype,
+and an additional link to the phenotype annotation interface.
 </p>
 
 <p>
@@ -326,26 +386,9 @@ page as described above, but creates a new genotype with the amended
 details (and no annotations).
 </p>
 
-
-<p>
-<strong>Add/edit background:</strong> This link pops up a text box
-where you can enter background alleles (we plan to add more
-sophisticated allele lookup later). If any background details are
-included, they appear in a column in the genotype table:
-</p>
-
 <div>
   <img src="<% $c->uri_for('/static/images/docs/genotype_background.png') %>" alt=""/>
 </div>
-
-<p>
-Note:If a single allele has a background, the background will be
-included with any multi-allele genotype that uses the allele. If two
-or more alleles have backgrounds, the backgrounds will be combined in
-the multi-allele genotype (duplicate alleles will only be included
-once). To change the background, use the one of the "Add/edit
-background", "Edit details", or "Copy and edit" options.
-</p>
 
 <p>
 <strong>Delete:</strong> The "Delete" link will ask you to confirm
@@ -373,24 +416,24 @@ that you want to remove an annotation, and then delete it.
 </p>
 
 <p>
-<strong>Copy and edit:</strong> The "Copy and edit" link in the table on the
-gene page allows you to make a new annotation to the same allele or
-genotype. For example, you may want to indicate that you have observed
-a phenotype under more than one set of conditions, e.g. at both
-standard and high temperatures. The interface works the same way as
-for editing an annotation, except that a new annotation is created,
-and the old annotation is retained without changes.
+<strong>Copy and edit:</strong> The "Copy and edit" link allows you to
+make a new annotation to the same allele or genotype, or transfer the
+annotation any other genotype in the genotype list (with or without
+changing any other details). For example, you may want to indicate
+that you have observed a phenotype under more than one set of
+conditions, e.g. at both standard and high temperatures. The interface
+works the same way as for editing an annotation, except that a new
+annotation is created, and the old annotation is retained without
+changes.
 </p>
 
 <p>
-On the paper summary page, the "Copy and edit" link adds one more feature:
-the annotation can be transferred, with or without other changes, to
-any other genotype in the genotype list, by changing the top pulldown:
+<strong>Quick Add:</strong> The "quick add" links available in
+advanced mode open the editing pop-up without any data entered or
+selected. Note that you cannot create alleles or genotypes in the
+"quick" phenotype interface; it uses genotypes that have already been
+entered in the Canto session.
 </p>
-
-<div>
-  <img src="<% $c->uri_for('/static/images/docs/fypo_dup_summary.png') %>" alt="phenotype duplication on summary page"/>
-</div>
 
 <h3>Annotation extensions</h3>
 

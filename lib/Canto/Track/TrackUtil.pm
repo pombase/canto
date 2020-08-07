@@ -233,6 +233,69 @@ sub _find_used_strains
   return %used_strain_ids;
 }
 
+sub _lookup_by_taxonid
+{
+  my $schema = shift;
+  my $taxonid = shift;
+
+  return $schema->resultset('Organismprop')
+    ->search({ 'type.name' => 'taxon_id', value => $taxonid },
+             { join => 'type' })
+    ->first();
+}
+
+=head2 change_taxonid
+
+ Usage   : $track_util->change_taxonid($old_taxonid, $new_taxonid);
+ Function: Change $old_taxonid to $new_taxonid in the track and session
+           databases
+ Returns : Nothing, but dies if there is no organism with the old taxon ID
+           or there is an existing organism with the new taxond ID
+
+=cut
+
+sub change_taxonid
+{
+  my $self = shift;
+
+  my $old_taxonid = shift;
+  my $new_taxonid = shift;
+
+  my $track_schema = $self->schema();
+
+  my $new_taxonid_prop = _lookup_by_taxonid($track_schema, $new_taxonid);
+
+  if (defined $new_taxonid_prop) {
+    die qq|an organism with taxon ID "$new_taxonid" already exists\n|;
+  }
+
+  my $old_taxonid_prop = _lookup_by_taxonid($track_schema, $old_taxonid);
+
+  if (!defined $old_taxonid_prop) {
+    die qq|can't find an organism with taxon ID "$old_taxonid" in the database\n|;
+  }
+
+  $old_taxonid_prop->value($new_taxonid);
+  $old_taxonid_prop->update();
+
+  my $proc = sub {
+    my $curs = shift;
+    my $cursdb = shift;
+
+    my $old_organism = $cursdb->resultset('Organism')
+      ->search({
+        taxonid => $old_taxonid,
+      })->first();
+
+    if (defined $old_organism) {
+      $old_organism->taxonid($new_taxonid);
+      $old_organism->update();
+    }
+  };
+
+  Canto::Track::curs_map($self->config(), $track_schema, $proc);
+}
+
 =head2 delete_unused_strains
 
  Usage   : $track_util->delete_unused_strains();

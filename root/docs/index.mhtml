@@ -102,6 +102,55 @@ You can curate any of these types of data for any gene you have put on the
 list for the paper (follow links for specific instructions):
 </p>
 <& /docs/annotation_type_list.mhtml &>
+
+
+<div class="row-fluid">
+<div class="span12">
+<h4>
+Advanced mode
+</h4>
+
+<p>
+In the "gear" menu in the upper right corner, you can ticke a box to activate "Advanced mode":
+</p>
+
+<div class="row-fluid">
+<div class="span6">
+  <a href="<% $c->uri_for($image_path . '/advanced_mode_selection.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/advanced_mode_selection.png') %>" alt="activate advanced mode"/></a>
+</div>
+</div>
+
+<p>
+In advanced mode, a set of "Quick links" appears on the paper summary
+page: 
+</p>
+
+<div class="row-fluid">
+<div class="span6">
+  <a href="<% $c->uri_for($image_path . '/summary_quick_links.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/summary_quick_links.png') %>" alt="activate advanced mode"/></a>
+</div>
+</div>
+
+<p>
+and the gene-specific pages offer "Quick add" links for some
+annotation types: 
+</p>
+
+<div class="row-fluid">
+<div class="span6">
+  <a href="<% $c->uri_for($image_path . '/gene_page_quick_links.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/gene_page_quick_links.png') %>" alt="activate advanced mode"/></a>
+</div>
+</div>
+
+<p>
+The quick-addition pop-ups work the same way as the
+editing pop-ups for each annotation type, so see the specific
+instructions on the pages linked above.
+</p>
+</div>
+</div>
+
+
 <p>
 If the paper does not have experimental data to support any of these
 types of annotation, proceed as described below.

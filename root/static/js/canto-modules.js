@@ -2835,7 +2835,6 @@ var extensionRelationEdit =
         $scope.organismSelected = function (organism) {
           $scope.extensionRelation.rangeValue = organism.taxonid;
           $scope.extensionRelation.rangeDisplayName = organism.scientific_name;
-          $scope.finishWithOrganism(organism);
         };
 
         $scope.termFoundCallback = function (termId, termName, searchString) {
@@ -4559,7 +4558,6 @@ var organismSelector = function () {
       organismSelected: '&',
       organisms: '<',
       initialSelectionTaxonId: '@',
-      alwaysShowSelect: '<',
       label: '@'
     },
     restrict: 'E',
@@ -4584,7 +4582,7 @@ var organismSelectorCtrl = function ($scope, CantoGlobals) {
 
   $scope.$watch('organisms', function () {
     if ($scope.organisms && $scope.organisms.length > 0)
-      if (!$scope.alwaysShowSelect && $scope.organisms.length === 1) {
+      if ($scope.organisms.length === 1) {
           $scope.data.selectedOrganism = $scope.organisms[0];
         $scope.organismChanged();
       } else {
