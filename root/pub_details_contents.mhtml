@@ -15,6 +15,10 @@ $pub
     <td class="title">Authors</td>
     <td><% $authors %></td>
   </tr>
+  <tr>
+    <td class="title">Publication date</td>
+    <td><% $publication_date %></td>
+  </tr>
 </table>
 
 <%init>
@@ -27,7 +31,14 @@ if ($pub->uniquename() =~ /PMID/) {
 }
 
 my $uniquename = $pub->uniquename();
-my $title = $pub->title();
-my $authors = $pub->authors();
-my $abstract = $pub->abstract();
+
+use Canto::Track;
+
+my $pubs_lookup = Canto::Track::get_adaptor($c->config(), 'pubs');
+my $pub_details = $pubs_lookup->lookup_by_uniquename($pub->uniquename());
+
+my $title = $pub_details->{title};
+my $authors = $pub_details->{authors};
+my $abstract = $pub_details->{abstract};
+my $publication_date = $pub_details->{publication_date};
 </%init>

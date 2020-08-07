@@ -43,7 +43,49 @@ with 'Canto::Track::TrackAdaptor';
 use Canto::Util qw(trim);
 use Canto::Track::CuratorManager;
 
-=head2 lookup()
+
+=head2
+
+ Usage   : my $pubs_lookup = Canto::Track::get_adaptor($config, 'pubs');
+           my $pub_details = $pubs_lookup->lookup_by_uniquename('PMID:29761456');
+ Function: Lookup the details of a specific publication
+ Args    : $uniquename - the PubMed ID
+ Returns : if found, a hash ref like:
+              {
+                 uniquename => '...',
+                 title => '...',
+                 citation => '...',
+                 publication_date => '...',
+                 authors => '...',
+              }
+           otherwise undef
+
+=cut
+
+sub lookup_by_uniquename
+{
+  my $self = shift;
+
+  my $uniquename = shift;
+
+  my $pub = $self->schema()->resultset('Pub')
+    ->find({ uniquename => $uniquename });
+
+  if (defined $pub) {
+    my %ret = ();
+
+    for my $field_name (qw(uniquename title citation publication_date authors)) {
+      $ret{$field_name} = $pub->$field_name();
+    }
+
+    return \%ret;
+  } else {
+    return undef;
+  }
+}
+
+
+=head2 lookup_by_curator_email()
 
  Usage   : my $pubs_lookup = Canto::Track::get_adaptor($config, 'pubs');
            my $res = $pubs_lookup->lookup_by_curator_email('test@example.com');
