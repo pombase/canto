@@ -7728,7 +7728,7 @@ var annotationTableCtrl =
 
         $scope.setSortBy = function(col) {
           if ($scope.sortColumn === col) {
-            $scope.setDefaulSort();
+            $scope.setDefaultSort();
           } else {
             $scope.prevSortColumn = $scope.sortColumn;
             $scope.sortColumn = col;
@@ -7736,7 +7736,7 @@ var annotationTableCtrl =
           }
         };
 
-        $scope.setDefaulSort = function() {
+        $scope.setDefaultSort = function() {
           $scope.sortColumn = null;
           $scope.sortAnnotations();
         };
