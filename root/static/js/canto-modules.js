@@ -6853,6 +6853,7 @@ var annotationEditDialogCtrl =
 
     $scope.showSuggestionFields = function() {
       return $scope.isValidTerm() && $scope.annotationType.category == 'ontology' &&
+        $scope.annotationType.ontology_size !== 'small' &&
         $scope.filteredFeatures && $scope.filteredFeatures.length != 0;
     };
 
@@ -7677,7 +7678,11 @@ var annotationTableCtrl =
                                      }
                                    }).join(' ');
                     } else {
-                      return null;
+                      if (columnName === 'organism_full_name' && annotation.organism) {
+                        return annotation.organism.full_name;
+                      } else {
+                        return null;
+                      }
                     }
                   }
                 }
@@ -7728,7 +7733,7 @@ var annotationTableCtrl =
 
         $scope.setSortBy = function(col) {
           if ($scope.sortColumn === col) {
-            $scope.setDefaulSort();
+            $scope.setDefaultSort();
           } else {
             $scope.prevSortColumn = $scope.sortColumn;
             $scope.sortColumn = col;
@@ -7736,7 +7741,7 @@ var annotationTableCtrl =
           }
         };
 
-        $scope.setDefaulSort = function() {
+        $scope.setDefaultSort = function() {
           $scope.sortColumn = null;
           $scope.sortAnnotations();
         };
