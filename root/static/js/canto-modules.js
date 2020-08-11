@@ -6853,6 +6853,7 @@ var annotationEditDialogCtrl =
 
     $scope.showSuggestionFields = function() {
       return $scope.isValidTerm() && $scope.annotationType.category == 'ontology' &&
+        $scope.annotationType.ontology_size !== 'small' &&
         $scope.filteredFeatures && $scope.filteredFeatures.length != 0;
     };
 
