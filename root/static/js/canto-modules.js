@@ -6042,6 +6042,10 @@ var annotationEditDialogCtrl =
       return $scope.status.validEvidence;
     };
 
+    $scope.showSuggesionFields = function() {
+      return $scope.annotationType && $scope.annotationType.ontology_size !== 'small';
+    };
+
     $scope.annotationChanged = function () {
       var changesToStore = {};
 
