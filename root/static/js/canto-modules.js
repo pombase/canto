@@ -1079,7 +1079,7 @@ var cursStateService =
     this.conditions = [];
     this.with_gene_id = null;
     this.validEvidence = false;
-    this.comment = null;
+    this.figure = null;
 
     // return the data in a obj with keys keys suitable for sending to the
     // server
@@ -2041,7 +2041,7 @@ canto.directive('ontologyTermConfirm',
 
 
 var ontologyTermCommentTransfer =
-  function () {
+  function (CantoGlobals) {
     return {
       scope: {
         annotationType: '=',
@@ -2049,15 +2049,19 @@ var ontologyTermCommentTransfer =
         featureDisplayName: '@',
         annotationDetails: '=',
         comment: '=',
+        figOrTable: '=',
       },
       restrict: 'E',
       replace: true,
       templateUrl: app_static_path + 'ng_templates/ontology_term_comment_transfer.html',
-    };
+      controller: function ($scope) {
+        $scope.showFigureField = CantoGlobals.annotationFigureField;
+      },
+   };
   };
 
 canto.directive('ontologyTermCommentTransfer',
-  ['CantoService', ontologyTermCommentTransfer]);
+                ['CantoGlobals', ontologyTermCommentTransfer]);
 
 
 function openExtensionRelationDialog($uibModal, extensionRelation, relationConfig) {
@@ -3133,7 +3137,6 @@ var ontologyWorkflowCtrl =
     $scope.proceed = function () {
       if ($scope.getState() == 'commenting') {
         $scope.storeInProgress = true;
-        CursStateService.comment = $scope.data.comment;
         $scope.storeAnnotation();
         return;
       }
@@ -3176,12 +3179,6 @@ var ontologyWorkflowCtrl =
             CursStateService.asAnnotationDetails();
         } else {
           $scope.annotationForServer = {};
-        }
-
-        if (oldState == 'selectingEvidence') {
-          CursStateService.evidence_code = $scope.data.evidence_code;
-          CursStateService.with_gene_id = $scope.data.with_gene_id;
-          CursStateService.conditions = $scope.data.conditions;
         }
       });
 
