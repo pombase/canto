@@ -69,6 +69,7 @@ Annotation extensions
                                   feature-display-name="<% $feature_display_name %>"
                                   annotation-details="annotationForServer"
                                   comment="data.comment"
+                                  fig-or-table="data.figure"
                                   annotation-type="annotationType"></ontology-term-comment-transfer>
   </div>
 

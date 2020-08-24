@@ -1662,3 +1662,11 @@ a:not([href]) {
   font-weight: 700;
   margin-bottom: 10px;
 }
+
+.curs-workflow-fig-or-table {
+  margin: 1em 0 2em 0;
+}
+
+.curs-workflow-confirm-comment {
+  width: 50em;
+}
