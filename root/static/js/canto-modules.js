@@ -2908,7 +2908,6 @@ var ontologyWorkflowCtrl =
 
     $scope.proceed = function () {
       if ($scope.getState() == 'commenting') {
-        CursStateService.comment = $scope.data.comment;
         $scope.storeAnnotation();
         return;
       }
@@ -2951,12 +2950,6 @@ var ontologyWorkflowCtrl =
             CursStateService.asAnnotationDetails();
         } else {
           $scope.annotationForServer = {};
-        }
-
-        if (oldState == 'selectingEvidence') {
-          CursStateService.evidence_code = $scope.data.evidence_code;
-          CursStateService.with_gene_id = $scope.data.with_gene_id;
-          CursStateService.conditions = $scope.data.conditions;
         }
       });
 
