@@ -23,7 +23,8 @@ You have made the following annotation:
   </div>
 
   <div ng-hide="annotationType.annotation_comment_help_text">
-Additional information (optional): you can supply figure or table numbers, or
+Additional information (optional):
+<span ng-if="!showFigureField">you can supply figure or table numbers, or</span>
 provide any details you have for this annotation that do not fit into the
 available evidence, extension options, etc.
   </div>
