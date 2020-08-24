@@ -1724,6 +1724,7 @@ a:not([href]) {
   font-weight: 700;
   margin-bottom: 10px;
 }
+
 .curs-warning-container {
   display: flex;
   justify-content: flex-end;
@@ -1842,4 +1843,12 @@ a:not([href]) {
 .allele-notes-chosen-notes-allele-name {
   margin: 0.5em 0;
   font-weight: bold;
+}
+
+.curs-workflow-fig-or-table {
+  margin: 1em 0 2em 0;
+}
+
+.curs-workflow-confirm-comment {
+  width: 50em;
 }

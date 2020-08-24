@@ -11,14 +11,24 @@ You have made the following annotation:
     </div>
 
     <div style="padding: 8px">
+
+  <div class="curs-workflow-fig-or-table" ng-show="showFigureField">
+    <label for="figure-field">Figure or table:</label>
+    <input id="figure-field" type="text" ng-model="figOrTable"/>
+  </div>
+
+  <div class="curs-workflow-confirm-comment">
   <div ng-show="annotationType && annotationType.annotation_comment_help_text">
     {{annotationType.annotation_comment_help_text}}
   </div>
+
   <div ng-hide="annotationType.annotation_comment_help_text">
 Additional information (optional): you can supply figure or table numbers, or
 provide any details you have for this annotation that do not fit into the
 available evidence, extension options, etc.
   </div>
+  </div>
+
   <textarea ng-model="comment"
             class="annotation-comment" cols="80"
             rows="6" style="display: block"></textarea>
