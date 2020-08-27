@@ -1,14 +1,14 @@
 <!-- PAGE_TITLE: @@name@@ Documentation -->
 <!-- FLAGS: use_bootstrap -->
-<h1>Getting started</h1>
-<h2>Finding a publication</h2>
+<h1 id="getting_started">Getting started</h1>
+<h2 id="finding_a_publication">Finding a publication</h2>
 <p>To start a curation session in Canto, enter the PubMed ID of your chosen publication in the search box on the left of the page. Note that the ‘PMID:’ prefix is optional.</p>
 <div class="row-fluid">
 <div class="span6">
 <a href="<% $c->uri_for($image_path . '/pmid_entry.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/pmid_entry.png') %>" alt=""/></a>
 </div>
 </div>
-<h2>Starting a session</h2>
+<h2 id="starting_a_session">Starting a session</h2>
 <p>When you enter a curation session in Canto, you will see a message with a few basic details about the paper and how to proceed:</p>
 <div class="row-fluid">
 <div class="span6">
@@ -29,7 +29,7 @@
 </div>
 </div>
 <p>Once you have begun a session, your session will be preserved at a stable URL, so you do not need to complete the curation in one go. Most pages have at least one '?' icon, which links to help documentation (mouse over to see a brief description). You can use the ‘Contact curators' link at any point if you get stuck, or have any questions.</p>
-<h2>Adding genes and organisms</h2>
+<h2 id="adding_genes_and_organisms">Adding genes and organisms</h2>
 <p>To start curating a paper, you will first be asked to supply a UniProtKB accession number for each gene from your publication:</p>
 <div class="row-fluid">
 <div class="span6">
@@ -42,7 +42,7 @@
 <a href="<% $c->uri_for($image_path . '/create_host_organism.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/create_host_organism.png') %>" alt=""/></a>
 </div>
 </div>
-<h3>Finding genes in UniProtKB</h3>
+<h3 id="finding_genes_in_uniprotkb">Finding genes in UniProtKB</h3>
 <p>PHI-Canto uses <a href="https://www.uniprot.org/help/uniprotkb">UniProt Knowledgebase</a> (UniProtKB) gene accession numbers to disambiguate genes/proteins. This is to ensure that we are talking about the correct gene product – especially because the same names are sometimes used for different proteins – and to standardize entries, because not all strains of an organism are in UniProt.</p>
 <ol>
 <li>
@@ -69,7 +69,7 @@
 <a href="<% $c->uri_for($image_path . '/uniprot_record.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/uniprot_record.png') %>" alt=""/></a>
 </div>
 </div>
-<h3>Information not valid for curation</h3>
+<h3 id="information_not_valid_for_curation">Information not valid for curation</h3>
 <p>If the paper does not mention individual genes – which is typical of methods papers, many types of high-throughput study, reviews – check the box labeled ‘This paper does not contain any gene-specific information’, and select a reason from the pulldown that appears.</p>
 <div class="row-fluid">
 <div class="span6">
@@ -79,7 +79,7 @@
 <p>Complete the session by clicking ‘Continue’ and then ‘Finish’. Further comment is optional.</p>
 <p>If the paper mentions specific genes, but does not contain any data that can be curated in Canto for them (see Curating specific data types), enter the genes and finish the session as described below (see Finishing and submitting).</p>
 <p>Please note that you should only curate information supported by experiments in the paper you are curating. If you want to capture other information not directly shown in a particular paper, please contact the curators (contact@phi-base.org) to discuss how to proceed.</p>
-<h2>Adding strains</h2>
+<h2 id="adding_strains">Adding strains</h2>
 <p>Once you have specified your genes and any host organisms (with no specified genes), the next screen will allow you to confirm the genes and organisms that have been retrieved from UniProt.</p>
 <div class="row-fluid">
 <div class="span6">
@@ -109,9 +109,9 @@
 <p>To delete a strain, click the cross symbol next to the strain name. Note that you will be unable to delete a strain if it is used by other genotypes in the curation session.</p>
 <p>Note: if your new strain contains background mutations, please do not specify these in the strain name unless it is conventional for the strain name to include the names of other mutations. Otherwise, you should specify background mutations using the ‘Background’ information on a genotype (see <a href="genotypes">Creating alleles and genotypes</a>).</p>
 <p>Once you have specified strains for each organism, you can continue to the curation summary page; from there, you can annotate genes and genotypes with the annotation types described in this article.</p>
-<h2>Curating specific data types</h2>
+<h2 id="curating_specific_data_types">Curating specific data types</h2>
 <p>Annotations in PHI-Canto are divided into three types: gene annotations, genotype annotations, and metagenotype annotations. Follow the links below for specific instructions.</p>
-<h3>Gene annotations</h3>
+<h3 id="gene_annotations">Gene annotations</h3>
 <ul>
 <li><strong><a href="go_annotation">GO molecular function</a></strong>: A molecular function is a catalytic (e.g. protein serine/threonine kinase activity, pyruvate carboxylase activity) or binding activity, or any other activity that occurs at the molecular level.</li>
 <li><strong><a href="go_annotation">GO biological process</a></strong>: A biological process is a series of events accomplished by one or more ordered assemblies of molecular functions, such as cell cycle regulation, ion transport, or signal transduction.</li>
@@ -119,18 +119,18 @@
 <li><strong><a href="modification_annotation">protein modification</a></strong>: A protein modification is a covalent modification or other change that alters the measured molecular mass of a peptide or protein amino acid residue.</li>
 <li><strong><a href="physical_interaction_annotation">physical interaction</a></strong>: Examples: co-purification, two-hybrid, affinity capture.</li>
 </ul>
-<h3>Genotype annotations</h3>
+<h3 id="genotype_annotations">Genotype annotations</h3>
 <p>See the <a href="genotypes">Creating alleles and genotypes</a> documentation for instructions on creating genotypes.</p>
 <ul>
 <li><strong><a href="phipo_annotation">pathogen phenotype</a></strong>: Annotate normal or abnormal phenotypes of pathogen organisms with this genotype.</li>
 <li><strong><a href="phipo_annotation">host phenotype</a></strong>: Annotate normal or abnormal phenotypes of host organisms with this genotype.</li>
 </ul>
-<h3>Metagenotype annotations</h3>
+<h3 id="metagenotype_annotations">Metagenotype annotations</h3>
 <p>See the <a href="genotypes">Creating alleles and genotypes</a> documentation for instructions on creating metagenotypes.</p>
 <ul>
 <li><strong><a href="phipo_annotation">pathogen-host interaction phenotype</a></strong>: Annotate normal or abnormal phenotypes of organisms within this pathogen-host interaction (metagenotype).</li>
 </ul>
-<h2>Finishing and submitting</h2>
+<h2 id="finishing_and_submitting">Finishing and submitting</h2>
 <p>When you have finished entering data from your paper, click the ‘Submit to curators' button on the right-hand side of the Curation Summary page:</p>
 <div class="row-fluid">
 <div class="span6">
