@@ -1,7 +1,7 @@
 <!-- PAGE_TITLE: @@name@@ Documentation -->
 <!-- FLAGS: use_bootstrap -->
-<h1>Creating alleles and genotypes</h1>
-<h2>Pathogen or Host Genotype Management</h2>
+<h1 id="creating_alleles_and_genotypes">Creating alleles and genotypes</h1>
+<h2 id="pathogen_or_host_genotype_management">Pathogen or Host Genotype Management</h2>
 <p>The Genotype Management pages are used to create genotypes containing one or more alleles. To start creating genotypes, follow the ‘Pathogen genotype management’ link or the ‘Host genotype management’ link from the curation summary page, depending on whether you want to create genotypes for a pathogen or a host.</p>
 <div class="row-fluid">
 <div class="span6">
@@ -20,7 +20,7 @@
 <a href="<% $c->uri_for($image_path . '/gene_picker.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/gene_picker.png') %>" alt=""/></a>
 </div>
 </div>
-<h3>Creating single-allele genotypes</h3>
+<h3 id="creating_single_allele_genotypes">Creating single-allele genotypes</h3>
 <p>For each gene, you can use the 'Deletion’ button as a shortcut to add a single-allele deletion genotype. For other allele types, you can use the ‘Other genotype…’ button to show a pop-up that allows you to create single-allele genotypes.</p>
 <div class="row-fluid">
 <div class="span6">
@@ -40,7 +40,7 @@
 <a href="<% $c->uri_for($image_path . '/genotype_management.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/genotype_management.png') %>" alt=""/></a>
 </div>
 </div>
-<h3>Creating multi-locus genotypes</h3>
+<h3 id="creating_multi_locus_genotypes">Creating multi-locus genotypes</h3>
 <p>Genotypes containing multiple alleles are not created directly; rather, they are created by combining single-allele genotypes.</p>
 <p>To create a multi-allele genotype, first add all of the constituent single alleles to the single-allele table. Then select two or more alleles by ticking the boxes at the left side of the table. Selecting two or more alleles will enable the ‘Combine selected genotypes’ button:</p>
 <div class="row-fluid">
@@ -57,7 +57,7 @@
 <h4>Using wild-type alleles in genotypes</h4>
 <p>A wild-type gene at its normal (endogenous) expression level will generally not have phenotypes annotated in Canto. Single wild-type alleles should only have phenotypes if the gene is expressed at a higher (overexpression) or lower (knockdown) level than normal. Similarly, in a multi-allele genotype, if the wild-type allele is the only allele of the gene present, it should only be included if it is over- or under-expressed.</p>
 <p>Although it is possible to add a wild-type gene as a single allele with wild-type expression, this is intended only for the case of ‘gene-for-gene relationships’ within a pathogen-host interaction: in these cases, a control genotype and phenotype need to be recorded in order to disambiguate naturally-occurring phenotypes (caused by strain sequence variation in the natural strain) from experimental phenotypes (caused by mutations introduced by the author).</p>
-<h3>Editing and copying genotypes</h3>
+<h3 id="editing_and_copying_genotypes">Editing and copying genotypes</h3>
 <p>When you mouse over any genotype in either table, a set of options appears in a popup:</p>
 <div class="row-fluid">
 <div class="span6">
@@ -77,7 +77,7 @@
 <p>Note: If your genotype is from a strain that already includes the names of background alleles, you do not need to specify the names of background alleles in the Background field.</p>
 <p>Note: If a single allele has a background, the background will be included with any multi-allele genotype that uses the allele. If two or more alleles have backgrounds, the backgrounds will be combined in the multi-allele genotype (alleles with duplicate backgrounds will only be included once). To change the background, use one of the ‘Add/edit background’, ‘Edit details’, or ‘Copy and edit’ options.</p>
 <p><strong>Delete:</strong> delete the selected genotype. The action is disabled for any genotype that has phenotype annotations. To delete a genotype with annotations, first delete the annotations (you can view the annotations with the ‘View annotations’ link, or by returning to the curation summary page).</p>
-<h2>Metagenotype Management</h2>
+<h2 id="metagenotype_management">Metagenotype Management</h2>
 <p>The <em>metagenotype</em> is an abstract concept that combines a pathogen genotype with a host genotype: it is the underlying genotype of a pathogen–host interaction. Metagenotypes are annotated with <em>pathogen–host interaction phenotypes</em>.</p>
 <p>Metagenotypes are created by combining genotypes: a pathogen genotype and a host genotype are selected, then combined to form a new metagenotype. In Canto, you can create metagenotypes by following the Metagenotype Management link on the curation summary page or the Genotype Management page.</p>
 <div class="row-fluid">
@@ -93,7 +93,7 @@
 </div>
 </div>
 <p>If you only have one pathogen or one host, they will be selected by default. After selecting an organism, a table of its genotypes will be shown (unless the organism has no genotypes).</p>
-<h3>Creating metagenotypes</h3>
+<h3 id="creating_metagenotypes">Creating metagenotypes</h3>
 <p>You can select a pathogen or host genotype by clicking the radio buttons next to the rows of the genotype tables.</p>
 <div class="row-fluid">
 <div class="span6">
@@ -113,7 +113,7 @@
 </div>
 </div>
 <p>Selecting a host strain has the intent of describing an interaction between the wild-type host (of the specified strain) with some mutant pathogen. It is not necessary to select the strain for a mutant genotype, because this strain information is always embedded in the mutant genotype itself.</p>
-<h3>Managing metagenotypes</h3>
+<h3 id="managing_metagenotypes">Managing metagenotypes</h3>
 <p>Each row of the metagenotype table (shown at the bottom of the Metagenotype Management page) has links for common actions:</p>
 <div class="row-fluid">
 <div class="span6">
