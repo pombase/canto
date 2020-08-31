@@ -66,7 +66,7 @@
       </div>
     </span>
   </td>
-  <td ng-class="{ 'term-warning': annotation.is_obsolete_term }">
+  <td ng-if="!data.hideColumns.term_ontid" ng-class="{ 'term-warning': annotation.is_obsolete_term }">
     {{annotation.term_ontid}}
   </td>
   <td ng-class="{ 'term-warning': annotation.is_obsolete_term }">

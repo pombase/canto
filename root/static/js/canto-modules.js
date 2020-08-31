@@ -6412,6 +6412,9 @@ var annotationTableCtrl =
           publicationUniquename: null,
         };
 
+        $scope.annotationTypeConfigPromise =
+          AnnotationTypeConfig.getByName($scope.annotationTypeName);
+
         var baseSortFunc =
             function(a, b, isCurrent) {
               function getColumnValue(annotation, columnName) {
@@ -6545,6 +6548,7 @@ var annotationTableCtrl =
             copyObject(initialHideColumns, $scope.data.hideColumns);
             $.map($scope.annotations,
               function (annotation) {
+                // hide empty columns:
                 $.map(initialHideColumns,
                   function (prop, key) {
                     if (key == 'qualifiers' && annotation.is_not) {
@@ -6567,12 +6571,25 @@ var annotationTableCtrl =
           if ($scope.isActiveSession) {
             $scope.data.hideColumns['curator'] = true;
           }
+
+          if ($scope.annotationType &&
+              $scope.annotationType.annotation_table_columns_to_hide) {
+            // force some columns to be hidden even if they aren't empty
+            $.map($scope.annotationType.annotation_table_columns_to_hide,
+                  function(columnName) {
+                    $scope.data.hideColumns[columnName] = true;
+                  });
+          }
         };
+
+        $scope.annotationTypeConfigPromise.then(function (annotationType) {
+          $scope.updateColumns();
+        });
       },
       link: function ($scope) {
         $scope.$watch('annotations.length',
           function () {
-            AnnotationTypeConfig.getByName($scope.annotationTypeName).then(function (annotationType) {
+            $scope.annotationTypeConfigPromise.then(function (annotationType) {
               $scope.annotationType = annotationType;
               $scope.displayAnnotationFeatureType = capitalizeFirstLetter(annotationType.feature_type);
             });

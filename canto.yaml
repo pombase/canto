@@ -2023,6 +2023,7 @@ available_annotation_type_list:
     specific_term_examples: ~
     help_text: ~
     more_help_text: ~
+    annotation_table_columns_to_hide: [term_ontid]
     evidence_codes:
       - Microarray
       - Northern blot
@@ -2038,6 +2039,7 @@ available_annotation_type_list:
     specific_term_examples: ~
     help_text: ~
     more_help_text: ~
+    annotation_table_columns_to_hide: [term_ontid]
     evidence_codes:
       - Reporter gene assay
       - Western blot
