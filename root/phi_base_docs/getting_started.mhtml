@@ -1,0 +1,157 @@
+<!-- PAGE_TITLE: @@name@@ Documentation -->
+<!-- FLAGS: use_bootstrap -->
+<h1 id="getting_started">Getting started</h1>
+<h2 id="finding_a_publication">Finding a publication</h2>
+<p>To start a curation session in Canto, enter the PubMed ID of your chosen publication in the search box on the left of the page. Note that the ‘PMID:’ prefix is optional.</p>
+<div class="row-fluid">
+<div class="span6">
+<a href="<% $c->uri_for($image_path . '/pmid_entry.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/pmid_entry.png') %>" alt=""/></a>
+</div>
+</div>
+<h2 id="starting_a_session">Starting a session</h2>
+<p>When you enter a curation session in Canto, you will see a message with a few basic details about the paper and how to proceed:</p>
+<div class="row-fluid">
+<div class="span6">
+<a href="<% $c->uri_for($image_path . '/welcome_page.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/welcome_page.png') %>" alt=""/></a>
+</div>
+</div>
+<p>If you want to delegate curation to someone else (e.g. the first author or another current lab member), click "Reassign paper", and fill in the name and email address of the intended recipient on the next page.</p>
+<p>Otherwise, click "Start curating", confirm your name, email address, and (optionally) your <a href="http://orcid.org/">ORCID</a> on the next page, then continue. After starting the session, you will receive an email reminding you of the curation session link and basic instructions.</p>
+<div class="row-fluid">
+<div class="span6">
+<a href="<% $c->uri_for($image_path . '/curator_details.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/curator_details.png') %>" alt=""/></a>
+</div>
+</div>
+<p>Note: you can also begin curation and then reassign a session later; there is a "Reassign" button near the upper right corner of the page:</p>
+<div class="row-fluid">
+<div class="span6">
+<a href="<% $c->uri_for($image_path . '/reassign_button.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/reassign_button.png') %>" alt=""/></a>
+</div>
+</div>
+<p>Once you have begun a session, your session will be preserved at a stable URL, so you do not need to complete the curation in one go. Most pages have at least one '?' icon, which links to help documentation (mouse over to see a brief description). You can use the ‘Contact curators' link at any point if you get stuck, or have any questions.</p>
+<h2 id="adding_genes_and_organisms">Adding genes and organisms</h2>
+<p>To start curating a paper, you will first be asked to supply a UniProtKB accession number for each gene from your publication:</p>
+<div class="row-fluid">
+<div class="span6">
+<a href="<% $c->uri_for($image_path . '/create_gene_list.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/create_gene_list.png') %>" alt=""/></a>
+</div>
+</div>
+<p>In the case where your publication contains host organisms with no genes specified, you can pick these hosts using the organism picker below the gene entry field (you can search for hosts by scientific name, common name, or NCBI Taxonomy ID):</p>
+<div class="row-fluid">
+<div class="span6">
+<a href="<% $c->uri_for($image_path . '/create_host_organism.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/create_host_organism.png') %>" alt=""/></a>
+</div>
+</div>
+<h3 id="finding_genes_in_uniprotkb">Finding genes in UniProtKB</h3>
+<p>PHI-Canto uses <a href="https://www.uniprot.org/help/uniprotkb">UniProt Knowledgebase</a> (UniProtKB) gene accession numbers to disambiguate genes/proteins. This is to ensure that we are talking about the correct gene product – especially because the same names are sometimes used for different proteins – and to standardize entries, because not all strains of an organism are in UniProt.</p>
+<ol>
+<li>
+<p><strong>Identify the reference proteome</strong> (we use the designated reference proteome to integrate different strain information at the gene level in PHI-base). In PHI-Canto you will be able to specify the strain you used.</p>
+<p>Look up the reference proteome for your organism using the species name (<a href="https://www.uniprot.org/help/reference_proteome">https://www.uniprot.org/help/reference_proteome</a>).</p>
+<p>If there is no reference proteome, use the strain studied.</p>
+</li>
+<li>
+<p><strong>Identify the gene of interest in the reference proteome</strong></p>
+<p>Start from the <a href="https://www.uniprot.org/">UniProt homepage</a>, then perform any of the following steps:</p>
+<ul>
+<li>Search for the author assigned gene name/primary name (e.g. Tri5) or synonyms, plus species name (e.g <em>Fusarium graminearum</em>).</li>
+<li>If the gene does not have a ‘given name’ but a locus ID is provided, search using the locus_id (e.g. FGRRES_03537) plus species name (e.g. <em>Fusarium graminearum</em>). If the entry identifier used is not the reference strain, copy the protein sequence and go to the BLAST step below.</li>
+<li>Search on a protein description (e.g. Trichodiene synthase)</li>
+<li>Obtain the protein sequence for your gene of interest and BLAST against UniprotKB (<a href="https://www.uniprot.org/blast/">https://www.uniprot.org/blast/</a>) with your protein sequence. \
+<strong>Note:</strong> If there are multiple entries for your gene product from the reference strain, please select the ‘Reviewed entry’. Use the left hand filter for ‘Reviewed entries’.</li>
+<li>If the gene cannot be located in UniProt, contact the authors, UniProt, or PHI-base for help locating the canonical database entry.</li>
+<li><strong>Add the entry into PHI-Canto.</strong> Once the entry of interest is located, select the entry accession number (also called ‘Entry’) from column 1 of the results table, and use this to retrieve the entry into PHI-Canto on the gene entry page. Be careful not to confuse the ‘Entry' column with the ‘Entry name' column. PHI-Canto uses the accession number to retrieve details (such as the gene name, gene product, and organism). If PHI-Canto is unable to find your entry, check for typos (e.g. 0 for O), ensure you are using the ‘entry’ not ‘entry name’, and check that your accession is from UniProtKB, not UniParc.</li>
+</ul>
+</li>
+</ol>
+<div class="row-fluid">
+<div class="span6">
+<a href="<% $c->uri_for($image_path . '/uniprot_record.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/uniprot_record.png') %>" alt=""/></a>
+</div>
+</div>
+<h3 id="information_not_valid_for_curation">Information not valid for curation</h3>
+<p>If the paper does not mention individual genes – which is typical of methods papers, many types of high-throughput study, reviews – check the box labeled ‘This paper does not contain any gene-specific information’, and select a reason from the pulldown that appears.</p>
+<div class="row-fluid">
+<div class="span6">
+<a href="<% $c->uri_for($image_path . '/invalid_curation_reason.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/invalid_curation_reason.png') %>" alt=""/></a>
+</div>
+</div>
+<p>Complete the session by clicking ‘Continue’ and then ‘Finish’. Further comment is optional.</p>
+<p>If the paper mentions specific genes, but does not contain any data that can be curated in Canto for them (see Curating specific data types), enter the genes and finish the session as described below (see Finishing and submitting).</p>
+<p>Please note that you should only curate information supported by experiments in the paper you are curating. If you want to capture other information not directly shown in a particular paper, please contact the curators (contact@phi-base.org) to discuss how to proceed.</p>
+<h2 id="adding_strains">Adding strains</h2>
+<p>Once you have specified your genes and any host organisms (with no specified genes), the next screen will allow you to confirm the genes and organisms that have been retrieved from UniProt.</p>
+<div class="row-fluid">
+<div class="span6">
+<a href="<% $c->uri_for($image_path . '/organism_table.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/organism_table.png') %>" alt=""/></a>
+</div>
+</div>
+<p>The next step is to add one or more ‘experimental strains’ for every organism in your curation session. Note that for the purposes of PHI-Canto, the term <em>strain</em> is used broadly to refer to any taxonomic classifier more specific than a species. This includes (but is not limited to): subspecies, varieties, pathovars, cultivars, and strains in the conventional sense.</p>
+<p>You can add experimental strains using the strain picker that is located below each pathogen and host on the page:</p>
+<div class="row-fluid">
+<div class="span6">
+<a href="<% $c->uri_for($image_path . '/strain_dropdown.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/strain_dropdown.png') %>" alt=""/></a>
+</div>
+</div>
+<p>You can select a strain from the list by using your mouse or the arrow keys on the keyboard (use Enter or Tab to confirm a strain with the keyboard). Typing a strain name into the text input will filter to the list of strains to match what you typed:</p>
+<div class="row-fluid">
+<div class="span6">
+<a href="<% $c->uri_for($image_path . '/strain_autocomplete.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/strain_autocomplete.png') %>" alt=""/></a>
+</div>
+</div>
+<p>If you want to add a strain that is not in the list, type its name into the text input, then click the ‘Add strain’ button, or hit Enter on your keyboard. Custom strains will be highlighted in orange once added:</p>
+<div class="row-fluid">
+<div class="span6">
+<a href="<% $c->uri_for($image_path . '/custom_strain.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/custom_strain.png') %>" alt=""/></a>
+</div>
+</div>
+<p>Use the ‘Unknown strain’ button if the publication does not specify a strain for the organism (or does not describe the organism more specifically than its species).</p>
+<p>To delete a strain, click the cross symbol next to the strain name. Note that you will be unable to delete a strain if it is used by other genotypes in the curation session.</p>
+<p>Note: if your new strain contains background mutations, please do not specify these in the strain name unless it is conventional for the strain name to include the names of other mutations. Otherwise, you should specify background mutations using the ‘Background’ information on a genotype (see <a href="genotypes">Creating alleles and genotypes</a>).</p>
+<p>Once you have specified strains for each organism, you can continue to the curation summary page; from there, you can annotate genes and genotypes with the annotation types described in this article.</p>
+<h2 id="curating_specific_data_types">Curating specific data types</h2>
+<p>Annotations in PHI-Canto are divided into three types: gene annotations, genotype annotations, and metagenotype annotations. Follow the links below for specific instructions.</p>
+<h3 id="gene_annotations">Gene annotations</h3>
+<ul>
+<li><strong><a href="go_annotation">GO molecular function</a></strong>: A molecular function is a catalytic (e.g. protein serine/threonine kinase activity, pyruvate carboxylase activity) or binding activity, or any other activity that occurs at the molecular level.</li>
+<li><strong><a href="go_annotation">GO biological process</a></strong>: A biological process is a series of events accomplished by one or more ordered assemblies of molecular functions, such as cell cycle regulation, ion transport, or signal transduction.</li>
+<li><strong><a href="go_annotation">GO cellular component</a></strong>: Cellular components include subcellular structures and macromolecular complexes, such as nucleus, nuclear inner membrane, nuclear pore, and proteasome complex.</li>
+<li><strong><a href="modification_annotation">protein modification</a></strong>: A protein modification is a covalent modification or other change that alters the measured molecular mass of a peptide or protein amino acid residue.</li>
+<li><strong><a href="physical_interaction_annotation">physical interaction</a></strong>: Examples: co-purification, two-hybrid, affinity capture.</li>
+</ul>
+<h3 id="genotype_annotations">Genotype annotations</h3>
+<p>See the <a href="genotypes">Creating alleles and genotypes</a> documentation for instructions on creating genotypes.</p>
+<ul>
+<li><strong><a href="phipo_annotation">pathogen phenotype</a></strong>: Annotate normal or abnormal phenotypes of pathogen organisms with this genotype.</li>
+<li><strong><a href="phipo_annotation">host phenotype</a></strong>: Annotate normal or abnormal phenotypes of host organisms with this genotype.</li>
+</ul>
+<h3 id="metagenotype_annotations">Metagenotype annotations</h3>
+<p>See the <a href="genotypes">Creating alleles and genotypes</a> documentation for instructions on creating metagenotypes.</p>
+<ul>
+<li><strong><a href="phipo_annotation">pathogen-host interaction phenotype</a></strong>: Annotate normal or abnormal phenotypes of organisms within this pathogen-host interaction (metagenotype).</li>
+</ul>
+<h2 id="finishing_and_submitting">Finishing and submitting</h2>
+<p>When you have finished entering data from your paper, click the ‘Submit to curators' button on the right-hand side of the Curation Summary page:</p>
+<div class="row-fluid">
+<div class="span6">
+<a href="<% $c->uri_for($image_path . '/session_submit_button.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/session_submit_button.png') %>" alt=""/></a>
+</div>
+</div>
+<p>To submit a curation session that does not contain any annotations based on experimental data, check the ‘No experimental results to add?’ checkbox, then select a reason from the pulldown menu that appears:</p>
+<div class="row-fluid">
+<div class="span6">
+<a href="<% $c->uri_for($image_path . '/submit_no_results.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/submit_no_results.png') %>" alt=""/></a>
+</div>
+</div>
+<p>After you have clicked ‘Submit to curators’, you will see a text box in which you can put any comments or questions for the curators (this is optional):</p>
+<div class="row-fluid">
+<div class="span6">
+<a href="<% $c->uri_for($image_path . '/submit_curator_comments.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/submit_curator_comments.png') %>" alt=""/></a>
+</div>
+</div>
+<p>After you click ‘Finish’, you will not be able to make any further changes to your session. However, you can view the annotations in the session at any time. If you need to make any further changes to your curation session after submission, please contact the PHI-Canto curation team.</p>
+<%init>
+my $config = $c->config();
+my $base_docs_path = $config->{base_docs_path};
+my $image_path = '/static/images/' . $base_docs_path;
+</%init>

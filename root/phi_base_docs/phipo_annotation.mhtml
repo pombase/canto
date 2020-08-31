@@ -1,11 +1,11 @@
 <!-- PAGE_TITLE: @@name@@ Documentation -->
 <!-- FLAGS: use_bootstrap -->
-<h1>Curating phenotypes</h1>
-<h2>Introduction</h2>
+<h1 id="curating_phenotypes">Curating phenotypes</h1>
+<h2 id="introduction">Introduction</h2>
 <p>A phenotype is any observable characteristic or trait of an organism that results from the interactions between its genotype and the environment. PHI-Canto supports annotation of single- and multi-allele phenotypes on pathogen genotypes, host genotypes and metagenotypes (pathogen and host genotype), using PHIPO terms and additional useful details such as evidence and experimental conditions.</p>
 <p>When using PHIPO terms – or terms from any ontology – always pay careful attention to the term definitions. They are usually more detailed, and often more informative, than the term names alone. For each annotation, ensure that the definition of the selected term accurately describes the experiment you are trying to capture, and that the results shown in the paper fit all parts of the term definition.</p>
-<h2>Starting a phenotype annotation</h2>
-<h3>Single-species phenotypes</h3>
+<h2 id="starting_a_phenotype_annotation">Starting a phenotype annotation</h2>
+<h3 id="single_species_phenotypes">Single-species phenotypes</h3>
 <h4>Genotype Management workflow</h4>
 <p>Using the Pathogen Genotype Management or Host Genotype Management pages, you can make phenotype annotations to a genotype of a single species. These genotypes can be either single-allele or multi-allele:</p>
 <ul>
@@ -32,7 +32,7 @@
 </div>
 </div>
 <p>After selecting ‘OK’, you will begin the phenotype curation process for the allele you have created (see ‘The phenotype curation process’ below).</p>
-<h3>Pathogen-host interaction phenotypes</h3>
+<h3 id="pathogen_host_interaction_phenotypes">Pathogen-host interaction phenotypes</h3>
 <p>To annotate a phenotype on a pathogen-host interaction (a metagenotype), go to the Metagenotype Management page and select ‘Annotate pathogen-host interaction phenotype’ from the list of actions next to the relevant metagenotype.</p>
 <div class="row-fluid">
 <div class="span6">
@@ -40,8 +40,8 @@
 </div>
 </div>
 <p>Note that you must first have created a metagenotype; see <a href="genotypes">Creating alleles and genotypes</a> for instructions.</p>
-<h2>The phenotype curation process</h2>
-<h3>Selecting a PHIPO term</h3>
+<h2 id="the_phenotype_curation_process">The phenotype curation process</h2>
+<h3 id="selecting_a_phipo_term">Selecting a PHIPO term</h3>
 <p>Next, to find a PHIPO term, type text into the search box. When suggestions from the autocomplete feature appear, choose one and proceed.</p>
 <div class="row-fluid">
 <div class="span6">
@@ -60,14 +60,14 @@
 <a href="<% $c->uri_for($image_path . '/new_term_suggest.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/new_term_suggest.png') %>" alt=""/></a>
 </div>
 </div>
-<h3>Experimental evidence</h3>
+<h3 id="experimental_evidence">Experimental evidence</h3>
 <p>After you choose a term, you will be prompted to select an experimental evidence code from a pulldown menu:</p>
 <div class="row-fluid">
 <div class="span6">
 <a href="<% $c->uri_for($image_path . '/evidence_picker.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/evidence_picker.png') %>" alt=""/></a>
 </div>
 </div>
-<h3>Experimental conditions</h3>
+<h3 id="experimental_conditions">Experimental conditions</h3>
 <p>After selecting experimental evidence, you can optionally enter any experimental conditions. It is not necessary to record all of the experimental conditions, just those that are key to the experiment.</p>
 <p>Conditions are aspects of the experimental setup that may be relevant to various different methods, and are independent of what cells, strain, organism, etc. are used. Examples include:</p>
 <ul>
@@ -96,7 +96,7 @@
 </div>
 </div>
 <p>PHI-Canto will display custom experimental conditions in red text, pending their review by an expert curator before they are added to the main list of experimental conditions.</p>
-<h3>Annotation comments</h3>
+<h3 id="annotation_comments">Annotation comments</h3>
 <p>Once you have entered all the data for your annotation, you will see a confirmation page that shows a preview of your annotation before it is created. For single-species phenotypes, the annotation preview will look like this:</p>
 <div class="row-fluid">
 <div class="span6">
@@ -117,7 +117,7 @@
 </ul>
 <p>The data in the comments section will not be shown on the PHI-base website; the comments are intended to facilitate the checking of a session by the approval team (PHI-base and carefully selected species experts) prior to approval of the curated session.</p>
 <p>Once you select ‘OK’ on this screen, your annotation will be saved. You can then either make further annotations, pause the session and come back to it later, or submit the completed curation session for approval.</p>
-<h2>Annotation extensions</h2>
+<h2 id="annotation_extensions">Annotation extensions</h2>
 <p>You can add annotation extensions to provide additional specificity for PHIPO annotations (see below for specific examples). After you have selected an ontology term and evidence, the PHI-Canto interface will display a list of available extension types (if no extension types are available, this step is skipped, and you will go straight to the annotation summary page).</p>
 <p>Select an extension type to show a pop-up where you can specify the required details for the extension. For example, an annotation to ‘abolished pathogen penetration into host’ can have any of these extensions:</p>
 <div class="row-fluid">
@@ -153,7 +153,7 @@
 <li><strong>Infective ability:</strong> relates a pathogen-host interaction phenotype with one of the set of high-level phenotype terms from PHI-base, and describes the overall change in factors like pathogenicity and virulence. For example, the phenotype ‘abolished pathogen penetration into host’ can be extended with ‘loss of pathogenicity’, such that the phenotype was an effect of a change in the infective ability of the pathogen.</li>
 <li><strong>Disease caused:</strong> relates an instance of a pathogen-host interaction with the disease that was expected to manifest. The disease names are taken from a small ontology specific to PHI-Canto.</li>
 </ul>
-<h2>Editing, deleting and duplicating phenotypes</h2>
+<h2 id="editing__deleting_and_duplicating_phenotypes">Editing, deleting and duplicating phenotypes</h2>
 <p><strong>Edit:</strong> If you want to make changes to an annotation you have made, use the ‘Edit’ link next to the annotation in the table. In the pop-up edit the appropriate fields, then select ‘OK’.</p>
 <div class="row-fluid">
 <div class="span6">
