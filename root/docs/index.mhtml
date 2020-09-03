@@ -116,7 +116,7 @@ In the "gear" menu in the upper right corner, you can ticke a box to activate "A
 
 <div class="row-fluid">
 <div class="span6">
-  <a href="<% $c->uri_for($image_path . '/advanced_mode_selection.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/advanced_mode_selection.png') %>" alt="activate advanced mode"/></a>
+  <a href="<% $c->uri_for('/static/images/docs/advanced_mode_selection.png') %>"/><img class="screenshot" src="<% $c->uri_for('/static/images/docs/advanced_mode_selection.png') %>" alt="activate advanced mode"/></a>
 </div>
 </div>
 
@@ -127,7 +127,7 @@ page:
 
 <div class="row-fluid">
 <div class="span6">
-  <a href="<% $c->uri_for($image_path . '/summary_quick_links.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/summary_quick_links.png') %>" alt="activate advanced mode"/></a>
+  <a href="<% $c->uri_for('/static/images/docs/summary_quick_links.png') %>"/><img class="screenshot" src="<% $c->uri_for('/static/images/docs/summary_quick_links.png') %>" alt="activate advanced mode"/></a>
 </div>
 </div>
 
@@ -138,7 +138,7 @@ annotation types:
 
 <div class="row-fluid">
 <div class="span6">
-  <a href="<% $c->uri_for($image_path . '/gene_page_quick_links.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/gene_page_quick_links.png') %>" alt="activate advanced mode"/></a>
+  <a href="<% $c->uri_for('/static/images/docs/gene_page_quick_links.png') %>"/><img class="screenshot" src="<% $c->uri_for('/static/images/docs/gene_page_quick_links.png') %>" alt="activate advanced mode"/></a>
 </div>
 </div>
 
