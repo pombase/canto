@@ -27,5 +27,9 @@
     "qunit": "^2.9.2",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12"
+  },
+  "dependencies": {
+    "@types/angular": "^1.7.3",
+    "angular": "^1.7.8"
   }
 }
