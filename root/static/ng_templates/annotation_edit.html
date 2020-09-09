@@ -222,8 +222,10 @@
       <tr ng-if="filteredFeatures && filteredFeatures.length != 0 && (showFigureField || hasFigure)">
         <td class="title">Figure</td>
         <td colspan="2">
+          <span>Prefix figure numbers with 'Figure' and table numbers with 'Table'. Prefix supplementary figure and table numbers with an 'S', for example: 'Figure S1'.</span>
           <input class="form-control curs-edit-wide-field"
                  type="text" size="60"
+                 placeholder="Figure 1, Table 1"
                  ng-model="annotation.figure"/>
         </td>
       </tr>
