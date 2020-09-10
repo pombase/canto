@@ -911,7 +911,20 @@ sub create_sessions_from_json
       }
     }
 
-    for my $gene_uniquename (@{$session_data->{genes}}) {
+    my $alleles = $session_data->{alleles};
+
+    my @gene_uniquenames_from_json = @{$session_data->{genes} || []};
+
+    while (my ($allele_uniquename, $allele_details) = each %$alleles) {
+      my $allele_gene_uniquename = $allele_details->{gene};
+
+      if (defined $allele_gene_uniquename &&
+            !grep { $_ eq $allele_gene_uniquename } @gene_uniquenames_from_json) {
+        push @gene_uniquenames_from_json, $allele_gene_uniquename;
+      }
+    }
+
+    for my $gene_uniquename (@gene_uniquenames_from_json) {
       if ($using_existing_session) {
         if ($existing_session_gene_uniquenames{$gene_uniquename}) {
           next;
@@ -966,8 +979,6 @@ sub create_sessions_from_json
           primary_identifier => $existing_gene_uniquename,
         });
     }
-
-    my $alleles = $session_data->{alleles};
 
     if ($alleles) {
       my %existing_allele_uniquenames = ();
