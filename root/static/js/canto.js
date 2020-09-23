@@ -4,11 +4,13 @@
 
 // eslint-disable-next-line no-unused-vars
 function trim(a) {
-  a=a.replace(/^\s+/,''); return a.replace(/\s+$/,'');
+  a = a.replace(/^\s+/,'');
+  return a.replace(/\s+$/,'');
 }
 
-var loadingDiv = $('<div id="loading"><img src="' + application_root +
-                   '/static/images/spinner.gif"/></div>');
+var loadingDiv = $(
+  '<div id="loading"><img src="' + application_root + '/static/images/spinner.gif"/></div>'
+);
 
 function loadingStart() {
   loadingDiv.show();
@@ -20,7 +22,7 @@ function loadingEnd() {
   $('#ajax-loading-overlay').hide();
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
   loadingDiv
     .prependTo('body')
     .position({
@@ -34,9 +36,9 @@ $(document).ready(function() {
     .bind('ajaxStop.canto', loadingEnd);
 });
 
-$(document).ready(function() {
-  $(".sect .undisclosed-title, .sect .disclosed-title").each(function() {
-    $(this).click(function() {
+$(document).ready(function () {
+  $(".sect .undisclosed-title, .sect .disclosed-title").each(function () {
+    $(this).click(function () {
       $(this).next().toggle();
       $(this).toggleClass('undisclosed-title');
       $(this).toggleClass('disclosed-title');
@@ -75,14 +77,14 @@ function make_confirm_dialog(link, prompt, confirm_button_label, cancel_button_l
     buttons : [
       {
         text: cancel_button_label,
-        click: function() {
+        click: function () {
           $(this).dialog("close");
           $(this).remove();
         }
       },
       {
         text: confirm_button_label,
-        click: function() {
+        click: function () {
           window.location.href = targetUrl;
         }
       }
@@ -102,12 +104,13 @@ var ferret_choose = {
     } else {
       definition = ui.item.definition;
     }
-    var def =
-      $('<div class="curs-autocomplete-definition ui-widget-content ui-autocomplete ui-corner-all">' +
-        '<h3>Term name</h3><div>' +
-        ui.item.name + '</div>' +
-        '<h3>Definition</h3><div>' +
-        definition + '</div></div>');
+    var def = $(
+      '<div class="curs-autocomplete-definition ui-widget-content ui-autocomplete ui-corner-all">' +
+      '<h3>Term name</h3><div>' +
+      ui.item.name + '</div>' +
+      '<h3>Definition</h3><div>' +
+      definition + '</div></div>'
+    );
     def.appendTo('body');
     var widget = $(this).autocomplete("widget");
     def.position({
@@ -118,7 +121,7 @@ var ferret_choose = {
     return false;
   },
 
-  hide_autocomplete_def: function() {
+  hide_autocomplete_def: function () {
     $('.curs-autocomplete-definition').remove();
   }
 };
@@ -166,21 +169,27 @@ $(document).ready(function() {
   });
 
   $('#curs-pub-assign-popup-dialog').click(function () {
-    $('#curs-pub-assign-dialog').dialog({ modal: true,
-                                          title: 'Set the corresponding author...',
-                                          width: '40em' });
+    $('#curs-pub-assign-dialog').dialog({
+      modal: true,
+      title: 'Set the corresponding author...',
+      width: '40em'
+    });
   });
 
   $('#curs-pub-create-session-popup-dialog').click(function () {
-    $('#curs-pub-create-session-dialog').dialog({ modal: true,
-                                                  title: 'Create a session',
-                                                  width: '40em' });
+    $('#curs-pub-create-session-dialog').dialog({
+      modal: true,
+      title: 'Create a session',
+      width: '40em'
+    });
   });
 
   $('#curs-pub-reassign-session-popup-dialog').click(function () {
-    $('#curs-pub-reassign-session-dialog').dialog({ modal: true,
-                                                    title: 'Reassign a session',
-                                                    width: '40em' });
+    $('#curs-pub-reassign-session-dialog').dialog({
+      modal: true,
+      title: 'Reassign a session',
+      width: '40em'
+    });
   });
 
   $('#curs-pub-triage-this-pub').click(function () {
@@ -208,7 +217,7 @@ $(document).ready(function() {
       success: function(data) {
         if (typeof(data.error_message) == 'undefined') {
           ($popup.data('success_callback'))(data);
-          $popup.dialog( "close" );
+          $popup.dialog("close");
         } else {
           $.pnotify({
             pnotify_title: 'Error',
@@ -271,30 +280,30 @@ $(document).ready(function() {
     $(".curs-person-picker .curs-person-picker-input").autocomplete({
       minLength: 0,
       source: curs_people_autocomplete_list,
-      focus: function( event, ui ) {
-        $(this).val( ui.item.name );
+      focus: function(event, ui) {
+        $(this).val(ui.item.name);
         return false;
       },
-      select: function( event, ui ) {
-        $(this).val( ui.item.name );
-        $(this).siblings('.curs-person-picker-person-id').val( ui.item.value );
+      select: function(event, ui) {
+        $(this).val(ui.item.name);
+        $(this).siblings('.curs-person-picker-person-id').val(ui.item.value);
         return false;
       }
     })
-    .data( "autocomplete" )._renderItem = function( ul, item ) {
-      return $( "<li></li>" )
-        .data( "item.autocomplete", item )
-        .append( "<a>" + item.label + "<br></a>" )
-        .appendTo( ul );
+    .data("autocomplete")._renderItem = function (ul, item) {
+      return $("<li></li>")
+        .data("item.autocomplete", item)
+        .append("<a>" + item.label + "<br></a>")
+        .appendTo(ul);
     };
   }
 
-  $(".confirm-delete").click(function() {
+  $(".confirm-delete").click(function () {
     make_confirm_dialog($(this), "Really delete?", "Confirm", "Cancel");
     return false;
   });
 
-  $("#curs-ontology-transfer .upload-genes-link a").click(function() {
+  $("#curs-ontology-transfer .upload-genes-link a").click(function () {
     function filter_func(i, e) {
       return $.trim(e.value).length > 0;
     }
@@ -302,28 +311,26 @@ $(document).ready(function() {
       make_confirm_dialog($(this), "Comment text will be lost.  Continue?", "Yes", "No");
       return false;
     }
-
     return true;
   });
 
-  $("#curs-pub-send-session-popup-dialog").click(function() {
+  $("#curs-pub-send-session-popup-dialog").click(function () {
     make_confirm_dialog($(this), "Send link to session curator?", "Send", "Cancel");
   });
 
-  $('button.curs-person-picker-add').click(function() {
+  $('button.curs-person-picker-add').click(function () {
     person_picker_add_person(this);
   });
 
-  $('#curs-content').on('click', '.canto-more-button',
-                        function(event) {
-                          var this_id = $(event.currentTarget).attr('id');
-                          var target = $('#' + this_id + '-target');
-                          target.show();
-                          $(event.currentTarget).hide();
-                          event.stopPropagation();
-                        });
+  $('#curs-content').on('click', '.canto-more-button', function (event) {
+    var this_id = $(event.currentTarget).attr('id');
+    var target = $('#' + this_id + '-target');
+    target.show();
+    $(event.currentTarget).hide();
+    event.stopPropagation();
+  });
 });
 
-$(document).ready(function() {
+$(document).ready(function () {
   $('.curs-js-link').show();
 });
