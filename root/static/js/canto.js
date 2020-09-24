@@ -1,3 +1,5 @@
+// @ts-check
+
 "use strict";
 
 /*global $,document,application_root,window,curs_root_uri,curs_people_autocomplete_list */
@@ -334,3 +336,10 @@ $(document).ready(function() {
 $(document).ready(function () {
   $('.curs-js-link').show();
 });
+
+export {
+  ferret_choose,
+  make_ontology_complete_url,
+  loadingStart,
+  loadingEnd
+}
