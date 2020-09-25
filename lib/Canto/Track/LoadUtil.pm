@@ -142,6 +142,8 @@ sub find_organism_by_taxonid
 {
   my $self = shift;
 
+  state $cache = {};
+
   my $taxonid = shift;
 
   croak "no taxon id supplied" unless $taxonid;
@@ -150,15 +152,22 @@ sub find_organism_by_taxonid
     die qq(taxon ID "$taxonid" isn't numeric\n);
   }
 
+  if ($cache->{$taxonid}) {
+    return $cache->{$taxonid};
+  }
+
   my $schema = $self->schema();
 
-  my $organismprop_rs = $schema->resultset('Organismprop')->search();
+  my $organismprop_rs = $schema->resultset('Organismprop')
+    ->search({'type.name' => 'taxon_id', 'me.value' => $taxonid},
+             { join => 'type', prefetch => 'organism' });
 
-  while (defined (my $prop = $organismprop_rs->next())) {
-    if ($prop->type()->name() eq 'taxon_id' &&
-        $prop->value() == $taxonid) {
-      return $prop->organism();
-    }
+  my $prop = $organismprop_rs->next();
+
+  if ($prop) {
+    my $organism = $prop->organism();
+    $cache->{$taxonid} = $organism;
+    return $organism;
   }
 
   return undef;
