@@ -8,6 +8,7 @@ use IO::All;
 use Getopt::Long;
 use Fcntl qw(:flock);
 use Text::CSV;
+use Try::Tiny;
 
 BEGIN {
   my $script_name = basename $0;
@@ -270,50 +271,15 @@ if ($do_strains) {
   my $load_util = Canto::Track::LoadUtil->new(schema => $schema);
   my $guard = $schema->txn_scope_guard;
 
-  open my $fh, '<', $do_strains or die "can't open $do_strains: $!";
-
-  my $csv = Text::CSV->new({ blank_is_undef => 1, binary => 1, auto_diag => 1  });
-
-  while (my $row = $csv->getline($fh)) {
-
-    next if lc $row->[0] eq 'ncbitaxspeciesid' && $. == 1;
-
-    my ($taxonid, $common_name, $strain_description, $synonyms) = @$row;
-
-    if ($taxonid !~ /^\d+$/) {
-      $guard->{inactivated} = 1;
-      die qq(load failed - taxon ID in first column of line $. isn't an integer: $taxonid\n);
-    }
-
-    $strain_description =~ s/^\s+//;
-    $strain_description =~ s/\s+$//;
-
-    my $organism = $load_util->find_organism_by_taxonid($taxonid);
-
-    if (!$organism) {
-      $guard->{inactivated} = 1;
-      die qq(load failed - no organism with taxon ID "$taxonid" found in the database\n);
-    }
-
-    my $strain = $load_util->get_strain($organism, $strain_description);
-
-    $strain->strainsynonyms()->delete_all();
-
-    if (defined $synonyms) {
-      map {
-        my $synonym = $_;
-        $synonym =~ s/^\s+//;
-        $synonym =~ s/\s+$//;
-        $schema->create_with_type('Strainsynonym', {
-          strain => $strain,
-          synonym => $synonym,
-        });
-      } split /,/, $synonyms;
-    }
-  }
+  try {
+    $load_util->load_strains($config, $do_strains);
+  } catch {
+    warn $_;
+    $guard->{inactivated} = 1;
+    exit 1;
+  };
 
   $guard->commit unless $dry_run;
-
 }
 
 if (@ontology_args) {
