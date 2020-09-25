@@ -142,6 +142,8 @@ sub find_organism_by_taxonid
 {
   my $self = shift;
 
+  state $cache = {};
+
   my $taxonid = shift;
 
   croak "no taxon id supplied" unless $taxonid;
@@ -150,15 +152,22 @@ sub find_organism_by_taxonid
     die qq(taxon ID "$taxonid" isn't numeric\n);
   }
 
+  if ($cache->{$taxonid}) {
+    return $cache->{$taxonid};
+  }
+
   my $schema = $self->schema();
 
-  my $organismprop_rs = $schema->resultset('Organismprop')->search();
+  my $organismprop_rs = $schema->resultset('Organismprop')
+    ->search({'type.name' => 'taxon_id', 'me.value' => $taxonid},
+             { join => 'type', prefetch => 'organism' });
 
-  while (defined (my $prop = $organismprop_rs->next())) {
-    if ($prop->type()->name() eq 'taxon_id' &&
-        $prop->value() == $taxonid) {
-      return $prop->organism();
-    }
+  my $prop = $organismprop_rs->next();
+
+  if ($prop) {
+    my $organism = $prop->organism();
+    $cache->{$taxonid} = $organism;
+    return $organism;
   }
 
   return undef;
@@ -1122,6 +1131,109 @@ sub create_sessions_from_json
   }
 
   return (\@new_sessions, \@updated_sessions);
+}
+
+=head2 load_strains
+
+ Usage   : $load_util->load_util($strain_file_name);
+ Function: Load strains and strain synonyms from a file.  Existing strains are
+           retained but synonyms are replaced.  The input file is comma
+           separated with these columns:
+             - taxon ID
+             - species common name
+             - strain name
+             - synonyms - comma separated and quoted
+ Returns : nothing
+
+=cut
+
+sub load_strains
+{
+  my $self = shift;
+  my $config = shift;
+  my $file_name = shift;
+
+  open my $fh, '<', $file_name or die "can't open $file_name: $!";
+
+  my $csv = Text::CSV->new({ blank_is_undef => 1, binary => 1, auto_diag => 1  });
+
+  my %strains_by_name = ();
+  my %strains_by_synonym = ();
+
+  while (my $row = $csv->getline($fh)) {
+
+    next if lc $row->[0] eq 'ncbitaxspeciesid' && $. == 1;
+
+    my ($taxonid, $common_name, $strain_name, $synonyms) = @$row;
+
+    if ($taxonid !~ /^\d+$/) {
+      die qq(load failed - taxon ID in first column of line $. isn't an integer: $taxonid\n);
+    }
+
+    $strain_name =~ s/^\s+//;
+    $strain_name =~ s/\s+$//;
+
+    my $organism = $self->find_organism_by_taxonid($taxonid);
+
+    if (!$organism) {
+      die qq(load failed - no organism with taxon ID "$taxonid" found in the database\n);
+    }
+
+    my $strain = $self->get_strain($organism, $strain_name);
+
+    my $name_key = "$taxonid:$strain_name";
+    if (exists $strains_by_name{$name_key}) {
+      die qq(load failed - strain name "$strain_name" for taxon $taxonid is duplicated in $file_name\n);
+    } else {
+      $strains_by_name{$name_key} = $strain;
+    }
+
+    $strain->strainsynonyms()->delete_all();
+
+    if (defined $synonyms) {
+      map {
+        my $synonym = $_;
+        $synonym =~ s/^\s+//;
+        $synonym =~ s/\s+$//;
+        $self->schema()->create_with_type('Strainsynonym', {
+          strain => $strain,
+          synonym => $synonym,
+        });
+
+        my $synonym_key = "$taxonid:$synonym";
+        if (exists $strains_by_synonym{$synonym_key}) {
+          die qq(load failed - strain synonym "$synonym" for strain "$strain_name" for taxon $taxonid is duplicated in $file_name\n);
+        } else {
+          $strains_by_synonym{$synonym_key} = $strain;
+        }
+
+      } split /,/, $synonyms;
+    }
+  }
+
+  my $curs_fix_proc = sub {
+    my $curs = shift;
+    my $curs_schema = shift;
+    my $track_schema = shift;
+
+    my $curs_strain_rs = $curs_schema->resultset('Strain')
+      ->search({ strain_name => { "!=" => undef }},
+               { prefetch => 'organism' });
+    while (defined (my $curs_strain = $curs_strain_rs->next())) {
+      my $curs_organism = $curs_strain->organism();
+      my $curs_strain_name = $curs_strain->strain_name();
+      my $name_key = $curs_organism->taxonid() . ":$curs_strain_name";
+      my $track_strain = $strains_by_name{$name_key} // $strains_by_synonym{$name_key};
+
+      if ($track_strain) {
+        $curs_strain->strain_name(undef);
+        $curs_strain->track_strain_id($track_strain->strain_id());
+        $curs_strain->update();
+      }
+    }
+  };
+
+  Canto::Track::curs_map($config, $self->schema(), $curs_fix_proc);
 }
 
 1;
