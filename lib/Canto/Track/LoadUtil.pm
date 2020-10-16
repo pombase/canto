@@ -1243,7 +1243,7 @@ sub load_strains
         warn qq(The strain "$name_key" in session ), $curs->curs_key(),
           " is ambiguous as there is a strain in the track database with that ",
           "name and also a strain synonym with that name.\n";
-        warn qq(Strains with "$curs_strain_name" as a synonym: ),
+        warn qq(Strains of taxon $curs_taxon with "$curs_strain_name" as a synonym: ),
           (join ", ", map {
             $_->strain_name()
           } @all_strains), "\n";
