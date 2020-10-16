@@ -1202,9 +1202,19 @@ sub load_strains
 
         my $synonym_key = "$taxonid:$synonym";
         if (exists $strains_by_synonym{$synonym_key}) {
-          die qq(load failed - strain synonym "$synonym" for strain "$strain_name" for taxon $taxonid is duplicated in $file_name\n);
+          if (@{$strains_by_synonym{$synonym_key}} == 1) {
+
+            warn qq(Warning: strain synonym "$synonym" for strain "$strain_name" for taxon $taxonid is duplicated in $file_name\n);
+          }
+
+          # If there is more than one element in the array, any
+          # strains in sessions we the name $synonym_key are prevented
+          # from finding a track strain.
+          # It needs manual intervention in that case.
+          my $other_strains = $strains_by_synonym{$synonym_key};
+          push @{$strains_by_synonym{$synonym_key}}, $strain;
         } else {
-          $strains_by_synonym{$synonym_key} = $strain;
+          $strains_by_synonym{$synonym_key} = [$strain];
         }
 
       } split /,/, $synonyms;
@@ -1217,18 +1227,49 @@ sub load_strains
     my $track_schema = shift;
 
     my $curs_strain_rs = $curs_schema->resultset('Strain')
-      ->search({ strain_name => { "!=" => undef }},
+      ->search({ track_strain_id => undef },
                { prefetch => 'organism' });
     while (defined (my $curs_strain = $curs_strain_rs->next())) {
       my $curs_organism = $curs_strain->organism();
       my $curs_strain_name = $curs_strain->strain_name();
-      my $name_key = $curs_organism->taxonid() . ":$curs_strain_name";
-      my $track_strain = $strains_by_name{$name_key} // $strains_by_synonym{$name_key};
+      my $curs_taxon = $curs_organism->taxonid();
+      my $name_key = $curs_taxon . ":$curs_strain_name";
+      my $track_strain_by_name = $strains_by_name{$name_key};
 
-      if ($track_strain) {
-        $curs_strain->strain_name(undef);
-        $curs_strain->track_strain_id($track_strain->strain_id());
-        $curs_strain->update();
+      my $track_strains_by_synonym = $strains_by_synonym{$name_key};
+
+      if (defined $track_strain_by_name && defined $track_strains_by_synonym) {
+        my @all_strains = @$track_strains_by_synonym;
+        warn qq(The strain "$name_key" in session ), $curs->curs_key(),
+          " is ambiguous as there is a strain in the track database with that ",
+          "name and also a strain synonym with that name.\n";
+        warn qq(Strains with "$curs_strain_name" as a synonym: ),
+          (join ", ", map {
+            $_->strain_name()
+          } @all_strains), "\n";
+      } else {
+        if (defined $track_strains_by_synonym && @$track_strains_by_synonym > 1) {
+          warn qq(The strain "$name_key" in session ), $curs->curs_key(),
+            " is ambiguous as there is more than one strain in the track DB ",
+            "with that name as a synonym.\n";
+          warn qq(Strains of taxon $curs_taxon with "$curs_strain_name" as a synonym: ),
+            (join ", ", map {
+              $_->strain_name()
+            } @$track_strains_by_synonym), "\n";
+        } else {
+          my $track_strain = $track_strain_by_name;
+          if (!defined $track_strain) {
+            if (defined $track_strains_by_synonym) {
+              $track_strain = $track_strains_by_synonym->[0];
+            }
+          }
+
+          if ($track_strain) {
+            $curs_strain->strain_name(undef);
+            $curs_strain->track_strain_id($track_strain->strain_id());
+            $curs_strain->update();
+          }
+        }
       }
     }
   };
