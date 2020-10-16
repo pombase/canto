@@ -199,7 +199,7 @@ sub retrieve_entries
   }
 
   if ($response->is_success) {
-    my $xml = $response->content();
+    my $xml = $response->decoded_content();
     return parse_results($xml);
   } else {
     if ($response->status_line() =~ /^400 /) {
