@@ -125,8 +125,6 @@ var ferret_choose = {
 
 
 $(document).ready(function() {
-  $('input[type=checkbox]').shiftcheckbox();
-
   $('a.canto-select-all').click(function () {
     $(this).closest('div').find('input:checkbox').attr('checked', true);
   });
@@ -235,16 +233,39 @@ $(document).ready(function() {
     return true;
   });
 
-  function add_jTruncate($element) {
-    $element.jTruncate({
-      length: 300,
-      minTrail: 50,
-      moreText: "[show all]",
-      lessText: "[hide]"
+  function truncate($element) {
+    $element.each(function() {
+      var obj = $(this);
+      var body = obj.html();
+
+      if (body.length > 320) {
+	var splitLoc = body.indexOf(' ', 300);
+	if (splitLoc != -1) {
+	  var splitLocation = body.indexOf(' ', 300);
+	  var str1 = body.substring(0, splitLocation);
+	  var str2 = body.substring(splitLocation, body.length - 1);
+	  obj.html(str1 + '<span class="truncate_ellipsis">...</span> <span class="truncate_more">' + str2 + '</span>');
+	  obj.find('.truncate_more').css("display", "none");
+	  obj.append(
+	    '<div class="clearboth">' +
+	      '<a href="#" class="truncate_more_link">more</a>' +
+	      '</div>'
+	  );
+
+	  var moreLink = $('.truncate_more_link', obj);
+	  var moreContent = $('.truncate_more', obj);
+	  var ellipsis = $('.truncate_ellipsis', obj);
+	  moreLink.click(function() {
+	    moreContent.show();
+	    moreLink.remove();
+	    ellipsis.remove();
+	  });
+	}
+      }
     });
   }
 
-  add_jTruncate($('.non-key-attribute'));
+  truncate($('.non-key-attribute'));
 
   if (typeof curs_people_autocomplete_list != 'undefined') {
     $(".curs-person-picker .curs-person-picker-input").autocomplete({
