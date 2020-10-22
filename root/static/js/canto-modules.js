@@ -7008,6 +7008,14 @@ var termNameComplete =
                     .then(function (data) {
                       // this triggers using a dropdown instead of autocomplete
                       $scope.allTerms = data;
+                      if ($scope.currentTermName) {
+                        $.map($scope.allTerms,
+                              function(term) {
+                                if ($scope.currentTermName === term.name) {
+                                  $scope.chosenTerm = term;
+                                }
+                              });
+                      }
                     });
               }
             });
