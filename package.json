@@ -19,6 +19,20 @@
   },
   "homepage": "https://github.com/pombase/canto#readme",
   "devDependencies": {
+    "@types/angular": "^1.7.3",
+    "@types/angular-animate": "^1.5.10",
+    "@types/angular-mocks": "^1.7.0",
+    "@types/angular-ui-bootstrap": "^1.0.0",
+    "@types/bootstrap": "^5.0.0",
+    "@types/chart.js": "^2.9.26",
+    "@types/jquery": "^3.5.3",
+    "@types/jquery.form": "^3.26.30",
+    "@types/jquery.placeholder": "^2.1.29",
+    "@types/jquery.pnotify": "^3.0.36",
+    "@types/jquery.validation": "^1.16.6",
+    "@types/jqueryui": "^1.12.13",
+    "@types/ngtoaster": "^2.2.1",
+    "angular-mocks": "^1.5.11",
     "jasmine-core": "^3.4.0",
     "karma": "^2.0.2",
     "karma-chrome-launcher": "^2.2.0",
@@ -29,8 +43,20 @@
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
-    "@types/angular": "^1.7.3",
-    "angular": "^1.7.8",
-    "jquery": "^1.9.1"
+    "angular": "1.7.8",
+    "angular-animate": "1.5.11",
+    "angular-chart.js": "1.1.1",
+    "angular-confirm": "1.2.6",
+    "angular-ui-bootstrap": "2.5.0",
+    "angularjs-toaster": "2.2.0",
+    "bootstrap": "3.3.7",
+    "chart.js": "2.7.3",
+    "jquery": "1.9.1",
+    "jquery-form": "4.0.1",
+    "jquery-placeholder": "2.3.1",
+    "jquery-ui": "1.10.4",
+    "jquery-validation": "1.17.0",
+    "pnotify": "3.0.0",
+    "tag-it": "2.0.0"
   }
 }
