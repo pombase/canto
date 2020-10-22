@@ -188,7 +188,7 @@ sub retrieve_entries
   # copied from http://www.uniprot.org/faq/28#batch_retrieval_of_entries
   my $agent = LWP::UserAgent->new;
 
-  my $url = $batch_service_url . join (' OR ', map { "id:$_" } @identifiers);
+  my $url = $batch_service_url . join (' OR ', map { "accession:$_" } @identifiers);
 
   my $response = $agent->get($url, 'Accept-Encoding' => 'gzip, x-gzip, deflate');
 
