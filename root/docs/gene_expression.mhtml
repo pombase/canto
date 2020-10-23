@@ -6,13 +6,13 @@ The RNA level and protein level annotation options allow you to
 annotate descriptions that will appear in the "Qualitative gene
 expression" section of PomBase gene pages. (Quantitative gene
 expression curation will be added to Canto in the future; in the
-meantime, data for lange gene sets can be <a
+meantime, data for large gene sets can be <a
 href="https://www.pombase.org/submit-data/bulk-annotation">submitted
 to PomBase in bulk</a>.)
 </p>
 
 <p>
-First, click in the box to show the pull-down menu, then select a description:
+First, select a description from the pull-down menu:
 </p>
 
 <div>

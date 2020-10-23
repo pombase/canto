@@ -106,9 +106,9 @@ list for the paper (follow links for specific instructions):
 
 <div class="row-fluid">
 <div class="span12">
-<h4>
+<h3>
 Advanced mode
-</h4>
+</h3>
 
 <p>
 In the "gear" menu in the upper right corner, you can ticke a box to activate "Advanced mode":
@@ -185,7 +185,7 @@ add?" box and select a reason from the pulldown menu that appears:
 </p>
 </div>
 </div>
-<div class="row-fluid">
+<div class="row-fluid"><
 <div class="span6">
   <a href="<% $c->uri_for($image_path . '/no_expt.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/no_expt.png') %>" alt="option for paper without curatable experimental data"/></a>
 </div>
