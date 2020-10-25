@@ -2021,7 +2021,7 @@ available_annotation_type_list:
     feature_type: 'gene'
     broad_term_suggestions: ~
     specific_term_examples: ~
-    help_text: ~
+    help_text: Qualitative descriptions of presence, absence, increase, decrease, etc. of the RNA transcribed from a gene.
     more_help_text: ~
     annotation_table_columns_to_hide: [term_ontid]
     evidence_codes:
@@ -2029,6 +2029,7 @@ available_annotation_type_list:
       - Northern blot
       - Quantitative PCR
       - Reporter gene assay
+    detailed_help_path: /docs/gene_expression
   - name: wt_protein_expression
     category: ontology
     ontology_size: small
@@ -2037,12 +2038,13 @@ available_annotation_type_list:
     feature_type: 'gene'
     broad_term_suggestions: ~
     specific_term_examples: ~
-    help_text: ~
+    help_text: Qualitative descriptions of presence, absence, increase, decrease, etc. of the protein product of a gene.
     more_help_text: ~
     annotation_table_columns_to_hide: [term_ontid]
     evidence_codes:
       - Reporter gene assay
       - Western blot
+    detailed_help_path: /docs/gene_expression
   - name: genetic_interaction
     category: interaction
     display_name: 'genetic interaction'
@@ -2166,6 +2168,12 @@ help_text:
   post_translational_modification_definition:
     inline: Click for help on modification annotation
     docs_path: "modification_annotation"
+  wt_rna_expression_definition:
+    inline: Click for help on WT RNA expression
+    docs_path: "gene_expression"
+  wt_protein_expression_definition:
+    inline: Click for help on WT protein expression
+    docs_path: "gene_expression"
   physical_interaction_definition:
     inline: Click for help on physical interaction annotation
     docs_path: "physical_interaction_annotation"
