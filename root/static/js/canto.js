@@ -134,7 +134,7 @@ var ferret_choose = {
 
 $(document).ready(function() {
   $('a.canto-select-all').click(function () {
-    $(this).closest('div').find('input:checkbox').attr('checked', true);
+    $(this).closest('div').find('input:checkbox').prop('checked', true);
   });
 
   $('a.canto-select-none').click(function () {
