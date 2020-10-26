@@ -1,5 +1,7 @@
 // @ts-check
 
+import PNotify from 'pnotify';
+
 "use strict";
 
 /*global $,document,application_root,window,curs_root_uri,curs_people_autocomplete_list */
@@ -221,9 +223,9 @@ $(document).ready(function() {
           ($popup.data('success_callback'))(data);
           $popup.dialog("close");
         } else {
-          $.pnotify({
-            pnotify_title: 'Error',
-            pnotify_text: data.error_message,
+          new PNotify({
+            title: 'Error',
+            text: data.error_message,
           });
         }
       },
