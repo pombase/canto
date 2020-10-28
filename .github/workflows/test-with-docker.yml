@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Run Canto tests in a Docker container
 
 on:
   push:
