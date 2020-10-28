@@ -99,6 +99,25 @@ sub _cached_lookup_by_name
   return $res;
 }
 
+sub _cached_lookup_by_id
+{
+  my $self = shift;
+  my $termid = shift;
+
+  my $lookup = $self->lookup();
+
+  if (exists $self->cache()->{terms}->{$termid}) {
+    return $self->cache()->{terms}->{$termid};
+  }
+
+  my $res = $lookup->lookup_by_id(id => $termid);
+
+  $self->cache()->{terms}->{$termid} = $res;
+
+  return $res;
+}
+
+
 =head2 update_curs_terms
 
  Usage   : my $term_update = Canto::Curs::TermUpdate->new(config => $config);
@@ -122,6 +141,8 @@ sub update_curs_terms
   while (defined (my $annotation = $annotation_rs->next())) {
     my $data;
 
+    my $changed = 0;
+
     try {
       $data = $annotation->data();
     } catch {
@@ -129,8 +150,6 @@ sub update_curs_terms
     };
 
     if (defined $data->{conditions}) {
-      my $changed = 0;
-
       # replace term names with the ID if we know it otherwise assume that the
       # user has made up a condition
       map { my $name = $_;
@@ -140,11 +159,32 @@ sub update_curs_terms
               $changed = 1;
             }
           } @{$data->{conditions}};
+    }
 
-      if ($changed) {
-        $annotation->data($data);
-        $annotation->update();
-      }
+    my $extension = $data->{extension};
+
+    if (defined $extension) {
+      map {
+        my $orPart = $_;
+        map {
+          my $andPart = $_;
+          if ($andPart->{rangeType} && $andPart->{rangeType} eq 'Ontology') {
+            my $termid = $andPart->{rangeValue};
+            my $res = $self->_cached_lookup_by_id($termid);
+            if (defined $res &&
+                  (!$andPart->{rangeDisplayName} ||
+                   $andPart->{rangeDisplayName} ne $res->{name})) {
+              $andPart->{rangeDisplayName} = $res->{name};
+              $changed = 1;
+            }
+          }
+        } @$orPart;
+      } @$extension;
+    }
+
+    if ($changed) {
+      $annotation->data($data);
+      $annotation->update();
     }
   }
 
