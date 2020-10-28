@@ -10,4 +10,4 @@ Installation instructions are in the admin documentation:
 
 [![Build Status](https://api.travis-ci.org/pombase/canto.svg?branch=master)](https://travis-ci.org/pombase/canto)
 
-![Canto tests Action](https://github.com/pombase/canto/workflows/Run%20Canto%20tests%20in%20a%20Docker%20container/badge.svg)
+![Canto tests](https://github.com/pombase/canto/workflows/Canto%20tests/badge.svg)
