@@ -35,8 +35,12 @@ $(document).ready(function () {
     .position({
       my: 'center',
       at: 'center',
-      of: $('#content'),
-      offset: '0 200'
+      of: $('#content')
+    })
+  loadingDiv
+    .offset({
+      top: 0,
+      left: 200
     })
     .hide()  // hide it initially
     .bind('ajaxStart.canto', loadingStart)
