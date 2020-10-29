@@ -27,7 +27,7 @@
     "@types/chart.js": "~2.7.57",
     "@types/jquery": "~1.10.31",
     "@types/jquery.form": "~3.26.30",
-    "@types/jquery.pnotify": "~3.0.36",
+    "@types/jquery.pnotify": "^3.0.36",
     "@types/jqueryui": "~1.9.27",
     "@types/ngtoaster": "~2.2.1",
     "angular-mocks": "^1.5.11",
@@ -52,7 +52,7 @@
     "jquery": "1.9.1",
     "jquery-form": "4.0.1",
     "jquery-ui": "1.10.4",
-    "pnotify": "3.0.0",
+    "pnotify": "^5.1.2",
     "tag-it": "2.0.0"
   }
 }
