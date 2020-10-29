@@ -354,5 +354,6 @@ export {
   ferret_choose,
   make_ontology_complete_url,
   loadingStart,
-  loadingEnd
+  loadingEnd,
+  trim,
 }
