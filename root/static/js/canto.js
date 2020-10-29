@@ -1,7 +1,7 @@
 // @ts-check
 
 import $ from 'jquery';
-import PNotify from 'pnotify';
+import {error as pnotify_error} from '@pnotify/core';
 
 "use strict";
 
@@ -224,7 +224,7 @@ $(document).ready(function() {
           ($popup.data('success_callback'))(data);
           $popup.dialog("close");
         } else {
-          new PNotify({
+          pnotify_error({
             title: 'Error',
             text: data.error_message,
           });
