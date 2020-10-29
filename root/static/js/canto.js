@@ -1,6 +1,8 @@
 // @ts-check
 
 import $ from 'jquery';
+import 'jquery-ui'
+import 'jquery-form'
 import {error as pnotify_error} from '@pnotify/core';
 
 "use strict";
