@@ -29,7 +29,7 @@ function loadingEnd() {
   $('#ajax-loading-overlay').hide();
 }
 
-$(document).ready(function () {
+$(function () {
   loadingDiv
     .prependTo('body')
     .position({
@@ -43,13 +43,13 @@ $(document).ready(function () {
       left: 200
     })
     .hide()  // hide it initially
-    .bind('ajaxStart.canto', loadingStart)
-    .bind('ajaxStop.canto', loadingEnd);
+    .on('ajaxStart.canto', loadingStart)
+    .on('ajaxStop.canto', loadingEnd);
 });
 
-$(document).ready(function () {
+$(function () {
   $(".sect .undisclosed-title, .sect .disclosed-title").each(function () {
-    $(this).click(function () {
+    $(this).on('click', function () {
       $(this).next().toggle();
       $(this).toggleClass('undisclosed-title');
       $(this).toggleClass('disclosed-title');
@@ -138,48 +138,48 @@ var ferret_choose = {
 };
 
 
-$(document).ready(function () {
-  $('a.canto-select-all').click(function () {
+$(function () {
+  $('a.canto-select-all').on('click', function () {
     $(this).closest('div').find('input:checkbox').prop('checked', true);
   });
 
-  $('a.canto-select-none').click(function () {
+  $('a.canto-select-none').on('click', function () {
     $(this).closest('div').find('input:checkbox').removeAttr('checked');
   });
 
-  $('#curs-finish-session').click(function () {
+  $('#curs-finish-session').on('click', function () {
     window.location.href = curs_root_uri + '/finish_form';
   });
 
-  $('#curs-pause-session').click(function () {
+  $('#curs-pause-session').on('click', function () {
     window.location.href = curs_root_uri + '/pause_curation';
   });
 
-  $('#curs-reassign-session').click(function () {
+  $('#curs-reassign-session').on('click', function () {
     window.location.href = curs_root_uri + '/reassign_session';
   });
 
-  $('.curs-assign').click(function () {
+  $('.curs-assign').on('click', function () {
     window.location.href = curs_root_uri + '/assign_session';
   });
 
-  $('.curs-reassign').click(function () {
+  $('.curs-reassign').on('click', function () {
     window.location.href = curs_root_uri + '/reassign_session';
   });
 
-  $('#curs-check-completed').click(function () {
+  $('#curs-check-completed').on('click', function () {
     window.location.href = curs_root_uri + '/complete_approval';
   });
 
-  $('#curs-cancel-approval').click(function () {
+  $('#curs-cancel-approval').on('click', function () {
     window.location.href = curs_root_uri + '/cancel_approval';
   });
 
-  $('#curs-stop-reviewing').click(function () {
+  $('#curs-stop-reviewing').on('click', function () {
     window.location.href = curs_root_uri + '/';
   });
 
-  $('#curs-pub-assign-popup-dialog').click(function () {
+  $('#curs-pub-assign-popup-dialog').on('click', function () {
     $('#curs-pub-assign-dialog').dialog({
       modal: true,
       title: 'Set the corresponding author...',
@@ -187,7 +187,7 @@ $(document).ready(function () {
     });
   });
 
-  $('#curs-pub-create-session-popup-dialog').click(function () {
+  $('#curs-pub-create-session-popup-dialog').on('click', function () {
     $('#curs-pub-create-session-dialog').dialog({
       modal: true,
       title: 'Create a session',
@@ -195,7 +195,7 @@ $(document).ready(function () {
     });
   });
 
-  $('#curs-pub-reassign-session-popup-dialog').click(function () {
+  $('#curs-pub-reassign-session-popup-dialog').on('click', function () {
     $('#curs-pub-reassign-session-dialog').dialog({
       modal: true,
       title: 'Reassign a session',
@@ -203,11 +203,11 @@ $(document).ready(function () {
     });
   });
 
-  $('#curs-pub-triage-this-pub').click(function () {
+  $('#curs-pub-triage-this-pub').on('click', function () {
     window.location.href = application_root + '/tools/triage?triage-return-pub-id=' + $(this).val();
   });
 
-  $('#curs-pub-assign-cancel,#curs-pub-create-session-cancel,.curs-dialog-cancel').click(function () {
+  $('#curs-pub-assign-cancel,#curs-pub-create-session-cancel,.curs-dialog-cancel').on('click', function () {
     $(this).closest('.ui-dialog-content').dialog('close');
     return false;
   });
@@ -241,7 +241,7 @@ $(document).ready(function () {
     });
   }
 
-  $('#curs-pub-assign-submit,#curs-pub-create-session-submit').click(function () {
+  $('#curs-pub-assign-submit,#curs-pub-create-session-submit').on('click', function () {
     var $dialog = $(this).closest('.ui-dialog-content');
     // if the user types a name that doesn't autocomplete show the new person dialog
     if ($dialog.find('.curs-person-picker-person-id').val().length == 0) {
@@ -279,7 +279,7 @@ $(document).ready(function () {
           var moreLink = $('.truncate_more_link', obj);
           var moreContent = $('.truncate_more', obj);
           var ellipsis = $('.truncate_ellipsis', obj);
-          moreLink.click(function () {
+          moreLink.on('click', function () {
             moreContent.show();
             moreLink.remove();
             ellipsis.remove();
@@ -313,12 +313,12 @@ $(document).ready(function () {
     };
   }
 
-  $(".confirm-delete").click(function () {
+  $(".confirm-delete").on('click', function () {
     make_confirm_dialog($(this), "Really delete?", "Confirm", "Cancel");
     return false;
   });
 
-  $("#curs-ontology-transfer .upload-genes-link a").click(function () {
+  $("#curs-ontology-transfer .upload-genes-link a").on('click', function () {
     function filter_func(i, e) {
       return $.trim(e.value).length > 0;
     }
@@ -329,11 +329,11 @@ $(document).ready(function () {
     return true;
   });
 
-  $("#curs-pub-send-session-popup-dialog").click(function () {
+  $("#curs-pub-send-session-popup-dialog").on('click', function () {
     make_confirm_dialog($(this), "Send link to session curator?", "Send", "Cancel");
   });
 
-  $('button.curs-person-picker-add').click(function () {
+  $('button.curs-person-picker-add').on('click', function () {
     person_picker_add_person(this);
   });
 
@@ -346,7 +346,7 @@ $(document).ready(function () {
   });
 });
 
-$(document).ready(function () {
+$(function () {
   $('.curs-js-link').show();
 });
 
