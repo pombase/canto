@@ -101,7 +101,7 @@ function make_confirm_dialog(link, prompt, confirm_button_label, cancel_button_l
 
 // eslint-disable-next-line no-unused-vars
 var ferret_choose = {
-  show_autocomplete_def: function(event, ui) {
+  show_autocomplete_def: function (event, ui) {
     $('.curs-autocomplete-definition').remove();
     var definition;
     if (ui.item.definition == null) {
@@ -132,7 +132,7 @@ var ferret_choose = {
 };
 
 
-$(document).ready(function() {
+$(document).ready(function () {
   $('a.canto-select-all').click(function () {
     $(this).closest('div').find('input:checkbox').prop('checked', true);
   });
@@ -210,16 +210,17 @@ $(document).ready(function() {
     var $popup = $('#person-picker-popup');
     $popup.find('.curs-person-picker-add-name').val(initial_name);
     var $picker_div = $(current_this).closest('div');
-    $popup.data('success_callback', function(data) {
+    $popup.data('success_callback', function (data) {
       $picker_div.find('.curs-person-picker-input').val(data.name);
       $picker_div.find('.curs-person-picker-person-id').val(data.person_id);
     });
     $popup.dialog({
       title: 'Add a person...',
-      modal: true });
+      modal: true
+    });
 
     $popup.find("form").ajaxForm({
-      success: function(data) {
+      success: function (data) {
         if (typeof(data.error_message) == 'undefined') {
           ($popup.data('success_callback'))(data);
           $popup.dialog("close");
@@ -248,33 +249,36 @@ $(document).ready(function() {
   });
 
   function truncate($element) {
-    $element.each(function() {
+    $element.each(function () {
       var obj = $(this);
       var body = obj.html();
 
       if (body.length > 320) {
-	var splitLoc = body.indexOf(' ', 300);
-	if (splitLoc != -1) {
-	  var splitLocation = body.indexOf(' ', 300);
-	  var str1 = body.substring(0, splitLocation);
-	  var str2 = body.substring(splitLocation, body.length - 1);
-	  obj.html(str1 + '<span class="truncate_ellipsis">...</span> <span class="truncate_more">' + str2 + '</span>');
-	  obj.find('.truncate_more').css("display", "none");
-	  obj.append(
-	    '<div class="clearboth">' +
-	      '<a href="#" class="truncate_more_link">more</a>' +
-	      '</div>'
-	  );
-
-	  var moreLink = $('.truncate_more_link', obj);
-	  var moreContent = $('.truncate_more', obj);
-	  var ellipsis = $('.truncate_ellipsis', obj);
-	  moreLink.click(function() {
-	    moreContent.show();
-	    moreLink.remove();
-	    ellipsis.remove();
-	  });
-	}
+        var splitLoc = body.indexOf(' ', 300);
+        if (splitLoc != -1) {
+          var splitLocation = body.indexOf(' ', 300);
+          var str1 = body.substring(0, splitLocation);
+          var str2 = body.substring(splitLocation, body.length - 1);
+          obj.html(
+            str1 +
+            '<span class="truncate_ellipsis">...</span> ' +
+            '<span class="truncate_more">' + str2 + '</span>'
+          );
+          obj.find('.truncate_more').css("display", "none");
+          obj.append(
+            '<div class="clearboth">' +
+            '<a href="#" class="truncate_more_link">more</a>' +
+            '</div>'
+          );
+          var moreLink = $('.truncate_more_link', obj);
+          var moreContent = $('.truncate_more', obj);
+          var ellipsis = $('.truncate_ellipsis', obj);
+          moreLink.click(function () {
+            moreContent.show();
+            moreLink.remove();
+            ellipsis.remove();
+          });
+        }
       }
     });
   }
@@ -285,11 +289,11 @@ $(document).ready(function() {
     $(".curs-person-picker .curs-person-picker-input").autocomplete({
       minLength: 0,
       source: curs_people_autocomplete_list,
-      focus: function(event, ui) {
+      focus: function (event, ui) {
         $(this).val(ui.item.name);
         return false;
       },
-      select: function(event, ui) {
+      select: function (event, ui) {
         $(this).val(ui.item.name);
         $(this).siblings('.curs-person-picker-person-id').val(ui.item.value);
         return false;
