@@ -1,8 +1,10 @@
 // @ts-check
 
+import angular from 'angular';
+import $ from 'jquery';
 "use strict";
 
-/*global history,curs_root_uri,angular,$,make_ontology_complete_url,
+/*global history,curs_root_uri,make_ontology_complete_url,
   ferret_choose,application_root,window,curs_key,
   app_static_path,loadingStart,loadingEnd,alert,trim,read_only_curs */
 

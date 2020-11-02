@@ -1,7 +1,5 @@
 declare const curs_root_uri: any;
 declare const read_only_curs: any;
-declare const angular: any;
-declare const $: any;
 declare const make_ontology_complete_url: any;
 declare const ferret_choose: any;
 declare const application_root: any;
