@@ -1,7 +1,7 @@
 // @ts-check
 
-import angular from 'angular';
 import $ from 'jquery';
+import angular from 'angular';
 "use strict";
 
 /*global history,curs_root_uri,make_ontology_complete_url,
