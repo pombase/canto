@@ -6,7 +6,8 @@
     "strictNullChecks": false,
     "target": "es6",
     "module": "commonjs",
-    "typeRoots": ["./root/static/js/"]
+    "typeRoots": ["./root/static/js/"],
+    "esModuleInterop": true,
   },
   "include": [
     "./root/static/js/canto-modules.js",
