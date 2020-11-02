@@ -6,5 +6,10 @@ module.exports = {
     filename: 'main.js',
     path: path.resolve(__dirname, 'root/dist'),
   },
-  mode: 'development'
+  mode: 'development',
+  resolve: {
+    alias: {
+      'tag-it': path.resolve(__dirname, 'node_modules/tag-it/js/tag-it.js')
+    }
+  },
 };
