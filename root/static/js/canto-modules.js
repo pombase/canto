@@ -2,6 +2,20 @@
 
 import $ from 'jquery';
 import angular from 'angular';
+import 'jquery-ui/ui/widgets/autocomplete';
+import 'angular-ui-bootstrap';
+import 'angular-confirm';
+import 'angularjs-toaster';
+import 'angular-chart.js';
+import 'tag-it';
+import {
+  ferret_choose,
+  make_ontology_complete_url,
+  loadingStart,
+  loadingEnd,
+  trim,
+} from './canto.js';
+
 "use strict";
 
 /*global history,curs_root_uri,make_ontology_complete_url,
