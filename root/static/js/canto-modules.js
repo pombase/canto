@@ -1854,7 +1854,7 @@ var featureComplete =
           var search_string = input.val();
           return $scope.render_item(ul, item, search_string);
         };
-        input.attr('disabled', false);
+        input.prop('disabled', false);
       }
     };
   };
@@ -1889,7 +1889,7 @@ var ontologyTermSelect =
       },
       link: function () {
         $('#loading').unbind('.canto');
-        $('#ferret-term-input').attr('disabled', false);
+        $('#ferret-term-input').prop('disabled', false);
       },
     };
   };
@@ -8863,7 +8863,7 @@ var termNameComplete =
           var search_string = input.val();
           return scope.render_term_item(ul, item, search_string);
         };
-        input.attr('disabled', false);
+        input.prop('disabled', false);
 
         function do_autocomplete() {
           input.focus();
