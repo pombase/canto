@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   entry: './root/static/js/canto-modules.js',
@@ -12,4 +13,11 @@ module.exports = {
       'tag-it': path.resolve(__dirname, 'node_modules/tag-it/js/tag-it.js')
     }
   },
+  plugins: [
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+      'window.jQuery': 'jquery'
+    })
+  ],
 };
