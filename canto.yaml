@@ -2025,8 +2025,8 @@ available_annotation_type_list:
     more_help_text: ~
     annotation_table_columns_to_hide: [term_ontid]
     evidence_codes:
-      - Microarray
-      - Northern blot
+      - Expression microarray
+      - Northern assay
       - Quantitative PCR
       - Reporter gene assay
     detailed_help_path: /docs/gene_expression
