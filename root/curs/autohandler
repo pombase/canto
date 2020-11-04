@@ -26,6 +26,7 @@ var allow_single_wildtype_allele = <% $allow_single_wildtype_allele ? 'true' : '
 var diploid_mode = <% $diploid_mode ? 'true' : 'false' %>;
 var flybase_mode = <% $flybase_mode ? 'true' : 'false' %>;
 var max_term_name_select_count = <% $max_term_name_select_count %>;
+var show_quick_deletion_buttons = <% $show_quick_deletion_buttons %>;
 </script>
 
 <div id="disabled-overlay"></div>
@@ -82,4 +83,5 @@ my $allow_single_wildtype_allele = $c->config()->{allow_single_wildtype_allele} 
 my $diploid_mode = $c->config()->{diploid_mode} || 0;
 my $flybase_mode = $c->config()->{flybase_mode} || 0;
 my $max_term_name_select_count = $c->config()->{max_term_name_select_count} || 20;
+my $show_quick_deletion_buttons = $c->config()->{show_quick_deletion_buttons} || 0;
 </%init>

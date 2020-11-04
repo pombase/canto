@@ -850,6 +850,7 @@ canto.service('CantoGlobals', function ($window) {
   this.diploid_mode = $window.diploid_mode;
   this.flybase_mode = $window.flybase_mode;
   this.max_term_name_select_count = $window.max_term_name_select_count;
+  this.show_quick_deletion_buttons = $window.show_quick_deletion_buttons;
   this.organismsAndGenes = $window.organismsAndGenes;
   this.confirmGenes = $window.confirmGenes;
   this.highlightTerms = $window.highlightTerms;
@@ -4658,6 +4659,8 @@ var GenotypeGeneListCtrl =
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.multiOrganismMode = CantoGlobals.multi_organism_mode;
+
+        $scope.showQuickDeletionButtons = CantoGlobals.show_quick_deletion_buttons;
 
         $scope.hasDeletionHash = {};
 

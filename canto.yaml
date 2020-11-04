@@ -105,6 +105,10 @@ flybase_mode: 0
 # a map of allele note types eg. { phenotype: { display_name: Phenotype } }
 allele_note_types: []
 
+# if 1, show the shortcut buttons on the genotype management page for quick
+# deletion allele creation
+show_quick_deletion_buttons: 1
+
 # from_address - used as the "from" field is all outgoing messages
 # admin_address - the contact address of the admin curators, used to
 #                 alert about completed sessions and problems
@@ -2251,6 +2255,7 @@ config_service:
     instance_organism: 1
     extension_configuration: 1
     max_term_name_select_count: 1
+    show_quick_deletion_buttons: 1
     pathogen_host_mode: 1
     multi_organism_mode: 1
     help_text: 1
