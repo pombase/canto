@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 26;
+use Test::More tests => 30;
 use Test::Exception;
 
 use Canto::TestUtil;
@@ -41,6 +41,10 @@ is (@$updated_sessions, 0);
 my $created_curs = $created_sessions->[0];
 my $created_cursdb = Canto::Curs::get_schema_for_key($config, $created_curs->curs_key());
 
+my $notes_rs = $created_cursdb->resultset('Metadata')->search({ key => 'external_notes' });
+is($notes_rs->count(), 1);
+is($notes_rs->first()->value(), "test notes\nline 2");
+
 my $FBal0119310_allele =
   $created_cursdb->resultset('Allele')->find({ primary_identifier => "FBal0119310" });
 
@@ -79,6 +83,10 @@ is($FBab0037918_allele->name(), 'Df(2L)Exel7046');
 
 is (@$created_sessions, 0);
 is (@$updated_sessions, 0);
+
+$notes_rs = $created_cursdb->resultset('Metadata')->search({ key => 'external_notes' });
+is($notes_rs->count(), 1);
+is($notes_rs->first()->value(), "test notes\nline 2");
 
 # load an extra allele
 my $test_json_extra_allele_file =

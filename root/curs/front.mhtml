@@ -7,6 +7,7 @@ $pub
 $current_user_is_admin
 $read_only_curs => 0
 $message_to_curators
+$external_notes => undef
 $total_annotation_count
 </%args>
 
@@ -106,6 +107,21 @@ $total_annotation_count
 % }
 </div>
 
+% if ($external_notes) {
+<div class="external-notes curs-box">
+  <div class="curs-box-title">
+    External notes
+  </div>
+  <div class="curs-box-body">
+% for my $note (@$external_notes) {
+    <p>
+      <% $note %>
+    </p>
+% }
+  </div>
+</div>
+% }
+
 <annotation-table-list show-metagenotype-link="true"></annotation-table-list>
 
 % if ($annotation_count > 0) {
@@ -128,4 +144,6 @@ my $no_annotations_reasons_init_js =
   Data::JavaScript::Anon->anon_dump($config->{curs_config}->{no_annotation_reasons});
 
 my $finish_form_url = $curs_root_uri . '/finish_session';
+
+
 </%init>

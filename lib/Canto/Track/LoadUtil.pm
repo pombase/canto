@@ -56,6 +56,8 @@ use Canto::Curs::Utils;
 
 use Canto::Track;
 
+use Canto::Curs 'EXTERNAL_NOTES_KEY';
+
 has 'schema' => (
   is => 'ro',
   isa => 'Canto::TrackDB',
@@ -879,6 +881,8 @@ sub create_sessions_from_json
     $cursdb = undef;
     $using_existing_session = 0;
 
+    my $external_notes = $session_data->{notes};
+
     my $new_allele_count = 0;
 
     my $error_message;
@@ -1113,6 +1117,12 @@ sub create_sessions_from_json
       } else {
         print "no new alleles adding to session: ", $curs->curs_key(), "\n";
       }
+    }
+
+    if ($external_notes) {
+      my $curs_metadata_rs = $cursdb->resultset('Metadata');
+      $curs_metadata_rs->update_or_create({ key => Canto::Curs->EXTERNAL_NOTES_KEY,
+                                            value => $external_notes });
     }
   } continue {
 

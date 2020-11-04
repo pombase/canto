@@ -86,6 +86,10 @@ If 1, allow notes/comments on diploids and multi-locus genotypes.
 If 0, a wildtype allele is allowed only if there is another non-wildtype or
 non-wildtype expression allele from the same gene.
 
+### show_quick_deletion_buttons
+If 1 (the default), show the "Deletion" buttons in the gene table on
+the genotype management page.
+
 ### diploid_mode
 If 1, allow diploids to be created and used in genotypes.
 
