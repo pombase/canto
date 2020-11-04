@@ -1,5 +1,6 @@
 {
   "PMID:2120045": {
+    "notes": "test notes\nline 2",
     "genes": [
       "FBgn0016131", "FBgn0004107"
     ],

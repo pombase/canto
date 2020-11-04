@@ -44,6 +44,8 @@ use Moose;
 
 use Canto::CursDB;
 
+use constant EXTERNAL_NOTES_KEY => 'external_notes';
+
 =head2 make_connect_string
 
  Usage   : my $connect_string =
