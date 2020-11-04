@@ -211,6 +211,12 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{message_to_curators} =
     $self->get_metadata($schema, MESSAGE_FOR_CURATORS_KEY);
 
+  my $external_notes = $self->get_metadata($schema, Canto::Curs->EXTERNAL_NOTES_KEY);
+
+  if ($external_notes) {
+    $st->{external_notes} = [split /\n+/, $external_notes];
+  }
+
   # enabled by default and disabled on /session_reassigned page
   $st->{show_curator_in_title} = 1;
 
