@@ -38,3 +38,4 @@ PSI-MOD_A_E_config
 node_modules
 tsoutput
 .PerlySenseProject
+root/dist
