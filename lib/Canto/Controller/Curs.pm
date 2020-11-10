@@ -51,6 +51,7 @@ use Carp qw(cluck);
 use JSON;
 use List::MoreUtils;
 use Try::Tiny;
+use Data::JavaScript::Anon;
 
 use Canto::Track;
 use Canto::Curs::Utils;
@@ -293,6 +294,11 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     }
   }
 
+  if ($state ne SESSION_CREATED && $state ne SESSION_ACCEPTED &&
+        $path =~ m:/view_genes_and_strains/:) {
+    $use_dispatch = 0;
+  }
+
   if ($state eq SESSION_ACCEPTED &&
       $path =~ m:/(gene_upload|edit_genes|genotype_manage|metagenotype_manage|confirm_genes|finish_form|ws):) {
     $use_dispatch = 0;
@@ -533,6 +539,165 @@ sub store_statuses : Chained('top') Args(0) Form
 
 my $gene_list_textarea_name = 'gene_identifiers';
 
+sub _search_highlight
+{
+  my $highlight_terms = shift;
+  my $identifier = shift;
+
+  return '' if !defined $identifier;
+
+  HTML::Mason::Escapes::basic_html_escape(\$identifier);
+
+  if (exists $highlight_terms->{$identifier}) {
+    return '<span class="curs-matched-search-term">' . $identifier . '</span>';
+  } else {
+    return $identifier;
+  }
+}
+
+sub _make_gene_edit_data
+{
+  my ($self, $c, $gene_list) = @_;
+
+  my $st = $c->stash();
+
+  my $schema = $st->{schema};
+
+  my $pathogen_host_mode = $st->{pathogen_host_mode};
+  my $multi_organism_mode = $st->{multi_organism_mode};
+
+  my @highlight_terms = @{$c->flash()->{highlight_terms} || []};
+
+  my %highlight_terms = ();
+  @highlight_terms{@highlight_terms} = @highlight_terms;
+
+  my %all_data = (
+    default_organism => {},
+  );
+
+  if ($pathogen_host_mode) {
+    $all_data{pathogen} = {};
+    $all_data{host} = {};
+  }
+
+  my $strain_lookup = Canto::Track::StrainLookup->new(config => $c->config());
+
+  my @gene_hashes = map {
+    my $gene = $_;
+    my $gene_proxy =
+      Canto::Curs::GeneProxy->new(config => $c->config(), cursdb_gene => $_);
+
+    my $synonyms_string =
+      join (', ', map { _search_highlight(\%highlight_terms, $_) } $gene_proxy->synonyms());
+    my $hash = {
+      'Systematic identifier' => _search_highlight(\%highlight_terms, $gene_proxy->primary_identifier()),
+      Name => _search_highlight(\%highlight_terms, $gene_proxy->primary_name()),
+      Product => $gene_proxy->product(),
+      Synonyms => $synonyms_string,
+      gene_id => $gene_proxy->gene_id(),
+      annotation_count => $gene_proxy->cursdb_gene()
+        ->all_annotations(include_with=>1)->count(),
+      genotype_count => $gene_proxy->cursdb_gene()->genotypes()->count(),
+    };
+
+    my $organism_details = $gene_proxy->organism_details();
+
+    my $taxonid = $organism_details->{taxonid};
+
+    my %org_data;
+    my $org_type = $organism_details->{pathogen_or_host};
+
+    if ($org_type ne 'pathogen' && $org_type ne 'host') {
+      $org_type = 'default_organism';
+    }
+
+    if (exists $all_data{$org_type}->{$taxonid}) {
+      %org_data = %{$all_data{$org_type}->{$taxonid}};
+    } else {
+      %org_data = %$organism_details;
+      delete $org_data{full_name};
+      $org_data{genes} = [];
+      $org_data{selected_strains} = [];
+      $org_data{available_strains} = [$strain_lookup->lookup($taxonid)];
+
+      $all_data{$org_type}->{$taxonid} = \%org_data;
+    }
+
+    push @{$org_data{genes}}, {
+      systematic_identifier => $gene_proxy->primary_identifier(),
+      name => $gene_proxy->primary_name(),
+      product => $gene_proxy->product(),
+      synonyms => [$gene_proxy->synonyms()],
+      gene_id => $gene_proxy->gene_id(),
+      annotation_count => $gene_proxy->cursdb_gene()
+        ->all_annotations(include_with=>1)->count(),
+      genotype_count => $gene_proxy->cursdb_gene()->genotypes()->count(),
+    };
+
+    if ($multi_organism_mode) {
+      $hash->{Organism} = $organism_details->{full_name};
+      $hash->{taxonid} = $organism_details->{taxonid};
+      if ($pathogen_host_mode) {
+        $hash->{pathogen_or_host} = $organism_details->{pathogen_or_host};
+      }
+    }
+    $hash
+  } @$gene_list;
+
+  my @hosts_with_no_genes = ();
+
+  if ($pathogen_host_mode) {
+    use Canto::Track;
+    my $organism_lookup = Canto::Track::get_adaptor($c->config(), 'organism');
+
+    my @curs_host_organism_details =
+      grep {
+        $_->{pathogen_or_host} eq 'host';
+      }
+      map {
+        my $curs_organism = $_;
+
+        my $res = $organism_lookup->lookup_by_taxonid($curs_organism->taxonid());
+
+        $res->{genotype_count} = $curs_organism->genotypes()->count();
+        $res;
+      } $schema->resultset('Organism')->all();
+
+    my @host_organisms_from_genes = ();
+
+    for my $gene ($schema->resultset('Gene')->all()) {
+      my $this_gene_taxonid = $gene->organism()->taxonid();
+      my $organism_details = $organism_lookup->lookup_by_taxonid($this_gene_taxonid);
+      if ($organism_details->{pathogen_or_host} eq 'host') {
+        if (!grep { $_->{taxonid} == $this_gene_taxonid } @host_organisms_from_genes) {
+          push @host_organisms_from_genes, $organism_details;
+        }
+      }
+    }
+
+    my @no_gene_host_organisms =
+      grep {
+        my $host_org = $_;
+        !grep { $_->{taxonid} == $host_org->{taxonid} } @host_organisms_from_genes;
+      } @curs_host_organism_details;
+
+    @hosts_with_no_genes = @no_gene_host_organisms;
+  }
+
+  %all_data = map {
+    ($_, [values %{$all_data{$_}}])
+  } keys %all_data;
+
+  map {
+    $_->{available_strains} = [$strain_lookup->lookup($_->{taxonid})];
+  } @hosts_with_no_genes;
+
+  my $gene_list_data_js = Data::JavaScript::Anon->anon_dump(\%all_data);
+  my $hosts_with_no_genes_js = Data::JavaScript::Anon->anon_dump(\@hosts_with_no_genes);
+
+  return (\@gene_hashes, $gene_list_data_js, $hosts_with_no_genes_js);
+}
+
 # $confirm_genes will be true if we have just uploaded some genes
 sub _edit_genes_helper
 {
@@ -564,7 +729,6 @@ sub _edit_genes_helper
   $form->process();
 
   my $pathogen_host_mode = $c->config()->{pathogen_host_mode};
-  $st->{pathogen_host_mode} = $pathogen_host_mode;
 
   if (defined $c->req->param('continue')) {
     _redirect_and_detach($c);
@@ -655,8 +819,15 @@ sub _edit_genes_helper
 
   $st->{form} = $form;
 
-  $st->{gene_list} =
+  my $gene_list =
     [Canto::Controller::Curs->get_ordered_gene_rs($schema, 'primary_identifier')->all()];
+
+  my ($gene_hashes, $gene_list_data_js, $hosts_with_no_genes_js) =
+    $self->_make_gene_edit_data($c, $gene_list);
+
+  $st->{gene_hashes} = $gene_hashes;
+  $st->{gene_list_data_js} = $gene_list_data_js;
+  $st->{hosts_with_no_genes_js} = $hosts_with_no_genes_js;
 }
 
 sub edit_genes : Chained('top') Args(0) Form
@@ -665,6 +836,29 @@ sub edit_genes : Chained('top') Args(0) Form
   my ($c) = @_;
 
   $self->_edit_genes_helper(@_, 0);
+}
+
+sub view_genes_and_strains : Chained('top') Args(0)
+{
+  my $self = shift;
+  my ($c) = @_;
+
+  my $st = $c->stash();
+
+  my $pathogen_host_mode = $c->config()->{pathogen_host_mode};
+
+  my $gene_list =
+    [Canto::Controller::Curs->get_ordered_gene_rs($st->{schema}, 'primary_identifier')->all()];
+
+  my ($gene_hashes, $gene_list_data_js, $hosts_with_no_genes_js) =
+    $self->_make_gene_edit_data($c, $gene_list);
+
+  $st->{gene_hashes} = $gene_hashes;
+  $st->{gene_list_data_js} = $gene_list_data_js;
+  $st->{hosts_with_no_genes_js} = $hosts_with_no_genes_js;
+
+  $st->{title} = 'Genes, organisms and strains from this session';
+  $st->{template} = 'curs/view_genes_and_strains.mhtml';
 }
 
 sub confirm_genes : Chained('top') Args(0) Form
