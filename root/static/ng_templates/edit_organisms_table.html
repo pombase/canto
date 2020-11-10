@@ -59,7 +59,11 @@
             <span ng-class="{'gene-button-delete-text-disabled': g.disabled}">X</span></button>
           </td>
         </tr>
-        <tr ng-if="data.strainsMode"><td colspan="5"><strain-picker taxon-id="{{ o.taxonid }}"></strain-picker></td></tr>
+        <tr ng-if="data.strainsMode">
+          <td colspan="{{ readOnlyMode ? 4 : 5 }}">
+            <strain-picker taxon-id="{{ o.taxonid }}"></strain-picker>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
