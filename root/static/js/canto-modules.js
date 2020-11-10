@@ -9580,13 +9580,14 @@ var strainPicker = function () {
 
 canto.directive('strainPicker', strainPicker);
 
-var strainPickerCtrl = function ($scope, StrainsService, CantoService) {
+var strainPickerCtrl = function ($scope, StrainsService, CantoService, CantoGlobals) {
 
   $scope.data = {
     strains: null,
     sessionStrains: null,
     selectedStrain: ''
   };
+  $scope.readOnlyMode = CantoGlobals.read_only_curs;
 
   $scope.unknownStrainAdded = false;
 
@@ -9683,7 +9684,7 @@ var strainPickerCtrl = function ($scope, StrainsService, CantoService) {
 
 };
 
-canto.controller('strainPickerCtrl', ['$scope', 'StrainsService', 'CantoService', strainPickerCtrl]);
+canto.controller('strainPickerCtrl', ['$scope', 'StrainsService', 'CantoService', 'CantoGlobals', strainPickerCtrl]);
 
 var strainPickerDialogCtrl =
   function ($scope, $uibModalInstance, args, Curs, toaster) {
@@ -9962,6 +9963,7 @@ var editOrganismsTable = function (EditOrganismsSvc, CantoGlobals) {
       $scope.data = {
         strainsMode: CantoGlobals.strains_mode,
       };
+      $scope.readOnlyMode = CantoGlobals.read_only_curs;
 
       $scope.firstGene = function (genes) {
         if (genes.length > 0) {
