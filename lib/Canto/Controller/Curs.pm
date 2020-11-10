@@ -295,8 +295,12 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   }
 
   if ($state ne SESSION_CREATED && $state ne SESSION_ACCEPTED &&
-        $path =~ m|/view_genes_and_strains(?:/(?:/ro)?)?$|) {
-    $c->detach('view_genes_and_strains');
+      $path =~ m|/view_genes_and_strains(?:/(?:ro)?)?$|) {
+    if ($st->{pathogen_host_mode}) {
+      $c->detach('view_genes_and_strains');
+    } else {
+      $c->detach('front');
+    }
   }
 
   if ($state eq SESSION_ACCEPTED &&
