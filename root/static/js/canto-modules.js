@@ -10029,9 +10029,9 @@ var editOrganisms = function ($window, EditOrganismsSvc, StrainsService, CantoGl
     controller: function ($scope) {
       $scope.getPathogens = EditOrganismsSvc.getPathogenOrganisms;
       $scope.getHosts = EditOrganismsSvc.getHostOrganisms;
-      $scope.continueUrl = curs_root_uri;
-      $scope.addGenesUrl = curs_root_uri + '/gene_upload/';
       $scope.readOnlyMode = CantoGlobals.read_only_curs;
+      $scope.continueUrl = curs_root_uri + ($scope.readOnlyMode ? '/ro' : '');
+      $scope.addGenesUrl = curs_root_uri + '/gene_upload/';
 
       $scope.pathogenGeneExists = function () {
         return $scope.getPathogens().length > 0;
