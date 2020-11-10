@@ -295,8 +295,8 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   }
 
   if ($state ne SESSION_CREATED && $state ne SESSION_ACCEPTED &&
-        $path =~ m:/view_genes_and_strains/:) {
-    $use_dispatch = 0;
+        $path =~ m|/view_genes_and_strains(?:/(?:/ro)?)?$|) {
+    $c->detach('view_genes_and_strains');
   }
 
   if ($state eq SESSION_ACCEPTED &&
@@ -838,7 +838,7 @@ sub edit_genes : Chained('top') Args(0) Form
   $self->_edit_genes_helper(@_, 0);
 }
 
-sub view_genes_and_strains : Chained('top') Args(0)
+sub view_genes_and_strains : Chained('top')
 {
   my $self = shift;
   my ($c) = @_;
