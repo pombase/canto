@@ -42,18 +42,24 @@ use feature "state";
 =head2 as_strings
 
  Usage   : ($extension_string, $qualifier_list) =
-              $extension_data->as_strings($ontology_lookup, $extension_obj);
+              $extension_data->as_strings($ontology_lookup, $curs_schema, $database_prefix,
+                                          $extension_obj);
  Function: Return a string representation of the qualifiers from an annotation
            for exporting to a GAF file.  Also returns any has_qualifier()
            extensions as text in the $qualifier_list.  eg. has_qualifier(PBHQ:002)
            is returned as "NOT" and is removed from the extension string.
- Args    : None
+ Args    : $ontology_lookup - An OntologyLookup object
+           $curs_schema     - the schema of the session containing this extension
+           $database_prefix - the prefix to add to gene IDs
+           $extension_obj   - the extension in the form stored in the database
 
 =cut
 
 sub as_strings
 {
   my $ontology_lookup = shift;
+  my $curs_schema = shift;
+  my $db_prefix = shift;
   my $extension_obj = shift;
 
   state $term_cache = {};
@@ -110,8 +116,22 @@ sub as_strings
       }
     } @part;
 
+    my $_process_value = sub {
+      my $val = shift;
+
+      if ($val !~ /:/) {
+        my $gene = $curs_schema->resultset('Gene')->find({ primary_identifier => $val });
+
+        if (defined $gene) {
+          return "$db_prefix:$val";
+        }
+      }
+
+      return $val;
+    };
+
     join ',', map {
-      $_->{relation} . '(' . $_->{rangeValue} . ')';
+      $_->{relation} . '(' . $_process_value->($_->{rangeValue}) . ')';
     } @filtered_part;
   } @{$extension_obj};
 

@@ -222,7 +222,7 @@ sub get_annotation_table_tsv
     return '';
   }
 
-  my $db = $config->{export}->{gene_association_fields}->{db};
+  my $db_prefix = $config->{export}->{gene_association_fields}->{db};
 
   my $results = '';
 
@@ -239,7 +239,8 @@ sub get_annotation_table_tsv
       my $qualifier_list;
 
       ($extension_string, $qualifier_list) =
-        Canto::Curs::ExtensionData::as_strings($ontology_lookup, $annotation->{extension});
+        Canto::Curs::ExtensionData::as_strings($ontology_lookup, $schema, $db_prefix,
+                                               $annotation->{extension});
 
       @extra_qualifiers = @$qualifier_list;
     }
@@ -259,7 +260,7 @@ sub get_annotation_table_tsv
       }
       if ($column_name eq 'with_or_from_identifier') {
         if (defined $val && length $val > 0) {
-          $val = "$db:$val";
+          $val = "$db_prefix:$val";
         } else {
           $val = '';
         }
