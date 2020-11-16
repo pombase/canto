@@ -1959,7 +1959,7 @@ sub _metagenotype_store
     $c->stash->{json_data} = {
       status => "error",
       message => "Storing new metagenotype failed: internal error - " .
-        "metagenotype call much have 'host_genotype_id' or 'host_taxonid' param",
+        "metagenotype call must have 'host_genotype_id' or 'host_taxonid' param",
     };
 
     $c->forward('View::JSON');
