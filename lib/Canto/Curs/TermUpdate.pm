@@ -149,6 +149,19 @@ sub update_curs_terms
       croak "failed to inflate data column: $_\n";
     };
 
+    # fix any alt_id
+    my $termid = $data->{term_ontid};
+    if ($termid) {
+      # lookup check the alt_id too
+      my $res = $self->_cached_lookup_by_id($termid);
+      if (defined $res) {
+        if ($termid ne $res->{id}) {
+          $data->{term_ontid} = $res->{id};
+          $changed = 1;
+        }
+      }
+    }
+
     if (defined $data->{conditions}) {
       # replace term names with the ID if we know it otherwise assume that the
       # user has made up a condition
