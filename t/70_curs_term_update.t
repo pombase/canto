@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 4;
+use Test::More tests => 5;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -20,6 +20,8 @@ my $annotation_rs = $curs_schema->resultset('Annotation');
 my $annotation = $annotation_rs->first();
 
 my $data = $annotation->data();
+
+$data->{term_ontid} = 'GO:123456789';   # alt_id of "GO:0055085"
 
 $data->{extension} = [
   [
@@ -131,3 +133,5 @@ cmp_deeply($check_data->{extension}->[0],
                'rangeDisplayName' => 'transport vesicle'
              }
            ]);
+
+is($check_data->{term_ontid}, 'GO:0055085');
