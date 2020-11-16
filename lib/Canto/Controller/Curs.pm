@@ -1951,8 +1951,6 @@ sub _metagenotype_store
   my $body_data = _decode_json_content($c);
 
   my $pathogen_genotype_id = $body_data->{pathogen_genotype_id};
-  my $pathogen_taxonid = $body_data->{pathogen_taxon_id};
-  my $pathogen_strain_name = $body_data->{pathogen_strain_name};
   my $host_genotype_id = $body_data->{host_genotype_id};
   my $host_taxonid = $body_data->{host_taxon_id};
   my $host_strain_name = $body_data->{host_strain_name};
@@ -1961,7 +1959,7 @@ sub _metagenotype_store
     $c->stash->{json_data} = {
       status => "error",
       message => "Storing new metagenotype failed: internal error - " .
-        "metagenotype call must have 'host_genotype_id' or 'host_taxonid' param",
+        "metagenotype call much have 'host_genotype_id' or 'host_taxonid' param",
     };
 
     $c->forward('View::JSON');
@@ -1981,48 +1979,20 @@ sub _metagenotype_store
     return;
   }
 
-  if (!$pathogen_genotype_id && !$pathogen_taxonid) {
-    $c->stash->{json_data} = {
-      status => "error",
-      message => "Storing new metagenotype failed: internal error - " .
-        "metagenotype call must have 'pathogen_genotype_id' or 'pathogen_taxonid' param",
-    };
-
-    $c->forward('View::JSON');
-
-    return;
-  }
-
-  if ($pathogen_genotype_id && $pathogen_taxonid) {
-    $c->stash->{json_data} = {
-      status => "error",
-      message => "Storing new metagenotype failed: internal error - " .
-        "metagenotype call has both 'pathogen_genotype_id' and 'pathogen_taxonid' params",
-    };
-
-    $c->forward('View::JSON');
-
-    return;
-  }
-
   my @alleles = ();
 
   try {
+    my $pathogen_genotype = $schema->find_with_type('Genotype', $pathogen_genotype_id);
+
     my $genotype_manager =
       Canto::Curs::GenotypeManager->new(config => $c->config(), curs_schema => $schema);
 
     my $host_genotype;
-    my $pathogen_genotype;
 
     if ($host_genotype_id) {
       $host_genotype = $schema->find_with_type('Genotype', $host_genotype_id);
     } else {
       $host_genotype = $genotype_manager->get_wildtype_genotype($host_taxonid, $host_strain_name);
-    }
-    if ($pathogen_genotype_id) {
-      $pathogen_genotype = $schema->find_with_type('Genotype', $pathogen_genotype_id);
-    } else {
-      $pathogen_genotype = $genotype_manager->get_wildtype_genotype($pathogen_taxonid, $pathogen_strain_name);
     }
 
     my $existing_metagenotype =
