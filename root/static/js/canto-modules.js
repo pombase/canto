@@ -6731,7 +6731,11 @@ var annotationEditDialogCtrl =
                   }
 
                   if (annotationType.single_allele_only) {
-                    return nonAccessoryAlleles.length == 1;
+                    if (annotationType.single_allele_only === 'ignore_accessory') {
+                      return nonAccessoryAlleles.length == 1;
+                    } else {
+                      return feature.alleles.length == 1;
+                    }
                   } else {
                     if (annotationType.single_locus_only) {
                       var seenGenes = [];

@@ -283,8 +283,9 @@ If 1, this annotation type can have conditions as well as evidence.
 Mostly useful for phenotypes.
 
 ### single_allele_only
-Only display/allow genotypes containing a single allele for this
-annotation type.
+If true, only display/allow genotypes containing a single allele for
+this annotation type.  If set to "ignore_accessory", accessory alleles
+will be ignored when counting alleles in a genotype.
 
 ### single_locus_only
 For interactions, restrict the genotype B list to contain only
