@@ -63,7 +63,7 @@ my $proc = sub {
           map {
             my $and_part = $_;
             if ($and_part->{rangeType} && $and_part->{rangeType} eq 'Ontology' &&
-                  $and_part->{relation} eq 'infects_tissue' ) {
+                  $and_part->{relation} eq $old_ext_rel_name ) {
               use Data::Dumper;
               warn $curs->curs_key(), "\n", Dumper([$and_part]);
             }
