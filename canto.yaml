@@ -109,6 +109,8 @@ allele_note_types: []
 # deletion allele creation
 show_quick_deletion_buttons: 1
 
+external_notes_label: External notes
+
 # from_address - used as the "from" field is all outgoing messages
 # admin_address - the contact address of the admin curators, used to
 #                 alert about completed sessions and problems

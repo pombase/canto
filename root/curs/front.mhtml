@@ -110,7 +110,7 @@ $total_annotation_count
 % if ($external_notes) {
 <div class="external-notes curs-box">
   <div class="curs-box-title">
-    External notes
+    <% $external_notes_label %>
   </div>
   <div class="curs-box-body">
 % for my $note (@$external_notes) {
@@ -145,5 +145,6 @@ my $no_annotations_reasons_init_js =
 
 my $finish_form_url = $curs_root_uri . '/finish_session';
 
+my $external_notes_label = $config->{external_notes_label} || "External notes";
 
 </%init>
