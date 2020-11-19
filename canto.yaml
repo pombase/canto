@@ -25,7 +25,7 @@ header_image: logos/curation_tool.png
 
 canto_url: http://curation.pombase.org/
 
-app_version: v1564
+app_version: v1566
 
 schema_version: 33
 
@@ -108,6 +108,8 @@ allele_note_types: []
 # if 1, show the shortcut buttons on the genotype management page for quick
 # deletion allele creation
 show_quick_deletion_buttons: 1
+
+external_notes_label: External notes
 
 # from_address - used as the "from" field is all outgoing messages
 # admin_address - the contact address of the admin curators, used to
