@@ -43,6 +43,5 @@ CANTO_DOCKER_RUN_ARGS="$EXTRA_ARGS --rm $INTERACTIVE_ARGS --mount type=bind,sour
 
 cd canto
 
-RUN_ARGS="$@ >> /logs/`date --rfc-3339=date`.log.txt 2>&1"
+exec docker run $CANTO_DOCKER_RUN_ARGS "$@"
 
-exec docker run $CANTO_DOCKER_RUN_ARGS bash -c "$RUN_ARGS"
