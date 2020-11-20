@@ -18,6 +18,12 @@ then
    exit 1
 fi
 
+if [ ! -d logs ]
+then
+   echo 'missing "logs" directory - exiting'
+   exit 1
+fi
+
 if [ $(uname) = Linux ]
 then
     EXTRA_ARGS=--net=host
@@ -27,7 +33,15 @@ if [[ "$1" == "--debug" ]]; then
     DEBUG="-e CANTO_DEBUG=TRUE"
 fi
 
-CANTO_DOCKER_RUN_ARGS="$EXTRA_ARGS --rm -ti $DEBUG --security-opt seccomp=unconfined --cap-add=SYS_PTRACE  --net=host --mount type=bind,source=$(pwd)/data,target=/data --mount type=bind,source=$(pwd)/import_export,target=/import_export --mount type=bind,source=$(pwd)/canto,target=/canto -w=/canto pombase/canto-run:v8"
+TTY_OPT="-t"
+
+if [ "$1" == "--no-tty" ]; then
+    shift
+    TTY_OPT=""
+fi
+
+
+CANTO_DOCKER_RUN_ARGS="$EXTRA_ARGS -i $TTY_OPT --rm $DEBUG --security-opt seccomp=unconfined --cap-add=SYS_PTRACE --mount type=bind,source=$(pwd)/logs,target=/logs  --mount type=bind,source=$(pwd)/data,target=/data --mount type=bind,source=$(pwd)/import_export,target=/import_export --mount type=bind,source=$(pwd)/canto,target=/canto -w=/canto pombase/canto-base:v12"
 
 cd canto
 

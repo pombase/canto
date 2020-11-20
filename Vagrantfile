@@ -23,7 +23,8 @@ setup_docker_folders = <<-SCRIPT
   cd canto-docker
   mkdir data
   mkdir import_export
-  chown vagrant:vagrant data import_export
+  mkdir logs
+  chown vagrant:vagrant data import_export logs
 SCRIPT
 
 Vagrant.configure("2") do |config|

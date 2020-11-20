@@ -20,7 +20,7 @@ section:
     ./canto/script/canto_docker ./script/canto_load.pl --genes \
         /import_export/genes_file.tsv --for-taxon 4896
 
-Only three host directories (`canto`, `data` and `import_export`) are
+Only four host directories (`canto`, `data`, `logs` and `import_export`) are
 visible inside the container so reading and writing of files should be
 via those directories.  In particular, as in the example above,
 datasets for loading should be added to your `import_export` directory

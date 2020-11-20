@@ -19,6 +19,7 @@ container and then initialise Canto.
 
     mkdir data
     mkdir import_export
+    mkdir logs
 
     git clone https://github.com/pombase/canto.git
 
