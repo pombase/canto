@@ -54,6 +54,8 @@ my $proc = sub {
 
     my $data = $annotation->data();
 
+    my $changed = 0;
+
     my $extension = $data->{extension};
 
     if (defined $extension) {
@@ -62,14 +64,23 @@ my $proc = sub {
           my $or_part = $_;
           map {
             my $and_part = $_;
-            if ($and_part->{rangeType} && $and_part->{rangeType} eq 'Ontology' &&
+            if ((!$and_part->{rangeType} || $and_part->{rangeType} && $and_part->{rangeType} eq 'Ontology') &&
                   $and_part->{relation} eq $old_ext_rel_name ) {
-              use Data::Dumper;
-              warn $curs->curs_key(), "\n", Dumper([$and_part]);
+              if ($and_part->{rangeValue} eq 'PHIPO:0001189' ||
+                    $and_part->{rangeValue} eq 'PHIPO:0001190') {
+                $and_part->{relation} = $new_ext_rel_name;
+                warn "changed annotation in ", $curs->curs_key(), "\n";
+                $changed = 1;
+              }
             }
           } @$or_part;
         } @$extension;
       }
+    }
+
+    if ($changed) {
+      $annotation->data($data);
+      $annotation->update();
     }
   }
 };
