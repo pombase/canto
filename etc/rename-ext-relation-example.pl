@@ -58,8 +58,8 @@ my $proc = sub {
 
     my $extension = $data->{extension};
 
-    if (defined $extension) {
-      if (@$extension > 1) {
+    if (defined $extension && @$extension == 1) {
+
         map {
           my $or_part = $_;
           map {
@@ -75,7 +75,6 @@ my $proc = sub {
             }
           } @$or_part;
         } @$extension;
-      }
     }
 
     if ($changed) {
