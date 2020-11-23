@@ -299,7 +299,12 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     if ($st->{pathogen_host_mode}) {
       $c->detach('view_genes_and_strains');
     } else {
-      $c->detach('front');
+      if ($state eq NEEDS_APPROVAL || $state eq APPROVAL_IN_PROGRESS ||
+          $state eq APPROVED || $state eq EXPORTED) {
+        $c->detach('finished_publication');
+      } else {
+        $c->detach('front');
+      }
     }
   }
 
