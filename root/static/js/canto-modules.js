@@ -9549,13 +9549,14 @@ var strainPicker = function () {
 
 canto.directive('strainPicker', strainPicker);
 
-var strainPickerCtrl = function ($scope, StrainsService, CantoService) {
+var strainPickerCtrl = function ($scope, StrainsService, CantoService, CantoGlobals) {
 
   $scope.data = {
     strains: null,
     sessionStrains: null,
     selectedStrain: ''
   };
+  $scope.readOnlyMode = CantoGlobals.read_only_curs;
 
   $scope.unknownStrainAdded = false;
 
@@ -9652,7 +9653,7 @@ var strainPickerCtrl = function ($scope, StrainsService, CantoService) {
 
 };
 
-canto.controller('strainPickerCtrl', ['$scope', 'StrainsService', 'CantoService', strainPickerCtrl]);
+canto.controller('strainPickerCtrl', ['$scope', 'StrainsService', 'CantoService', 'CantoGlobals', strainPickerCtrl]);
 
 var strainPickerDialogCtrl =
   function ($scope, $uibModalInstance, args, Curs, toaster) {
@@ -9931,6 +9932,7 @@ var editOrganismsTable = function (EditOrganismsSvc, CantoGlobals) {
       $scope.data = {
         strainsMode: CantoGlobals.strains_mode,
       };
+      $scope.readOnlyMode = CantoGlobals.read_only_curs;
 
       $scope.firstGene = function (genes) {
         if (genes.length > 0) {
@@ -9996,7 +9998,8 @@ var editOrganisms = function ($window, EditOrganismsSvc, StrainsService, CantoGl
     controller: function ($scope) {
       $scope.getPathogens = EditOrganismsSvc.getPathogenOrganisms;
       $scope.getHosts = EditOrganismsSvc.getHostOrganisms;
-      $scope.continueUrl = curs_root_uri;
+      $scope.readOnlyMode = CantoGlobals.read_only_curs;
+      $scope.continueUrl = curs_root_uri + ($scope.readOnlyMode ? '/ro' : '');
       $scope.addGenesUrl = curs_root_uri + '/gene_upload/';
 
       $scope.pathogenGeneExists = function () {
