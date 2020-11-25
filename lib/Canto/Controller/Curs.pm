@@ -318,7 +318,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     $use_dispatch = 0;
   }
 
-  if ($state eq CURATION_PAUSED && $path =~ m:/(ws/.*/list|restart_curation|ro):) {
+  if ($state eq CURATION_PAUSED && $path =~ m:/(ws/settings/(set/paused_message|get_all)|ws/.*/list|restart_curation|ro):) {
     $use_dispatch = 0;
   }
 
@@ -2716,6 +2716,8 @@ sub restart_curation : Chained('top') Args(0)
   my $schema = $st->{schema};
 
   $self->state()->set_state($schema, CURATION_IN_PROGRESS);
+
+  $self->unset_metadata($schema, 'paused_message');
 
   $c->flash()->{message} = 'Session has been restarted';
 

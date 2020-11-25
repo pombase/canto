@@ -1,12 +1,33 @@
 <%args>
 $curs_root_uri
+$current_user_is_admin
 </%args>
 
-<div id="curs-curation-paused">
+<div ng-controller="CursPausedPageCtrl" id="curs-curation-paused">
 <p>
 Your work is permanently saved.  You can return and continue curating at any
 time by returning to the page.
 </p>
+
+% if ($current_user_is_admin) {
+<div class="ng-cloak" ng-if="!loading">
+  <div ng-if="pausedMessage">
+    <div>
+      Message:
+    </div>
+    <div class="curs-paused-message">
+      {{pausedMessage}}
+    </div>
+  </div>
+
+  <div class="curs-paused-edit-message">
+    <a href="#" ng-click="editMessage()">
+      <span ng-if="pausedMessage">Edit</span>
+      <span ng-if="!pausedMessage">Add message</span>
+    </a>
+  </div>
+</div>
+% }
 
 <a class="btn btn-primary" href="<% $restart_curation_uri %>">Continue curation</a>
 

@@ -1311,7 +1311,9 @@ var cursFrontPageCtrl =
 
     $scope.editMessageToCurators = function () {
       CursSettings.getAll().then(function (response) {
-        editMessageForCurators($uibModal, response.data.message_for_curators)
+        editStoredMessage($uibModal, 'Edit message for curators',
+                          response.data.message_for_curators,
+                          'message_for_curators')
           .then(function(result) {
             $scope.messageForCurators = result;
           });
@@ -1339,6 +1341,33 @@ canto.controller('CursFrontPageCtrl',
                  ['$scope', '$uibModal', 'CursSettings',
                   'CursAnnotationDataService', 'AnnotationProxy', 'AnnotationTypeConfig',
                   cursFrontPageCtrl]);
+
+
+var cursPausedPageCtrl =
+  function ($scope, $uibModal, CursSettings) {
+    var settingsPromise = CursSettings.getAll();
+
+    $scope.loading = true;
+    $scope.pausedMessage = null;
+
+    settingsPromise.then(function (response) {
+      $scope.pausedMessage = response.data.paused_message;
+      $scope.loading = false;
+    });
+
+    $scope.editMessage = function () {
+      editStoredMessage($uibModal, 'Edit message',
+                        $scope.pausedMessage,
+                        'paused_message')
+        .then(function(result) {
+          $scope.pausedMessage = result;
+        });
+    };
+  };
+
+canto.controller('CursPausedPageCtrl',
+                 ['$scope', '$uibModal', 'CursSettings',
+                  cursPausedPageCtrl]);
 
 
 function openSimpleDialog($uibModal, title, heading, message) {
@@ -2102,7 +2131,7 @@ function arrayIntersection(arr1, arr2) {
 // only those where the "domain" term ID in the configuration matches one of
 // subsetIds.  Also ignore any configs where the "role" is "admin" and the
 // current, logged in user isn't an admin.
-function extensionConfFilter(allConfigs, subsetIds, role) {
+function extensionConfFilter(allConfigs, subsetIds, annotationTypeName, role) {
   return $.map(allConfigs,
     function (conf) {
       if (conf.role == 'admin' &&
@@ -10119,17 +10148,19 @@ canto.controller('genotypeAndSummaryNavCtrl', ['$scope', 'CantoGlobals', genotyp
 canto.directive('genotypeAndSummaryNav', [genotypeAndSummaryNav]);
 
 
-var messageForCuratorsEditDialogCtrl =
+var storedMessageEditDialogCtrl =
   function ($scope, $uibModalInstance, toaster, CursSettings, args) {
     $scope.data = {
+      dialogTitle: args.dialogTitle,
       message: args.message,
+      messageName: args.messageName,
     };
 
     $scope.finish = function () {
       if ($scope.data.message === args.message) {
         $uibModalInstance.close();
       } else {
-        CursSettings.set('message_for_curators', $scope.data.message)
+        CursSettings.set(args.messageName, $scope.data.message)
         .then(function () {
           $uibModalInstance.close($scope.data.message);
         })
@@ -10144,24 +10175,26 @@ var messageForCuratorsEditDialogCtrl =
     };
   };
 
-canto.controller('MessageForCuratorsEditDialogCtrl',
+canto.controller('StoredMessageEditDialogCtrl',
   ['$scope', '$uibModalInstance', 'toaster', 'CursSettings',
     'args',
-    messageForCuratorsEditDialogCtrl
+   storedMessageEditDialogCtrl
   ]);
 
 
-function editMessageForCurators($uibModal, message) {
+function editStoredMessage($uibModal, dialogTitle, message, messageName) {
   var editInstance = $uibModal.open({
-    templateUrl: app_static_path + 'ng_templates/message_for_curators_edit_dialog.html',
-    controller: 'MessageForCuratorsEditDialogCtrl',
-    title: 'Edit message for curators',
+    templateUrl: app_static_path + 'ng_templates/store_message_edit_dialog.html',
+    controller: 'StoredMessageEditDialogCtrl',
+    title: 'Edit message',
     animate: false,
     size: 'lg',
     resolve: {
       args: function () {
         return {
-          message: message
+          dialogTitle: dialogTitle,
+          message: message,
+          messageName: messageName,
         };
       }
     },
@@ -10182,7 +10215,9 @@ var finishedPublicationPageCtrl =
 
     $scope.editMessageForCurators = function () {
       if ($scope.messageForCurators) {
-        editMessageForCurators($uibModal, $scope.messageForCurators)
+        editStoredMessage($uibModal, 'Edit message for curators',
+                          $scope.messageForCurators,
+                          'message_for_curators')
           .then(function(result) {
             $scope.messageForCurators = result;
           });
