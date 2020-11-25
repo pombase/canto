@@ -2130,8 +2130,8 @@ function arrayIntersection(arr1, arr2) {
 // Filter the extension_configuration results from the server and return
 // only those where the "domain" term ID in the configuration matches one of
 // subsetIds.  Also ignore any configs where the "role" is "admin" and the
-// current, logged in user isn't an admin.
-function extensionConfFilter(allConfigs, subsetIds, annotationTypeName, role) {
+// current, logged in user isn't an admin.  
+function extensionConfFilter(allConfigs, subsetIds, role) {
   return $.map(allConfigs,
     function (conf) {
       if (conf.role == 'admin' &&
