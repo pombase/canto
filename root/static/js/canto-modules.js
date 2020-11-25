@@ -2141,7 +2141,7 @@ function extensionConfFilter(allConfigs, subsetIds, role, annotationTypeName) {
       if (conf.annotation_type_name &&
           conf.annotation_type_name !== annotationTypeName) {
         var found = false;
-        var parts = conf.annotation_type_name.split(/|/);
+        var parts = conf.annotation_type_name.split(/\|/);
 
         $.map(parts, function(part) {
           if (part.match(/\w/) && annotationTypeName === part) {
