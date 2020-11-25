@@ -70,7 +70,7 @@ sub parse {
       next if $line =~ /^#/;
 
       my ($domain, $subset_rel, $allowed_relation, $range, $display_text, $help_text,
-          $cardinality, $role) =
+          $cardinality, $role, $annotation_type_name) =
             split (/\t/, $line);
 
       if ($domain =~ /^\s*domain/i) {
@@ -175,6 +175,7 @@ sub parse {
         help_text => $help_text,
         cardinality => \@cardinality,
         role => $role,
+        annotation_type_name => $annotation_type_name,
       );
 
       if ($domain =~ /(\S+)-(\S+)/) {

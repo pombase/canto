@@ -104,9 +104,10 @@ cmp_deeply($config_with_suffix->{extension_configuration},
               'help_text' => '',
               'domain' => 'GO:0016023',
               'role' => 'user',
+              'annotation_type_name' => undef,
               'subset_rel' => [
                                 'is_a'
-                              ]
+                        ]
             },
             {
               'subset_rel' => [
@@ -127,7 +128,8 @@ cmp_deeply($config_with_suffix->{extension_configuration},
               'cardinality' => [
                                  '*'
                                ],
-              'display_text' => 'Something that happens during'
+              'display_text' => 'Something that happens during',
+              'annotation_type_name' => undef,
             },
             {
               'subset_rel' => [
@@ -146,7 +148,8 @@ cmp_deeply($config_with_suffix->{extension_configuration},
                                  '0',
                                  '1'
                                ],
-              'allowed_relation' => 'localizes'
+              'allowed_relation' => 'localizes',
+              'annotation_type_name' => undef,
             },
             {
               'cardinality' => [
@@ -168,7 +171,8 @@ cmp_deeply($config_with_suffix->{extension_configuration},
               'role' => 'user',
               'subset_rel' => [
                                 'is_a'
-                              ]
+                              ],
+              'annotation_type_name' => 'biological_process',
             },
             {
               'allowed_relation' => 'modifies_residue',
@@ -188,7 +192,8 @@ cmp_deeply($config_with_suffix->{extension_configuration},
               'role' => 'user',
               'subset_rel' => [
                                 'is_a'
-                              ]
+                              ],
+              'annotation_type_name' => undef,
             },
             {
               'exclude_subset_ids' => ['is_a(GO:0055085)'],
@@ -208,10 +213,11 @@ cmp_deeply($config_with_suffix->{extension_configuration},
                              'type' => 'Gene'
                            }
                          ],
-              'display_text' => 'localizes'
+              'display_text' => 'localizes',
+              'annotation_type_name' => undef,
             },
             {
-              'help_text' => '',
+             'help_text' => '',
               'range' => [
                            {
                              'type' => 'Gene'
@@ -227,7 +233,8 @@ cmp_deeply($config_with_suffix->{extension_configuration},
               'subset_rel' => [
                                 'is_a'
                               ],
-              'role' => 'user'
+              'role' => 'user',
+             'annotation_type_name' => undef,
             },
             {
               'role' => 'user',
@@ -246,7 +253,8 @@ cmp_deeply($config_with_suffix->{extension_configuration},
                            {
                              'type' => 'Gene'
                            }
-                         ]
+                         ],
+              'annotation_type_name' => undef,
             },
             {
               'subset_rel' => [
@@ -271,7 +279,8 @@ cmp_deeply($config_with_suffix->{extension_configuration},
                                  '0',
                                  '1'
                                ],
-              'display_text' => 'penetrance'
+              'display_text' => 'penetrance',
+              'annotation_type_name' => undef,
             }
           ]);
 

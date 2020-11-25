@@ -1,7 +1,7 @@
 GO:0016023	is_a	has_substrate	GENE	kinase substrate		0,1	user
 GO:0016023	is_a	happens_during	GO:0005215	Something that happens during		*	user
 GO:0022857	is_a	localizes	GENE	localizes		0,1	user
-GO:0022857	is_a	occurs_at	SO:0001799	occurs at		0,1	user
+GO:0022857	is_a	occurs_at	SO:0001799	occurs at		0,1	user	biological_process
 GO:0022857	is_a	modifies_residue	TEXT	occurs at		0,1	user
 GO:0006810-is_a(GO:0055085)	is_a	localizes	GENE	localizes		0,1	user
 GO:0034762	is_a	occurs_at	GENE	occurs at		0,1	user
