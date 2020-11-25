@@ -1852,3 +1852,12 @@ a:not([href]) {
 .curs-workflow-confirm-comment {
   width: 50em;
 }
+
+.curs-paused-edit-message {
+  padding: 1em 0em;
+}
+
+.curs-paused-message {
+  padding: 1em 0.5em 0.5em 0.5em;
+  font-size: 95%;
+}

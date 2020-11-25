@@ -25,7 +25,7 @@ header_image: logos/curation_tool.png
 
 canto_url: http://curation.pombase.org/
 
-app_version: v1568
+app_version: v1569
 
 schema_version: 33
 
@@ -2273,6 +2273,7 @@ curs_settings_service:
   allowed_keys:
     annotation_mode: 1
     message_for_curators: 1
+    paused_message: 1
   allowed_data_keys:
     checked: 1
 

@@ -1,0 +1,13 @@
+<%args>
+$gene_list_data_js
+$hosts_with_no_genes_js
+</%args>
+
+<script language="javascript" type="text/javascript">
+var geneListData = <% $gene_list_data_js |n %>;
+var hostsWithNoGenes = <% $hosts_with_no_genes_js |n %>;
+</script>
+
+<div id="curs-view-genes-and-strains">
+  <edit-organisms></edit-organisms>
+</div>

@@ -15,7 +15,8 @@
       <span ng-repeat="strain in data.sessionStrains track by $index" class="curs-strain-tag btn-group btn-group-xs">
         <span class="curs-strain-tag-name btn fake"
               ng-class="strain.is_custom ? 'btn-warning' : 'btn-default'">{{strain.strain_name}}</span>
-        <button type="button"
+        <button ng-if="!readOnlyMode"
+                type="button"
                 class="curs-strain-tag-delete btn"
                 ng-class="strain.is_custom ? 'btn-warning' : 'btn-default'"
                 title="Delete strain"
@@ -24,7 +25,7 @@
         </button>
       </span>
     </div>
-    <div>
+    <div ng-if="!readOnlyMode">
       <form ng-submit="addStrain()">
         <input ng-model="data.selectedStrain"
                placeholder="Type a strain name"

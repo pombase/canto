@@ -49,6 +49,15 @@ Edit gene list
     </a>
   </div>
 % }
+
+% if ($pathogen_host_mode && $read_only_curs) {
+  <div class="feature-list-action" style="margin-bottom: 20px;">
+    <a href="<% $view_genes_and_strains_path %>">
+View genes, organisms and strains from this session
+    </a>
+  </div>
+% }
+
 % if ($genotype_annotation_configured) {
   <div class="curs-box-title">
     <div>
@@ -167,6 +176,10 @@ my $genotype_annotation_configured = $st->{genotype_annotation_configured};
 
 my $start_path = $st->{curs_root_uri};
 my $edit_path = "$start_path/edit_genes";
+my $view_genes_and_strains_path = "$start_path/view_genes_and_strains";
+if ($read_only_curs) {
+  $view_genes_and_strains_path .= '/ro';
+}
 my $genotype_manage_url = "$start_path/genotype_manage";
 my $pathogen_genotype_manage_url = "$start_path/pathogen_genotype_manage";
 my $host_genotype_manage_url = "$start_path/host_genotype_manage";
