@@ -2130,13 +2130,27 @@ function arrayIntersection(arr1, arr2) {
 // Filter the extension_configuration results from the server and return
 // only those where the "domain" term ID in the configuration matches one of
 // subsetIds.  Also ignore any configs where the "role" is "admin" and the
-// current, logged in user isn't an admin.
-function extensionConfFilter(allConfigs, subsetIds, annotationTypeName, role) {
+// current, logged in user isn't an admin.  
+function extensionConfFilter(allConfigs, subsetIds, role, annotationTypeName) {
   return $.map(allConfigs,
     function (conf) {
       if (conf.role == 'admin' &&
         role != 'admin') {
         return;
+      }
+      if (conf.annotation_type_name &&
+          conf.annotation_type_name !== annotationTypeName) {
+        var found = false;
+        var parts = conf.annotation_type_name.split(/\|/);
+
+        $.map(parts, function(part) {
+          if (part.match(/\w/) && annotationTypeName === part) {
+            found = true;
+          }
+        });
+        if (!found) {
+          return;
+        }
       }
       var matched =
         $.grep(conf.subset_rel,
@@ -2184,7 +2198,7 @@ canto.controller('ExtensionBuilderDialogCtrl',
   ]);
 
 
-function openExtensionBuilderDialog($uibModal, extension, termId, featureDisplayName) {
+function openExtensionBuilderDialog($uibModal, extension, termId, featureDisplayName, annotationTypeName) {
   return $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/extension_builder_dialog.html',
     controller: 'ExtensionBuilderDialogCtrl',
@@ -2197,6 +2211,7 @@ function openExtensionBuilderDialog($uibModal, extension, termId, featureDisplay
           extension: angular.copy(extension),
           termId: termId,
           featureDisplayName: featureDisplayName,
+          annotationTypeName: annotationTypeName,
         };
       },
     },
@@ -2622,6 +2637,7 @@ var extensionBuilder =
         termId: '@',
         featureDisplayName: '@',
         isValid: '=',
+        annotationTypeName: '@',
       },
       restrict: 'E',
       replace: true,
@@ -2652,7 +2668,8 @@ var extensionBuilder =
             subset_ids && subset_ids.length > 0) {
             var newConf =
               extensionConfFilter($scope.extensionConfiguration, subset_ids,
-                CantoGlobals.current_user_is_admin ? 'admin' : 'user');
+                                  CantoGlobals.current_user_is_admin ? 'admin' : 'user',
+                                  $scope.annotationTypeName);
             copyObject(newConf, $scope.matchingConfigurations);
             return;
           }
@@ -3075,7 +3092,8 @@ var ontologyWorkflowCtrl =
       if (subset_ids && subset_ids.length > 0) {
         $scope.matchingExtensionConfigs =
           extensionConfFilter($scope.extensionConfiguration, subset_ids,
-            CantoGlobals.current_user_is_admin ? 'admin' : 'user');
+                              CantoGlobals.current_user_is_admin ? 'admin' : 'user',
+                              $scope.annotationTypeName);
         return;
       }
 
@@ -7035,7 +7053,8 @@ var annotationEditDialogCtrl =
                 subset_ids && subset_ids.length > 0) {
               $scope.matchingConfigurations =
                 extensionConfFilter(extensionConfiguration, subset_ids,
-                                    CantoGlobals.current_user_is_admin ? 'admin' : 'user');
+                                    CantoGlobals.current_user_is_admin ? 'admin' : 'user',
+                                    $scope.annotationTypeName);
             } else {
               $scope.matchingConfigurations = [];
             }
@@ -7083,8 +7102,9 @@ var annotationEditDialogCtrl =
     $scope.editExtension = function () {
       var editPromise =
         openExtensionBuilderDialog($uibModal, $scope.annotation.extension,
-          $scope.annotation.term_ontid,
-          $scope.currentFeatureDisplayName);
+                                   $scope.annotation.term_ontid,
+                                   $scope.currentFeatureDisplayName,
+                                   $scope.annotationTypeName);
 
       editPromise.then(function (result) {
         angular.copy(result.extension, $scope.annotation.extension);
