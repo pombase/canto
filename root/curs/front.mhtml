@@ -107,7 +107,7 @@ $total_annotation_count
 % }
 </div>
 
-% if ($external_notes) {
+% if ($external_notes && $current_user_is_admin) {
 <div class="external-notes curs-box">
   <div class="curs-box-title">
     <% $external_notes_label %>
