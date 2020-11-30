@@ -214,10 +214,6 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
   my $external_notes = $self->get_metadata($schema, Canto::Curs->EXTERNAL_NOTES_KEY);
 
-  if ($external_notes) {
-    $st->{external_notes} = [split /\n+/, $external_notes];
-  }
-
   # enabled by default and disabled on /session_reassigned page
   $st->{show_curator_in_title} = 1;
 
@@ -250,6 +246,10 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
     if (!defined $annotation_mode) {
       $self->set_metadata($schema, 'annotation_mode', 'advanced');
+    }
+
+    if ($external_notes) {
+      $st->{external_notes} = [split /\n+/, $external_notes];
     }
   } else {
     $st->{current_user_is_admin} = 0;
