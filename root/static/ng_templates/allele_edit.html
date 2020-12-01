@@ -195,29 +195,29 @@
             <div ng-show="!isValidExpression()"
                  class="help-block">Required for this allele type</div>
             <div>
-              <label for="allele-edit-overexpression">Overexpression</label>
               <input ng-model="alleleData.expression" name="curs-allele-expression" id="allele-edit-overexpression"
                      type="radio" value="Overexpression" />
+              <label for="allele-edit-overexpression">Overexpression</label>
             </div>
             <div>
-              <label for="allele-edit-wild-type-level">Wild type product level</label>
               <input ng-model="alleleData.expression" name="curs-allele-expression" id="allele-edit-wild-type-level"
                      type="radio" value="Wild type product level" />
+              <label for="allele-edit-wild-type-level">Wild type product level</label>
             </div>
             <div>
-              <label for="allele-edit-knockdown">Knockdown</label>
               <input ng-model="alleleData.expression" name="curs-allele-expression" id="allele-edit-knockdown"
                      type="radio" value="Knockdown" />
+              <label for="allele-edit-knockdown">Knockdown</label>
             </div>
             <div ng-show="alleleData.type == 'disruption' || alleleData.type == 'other'">
-              <label for="allele-edit-null-expression">Null</label>
               <input ng-model="alleleData.expression" name="curs-allele-expression" id="allele-edit-null-expression"
                      type="radio" value="Null" />
+              <label for="allele-edit-null-expression">Null</label>
             </div>
             <div ng-show="pathogenHostMode || alleleData.type !== 'wild type'">
-              <label for="allele-edit-not-assayed">Not assayed</label>
               <input ng-model="alleleData.expression" name="curs-allele-expression" id="allele-edit-not-assayed"
                      type="radio" value="Not assayed" />
+              <label for="allele-edit-not-assayed">Not assayed</label>
             </div>
           </td>
         </tr>

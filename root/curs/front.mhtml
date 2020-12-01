@@ -107,16 +107,20 @@ $total_annotation_count
 % }
 </div>
 
-% if ($external_notes && $current_user_is_admin) {
+% if (($always_show_external_notes_section || $external_notes) && $current_user_is_admin) {
 <div class="external-notes curs-box">
   <div class="curs-box-title">
     <% $external_notes_label %>
   </div>
   <div class="curs-box-body">
-% for my $note (@$external_notes) {
+% if ($external_notes) {
+%   for my $note (@{$external_notes // []}) {
     <p>
       <% $note %>
     </p>
+%   }
+% } else {
+   <p>[none]</p>
 % }
   </div>
 </div>
@@ -146,5 +150,7 @@ my $no_annotations_reasons_init_js =
 my $finish_form_url = $curs_root_uri . '/finish_session';
 
 my $external_notes_label = $config->{external_notes_label} || "External notes";
+
+my $always_show_external_notes_section = $config->{always_show_external_notes_section};
 
 </%init>
