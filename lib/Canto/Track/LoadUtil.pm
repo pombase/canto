@@ -881,7 +881,7 @@ sub create_sessions_from_json
     $cursdb = undef;
     $using_existing_session = 0;
 
-    my $external_notes = $session_data->{comments};
+    my $external_notes = $session_data->{comment};
 
     my $new_allele_count = 0;
 
