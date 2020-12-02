@@ -184,11 +184,18 @@ sub update_curs_terms
           if ($andPart->{rangeType} && $andPart->{rangeType} eq 'Ontology') {
             my $termid = $andPart->{rangeValue};
             my $res = $self->_cached_lookup_by_id($termid);
-            if (defined $res &&
-                  (!$andPart->{rangeDisplayName} ||
-                   $andPart->{rangeDisplayName} ne $res->{name})) {
-              $andPart->{rangeDisplayName} = $res->{name};
-              $changed = 1;
+
+            if ($res) {
+              if ($termid ne $res->{id}) {
+                $andPart->{rangeValue} = $res->{id};
+                $changed = 1;
+              }
+
+              if (!$andPart->{rangeDisplayName} ||
+                    $andPart->{rangeDisplayName} ne $res->{name}) {
+                $andPart->{rangeDisplayName} = $res->{name};
+                $changed = 1;
+              }
             }
           }
         } @$orPart;
