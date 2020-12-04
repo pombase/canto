@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 38;
+use Test::More tests => 53;
 use Test::Exception;
 
 use Canto::TestUtil;
@@ -30,6 +30,8 @@ my $fly = $load_util->get_organism('Drosophila melanogaster', '7227', 'fruit fly
 my $gene_load = Canto::Track::GeneLoad->new(organism => $fly, schema => $schema);
 $gene_load->create_gene('FBgn0004107', 'Dmel\Cdk2', [], 'Cyclin-dependent kinase 2');
 $gene_load->create_gene('FBgn0016131', 'Dmel\Cdk4', [], 'Cyclin-dependent kinase 4');
+$gene_load->create_gene('FBgn0008888', 'Dmel\Cdk88', [], 'kinase 88');
+$gene_load->create_gene('FBgn0009999', 'Dmel\Cdk99', [], 'kinase 99');
 my $test_json_file = $test_util->root_dir() . '/t/data/sessions_from_json_test.json';
 my ($created_sessions, $updated_sessions) =
   $load_util->create_sessions_from_json($config, $test_json_file,
@@ -141,6 +143,15 @@ $FBgn0016131_gene =
 ok(defined $FBgn0016131_gene);
 
 
+# make sure we can reload the same file with ID changes
+($created_sessions, $updated_sessions) =
+  $load_util->create_sessions_from_json($config, $test_json_id_changes_file,
+                                        'test.user@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org', 7227);
+
+is (@$created_sessions, 0);
+is (@$updated_sessions, 0);
+
+
 # load an extra allele
 my $test_json_extra_allele_file =
   $test_util->root_dir() . '/t/data/sessions_from_json_extra_allele_test.json';
@@ -155,7 +166,7 @@ my $updated_curs = $updated_sessions->[0];
 my $updated_cursdb = Canto::Curs::get_schema_for_key($config, $updated_curs->curs_key());
 
 my $FBal0098765_allele =
-  $created_cursdb->resultset('Allele')->find({ primary_identifier => "FBal0098765" });
+  $updated_cursdb->resultset('Allele')->find({ primary_identifier => "FBal0098765" });
 
 ok (defined $FBal0098765_allele);
 
@@ -163,3 +174,63 @@ is($FBal0098765_allele->type(), 'other');
 is($FBal0098765_allele->name(), 'Dmel\Cdk4_d1234');
 is($FBal0098765_allele->description(), undef);
 is($FBal0098765_allele->comment(), undef);
+
+
+# load an extra gene
+my $test_json_extra_gene_file =
+  $test_util->root_dir() . '/t/data/sessions_from_json_extra_gene_test.json';
+($created_sessions, $updated_sessions) =
+  $load_util->create_sessions_from_json($config, $test_json_extra_gene_file,
+                                        'test.user@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org', 7227);
+
+is (@$created_sessions, 0);
+is (@$updated_sessions, 1);
+
+$updated_curs = $updated_sessions->[0];
+$updated_cursdb = Canto::Curs::get_schema_for_key($config, $updated_curs->curs_key());
+
+my $FBgn0008888 =
+  $updated_cursdb->resultset('Gene')->find({ primary_identifier => "FBgn0008888" });
+ok (defined $FBgn0008888);
+
+
+
+# make sure we can load it again
+($created_sessions, $updated_sessions) =
+  $load_util->create_sessions_from_json($config, $test_json_extra_gene_file,
+                                        'test.user@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org', 7227);
+
+is (@$created_sessions, 0);
+is (@$updated_sessions, 0);
+
+
+
+# load an extra gene and an allele
+my $test_json_extra_gene_and_allele_file =
+  $test_util->root_dir() . '/t/data/sessions_from_json_extra_gene_and_allele_test.json';
+($created_sessions, $updated_sessions) =
+  $load_util->create_sessions_from_json($config, $test_json_extra_gene_and_allele_file,
+                                        'test.user@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org', 7227);
+
+is (@$created_sessions, 0);
+is (@$updated_sessions, 1);
+
+$updated_curs = $updated_sessions->[0];
+$updated_cursdb = Canto::Curs::get_schema_for_key($config, $updated_curs->curs_key());
+
+my $FBgn0009999 =
+  $updated_cursdb->resultset('Gene')->find({ primary_identifier => "FBgn0009999" });
+ok (defined $FBgn0009999);
+
+my $FBal0009999_allele =
+  $updated_cursdb->resultset('Allele')->find({ primary_identifier => "FBal0009999" });
+is ($FBal0009999_allele->name(), 'Dmel\Cdk88_V1.allele');
+
+
+# make sure we can load it again
+($created_sessions, $updated_sessions) =
+  $load_util->create_sessions_from_json($config, $test_json_extra_gene_and_allele_file,
+                                        'test.user@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org', 7227);
+
+is (@$created_sessions, 0);
+is (@$updated_sessions, 0);
