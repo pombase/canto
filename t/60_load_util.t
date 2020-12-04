@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 30;
+use Test::More tests => 38;
 use Test::Exception;
 
 use Canto::TestUtil;
@@ -87,6 +87,56 @@ is (@$updated_sessions, 0);
 $notes_rs = $created_cursdb->resultset('Metadata')->search({ key => 'external_notes' });
 is($notes_rs->count(), 1);
 is($notes_rs->first()->value(), "test notes\nline 2");
+
+
+# load a file with allele and gene ID changes (via the "secondary_identifiers" field)
+my $test_json_id_changes_file =
+  $test_util->root_dir() . '/t/data/sessions_from_json_id_changes_test.json';
+
+my $FBal0064432_allele =
+  $created_cursdb->resultset('Allele')->find({ primary_identifier => "FBal0064432" });
+$FBal0064432_allele->primary_identifier("FBal0064432-sec-test");
+$FBal0064432_allele->update();
+my $FBal0064432_old_id_allele =
+  $created_cursdb->resultset('Allele')->find({ primary_identifier => "FBal0064432-sec-test" });
+ok(defined $FBal0064432_old_id_allele);
+
+my $FBgn0016131_gene =
+  $created_cursdb->resultset('Gene')->find({ primary_identifier => "FBgn0016131" });
+$FBgn0016131_gene->primary_identifier("FBgn0016131-sec-test");
+$FBgn0016131_gene->update();
+my $FBgn0016131_old_id_gene =
+  $created_cursdb->resultset('Gene')->find({ primary_identifier => "FBgn0016131-sec-test" });
+ok(defined $FBgn0016131_old_id_gene);
+
+($created_sessions, $updated_sessions) =
+  $load_util->create_sessions_from_json($config, $test_json_id_changes_file,
+                                        'test.user@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org', 7227);
+
+is (@$created_sessions, 0);
+is (@$updated_sessions, 1);
+
+$FBal0064432_old_id_allele =
+  $created_cursdb->resultset('Allele')->find({ primary_identifier => "FBal0064432-sec-test" });
+ok(!defined $FBal0064432_old_id_allele);
+
+$FBal0064432_allele =
+  $created_cursdb->resultset('Allele')->find({ primary_identifier => "FBal0064432" });
+ok(defined $FBal0064432_allele);
+
+## new name:
+#is($FBal0119310_allele->name(), "Dmel\\Cdk2-new-name");
+## new type:
+#is($FBal0119310_allele->type(), 'accessory');
+
+$FBgn0016131_old_id_gene =
+  $created_cursdb->resultset('Gene')->find({ primary_identifier => "FBgn0016131-sec-test" });
+ok(!defined $FBgn0016131_old_id_gene);
+
+$FBgn0016131_gene =
+  $created_cursdb->resultset('Gene')->find({ primary_identifier => "FBgn0016131" });
+ok(defined $FBgn0016131_gene);
+
 
 # load an extra allele
 my $test_json_extra_allele_file =
