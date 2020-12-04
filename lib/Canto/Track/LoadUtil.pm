@@ -1170,7 +1170,16 @@ sub create_sessions_from_json
     }
 
     if ($using_existing_session) {
-      if ($new_allele_count > 0) {
+      # check for genes that are in the Canto database but aren't in input file
+      for my $gene ($cursdb->resultset('Gene')->all()) {
+        if (!exists $genes_from_json->{$gene->primary_identifier()}) {
+          warn "gene ", $gene->primary_identifier(),
+            " is the Canto database is not in the JSON input for session: ",
+            $curs->curs_key(), "\n";
+        }
+      }
+
+     if ($new_allele_count > 0) {
         $session_updated = 1;
       } else {
         print "no new alleles adding to session: ", $curs->curs_key(), "\n";
