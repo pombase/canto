@@ -959,6 +959,44 @@ sub create_sessions_from_json
     my $alleles_from_json = $session_data->{alleles};
     my $genes_from_json = $session_data->{genes};
 
+    if ($using_existing_session) {
+      my %secondary_gene_identifier_counts = ();
+
+      for my $gene_details (values %$genes_from_json) {
+        for my $secondary_identifier (@{$gene_details->{secondary_identifiers} // []}) {
+          $secondary_gene_identifier_counts{$secondary_identifier}++;
+        }
+      }
+
+      for my $secondary_identifier (keys %secondary_gene_identifier_counts) {
+        if ($secondary_gene_identifier_counts{$secondary_identifier} > 1 &&
+              $existing_session_gene_uniquenames{$secondary_identifier}) {
+          print "two genes in the JSON file have a secondary identifier ",
+            "($secondary_identifier) in common and there is a gene with that ",
+            "identifier in the session - skipping $pub_uniquename\n";
+          next PUB;
+        }
+      }
+
+      my %secondary_allele_identifier_counts = ();
+
+      for my $allele_details (values %$alleles_from_json) {
+        for my $secondary_identifier (@{$allele_details->{secondary_identifiers} // []}) {
+          $secondary_allele_identifier_counts{$secondary_identifier}++;
+        }
+      }
+
+      for my $secondary_identifier (keys %secondary_allele_identifier_counts) {
+        if ($secondary_allele_identifier_counts{$secondary_identifier} > 1 &&
+              $existing_session_alleles_by_uniquenames{$secondary_identifier}) {
+          print "two alleles in the JSON file have a secondary identifier ",
+            "($secondary_identifier) in common and there is a allele with that ",
+            "identifier in the session - skipping $pub_uniquename\n";
+          next PUB;
+        }
+      }
+    }
+
     my @gene_lookup_results = ();
 
   GENE:
