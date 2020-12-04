@@ -1179,6 +1179,15 @@ sub create_sessions_from_json
         }
       }
 
+      # check for alleles
+      for my $allele ($cursdb->resultset('Allele')->all()) {
+        if (!exists $alleles_from_json->{$allele->primary_identifier()}) {
+          warn "allele ", $allele->primary_identifier(),
+            " is the Canto database is not in the JSON input for session: ",
+            $curs->curs_key(), "\n";
+        }
+      }
+
      if ($new_allele_count > 0) {
         $session_updated = 1;
       } else {

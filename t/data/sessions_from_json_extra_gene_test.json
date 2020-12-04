@@ -25,6 +25,13 @@
         "description": null,
         "synonyms": ["l(2)k06503"]
       },
+      "FBal0098765": {
+        "gene": "FBgn0016131",
+        "type": "other",
+        "name": "Dmel\\Cdk4_d1234",
+        "description": null,
+        "synonyms": []
+      },
       "FBab0037918" : {
         "description" : "Df(2L)Exel7046",
         "name" : "Df(2L)Exel7046",
