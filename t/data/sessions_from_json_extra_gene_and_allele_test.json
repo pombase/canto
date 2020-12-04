@@ -1,9 +1,12 @@
 {
   "PMID:2120045": {
+    "comment": "test notes\nline 2",
     "genes": {
       "FBgn0016131": {
       },
       "FBgn0004107": {
+      },
+      "FBgn0009999": {
       }
     },
     "alleles": {
@@ -15,19 +18,17 @@
         "comment": "comment on FBal0119310",
         "synonyms": ["UAS-Cdk2-myc", "UAS-Cdk2"]
       },
+      "FBal0009999": {
+        "gene": "FBgn0009999",
+        "type": "other",
+        "name": "Dmel\\Cdk88_V1.allele"
+      },
       "FBal0064432": {
         "gene": "FBgn0016131",
         "type": "other",
         "name": "Dmel\\Cdk4_k06503",
         "description": null,
         "synonyms": ["l(2)k06503"]
-      },
-      "FBal0098765": {
-        "gene": "FBgn0016131",
-        "type": "other",
-        "name": "Dmel\\Cdk4_d1234",
-        "description": null,
-        "synonyms": []
       },
       "FBab0037918" : {
         "description" : "Df(2L)Exel7046",

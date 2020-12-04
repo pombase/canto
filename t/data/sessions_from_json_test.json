@@ -1,9 +1,12 @@
 {
   "PMID:2120045": {
     "comment": "test notes\nline 2",
-    "genes": [
-      "FBgn0016131", "FBgn0004107"
-    ],
+    "genes": {
+      "FBgn0016131": {
+      },
+      "FBgn0004107": {
+      }
+    },
     "alleles": {
       "FBal0119310": {
         "gene": "FBgn0004107",
