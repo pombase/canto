@@ -813,6 +813,30 @@ sub load_pub_from_pubmed
   }
 }
 
+
+sub _update_allele_name_and_type
+{
+  my ($existing_allele, $json_allele_details) = @_;
+
+  my $session_updated = 0;
+
+  if (($existing_allele->name() // '') ne ($json_allele_details->{name} // '')) {
+    $existing_allele->name($json_allele_details->{name});
+    $existing_allele->update();
+    $session_updated = 1;
+  }
+
+  if ($json_allele_details->{type} &&
+        $existing_allele->type() ne $json_allele_details->{type}) {
+    $existing_allele->type($json_allele_details->{type});
+    $existing_allele->update();
+    $session_updated = 1;
+  }
+
+  return $session_updated;
+}
+
+
 =head2 create_sessions_from_json
 
  Usage   : my ($curs, $cursdb, $curator) =
@@ -944,13 +968,14 @@ sub create_sessions_from_json
           next GENE;
         }
 
+        $session_updated = 1;
+
         for my $secondary_identifier (@{$json_gene_details->{secondary_identifiers} || []}) {
           my $existing_session_gene = $existing_session_gene_uniquenames{$secondary_identifier};
 
           if ($existing_session_gene) {
             $existing_session_gene->primary_identifier($json_gene_uniquename);
             $existing_session_gene->update();
-            $session_updated = 1;
             next GENE;
           }
         }
@@ -1022,8 +1047,14 @@ sub create_sessions_from_json
       while (my ($allele_uniquename, $json_allele_details) = each %$alleles_from_json) {
         if ($using_existing_session) {
           if ($existing_allele_uniquenames{$allele_uniquename}) {
+            my $existing_allele = $existing_allele_uniquenames{$allele_uniquename};
+            if (_update_allele_name_and_type($existing_allele, $json_allele_details)) {
+              $session_updated = 1;
+            }
             next;
           }
+
+          $session_updated = 1;
 
           for my $secondary_identifier (@{$json_allele_details->{secondary_identifiers} || []}) {
 
@@ -1033,7 +1064,7 @@ sub create_sessions_from_json
             if ($existing_session_allele) {
               $existing_session_allele->primary_identifier($allele_uniquename);
               $existing_session_allele->update();
-              $session_updated = 1;
+              _update_allele_name_and_type($existing_session_allele, $json_allele_details);
               next ALLELE;
             }
           }

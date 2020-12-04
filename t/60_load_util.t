@@ -124,10 +124,13 @@ $FBal0064432_allele =
   $created_cursdb->resultset('Allele')->find({ primary_identifier => "FBal0064432" });
 ok(defined $FBal0064432_allele);
 
-## new name:
-#is($FBal0119310_allele->name(), "Dmel\\Cdk2-new-name");
-## new type:
-#is($FBal0119310_allele->type(), 'accessory');
+
+$FBal0119310_allele =
+  $created_cursdb->resultset('Allele')->find({ primary_identifier => "FBal0119310" });
+# new name:
+is($FBal0119310_allele->name(), "Dmel\\Cdk2-new-name");
+# new type:
+is($FBal0119310_allele->type(), 'accessory');
 
 $FBgn0016131_old_id_gene =
   $created_cursdb->resultset('Gene')->find({ primary_identifier => "FBgn0016131-sec-test" });
