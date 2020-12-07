@@ -64,7 +64,7 @@ Annotation extensions
     </div>
   </div>
 
-  <div class="ng-cloak">
+  <div ng-if="annotationType" class="ng-cloak">
   <ontology-term-comment-transfer ng-show="getState() == 'commenting'"
                                   feature-type="<% $feature_type %>"
                                   feature-display-name="<% $feature_display_name %>"
