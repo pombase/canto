@@ -1196,6 +1196,11 @@ span.canto-select-buttons {
    padding: .2em 1em .1em;
 }
 
+.ui-autocomplete {
+  /* move autocomplete results above dialogs */
+  z-index: 1055;
+}
+
 .curs-ui-dialog-subheading {
   margin-left: -1em;
   margin-right: -1em;
