@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 26;
+use Test::More tests => 28;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -105,6 +105,12 @@ is(@results, 4);
 is(@results, 0);
 
 @results = $ontology_index->lookup('molecular_function', [], ' @ # $ % ^ & ', 10);
+is(@results, 0);
+
+@results = $ontology_index->lookup('molecular_function', [], ' ( act', 10);
+is(@results, 4);
+
+@results = $ontology_index->lookup('molecular_function', [], ' (', 10);
 is(@results, 0);
 
 # look up "act"
