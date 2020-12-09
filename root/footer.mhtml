@@ -16,16 +16,16 @@
 <script src="<% $c->uri_for('/static/js/Chart-v2.7.2.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/angular-chart-v1.1.1.js') %>"></script>
 % } else {
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
-<script src="//ajax.microsoft.com/ajax/jquery.validate/1.17.0/jquery.validate.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.11/angular-animate.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/2.2.0/toaster.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/angular-chart.js/1.1.1/angular-chart.min.js"></script>
+<script src="<% $c->uri_for('/static/js/jquery-1.9.1.min.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/jquery-ui-1.9.2.min.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/jquery.validate-1.17.0.min.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/angular-1.7.8.min.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/bootstrap-3.3.7.min.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/angular-animate-1.5.11.min.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/toaster-2.2.0.min.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/ui-bootstrap-tpls-2.5.0.min.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/Chart-2.7.2.min.js') %>"></script>
+<script src="<% $c->uri_for('/static/js/angular-chart-1.1.1.min.js') %>"></script>
 % }
 <script src="<% $c->uri_for('/static/js/jquery.shiftcheckbox.0.8.0.js') %>"></script>
 <script src="<% $c->uri_for('/static/js/jquery.pnotify.min.js') %>"></script>
