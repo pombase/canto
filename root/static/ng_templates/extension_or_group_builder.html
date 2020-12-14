@@ -3,17 +3,17 @@
     <ul>
     <li ng-repeat="extConf in matchingConfigurations">
       <span ng-switch="cardinalityStatus(extConf)">
-      <span class="curs-extension-already-used" ng-switch-when="MAX_REACHED"
-            tooltip="This extension relation type cannot be added more times for this annotation">
-        {{extConf.displayText}}
-      </span>
-      <span ng-switch-when="MORE_POSSIBLE" uib-tooltip="{{debugConfText(extConf)}}">
-        <a href="" ng-click="startAddRelation(extConf)">{{extConf.displayText}}</a>
-      </span>
-      <span ng-switch-when="MORE_REQUIRED" uib-tooltip="{{debugConfText(extConf)}}">
-        <a href="" ng-click="startAddRelation(extConf)">{{extConf.displayText}}</a>
-        <span style="color: red;">required</span>
-      </span>
+        <span class="curs-extension-already-used" ng-switch-when="MAX_REACHED"
+              tooltip="This extension relation type cannot be added more times for this annotation">
+          {{extConf.displayText}}
+        </span>
+        <span ng-switch-when="MORE_POSSIBLE" uib-tooltip="{{debugConfText(extConf)}}">
+          <a href="" ng-click="startAddRelation(extConf)">{{extConf.displayText}}</a>
+        </span>
+        <span ng-switch-when="MORE_REQUIRED" uib-tooltip="{{debugConfText(extConf)}}">
+          <a href="" ng-click="startAddRelation(extConf)">{{extConf.displayText}}</a>
+          <span style="color: red;">required</span>
+        </span>
       </span>
     </li>
     </ul>
