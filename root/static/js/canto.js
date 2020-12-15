@@ -318,17 +318,6 @@ $(function () {
     return false;
   });
 
-  $("#curs-ontology-transfer .upload-genes-link a").on('click', function () {
-    function filter_func(i, e) {
-      return $.trim(e.value).length > 0;
-    }
-    if ($(".annotation-comment").filter(filter_func).size() > 0) {
-      make_confirm_dialog($(this), "Comment text will be lost.  Continue?", "Yes", "No");
-      return false;
-    }
-    return true;
-  });
-
   $("#curs-pub-send-session-popup-dialog").on('click', function () {
     make_confirm_dialog($(this), "Send link to session curator?", "Send", "Cancel");
   });
