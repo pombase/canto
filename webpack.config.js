@@ -7,6 +7,14 @@ module.exports = {
     filename: 'main.js',
     path: path.resolve(__dirname, 'root/dist'),
   },
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        loaders: ["style-loader","css-loader"]
+      }
+    ]
+  },
   mode: 'development',
   resolve: {
     alias: {

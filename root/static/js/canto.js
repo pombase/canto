@@ -1,8 +1,11 @@
 // @ts-check
 
-import $ from 'jquery';
-import 'jquery-ui'
-import 'jquery-form'
+
+import 'webpack-jquery-ui/autocomplete';
+import 'webpack-jquery-ui/tooltip';
+import 'webpack-jquery-ui/dialog';
+import 'jquery-form';
+
 import {error as pnotify_error} from '@pnotify/core';
 
 "use strict";
