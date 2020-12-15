@@ -300,7 +300,7 @@ $(function () {
         return false;
       }
     })
-    .data("autocomplete")._renderItem = function (ul, item) {
+    .autocomplete("instance")._renderItem = function (ul, item) {
       return $("<li></li>")
         .data("item.autocomplete", item)
         .append("<a>" + item.label + "<br></a>")
