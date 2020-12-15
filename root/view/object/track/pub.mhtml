@@ -54,7 +54,7 @@ $is_admin_user
   session</button>
 </div>
 %   } else {
-<div id="curs-pub-reassign-session-dialog" style="display: none">
+<div class="ui-front" id="curs-pub-reassign-session-dialog" style="display: none">
   <form id="curs-pub-reassign-session-form" method="put"
         action="<% $c->uri_for('/tools/reassign_session') %>">
     <input type="hidden" name="pub_id" value="<% $pub_id %>"/>
