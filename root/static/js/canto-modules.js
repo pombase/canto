@@ -1820,7 +1820,7 @@ var featureComplete =
               });
             }, 1);
           },
-        }).data("ui-autocomplete")._renderItem = function (ul, item) {
+        }).autocomplete("instance")._renderItem = function (ul, item) {
           var search_string = input.val();
           return $scope.render_item(ul, item, search_string);
         };
@@ -3683,7 +3683,7 @@ var alleleNameComplete =
               });
             });
           }
-        }).data("ui-autocomplete")._renderItem = function (ul, item) {
+        }).autocomplete("instance")._renderItem = function (ul, item) {
           var inputValue = elem.find('input').val().trim().toLowerCase();
           var displayName = item.display_name;
           if (displayName.indexOf(inputValue) == -1) {
@@ -8438,7 +8438,7 @@ var termNameComplete =
             valBeforeComplete = null;
             ferret_choose.hide_autocomplete_def();
           },
-        }).data("ui-autocomplete")._renderItem = function (ul, item) {
+        }).autocomplete("instance")._renderItem = function (ul, item) {
           var search_string = input.val();
           return scope.render_term_item(ul, item, search_string);
         };
