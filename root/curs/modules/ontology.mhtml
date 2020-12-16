@@ -60,7 +60,7 @@ Annotation extensions
                          feature-display-name='<% $feature_display_name %>'
                          term-id="{{currentTerm()}}"
                          is-valid="extensionBuilderIsValid"
-                         annotation-type-name="{{annotation_type_name}}"></extension-builder>
+                         annotation-type-name="<% $annotation_type_name %>"></extension-builder>
     </div>
   </div>
 
