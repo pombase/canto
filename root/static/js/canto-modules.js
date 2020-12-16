@@ -2550,35 +2550,41 @@ var extensionOrGroupBuilder =
         };
 
         $scope.cardinalityStatus = function (extensionRelConf) {
-          var count = $scope.getCardinalityCount(extensionRelConf);
+          var extensionCount = $scope.getCardinalityCount(extensionRelConf);
           var cardinalityConf = extensionRelConf.cardinality;
-
-          if (cardinalityConf.length == 1) {
-            if (cardinalityConf[0] == '*') {
-              return 'MORE_POSSIBLE';
-            }
-
-            if (cardinalityConf[0] == count) {
+          var minCardinality = cardinalityConf[0];
+          if (minCardinality == 0) {
+            if (cardinalityConf.length === 1) {
               return 'MAX_REACHED';
             }
-
-            return 'MORE_REQUIRED';
+            if (extensionCount == 0) {
+              return 'OPTIONAL';
+            }
           }
-
-          if (cardinalityConf.length == 2) {
-            if ((cardinalityConf[0] == 0 &&
-                cardinalityConf[1] == 1) ||
-              (cardinalityConf[1] == 0 &&
-                cardinalityConf[0] == 1)) {
-              if (count == 1) {
+          var i, cardinality, isLastCardinality;
+          for (i = 0; i < cardinalityConf.length; i += 1) {
+            cardinality = cardinalityConf[i];
+            if (cardinality == '*') {
+              return 'OPTIONAL';
+            }
+            isLastCardinality = (i == cardinalityConf.length - 1);
+            if (extensionCount == cardinality) {
+              if (isLastCardinality) {
                 return 'MAX_REACHED';
               }
-              // fall through
+              if (cardinalityConf[i + 1] == '*') {
+                return 'MORE_OPTIONAL'
+              }
+              return 'MORE_AVAILABLE';
             }
-            // fall through
+            if (extensionCount < cardinality) {
+              return 'MORE_REQUIRED';
+            }
+            if (extensionCount > cardinality) {
+              continue;
+            }
           }
-
-          return 'MORE_POSSIBLE';
+          return 'OPTIONAL';
         };
 
         $scope.setIsValid = function () {
