@@ -43,7 +43,7 @@ test_psgi $app, sub {
     is $res->code, 200;
 
     like ($res->content(), qr/Details for publication: PMID:19351719/);
-    like ($res->content(), qr/Sequence feature or region/);
+    like ($res->content(), qr/Retracted/);
   }
 
   # test viewing a list
