@@ -1347,6 +1347,7 @@ export:
       - DNA replication related
       - DNA recombination related
       - Mitochondrial sequence related
+      - Sequence feature or region
       - Other
 
 load:
