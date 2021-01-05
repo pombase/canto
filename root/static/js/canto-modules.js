@@ -2545,8 +2545,18 @@ var extensionOrGroupBuilder =
 
         $scope.getRemainingCardinality = function (extensionRelConf) {
           var count = $scope.getCardinalityCount(extensionRelConf);
-          var maxCardinality = $scope.getMaxCardinality(extensionRelConf);
-          return maxCardinality - count;
+          var cardinalityConf = extensionRelConf.cardinality;
+          var i, cardinality;
+          for (i = 0; i < cardinalityConf.length; i += 1) {
+            cardinality = cardinalityConf[i];
+            if (cardinality == '*') {
+              return Infinity;
+            }
+            if (count <= cardinality) {
+              return cardinality - count;
+            }
+          }
+          return 0;
         };
 
         $scope.cardinalityStatus = function (extensionRelConf) {
