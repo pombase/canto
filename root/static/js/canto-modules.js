@@ -2567,7 +2567,7 @@ var extensionOrGroupBuilder =
             if (cardinality == '*') {
               return 'OPTIONAL';
             }
-            isLastCardinality = (i == cardinalityConf.length - 1);
+            isLastCardinality = (i === cardinalityConf.length - 1);
             if (extensionCount == cardinality) {
               if (isLastCardinality) {
                 return 'MAX_REACHED';
