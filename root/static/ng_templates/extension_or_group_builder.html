@@ -7,7 +7,7 @@
               tooltip="This extension relation type cannot be added more times for this annotation">
           {{extConf.displayText}}
         </span>
-        <span ng-switch-when="OPTIONAL|MORE_OPTIONAL" ng-switch-when-separator="|" uib-tooltip="{{debugConfText(extConf)}}">
+        <span ng-switch-when="OPTIONAL" uib-tooltip="{{debugConfText(extConf)}}">
           <a href="" ng-click="startAddRelation(extConf)">{{extConf.displayText}}</a>
         </span>
         <span ng-switch-when="MORE_AVAILABLE" uib-tooltip="{{debugConfText(extConf)}}">

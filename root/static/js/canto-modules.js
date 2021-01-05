@@ -2583,7 +2583,7 @@ var extensionOrGroupBuilder =
                 return 'MAX_REACHED';
               }
               if (cardinalityConf[i + 1] == '*') {
-                return 'MORE_OPTIONAL'
+                return 'OPTIONAL'
               }
               return 'MORE_AVAILABLE';
             }
