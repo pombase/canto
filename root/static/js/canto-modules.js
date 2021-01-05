@@ -2543,7 +2543,7 @@ var extensionOrGroupBuilder =
             if (cardinality == '*') {
               return Infinity;
             }
-            if (count <= cardinality) {
+            if (count < cardinality) {
               return cardinality - count;
             }
           }
