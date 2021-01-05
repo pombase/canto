@@ -12,16 +12,16 @@
         </span>
         <span ng-switch-when="MORE_AVAILABLE" uib-tooltip="{{debugConfText(extConf)}}">
           <a href="" ng-click="startAddRelation(extConf)">{{extConf.displayText}}</a>
-          <span ng-if="getRemainingCardinality(extConf) !== Infinity">
+          <span class="curs-cardinality-available" ng-if="getRemainingCardinality(extConf) !== Infinity">
             ({{getRemainingCardinality(extConf)}} more available)
           </span>
         </span>
         <span ng-switch-when="MORE_REQUIRED" uib-tooltip="{{debugConfText(extConf)}}">
           <a href="" ng-click="startAddRelation(extConf)">{{extConf.displayText}}</a>
-          <span ng-if="getCardinalityCount(extConf) == 0" style="color: red;">
+          <span class="curs-cardinality-required" ng-if="getCardinalityCount(extConf) == 0">
             ({{getRemainingCardinality(extConf)}} required)
           </span>
-          <span ng-if="getCardinalityCount(extConf) > 0" style="color: red;">
+          <span class="curs-cardinality-required" ng-if="getCardinalityCount(extConf) > 0">
             ({{getRemainingCardinality(extConf)}} more required)
           </span>
         </span>
