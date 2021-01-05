@@ -2590,9 +2590,6 @@ var extensionOrGroupBuilder =
             if (extensionCount < cardinality) {
               return 'MORE_REQUIRED';
             }
-            if (extensionCount > cardinality) {
-              continue;
-            }
           }
           return 'OPTIONAL';
         };
