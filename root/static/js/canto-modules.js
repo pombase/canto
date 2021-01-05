@@ -2534,15 +2534,6 @@ var extensionOrGroupBuilder =
           return 0;
         };
 
-        $scope.getMaxCardinality = function (extensionRelConf) {
-          var cardinalityConf = extensionRelConf.cardinality;
-          var maxCardinality = cardinalityConf[cardinalityConf.length - 1];
-          if (maxCardinality == '*') {
-            return Infinity;
-          }
-          return maxCardinality;
-        };
-
         $scope.getRemainingCardinality = function (extensionRelConf) {
           var count = $scope.getCardinalityCount(extensionRelConf);
           var cardinalityConf = extensionRelConf.cardinality;
