@@ -2,7 +2,7 @@
 
 import $ from 'jquery';
 import angular from 'angular';
-import 'jquery-ui/ui/widgets/autocomplete';
+import 'webpack-jquery-ui/autocomplete';
 import 'angular-ui-bootstrap';
 import 'angular-confirm';
 import 'angularjs-toaster';
