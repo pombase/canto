@@ -267,7 +267,7 @@
 
                         // Autocomplete will create its own tag from a selection and close automatically.
                         if (!(that.options.autocomplete.autoFocus && that.tagInput.data('autocomplete-open'))) {
-                            var focusedItem = that.tagInput.autocomplete('widget').find('.ui-menu-item > .ui-state-focus');
+                            var focusedItem = that.tagInput.autocomplete('widget').find('.ui-menu-item > .ui-state-active');
                             if (focusedItem.length > 0) {
                                 that.createTag(focusedItem[0].innerText);
                             } else {
