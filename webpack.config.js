@@ -10,7 +10,7 @@ module.exports = {
   mode: 'development',
   resolve: {
     alias: {
-      'tag-it': path.resolve(__dirname, 'node_modules/tag-it/js/tag-it.js')
+      'tag-it': path.resolve(__dirname, 'root/static/js/tag-it.js')
     }
   },
   plugins: [

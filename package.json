@@ -52,7 +52,6 @@
     "jquery": "^3.5.1",
     "jquery-form": "^4.3.0",
     "jquery-ui": "^1.12.1",
-    "pnotify": "^5.1.2",
-    "tag-it": "2.0.0"
+    "pnotify": "^5.1.2"
   }
 }
