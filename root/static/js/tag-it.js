@@ -121,7 +121,7 @@
                 this.options.singleFieldNode = this.element;
                 this.element.addClass('tagit-hidden-field');
             } else {
-                this.tagList = this.element.find('ul, ol').andSelf().last();
+                this.tagList = this.element.find('ul, ol').addBack().last();
             }
 
             this.tagInput = $('<input type="text" />').addClass('ui-widget-content');
@@ -267,7 +267,7 @@
 
                         // Autocomplete will create its own tag from a selection and close automatically.
                         if (!(that.options.autocomplete.autoFocus && that.tagInput.data('autocomplete-open'))) {
-                            var focusedItem = that.tagInput.autocomplete('widget').find('.ui-menu-item > .ui-state-focus');
+                            var focusedItem = that.tagInput.autocomplete('widget').find('.ui-menu-item > .ui-state-active');
                             if (focusedItem.length > 0) {
                                 that.createTag(focusedItem[0].innerText);
                             } else {
