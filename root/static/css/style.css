@@ -1569,6 +1569,14 @@ a:not([href]) {
   color: grey;
 }
 
+.curs-cardinality-required {
+  color: #8C0000;
+}
+
+.curs-cardinality-available {
+  color: #4F4F4F;
+}
+
 .curs-extension-name-complete-hint {
   white-space: nowrap;
   padding-left: 1em;
