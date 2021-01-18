@@ -31,7 +31,7 @@ databases.
         Canto is currently deployed for:
         <ul class="canto-other-instances">
           <li>
-  <a href="http://curation.pombase.org/pombe" class="btn btn-primary visit">Visit...</a>
+  <a href="https://curation.pombase.org/pombe" class="btn btn-primary visit">Visit...</a>
   <span class="organism-name">Schizosaccharomyces pombe</span> (fission yeast)
   at PomBase.
   Curate GO, phenotypes, interactions, protein modifications for inclusion in
@@ -48,12 +48,12 @@ databases.
   phenotype and genetic interaction annotation.
           </li>
           <li>
-  <a href="http://curation.pombase.org/uniprot" class="btn btn-primary visit">Visit...</a>
+  <a href="https://curation.pombase.org/uniprot" class="btn btn-primary visit">Visit...</a>
   <span>Generic Gene Ontology Implementation: Curate GO annotations for proteins,
   using UniProtKB identifiers.</span>
           </li>
           <li>
-  <a href="http://curation.pombase.org/kpas" class="btn btn-primary visit">Visit...</a>
+  <a href="https://curation.pombase.org/kpas" class="btn btn-primary visit">Visit...</a>
   <span class="organism-name">Komagataella pastoris</span> (formerly known as Pichia pastoris)
           </li>
         </ul>
@@ -96,7 +96,7 @@ Canto is a free, open source application. The source code is
 available from Github.
         </p>
         <p>
-There is <a href="http://curation.pombase.org/docs/canto_admin">documentation</a>
+There is <a href="https://curation.pombase.org/docs/canto_admin">documentation</a>
 for local installation and administration.
         </p>
         <p>

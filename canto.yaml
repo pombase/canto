@@ -23,7 +23,7 @@ instance_front_subtitle: Add your work
 header_image_url: '/'
 header_image: logos/curation_tool.png
 
-canto_url: http://curation.pombase.org/
+canto_url: https://curation.pombase.org/
 
 app_version: v1584
 
@@ -2389,7 +2389,7 @@ curs_config:
   genotype_config:
     default_strain_name: 'h+'
 
-canto_demo_url: "http://curation.pombase.org/demo"
+canto_demo_url: "https://curation.pombase.org/demo"
 
 extra_sponsors: []
 
