@@ -177,7 +177,7 @@ of these more specific terms in an iterative process.
 FYPO terms are organised in a hierarchical structure, and FYPO
 annotations should be as specific as possible to describe the data
 from your experiment. (More information on <a
-href="http://curation.pombase.org/pombase-trac/wiki/FYPOContentStructure">FYPO
+href="https://curation.pombase.org/pombase-trac/wiki/FYPOContentStructure">FYPO
 organisation</a> is available on the PomBase wiki.) You will have the
 opportunity to request a new term if the most specific term available
 does not describe your gene product adequately.
