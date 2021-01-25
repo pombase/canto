@@ -2090,6 +2090,7 @@ available_annotation_type_list:
     namespace: fission_yeast_phenotype
     can_have_conditions: 1
     category: interaction
+    term_suggestions_annotation_type: phenotype
     display_name: 'genetic interaction'
     feature_type: 'metagenotype'
     help_text: 'Examples: synthetic lethality, dosage suppression, phenotype enhancement.'
