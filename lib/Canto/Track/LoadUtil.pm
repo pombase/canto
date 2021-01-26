@@ -870,7 +870,7 @@ sub create_sessions_from_json
  };
 
   my $gene_lookup = Canto::Track::get_adaptor($config, 'gene');
-  my $sessions_data = decode_json($json_text);
+  my $sessions_data = JSON->new->decode($json_text);
 
   my $curator_manager = Canto::Track::CuratorManager->new(config => $config);
 
