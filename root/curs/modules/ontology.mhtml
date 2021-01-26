@@ -43,9 +43,7 @@ for annotating <% $feature_display_name %> with {{termDetails.id}}
                            annotation-type-name="<% $annotation_type_name %>"></annotation-evidence>
 
       <div ng-if="showConditions()" class="curs-evidence-conditions">
-        Please add experimental conditions.  Conditions are the aspects of the
-        experimental setup that are independent of what cells (strain, genotype,
-        constructs, etc.) are used.
+        <% $conditions_help_text %>
         <condition-picker conditions="data.conditions"></condition-picker>
       </div>
     </div>
@@ -100,5 +98,10 @@ if ($feature_type eq 'gene') {
   $feature_display_name = $feature->display_name();
 } else {
   $feature_display_name = $feature->display_name($c->config());
+}
+my $conditions_help_text = "Please add experimental conditions. Conditions are the aspects of the experimental setup that are independent of what cells (strain, genotype, constructs, etc.) are used.";
+my $annotation_type_config = $c->config()->{annotation_types}->{$annotation_type_name};
+if (defined $annotation_type_config->{conditions_help_text}) {
+  $conditions_help_text = $annotation_type_config->{conditions_help_text};
 }
 </%init>
