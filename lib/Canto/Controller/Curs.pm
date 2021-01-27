@@ -179,6 +179,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     ($st->{show_metagenotype_links}, $st->{show_host_genotype_link},
      $st->{has_pathogen_genes},
      $st->{has_host_genotypes}, $st->{has_pathogen_genotypes},
+     $st->{has_pathogen_host_metagenotypes},
      $st->{edit_organism_page_valid}) =
       _metagenotype_flags($config, $schema);
   }
@@ -371,6 +372,7 @@ sub _metagenotype_flags
   my $has_host_genes = 0;
   my $has_host_genotypes = 0;
   my $has_pathogen_genotypes = 0;
+  my $has_pathogen_host_metagenotypes = 0;
 
   my $organism_page_valid = 1;
 
@@ -409,9 +411,40 @@ sub _metagenotype_flags
     $organism_page_valid = 0;
   }
 
+  if ($has_host_genes && $has_pathogen_genes) {
+    my $rs = $schema->resultset('Metagenotype')
+      ->search({}, { prefetch => { first_genotype => 'organism',
+                                   second_genotype => 'organism' } });
+
+    while (defined (my $metagenotype = $rs->next())) {
+      my $first_genotype = $metagenotype->first_genotype();
+      my $first_organism = $first_genotype->organism();
+
+      my $first_org_details =
+        $organism_lookup->lookup_by_taxonid($first_organism->taxonid());
+
+      if (!defined $first_org_details->{pathogen_or_host}) {
+        next;
+      }
+
+      my $second_genotype = $metagenotype->second_genotype();
+      my $second_organism = $second_genotype->organism();
+
+      my $second_org_details =
+        $organism_lookup->lookup_by_taxonid($second_organism->taxonid());
+
+      if (!defined $second_org_details->{pathogen_or_host}) {
+        next;
+      }
+
+      $has_pathogen_host_metagenotypes = 1;
+      last;
+    }
+  }
+
   return ($has_pathogen_genotypes && $has_host, $has_host_genes,
           $has_pathogen_genes, $has_host_genotypes, $has_pathogen_genotypes,
-          $organism_page_valid);
+          $has_pathogen_host_metagenotypes, $organism_page_valid);
 };
 
 sub _set_genes_in_session
