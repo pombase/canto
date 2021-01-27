@@ -19,7 +19,7 @@
       </annotation-quick-add>
 %   } else {
       <span style="color: #888"
-            uib-tooltip="Add a <% $annotation_type->{feature_subtype} || '' %> genotype to make a phenotype annotation">
+            uib-tooltip="Add a <% $_display_subtype->($annotation_type) %> to make a phenotype annotation">
         <% ucfirst $annotation_type->{display_name} %>
       </span>
     </li>
@@ -47,6 +47,18 @@ my $_show_link = sub {
   }
 
   return $feature_subtype eq 'NONE' || $feature_subtype eq 'host' && $has_host_genotypes || $feature_subtype eq 'pathogen' && $has_pathogen_genotypes
+};
+
+my $_display_subtype = sub {
+  my ($annotation_type) = @_;
+
+  my $feature_subtype = $annotation_type->{feature_subtype} || 'NONE';
+
+  if ($feature_subtype eq 'pathogen-host') {
+    return 'pathogen-host metagenotype';
+  }
+
+  return ($annotation_type->{feature_subtype} . ' ' || '') . 'genotype';
 };
 
 </%init>
