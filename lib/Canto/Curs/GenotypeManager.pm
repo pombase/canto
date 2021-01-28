@@ -769,10 +769,18 @@ sub delete_metagenotype
   }
 
   my $host_genotype = $metagenotype->host_genotype();
+  my $pathogen_genotype = $metagenotype->pathogen_genotype();
 
   $metagenotype->delete();
 
+  if ($pathogen_genotype->annotations()->count() == 0 &&
+        $pathogen_genotype->is_wild_type() &&
+        !$pathogen_genotype->is_part_of_metagenotype()) {
+    $self->delete_genotype($pathogen_genotype->genotype_id());
+  }
+
   if ($host_genotype->annotations()->count() == 0 &&
+        $host_genotype->is_wild_type() &&
         !$host_genotype->is_part_of_metagenotype()) {
     $self->delete_genotype($host_genotype->genotype_id());
   }

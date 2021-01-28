@@ -412,6 +412,20 @@ sub genotype_type
   }
 }
 
+=head2 is_wild_type
+
+ Usage   : if ($genotype->is_wild_type()) { ... }
+ Function: Return 1 iff is genotype has no alleles
+
+=cut
+
+sub is_wild_type {
+  my $self = shift;
+
+  return $self->allele_genotypes()->count() == 0;
+}
+
+
 sub delete
 {
   my $self = shift;
