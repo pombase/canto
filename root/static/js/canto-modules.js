@@ -6400,6 +6400,8 @@ var annotationTableCtrl =
         $scope.multiOrganismMode = false;
         $scope.strainsMode = CantoGlobals.strains_mode;
 
+        $scope.sessionState = 'UNKNOWN';
+
         $scope.data = {};
 
         // default is no sorting
@@ -6533,6 +6535,7 @@ var annotationTableCtrl =
         CursSessionDetails.get()
           .then(function (sessionDetails) {
             $scope.data.publicationUniquename = sessionDetails.publication_uniquename;
+            $scope.sessionState = sessionDetails.state;
           });
 
         CantoConfig.get('instance_organism').then(function (results) {

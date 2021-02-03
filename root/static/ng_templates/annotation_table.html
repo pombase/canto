@@ -48,6 +48,7 @@
               </th>
               <th ng-if="annotationType.feature_type == 'metagenotype'">Pathogen genotype</th>
               <th ng-if="annotationType.feature_type == 'metagenotype'">Host genotype</th>
+              <th ng-if="sessionState == 'APPROVAL_IN_PROGRESS'">Internal ID</th>
               <th ng-if="!data.hideColumns.term_ontid">
                 <a class="curs-sort-button" href=""
                    title="Click to sort" ng-click="setSortBy('term_ontid')">
