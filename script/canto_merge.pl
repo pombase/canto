@@ -105,6 +105,15 @@ if (defined $merge_person) {
   my $person_to_remove_name = $person_to_remove->name();
   my $dest_person_name = $dest_person->name();
 
+  if ($person_to_remove->orcid() && !$dest_person->orcid()) {
+    $dest_person->orcid($person_to_remove->orcid());
+    $dest_person->update();
+  }
+  if ($person_to_remove->known_as() && !$dest_person->known_as()) {
+    $dest_person->known_as($person_to_remove->known_as());
+    $dest_person->update();
+  }
+
   my @labs = $person_to_remove->labs();
 
   if (@labs) {
