@@ -1600,11 +1600,6 @@ a:not([href]) {
   margin-top: 10px;
 }
 
-.curs-metagenotype-manage-pathogen, .curs-metagenotype-manage-host {
-  width: 49%;
-  float: left;
-}
-
 .gene-button-delete-text-disabled {
   color: whitesmoke;
 }
