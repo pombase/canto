@@ -1600,11 +1600,6 @@ a:not([href]) {
   margin-top: 10px;
 }
 
-.curs-metagenotype-manage-pathogen, .curs-metagenotype-manage-host {
-  width: 49%;
-  float: left;
-}
-
 .gene-button-delete-text-disabled {
   color: whitesmoke;
 }
@@ -1731,6 +1726,17 @@ a:not([href]) {
   display: inline-block;
   font-weight: 700;
   margin-bottom: 10px;
+}
+.curs-metagenotype-picker-columns {
+  display: flex;
+  flex-wrap: wrap;
+}
+.curs-metagenotype-picker-column-pathogen {
+  flex-basis: 530px;
+  padding-right: 30px;
+}
+.curs-metagenotype-picker-column-host {
+  flex-shrink: 1;
 }
 
 .curs-warning-container {
