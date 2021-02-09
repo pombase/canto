@@ -1034,6 +1034,8 @@ sub create_sessions_from_json
           if ($existing_session_gene) {
             $existing_session_gene->primary_identifier($json_gene_uniquename);
             $existing_session_gene->update();
+            delete $existing_session_gene_uniquenames{$secondary_identifier};
+            $existing_session_gene_uniquenames{$json_gene_uniquename} = $existing_session_gene;
             next GENE;
           }
         }
