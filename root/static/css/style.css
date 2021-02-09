@@ -1727,6 +1727,17 @@ a:not([href]) {
   font-weight: 700;
   margin-bottom: 10px;
 }
+.curs-metagenotype-picker-columns {
+  display: flex;
+  flex-wrap: wrap;
+}
+.curs-metagenotype-picker-column-pathogen {
+  flex-basis: 530px;
+  padding-right: 30px;
+}
+.curs-metagenotype-picker-column-host {
+  flex-shrink: 1;
+}
 
 .curs-warning-container {
   display: flex;
