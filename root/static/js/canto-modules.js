@@ -9377,9 +9377,11 @@ var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Met
       $scope.taxonGenotypeMap = null;
 
       $scope.metagenotypes = null;
+      $scope.filteredMetagenotypes = null;
 
       $scope.$on('metagenotype:updated', function (event, data) {
         $scope.metagenotypes = data;
+        $scope.filteredMetagenotypes = $scope.metagenotypes;
       });
       $scope.$on('metagenotype list changed', function () {
         Metagenotype.load();
@@ -9394,6 +9396,7 @@ var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Met
         $scope.selectedPathogen = organism;
         $scope.selectedGenotypePathogen = null;
         $scope.selectedPathogenGenotypes = $scope.taxonGenotypeMap[taxonId];
+        filterMetagenotypesBySelectedOrganisms();
       };
 
       $scope.onPathogenGenotypeSelect = function (genotype) {
@@ -9408,6 +9411,7 @@ var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Met
         $scope.selectedHostGenotypes = taxonId in $scope.taxonGenotypeMap ?
           $scope.taxonGenotypeMap[taxonId] :
           {'single': [], 'multi': []};
+        filterMetagenotypesBySelectedOrganisms();
       };
 
       $scope.onHostGenotypeSelect = function (genotype) {
@@ -9540,6 +9544,24 @@ var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Met
         });
       }
 
+      function filterMetagenotypesBySelectedOrganisms() {
+        function filterByOrganisms(metagenotype) {
+          var pathogenId = metagenotype.pathogen_genotype.organism.taxonid;
+          var hostId = metagenotype.host_genotype.organism.taxonid;
+          return pathogenId == selectedPathogenId && hostId == selectedHostId;
+        }
+        var selectedPathogenId = null;
+        var selectedHostId = null;
+        if ($scope.selectedPathogen) {
+          selectedPathogenId = $scope.selectedPathogen.taxonid;
+        }
+        if ($scope.selectedHost) {
+          selectedHostId = $scope.selectedHost.taxonid;
+        }
+        if (!! selectedPathogenId && !! selectedHostId) {
+          $scope.filteredMetagenotypes = $scope.metagenotypes.filter(filterByOrganisms);
+        }
+      }
     }
   };
 };
