@@ -1,0 +1,36 @@
+{
+  "PMID:2120045": {
+    "comment": "test notes\nline 2",
+    "genes": {
+      "FBgn0016131": {
+      }
+    },
+    "alleles": {
+      "FBal0064432": {
+        "gene": "FBgn0016131",
+        "type": "other",
+        "name": "Dmel\\Cdk4_k06503",
+        "description": null,
+        "synonyms": ["l(2)k06503"]
+      },
+      "FBal0098765": {
+        "gene": "FBgn0016131",
+        "type": "other",
+        "name": "Dmel\\Cdk4_d1234",
+        "description": null,
+        "synonyms": []
+      }
+    },
+    "genotypes": {
+      "FB<something>": {
+        "genotype_name": "...",
+        "background": "...",
+        "alleles": [
+          {
+            "allele_uniquename": "FBal0064432"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1226,25 +1226,71 @@ sub create_sessions_from_json
     }
 
     if ($using_existing_session) {
-      # check for genes that are in the Canto database but aren't in input file
-      for my $gene ($cursdb->resultset('Gene')->all()) {
-        if (!exists $genes_from_json->{$gene->primary_identifier()}) {
-          warn "gene ", $gene->primary_identifier(),
-            " is the Canto database is not in the JSON input for session: ",
-            $curs->curs_key(), "\n";
-        }
-      }
-
-      # check for alleles
+      # check for alleles that are in the Canto database but aren't in input file
+    ALLELE:
       for my $allele ($cursdb->resultset('Allele')->all()) {
-        if (!exists $alleles_from_json->{$allele->primary_identifier()}) {
-          warn "allele ", $allele->primary_identifier(),
-            " is the Canto database is not in the JSON input for session: ",
+        my $allele_primary_identifier = $allele->primary_identifier();
+        if (!exists $alleles_from_json->{$allele_primary_identifier}) {
+          warn "allele $allele_primary_identifier ",
+            "is the Canto database is not in the JSON input for session: ",
             $curs->curs_key(), "\n";
+
+          my @allele_genotypes = $allele->genotypes()->all();
+
+          map {
+            my $genotype = $_;
+
+            if ($genotype->annotations()->count() > 0) {
+              warn "  can't remove $allele_primary_identifier - one or more ",
+                "genotypes containing this allele has annotation\n";
+              next ALLELE;
+            }
+          } @allele_genotypes;
+
+          $session_updated = 1;
+          map {
+            my $genotype = $_;
+            $genotype->delete();
+          } @allele_genotypes;
+          $allele->allele_notes()->delete();
+          $allele->allelesynonyms()->delete();
+          $allele->delete();
         }
       }
 
-     if ($new_allele_count > 0) {
+      # check for genes
+    GENE:
+      for my $gene ($cursdb->resultset('Gene')->all()) {
+        my $gene_primary_identifier = $gene->primary_identifier();
+        if (!exists $genes_from_json->{$gene_primary_identifier}) {
+          warn "gene $gene_primary_identifier ",
+            "is the Canto database is not in the JSON input for session: ",
+            $curs->curs_key(), "\n";
+
+          my @gene_alleles = $gene->alleles();
+
+          map {
+            my $allele = $_;
+
+            my @gene_allele_genotypes = $allele->genotypes()->all();
+
+            map {
+              my $genotype = $_;
+
+              if ($genotype->annotations()->count() > 0) {
+                warn "  can't remove $gene_primary_identifier - one or more ",
+                  "genotypes containing an allele from this gene has annotation\n";
+                next GENE;
+              }
+            } @gene_allele_genotypes;
+          } @gene_alleles;
+
+          $session_updated = 1;
+          $gene->delete();
+        }
+      }
+
+      if ($new_allele_count > 0) {
         $session_updated = 1;
       } else {
         print "no new alleles adding to session: ", $curs->curs_key(), "\n";
