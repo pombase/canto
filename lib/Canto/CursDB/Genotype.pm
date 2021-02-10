@@ -353,7 +353,8 @@ sub metagenotypes
   return $self->metagenotype_second_genotypes()->all();
 }
 
-# returns either the count of metagenotypes that this genotype is part of
+# returns a hash of counts of metagenotypes of this genotype by
+# metagenotype type
 sub metagenotype_count_by_type
 {
   my $self = shift;
