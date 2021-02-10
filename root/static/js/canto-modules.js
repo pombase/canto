@@ -9260,7 +9260,7 @@ canto.directive('metagenotypeGenotypePicker',
 var metagenotypeListRow = function (CantoGlobals, Metagenotype, AnnotationTypeConfig) {
   return {
     scope: {
-      metagenotype: '=',
+      metagenotype: '<',
       showBackground: '<'
     },
     restrict: 'A',
@@ -9314,9 +9314,11 @@ var metagenotypeListRow = function (CantoGlobals, Metagenotype, AnnotationTypeCo
 canto.directive('metagenotypeListRow', ['CantoGlobals', 'Metagenotype', 'AnnotationTypeConfig', metagenotypeListRow]);
 
 
-var metagenotypeListView = function (Metagenotype) {
+var metagenotypeListView = function () {
   return {
-    scope: {},
+    scope: {
+      metagenotypes: '<'
+    },
     restrict: 'E',
     replace: true,
     templateUrl: app_static_path + 'ng_templates/metagenotype_list_view.html',
@@ -9324,21 +9326,16 @@ var metagenotypeListView = function (Metagenotype) {
       $scope.metagenotypes = [];
       $scope.showBackground = {};
 
-      $scope.$on('metagenotype:updated', function (event, data) {
-        $scope.metagenotypes = data;
-        $scope.showBackground = getBackgroundColumnSettings($scope.metagenotypes);
-      });
+      $scope.$watchCollection('metagenotypes', setBackgroundColumnSettings);
 
-      $scope.$on('metagenotype list changed', function () {
-        Metagenotype.load();
-      });
-
-      Metagenotype.load();
+      function setBackgroundColumnSettings(metagenotypes) {
+        $scope.showBackground = getBackgroundColumnSettings(metagenotypes);
+      }
 
       function getBackgroundColumnSettings(metagenotypes) {
         var backgroundFinder = function (organismType) {
-          return function (mg) {
-            var genotype = mg[organismType + '_genotype'];
+          return function (metagenotype) {
+            var genotype = metagenotype[organismType + '_genotype'];
             return (
               genotype.organism.pathogen_or_host === organismType &&
               !! genotype.background
@@ -9355,7 +9352,7 @@ var metagenotypeListView = function (Metagenotype) {
   };
 };
 
-canto.directive('metagenotypeListView', ['Metagenotype', metagenotypeListView]);
+canto.directive('metagenotypeListView', [metagenotypeListView]);
 
 
 var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Metagenotype, StrainsService) {
@@ -9378,6 +9375,15 @@ var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Met
       $scope.selectedHostStrain = null;
 
       $scope.taxonGenotypeMap = null;
+
+      $scope.metagenotypes = null;
+
+      $scope.$on('metagenotype:updated', function (event, data) {
+        $scope.metagenotypes = data;
+      });
+      $scope.$on('metagenotype list changed', function () {
+        Metagenotype.load();
+      });
 
       $scope.genotypeUrl = CantoGlobals.curs_root_uri;
       $scope.makeInvalid = true;
@@ -9453,6 +9459,7 @@ var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Met
           $scope.taxonGenotypeMap = makeTaxonGenotypeMap(genotypes, organisms);
         });
         StrainsService.getAllSessionStrains();
+        Metagenotype.load();
       }
 
       function loadOrganisms() {
