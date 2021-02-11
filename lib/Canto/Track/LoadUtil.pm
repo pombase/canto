@@ -955,7 +955,6 @@ sub create_sessions_from_json
     } else {
       ($curs, $cursdb) =
         Canto::Track::create_curs($config, $self->schema(), $pub, $connect_options);
-      push @new_sessions, $curs;
     }
 
     my %existing_session_gene_uniquenames = ();
@@ -1325,6 +1324,7 @@ sub create_sessions_from_json
 
     if (!$using_existing_session) {
       if ($success) {
+        push @new_sessions, $curs;
         print "created session: ", $curs->curs_key(), " pub: ", $pub->uniquename(),
           " for: $curator_email_address\n";
         $success = 0;
