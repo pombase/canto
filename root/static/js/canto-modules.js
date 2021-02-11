@@ -9323,7 +9323,7 @@ var metagenotypeListView = function () {
     replace: true,
     templateUrl: app_static_path + 'ng_templates/metagenotype_list_view.html',
     controller: function ($scope) {
-      $scope.metagenotypes = [];
+      $scope.metagenotypes = null;
       $scope.showBackground = {};
 
       $scope.$watchCollection('metagenotypes', setBackgroundColumnSettings);
