@@ -1231,8 +1231,9 @@ sub create_sessions_from_json
       for my $allele ($cursdb->resultset('Allele')->all()) {
         my $allele_primary_identifier = $allele->primary_identifier();
         if (!exists $alleles_from_json->{$allele_primary_identifier}) {
-          warn "allele $allele_primary_identifier ",
-            "is the Canto database is not in the JSON input for session: ",
+          warn "allele $allele_primary_identifier - ",
+            $allele->long_identifier($config),
+            " is in the Canto database is not in the JSON input for session: ",
             $curs->curs_key(), "\n";
 
           my @allele_genotypes = $allele->genotypes()->all();
@@ -1245,6 +1246,12 @@ sub create_sessions_from_json
                 "genotypes containing this allele has annotation\n";
               next ALLELE;
             }
+            if ($genotype->metagenotypes() > 0) {
+              warn "  can't remove $allele_primary_identifier - one or more ",
+                "genotypes containing this allele are part of an interaction ",
+                "or metagenotype\n";
+              next ALLELE;
+            }
           } @allele_genotypes;
 
           $session_updated = 1;
@@ -1255,6 +1262,7 @@ sub create_sessions_from_json
           $allele->allele_notes()->delete();
           $allele->allelesynonyms()->delete();
           $allele->delete();
+          warn "  - successfully deleted from the Canto database\n";
         }
       }
 
@@ -1264,7 +1272,7 @@ sub create_sessions_from_json
         my $gene_primary_identifier = $gene->primary_identifier();
         if (!exists $genes_from_json->{$gene_primary_identifier}) {
           warn "gene $gene_primary_identifier ",
-            "is the Canto database is not in the JSON input for session: ",
+            "is in the Canto database is not in the JSON input for session: ",
             $curs->curs_key(), "\n";
 
           my @gene_alleles = $gene->alleles();
@@ -1282,11 +1290,19 @@ sub create_sessions_from_json
                   "genotypes containing an allele from this gene has annotation\n";
                 next GENE;
               }
+              if ($genotype->metagenotypes() > 0) {
+                warn "  can't remove $gene_primary_identifier - one or more ",
+                  "genotypes containing this allele from this gene are part of ",
+                  "an interaction or metagenotype\n";
+                next ALLELE;
+              }
+
             } @gene_allele_genotypes;
           } @gene_alleles;
 
           $session_updated = 1;
           $gene->delete();
+          warn "  - successfully deleted from the Canto database\n";
         }
       }
 
