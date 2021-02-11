@@ -9396,7 +9396,9 @@ var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Met
         $scope.selectedPathogen = organism;
         $scope.selectedGenotypePathogen = null;
         $scope.selectedPathogenGenotypes = $scope.taxonGenotypeMap[taxonId];
-        filterMetagenotypesBySelectedOrganisms();
+        $scope.filteredMetagenotypes = filterMetagenotypesBySelectedOrganisms(
+          $scope.selectedPathogen, $scope.selectedHost, $scope.metagenotypes
+        );
       };
 
       $scope.onPathogenGenotypeSelect = function (genotype) {
@@ -9411,7 +9413,9 @@ var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Met
         $scope.selectedHostGenotypes = taxonId in $scope.taxonGenotypeMap ?
           $scope.taxonGenotypeMap[taxonId] :
           {'single': [], 'multi': []};
-        filterMetagenotypesBySelectedOrganisms();
+        $scope.filteredMetagenotypes = filterMetagenotypesBySelectedOrganisms(
+          $scope.selectedPathogen, $scope.selectedHost, $scope.metagenotypes
+        );
       };
 
       $scope.onHostGenotypeSelect = function (genotype) {
@@ -9544,23 +9548,18 @@ var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Met
         });
       }
 
-      function filterMetagenotypesBySelectedOrganisms() {
+      function filterMetagenotypesBySelectedOrganisms(selectedPathogen, selectedHost, metagenotypes) {
         function filterByOrganisms(metagenotype) {
           var pathogenId = metagenotype.pathogen_genotype.organism.taxonid;
           var hostId = metagenotype.host_genotype.organism.taxonid;
           return pathogenId == selectedPathogenId && hostId == selectedHostId;
         }
-        var selectedPathogenId = null;
-        var selectedHostId = null;
-        if ($scope.selectedPathogen) {
-          selectedPathogenId = $scope.selectedPathogen.taxonid;
+        if (selectedPathogen && selectedHost) {
+          var selectedPathogenId = selectedPathogen.taxonid;
+          var selectedHostId = selectedHost.taxonid;
+          return metagenotypes.filter(filterByOrganisms);
         }
-        if ($scope.selectedHost) {
-          selectedHostId = $scope.selectedHost.taxonid;
-        }
-        if (!! selectedPathogenId && !! selectedHostId) {
-          $scope.filteredMetagenotypes = $scope.metagenotypes.filter(filterByOrganisms);
-        }
+        return metagenotypes;
       }
     }
   };
