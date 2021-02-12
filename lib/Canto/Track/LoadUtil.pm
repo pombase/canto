@@ -1293,7 +1293,7 @@ sub create_sessions_from_json
                 warn "  can't remove $gene_primary_identifier - one or more ",
                   "genotypes containing this allele from this gene are part of ",
                   "an interaction or metagenotype\n";
-                next ALLELE;
+                next GENE;
               }
 
             } @gene_allele_genotypes;
