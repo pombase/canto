@@ -9260,7 +9260,7 @@ canto.directive('metagenotypeGenotypePicker',
 var metagenotypeListRow = function (CantoGlobals, Metagenotype, AnnotationTypeConfig) {
   return {
     scope: {
-      metagenotype: '=',
+      metagenotype: '<',
       showBackground: '<'
     },
     restrict: 'A',
@@ -9314,31 +9314,28 @@ var metagenotypeListRow = function (CantoGlobals, Metagenotype, AnnotationTypeCo
 canto.directive('metagenotypeListRow', ['CantoGlobals', 'Metagenotype', 'AnnotationTypeConfig', metagenotypeListRow]);
 
 
-var metagenotypeListView = function (Metagenotype) {
+var metagenotypeListView = function () {
   return {
-    scope: {},
+    scope: {
+      metagenotypes: '<'
+    },
     restrict: 'E',
     replace: true,
     templateUrl: app_static_path + 'ng_templates/metagenotype_list_view.html',
     controller: function ($scope) {
-      $scope.metagenotypes = [];
+      $scope.metagenotypes = null;
       $scope.showBackground = {};
 
-      $scope.$on('metagenotype:updated', function (event, data) {
-        $scope.metagenotypes = data;
-        $scope.showBackground = getBackgroundColumnSettings($scope.metagenotypes);
-      });
+      $scope.$watchCollection('metagenotypes', setBackgroundColumnSettings);
 
-      $scope.$on('metagenotype list changed', function () {
-        Metagenotype.load();
-      });
-
-      Metagenotype.load();
+      function setBackgroundColumnSettings(metagenotypes) {
+        $scope.showBackground = getBackgroundColumnSettings(metagenotypes);
+      }
 
       function getBackgroundColumnSettings(metagenotypes) {
         var backgroundFinder = function (organismType) {
-          return function (mg) {
-            var genotype = mg[organismType + '_genotype'];
+          return function (metagenotype) {
+            var genotype = metagenotype[organismType + '_genotype'];
             return (
               genotype.organism.pathogen_or_host === organismType &&
               !! genotype.background
@@ -9355,7 +9352,7 @@ var metagenotypeListView = function (Metagenotype) {
   };
 };
 
-canto.directive('metagenotypeListView', ['Metagenotype', metagenotypeListView]);
+canto.directive('metagenotypeListView', [metagenotypeListView]);
 
 
 var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Metagenotype, StrainsService) {
@@ -9379,6 +9376,17 @@ var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Met
 
       $scope.taxonGenotypeMap = null;
 
+      $scope.metagenotypes = null;
+      $scope.filteredMetagenotypes = null;
+
+      $scope.$on('metagenotype:updated', function (event, data) {
+        $scope.metagenotypes = data;
+        $scope.filteredMetagenotypes = $scope.metagenotypes;
+      });
+      $scope.$on('metagenotype list changed', function () {
+        Metagenotype.load();
+      });
+
       $scope.genotypeUrl = CantoGlobals.curs_root_uri;
       $scope.makeInvalid = true;
       $scope.display = (!CantoGlobals.read_only_curs);
@@ -9388,6 +9396,9 @@ var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Met
         $scope.selectedPathogen = organism;
         $scope.selectedGenotypePathogen = null;
         $scope.selectedPathogenGenotypes = $scope.taxonGenotypeMap[taxonId];
+        $scope.filteredMetagenotypes = filterMetagenotypesBySelectedOrganisms(
+          $scope.selectedPathogen, $scope.selectedHost, $scope.metagenotypes
+        );
       };
 
       $scope.onPathogenGenotypeSelect = function (genotype) {
@@ -9402,6 +9413,9 @@ var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Met
         $scope.selectedHostGenotypes = taxonId in $scope.taxonGenotypeMap ?
           $scope.taxonGenotypeMap[taxonId] :
           {'single': [], 'multi': []};
+        $scope.filteredMetagenotypes = filterMetagenotypesBySelectedOrganisms(
+          $scope.selectedPathogen, $scope.selectedHost, $scope.metagenotypes
+        );
       };
 
       $scope.onHostGenotypeSelect = function (genotype) {
@@ -9453,6 +9467,7 @@ var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Met
           $scope.taxonGenotypeMap = makeTaxonGenotypeMap(genotypes, organisms);
         });
         StrainsService.getAllSessionStrains();
+        Metagenotype.load();
       }
 
       function loadOrganisms() {
@@ -9533,6 +9548,19 @@ var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Met
         });
       }
 
+      function filterMetagenotypesBySelectedOrganisms(selectedPathogen, selectedHost, metagenotypes) {
+        function filterByOrganisms(metagenotype) {
+          var pathogenId = metagenotype.pathogen_genotype.organism.taxonid;
+          var hostId = metagenotype.host_genotype.organism.taxonid;
+          return pathogenId == selectedPathogenId && hostId == selectedHostId;
+        }
+        if (selectedPathogen && selectedHost) {
+          var selectedPathogenId = selectedPathogen.taxonid;
+          var selectedHostId = selectedHost.taxonid;
+          return metagenotypes.filter(filterByOrganisms);
+        }
+        return metagenotypes;
+      }
     }
   };
 };

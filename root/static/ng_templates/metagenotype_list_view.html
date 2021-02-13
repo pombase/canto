@@ -1,9 +1,12 @@
 <div>
-    <div ng-if="metagenotypes.length > 0">
+    <div ng-if="metagenotypes">
         <div class="row">
             <div class="col-md-12">
                 <h3>Metagenotypes</h3>
-                <table class="curs-genotype-list">
+                <p ng-if="metagenotypes.length == 0">
+                    No metagenotypes have been created for this pathogen and host species. 
+                </p>
+                <table ng-if="metagenotypes.length > 0" class="curs-genotype-list">
                     <thead>
                         <tr>
                             <th colspan="{{showBackground.pathogen ? 3 : 2}}">Pathogen</th>
@@ -22,9 +25,9 @@
                     </thead>
                     <tbody
                     metagenotype-list-row
-                    ng-repeat="meta in metagenotypes track by meta.metagenotype_id"
+                    ng-repeat="metagenotype in metagenotypes track by metagenotype.metagenotype_id"
                     show-background="showBackground"
-                    metagenotype="meta">
+                    metagenotype="metagenotype">
                   </tbody>
                 </table>
             </div>
