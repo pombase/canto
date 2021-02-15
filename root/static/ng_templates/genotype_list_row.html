@@ -15,7 +15,8 @@
     <span ng-if="firstLocus.type == 'aberration'">(aberration)</span>
   </td>
   <td>
-    <span ng-bind-html="firstLocus.long_display_name | encodeAlleleSymbols | toTrusted"></span>
+    <span  uib-tooltip="type: {{firstLocus.type}}" tooltip-popup-delay="500"
+           ng-bind-html="firstLocus.long_display_name | encodeAlleleSymbols | toTrusted"></span>
     <span ng-if="firstLocus.synonyms && genotype.alleles.length == 1">
       <span ng-repeat="synonym in firstLocus.synonyms" class="curs-genotype-view-allele-synonym">
         <span ng-if="synonym.edit_status == 'existing'"
@@ -77,7 +78,8 @@
       <span ng-if="currentAllele.type == 'aberration'">(aberration)</span>
     </td>
     <td>
-      <span ng-bind-html="currentAllele.long_display_name | encodeAlleleSymbols | toTrusted"></span>
+      <span uib-tooltip="type: {{currentAllele.type}}" tooltip-popup-delay="500"
+            ng-bind-html="currentAllele.long_display_name | encodeAlleleSymbols | toTrusted"></span>
       <span ng-if="currentAllele.synonyms">
         <span ng-repeat="synonym in currentAllele.synonyms">
           <span ng-if="synonym.edit_status == 'existing'"
