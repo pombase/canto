@@ -822,6 +822,13 @@ sub _update_allele_details
 
   if (($existing_allele->name() // '') ne ($json_allele_details->{name} // '')) {
     $existing_allele->name($json_allele_details->{name});
+    print "updated allele name of ", ($json_allele_details->{name} // ''), "\n";
+    $session_updated = 1;
+  }
+
+  if (($existing_allele->comment() // '') ne ($json_allele_details->{comment} // '')) {
+    $existing_allele->comment($json_allele_details->{comment});
+    print "updated comment of allele ", ($json_allele_details->{name} // ''), "\n";
     $session_updated = 1;
   }
 
