@@ -1081,6 +1081,7 @@ var cursStateService =
     this.with_gene_id = null;
     this.validEvidence = false;
     this.figure = null;
+    this.termSuggestion = null;
 
     // return the data in a obj with keys keys suitable for sending to the
     // server
