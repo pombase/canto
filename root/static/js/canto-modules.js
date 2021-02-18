@@ -2130,7 +2130,7 @@ function arrayIntersection(arr1, arr2) {
 // Filter the extension_configuration results from the server and return
 // only those where the "domain" term ID in the configuration matches one of
 // subsetIds.  Also ignore any configs where the "role" is "admin" and the
-// current, logged in user isn't an admin.  
+// current, logged in user isn't an admin.
 function extensionConfFilter(allConfigs, subsetIds, role, annotationTypeName) {
   return $.map(allConfigs,
     function (conf) {
@@ -4608,7 +4608,7 @@ var metagenotypeViewCtrl =
     };
 
     $scope.toSummaryPage = function () {
-      window.location.href = CantoGlobals.curs_root_uri + 
+      window.location.href = CantoGlobals.curs_root_uri +
       (CantoGlobals.read_only_curs ? '/ro' : '');
     };
   };
@@ -9720,7 +9720,7 @@ var strainPickerCtrl = function ($scope, StrainsService, CantoService, CantoGlob
 
   function markCustomStrains(sessionStrains) {
     return sessionStrains.map(customStrainMarker);
-    
+
     function customStrainMarker(strain) {
       var isCustom = true;
       if (strain.strain_name === 'Unknown strain') {
