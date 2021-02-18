@@ -1184,7 +1184,7 @@ sub create_sessions_from_json
           allele => $json_allele_details,
           allele_display_name => lc $allele_display_name,
           gene_display_name => lc $gene_display_name,
-          identifier => "genotype-$allele_uniquename",
+          identifier => undef,
           taxonid => $default_organism_taxonid,
         };
       }
