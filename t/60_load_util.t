@@ -57,25 +57,25 @@ is($FBal0119310_allele->name(), 'Dmel\Cdk2_UAS.Tag:MYC');
 is($FBal0119310_allele->description(), 'description of FBal0119310');
 is($FBal0119310_allele->comment(), 'comment on FBal0119310');
 
-my $genotype_FBal0119310 =
-  $created_cursdb->resultset('Genotype')->find({ identifier => "genotype-FBal0119310" });
+my @FBal0119310_genotypes = $FBal0119310_allele->genotypes();
 
-my $FBal0119310_genotype_allele = ($genotype_FBal0119310->alleles()->all())[0];
-is ($FBal0119310_genotype_allele->allele_id(), $FBal0119310_allele->allele_id());
+is (@FBal0119310_genotypes, 1);
 
-is($FBal0119310_allele->name(), 'Dmel\Cdk2_UAS.Tag:MYC');
 
 my @FBal0119310_allelesynonyms = sort map { $_->synonym() } $FBal0119310_allele->allelesynonyms()->all();
 is (@FBal0119310_allelesynonyms, 2);
 is ($FBal0119310_allelesynonyms[0], "UAS-Cdk2");
 is ($FBal0119310_allelesynonyms[1], "UAS-Cdk2-myc");
 
-my $genotype_FBab0037918 =
-  $created_cursdb->resultset('Genotype')->find({ identifier => "genotype-FBab0037918" });
 
-my $FBab0037918_allele = ($genotype_FBab0037918->alleles()->all())[0];
-
+my $FBab0037918_allele =
+  $created_cursdb->resultset('Allele')->find({ primary_identifier => "FBab0037918" });
 is($FBab0037918_allele->name(), 'Df(2L)Exel7046');
+
+my @FBab0037918_genotypes = $FBal0119310_allele->genotypes();
+
+is (@FBab0037918_genotypes, 1);
+
 
 
 # load the same file to test session updating
