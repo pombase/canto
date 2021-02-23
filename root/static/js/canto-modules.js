@@ -4714,7 +4714,7 @@ var GenotypeGeneListCtrl =
     CantoConfig, toaster) {
     return {
       scope: {
-        genotypes: '=',
+        genotypes: '<',
         genes: '<',
         genotypeType: '<'
       },
