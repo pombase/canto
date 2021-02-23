@@ -4726,27 +4726,15 @@ var GenotypeGeneListCtrl =
         $scope.curs_root_uri = CantoGlobals.curs_root_uri;
         $scope.read_only_curs = CantoGlobals.read_only_curs;
         $scope.multiOrganismMode = CantoGlobals.multi_organism_mode;
-
         $scope.showQuickDeletionButtons = CantoGlobals.show_quick_deletion_buttons;
 
         var hasDeletionHash = {};
+        var selectedStrain = '';
 
         $scope.$watch('genotypes', makeHasDeletionHash, true);
 
         $scope.hasDeletionGenotype = function(geneId) {
           return !$scope.multiOrganismMode && !!hasDeletionHash[geneId];
-        };
-
-        function makeHasDeletionHash() {
-          hasDeletionHash = {};
-          $scope.genotypes.map(function (genotype) {
-            if (genotype.alleles.length === 1) {
-              var allele = genotype.alleles[0];
-              if (allele.type === 'deletion') {
-                hasDeletionHash[allele.gene_id] = true;
-              }
-            }
-          });
         };
 
         $scope.singleAlleleQuick = function (geneDisplayName, geneSystematicId, geneId) {
@@ -4791,7 +4779,17 @@ var GenotypeGeneListCtrl =
           });
         };
 
-        var selectedStrain = '';
+        $scope.quickDeletion = CantoGlobals.strains_mode ?
+          deleteSelectStrainPicker :
+          makeDeletionAllele;
+
+        $scope.deletionButtonTitle = function (geneId) {
+          if (hasDeletionHash[geneId]) {
+            return 'A deletion genotype already exists for this gene';
+          } else {
+            return 'Add a deletion genotype for this gene';
+          }
+        };
 
         function deleteSelectStrainPicker(geneId) {
           var gene = getGeneById(geneId);
@@ -4861,16 +4859,16 @@ var GenotypeGeneListCtrl =
           });
         };
 
-        $scope.quickDeletion = CantoGlobals.strains_mode ?
-          deleteSelectStrainPicker :
-          makeDeletionAllele;
-
-        $scope.deletionButtonTitle = function (geneId) {
-          if (hasDeletionHash[geneId]) {
-            return 'A deletion genotype already exists for this gene';
-          } else {
-            return 'Add a deletion genotype for this gene';
-          }
+        function makeHasDeletionHash() {
+          hasDeletionHash = {};
+          $scope.genotypes.map(function (genotype) {
+            if (genotype.alleles.length === 1) {
+              var allele = genotype.alleles[0];
+              if (allele.type === 'deletion') {
+                hasDeletionHash[allele.gene_id] = true;
+              }
+            }
+          });
         };
       }
     };
