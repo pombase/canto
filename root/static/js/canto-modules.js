@@ -4735,8 +4735,8 @@ var GenotypeGeneListCtrl =
           $scope.makeHasDeletionHash();
         }, true);
 
-        $scope.hasDeletionGenotype = function(gene_id) {
-          return !$scope.multiOrganismMode && !!$scope.hasDeletionHash[gene_id];
+        $scope.hasDeletionGenotype = function(geneId) {
+          return !$scope.multiOrganismMode && !!$scope.hasDeletionHash[geneId];
         };
 
         $scope.makeHasDeletionHash = function () {
@@ -4751,8 +4751,8 @@ var GenotypeGeneListCtrl =
           });
         };
 
-        $scope.singleAlleleQuick = function (gene_display_name, gene_systematic_id, gene_id) {
-          var gene = $scope.geneById(gene_id);
+        $scope.singleAlleleQuick = function (geneDisplayName, geneSystematicId, geneId) {
+          var gene = $scope.geneById(geneId);
 
           if (!gene) {
             return;
@@ -4762,9 +4762,9 @@ var GenotypeGeneListCtrl =
           var editInstance = makeAlleleEditInstance(
             $uibModal,
             {
-              gene_display_name: gene_display_name,
-              gene_systematic_id: gene_systematic_id,
-              gene_id: gene_id,
+              gene_display_name: geneDisplayName,
+              gene_systematic_id: geneSystematicId,
+              gene_id: geneId,
             },
             taxonId
           );
@@ -4795,14 +4795,14 @@ var GenotypeGeneListCtrl =
 
         $scope.selectedStrain = '';
 
-        $scope.deleteSelectStrainPicker = function (gene_id) {
-          var gene = $scope.geneById(gene_id);
+        $scope.deleteSelectStrainPicker = function (geneId) {
+          var gene = $scope.geneById(geneId);
           var taxonId = gene.organism.taxonid;
           var deleteInstance = selectStrainPicker($uibModal, taxonId);
 
           deleteInstance.result.then(function (strain) {
             $scope.selectedStrain = strain.strain.strain_name;
-            $scope.makeDeletionAllele(gene_id);
+            $scope.makeDeletionAllele(geneId);
           });
         };
 
@@ -4867,8 +4867,8 @@ var GenotypeGeneListCtrl =
           $scope.deleteSelectStrainPicker :
           $scope.makeDeletionAllele;
 
-        $scope.deletionButtonTitle = function (gene_id) {
-          if ($scope.hasDeletionHash[gene_id]) {
+        $scope.deletionButtonTitle = function (geneId) {
+          if ($scope.hasDeletionHash[geneId]) {
             return 'A deletion genotype already exists for this gene';
           } else {
             return 'Add a deletion genotype for this gene';
