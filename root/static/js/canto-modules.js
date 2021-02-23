@@ -4729,28 +4729,28 @@ var GenotypeGeneListCtrl =
 
         $scope.showQuickDeletionButtons = CantoGlobals.show_quick_deletion_buttons;
 
-        $scope.hasDeletionHash = {};
+        var hasDeletionHash = {};
 
-        $scope.$watch('genotypes', $scope.makeHasDeletionHash, true);
+        $scope.$watch('genotypes', makeHasDeletionHash, true);
 
         $scope.hasDeletionGenotype = function(geneId) {
-          return !$scope.multiOrganismMode && !!$scope.hasDeletionHash[geneId];
+          return !$scope.multiOrganismMode && !!hasDeletionHash[geneId];
         };
 
-        $scope.makeHasDeletionHash = function () {
-          $scope.hasDeletionHash = {};
+        function makeHasDeletionHash() {
+          hasDeletionHash = {};
           $scope.genotypes.map(function (genotype) {
             if (genotype.alleles.length === 1) {
               var allele = genotype.alleles[0];
               if (allele.type === 'deletion') {
-                $scope.hasDeletionHash[allele.gene_id] = true;
+                hasDeletionHash[allele.gene_id] = true;
               }
             }
           });
         };
 
         $scope.singleAlleleQuick = function (geneDisplayName, geneSystematicId, geneId) {
-          var gene = $scope.getGeneById(geneId);
+          var gene = getGeneById(geneId);
 
           if (!gene) {
             return;
@@ -4791,20 +4791,20 @@ var GenotypeGeneListCtrl =
           });
         };
 
-        $scope.selectedStrain = '';
+        var selectedStrain = '';
 
-        $scope.deleteSelectStrainPicker = function (geneId) {
-          var gene = $scope.getGeneById(geneId);
+        function deleteSelectStrainPicker(geneId) {
+          var gene = getGeneById(geneId);
           var taxonId = gene.organism.taxonid;
           var deleteInstance = selectStrainPicker($uibModal, taxonId);
 
           deleteInstance.result.then(function (strain) {
-            $scope.selectedStrain = strain.strain.strain_name;
-            $scope.makeDeletionAllele(geneId);
+            selectedStrain = strain.strain.strain_name;
+            makeDeletionAllele(geneId);
           });
         };
 
-        $scope.getGeneById = function (geneId) {
+        function getGeneById(geneId) {
           if ($scope.genes) {
             for (var i = 0, len = $scope.genes.length; i < len; i++) {
               // find gene by ID
@@ -4816,8 +4816,8 @@ var GenotypeGeneListCtrl =
           return null;
         };
 
-        $scope.makeDeletionAllele = function (geneId) {
-          var gene = $scope.getGeneById(geneId);
+        function makeDeletionAllele(geneId) {
+          var gene = getGeneById(geneId);
 
           if (!gene) {
             return;
@@ -4845,7 +4845,7 @@ var GenotypeGeneListCtrl =
             undefined,
             [deletionAllele],
             taxonId,
-            $scope.selectedStrain,
+            selectedStrain,
             undefined
           );
 
@@ -4862,11 +4862,11 @@ var GenotypeGeneListCtrl =
         };
 
         $scope.quickDeletion = CantoGlobals.strains_mode ?
-          $scope.deleteSelectStrainPicker :
-          $scope.makeDeletionAllele;
+          deleteSelectStrainPicker :
+          makeDeletionAllele;
 
         $scope.deletionButtonTitle = function (geneId) {
-          if ($scope.hasDeletionHash[geneId]) {
+          if (hasDeletionHash[geneId]) {
             return 'A deletion genotype already exists for this gene';
           } else {
             return 'Add a deletion genotype for this gene';
