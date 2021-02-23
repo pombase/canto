@@ -4709,176 +4709,180 @@ var strainSelectorCtrl = function ($scope, CantoGlobals) {
 
 canto.directive('strainSelector', ['CantoGlobals', strainSelector]);
 
-var GenotypeGeneListCtrl =
-  function ($uibModal, $http, Curs, CursGenotypeList, CantoGlobals,
-    CantoConfig, toaster) {
-    return {
-      scope: {
-        genotypes: '<',
-        genes: '<',
-        genotypeType: '<'
-      },
-      restrict: 'E',
-      replace: true,
-      templateUrl: app_static_path + 'ng_templates/genotype_gene_list.html',
-      controller: function ($scope) {
+function GenotypeGeneList() {
+  return {
+    scope: {
+      genotypes: '<',
+      genes: '<',
+      genotypeType: '<'
+    },
+    restrict: 'E',
+    replace: true,
+    templateUrl: app_static_path + 'ng_templates/genotype_gene_list.html',
+    controller: 'genotypeGeneListCtrl' 
+  };
+};
 
-        $scope.curs_root_uri = CantoGlobals.curs_root_uri;
-        $scope.read_only_curs = CantoGlobals.read_only_curs;
-        $scope.multiOrganismMode = CantoGlobals.multi_organism_mode;
-        $scope.showQuickDeletionButtons = CantoGlobals.show_quick_deletion_buttons;
+canto.directive('genotypeGeneList', [GenotypeGeneList]);
 
-        var hasDeletionHash = {};
-        var selectedStrain = '';
+function GenotypeGeneListCtrl(
+  $scope, $uibModal, $http, Curs, CursGenotypeList, CantoGlobals, CantoConfig, toaster
+) {
+  $scope.curs_root_uri = CantoGlobals.curs_root_uri;
+  $scope.read_only_curs = CantoGlobals.read_only_curs;
+  $scope.multiOrganismMode = CantoGlobals.multi_organism_mode;
+  $scope.showQuickDeletionButtons = CantoGlobals.show_quick_deletion_buttons;
 
-        $scope.$watch('genotypes', makeHasDeletionHash, true);
+  var hasDeletionHash = {};
+  var selectedStrain = '';
 
-        $scope.hasDeletionGenotype = function(geneId) {
-          return !$scope.multiOrganismMode && !!hasDeletionHash[geneId];
-        };
+  $scope.$watch('genotypes', makeHasDeletionHash, true);
 
-        $scope.singleAlleleQuick = function (geneDisplayName, geneSystematicId, geneId) {
-          var gene = getGeneById(geneId);
-
-          if (!gene) {
-            return;
-          }
-
-          var taxonId = gene.organism.taxonid;
-          var editInstance = makeAlleleEditInstance(
-            $uibModal,
-            {
-              gene_display_name: geneDisplayName,
-              gene_systematic_id: geneSystematicId,
-              gene_id: geneId,
-            },
-            taxonId
-          );
-
-          editInstance.result.then(function (editResults) {
-            var alleleData = editResults.alleleData;
-            var strainName = editResults.strainName;
-            var storePromise = CursGenotypeList.storeGenotype(
-              toaster,
-              $http,
-              undefined,
-              undefined,
-              undefined,
-              [alleleData],
-              taxonId,
-              strainName,
-              undefined
-            );
-
-            storePromise.then(function (data) {
-              window.location.href = CantoGlobals.curs_root_uri +
-                '/' + getGenotypeManagePath($scope.genotypeType) +
-                '#/select/' +
-                data.genotype_id;
-            });
-          });
-        };
-
-        $scope.quickDeletion = CantoGlobals.strains_mode ?
-          deleteSelectStrainPicker :
-          makeDeletionAllele;
-
-        $scope.deletionButtonTitle = function (geneId) {
-          if (hasDeletionHash[geneId]) {
-            return 'A deletion genotype already exists for this gene';
-          } else {
-            return 'Add a deletion genotype for this gene';
-          }
-        };
-
-        function deleteSelectStrainPicker(geneId) {
-          var gene = getGeneById(geneId);
-          var taxonId = gene.organism.taxonid;
-          var deleteInstance = selectStrainPicker($uibModal, taxonId);
-
-          deleteInstance.result.then(function (strain) {
-            selectedStrain = strain.strain.strain_name;
-            makeDeletionAllele(geneId);
-          });
-        };
-
-        function getGeneById(geneId) {
-          if ($scope.genes) {
-            for (var i = 0, len = $scope.genes.length; i < len; i++) {
-              // find gene by ID
-              if ($scope.genes[i].gene_id == geneId) {
-                return $scope.genes[i];
-              }
-            }
-          }
-          return null;
-        };
-
-        function makeDeletionAllele(geneId) {
-          var gene = getGeneById(geneId);
-
-          if (!gene) {
-            return;
-          }
-
-          var displayName = gene.primary_name || gene.primary_identifier;
-
-          var deletionAllele = {
-            description: "",
-            expression: "",
-            gene_display_name: displayName,
-            gene_id: geneId,
-            gene_systematic_id: gene.primary_identifier,
-            name: displayName + "delta",
-            primary_identifier: "",
-            type: "deletion",
-          };
-
-          var taxonId = gene.organism.taxonid;
-          var storePromise = CursGenotypeList.storeGenotype(
-            toaster,
-            $http,
-            undefined,
-            undefined,
-            undefined,
-            [deletionAllele],
-            taxonId,
-            selectedStrain,
-            undefined
-          );
-
-          storePromise.then(function (data) {
-            if (data.status === "existing") {
-              toaster.pop('info', "Using existing genotype: " + data.genotype_display_name);
-            } else {
-              window.location.href = CantoGlobals.curs_root_uri +
-                '/' + getGenotypeManagePath($scope.genotypeType) +
-                '#/select/' +
-                data.genotype_id;
-            }
-          });
-        };
-
-        function makeHasDeletionHash() {
-          hasDeletionHash = {};
-          $scope.genotypes.map(function (genotype) {
-            if (genotype.alleles.length === 1) {
-              var allele = genotype.alleles[0];
-              if (allele.type === 'deletion') {
-                hasDeletionHash[allele.gene_id] = true;
-              }
-            }
-          });
-        };
-      }
-    };
+  $scope.hasDeletionGenotype = function(geneId) {
+    return !$scope.multiOrganismMode && !!hasDeletionHash[geneId];
   };
 
-canto.directive('genotypeGeneList',
-  ['$uibModal', '$http', 'Curs', 'CursGenotypeList',
-    'CantoGlobals', 'CantoConfig', 'toaster',
-    GenotypeGeneListCtrl
-  ]);
+  $scope.singleAlleleQuick = function (geneDisplayName, geneSystematicId, geneId) {
+    var gene = getGeneById(geneId);
+
+    if (!gene) {
+      return;
+    }
+
+    var taxonId = gene.organism.taxonid;
+    var editInstance = makeAlleleEditInstance(
+      $uibModal,
+      {
+        gene_display_name: geneDisplayName,
+        gene_systematic_id: geneSystematicId,
+        gene_id: geneId,
+      },
+      taxonId
+    );
+
+    editInstance.result.then(function (editResults) {
+      var alleleData = editResults.alleleData;
+      var strainName = editResults.strainName;
+      var storePromise = CursGenotypeList.storeGenotype(
+        toaster,
+        $http,
+        undefined,
+        undefined,
+        undefined,
+        [alleleData],
+        taxonId,
+        strainName,
+        undefined
+      );
+
+      storePromise.then(function (data) {
+        window.location.href = CantoGlobals.curs_root_uri +
+          '/' + getGenotypeManagePath($scope.genotypeType) +
+          '#/select/' +
+          data.genotype_id;
+      });
+    });
+  };
+
+  $scope.quickDeletion = CantoGlobals.strains_mode ?
+    deleteSelectStrainPicker :
+    makeDeletionAllele;
+
+  $scope.deletionButtonTitle = function (geneId) {
+    if (hasDeletionHash[geneId]) {
+      return 'A deletion genotype already exists for this gene';
+    } else {
+      return 'Add a deletion genotype for this gene';
+    }
+  };
+
+  function deleteSelectStrainPicker(geneId) {
+    var gene = getGeneById(geneId);
+    var taxonId = gene.organism.taxonid;
+    var deleteInstance = selectStrainPicker($uibModal, taxonId);
+
+    deleteInstance.result.then(function (strain) {
+      selectedStrain = strain.strain.strain_name;
+      makeDeletionAllele(geneId);
+    });
+  };
+
+  function getGeneById(geneId) {
+    if ($scope.genes) {
+      for (var i = 0, len = $scope.genes.length; i < len; i++) {
+        // find gene by ID
+        if ($scope.genes[i].gene_id == geneId) {
+          return $scope.genes[i];
+        }
+      }
+    }
+    return null;
+  };
+
+  function makeDeletionAllele(geneId) {
+    var gene = getGeneById(geneId);
+
+    if (!gene) {
+      return;
+    }
+
+    var displayName = gene.primary_name || gene.primary_identifier;
+
+    var deletionAllele = {
+      description: "",
+      expression: "",
+      gene_display_name: displayName,
+      gene_id: geneId,
+      gene_systematic_id: gene.primary_identifier,
+      name: displayName + "delta",
+      primary_identifier: "",
+      type: "deletion",
+    };
+
+    var taxonId = gene.organism.taxonid;
+    var storePromise = CursGenotypeList.storeGenotype(
+      toaster,
+      $http,
+      undefined,
+      undefined,
+      undefined,
+      [deletionAllele],
+      taxonId,
+      selectedStrain,
+      undefined
+    );
+
+    storePromise.then(function (data) {
+      if (data.status === "existing") {
+        toaster.pop('info', "Using existing genotype: " + data.genotype_display_name);
+      } else {
+        window.location.href = CantoGlobals.curs_root_uri +
+          '/' + getGenotypeManagePath($scope.genotypeType) +
+          '#/select/' +
+          data.genotype_id;
+      }
+    });
+  };
+
+  function makeHasDeletionHash() {
+    hasDeletionHash = {};
+    $scope.genotypes.map(function (genotype) {
+      if (genotype.alleles.length === 1) {
+        var allele = genotype.alleles[0];
+        if (allele.type === 'deletion') {
+          hasDeletionHash[allele.gene_id] = true;
+        }
+      }
+    });
+  };
+}
+
+canto.controller('genotypeGeneListCtrl', [
+  '$scope', '$uibModal', '$http', 'Curs', 'CursGenotypeList',
+  'CantoGlobals', 'CantoConfig', 'toaster', GenotypeGeneListCtrl
+]);
+
+
 
 var genotypeManageCtrl =
   function ($uibModal, $location, $http, Curs, CursGenotypeList, CantoGlobals,
