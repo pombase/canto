@@ -4739,7 +4739,7 @@ var GenotypeGeneListCtrl =
 
         $scope.makeHasDeletionHash = function () {
           $scope.hasDeletionHash = {};
-          $.map($scope.genotypes, function (genotype) {
+          $scope.genotypes.map(function (genotype) {
             if (genotype.alleles.length === 1) {
               var allele = genotype.alleles[0];
               if (allele.type === 'deletion') {
