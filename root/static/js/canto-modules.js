@@ -4731,9 +4731,7 @@ var GenotypeGeneListCtrl =
 
         $scope.hasDeletionHash = {};
 
-        $scope.$watch('genotypes', function () {
-          $scope.makeHasDeletionHash();
-        }, true);
+        $scope.$watch('genotypes', $scope.makeHasDeletionHash, true);
 
         $scope.hasDeletionGenotype = function(geneId) {
           return !$scope.multiOrganismMode && !!$scope.hasDeletionHash[geneId];
