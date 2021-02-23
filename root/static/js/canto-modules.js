@@ -4750,7 +4750,7 @@ var GenotypeGeneListCtrl =
         };
 
         $scope.singleAlleleQuick = function (geneDisplayName, geneSystematicId, geneId) {
-          var gene = $scope.geneById(geneId);
+          var gene = $scope.getGeneById(geneId);
 
           if (!gene) {
             return;
@@ -4794,7 +4794,7 @@ var GenotypeGeneListCtrl =
         $scope.selectedStrain = '';
 
         $scope.deleteSelectStrainPicker = function (geneId) {
-          var gene = $scope.geneById(geneId);
+          var gene = $scope.getGeneById(geneId);
           var taxonId = gene.organism.taxonid;
           var deleteInstance = selectStrainPicker($uibModal, taxonId);
 
@@ -4804,7 +4804,7 @@ var GenotypeGeneListCtrl =
           });
         };
 
-        $scope.geneById = function (geneId) {
+        $scope.getGeneById = function (geneId) {
           if ($scope.genes) {
             for (var i = 0, len = $scope.genes.length; i < len; i++) {
               // find gene by ID
@@ -4817,7 +4817,7 @@ var GenotypeGeneListCtrl =
         };
 
         $scope.makeDeletionAllele = function (geneId) {
-          var gene = $scope.geneById(geneId);
+          var gene = $scope.getGeneById(geneId);
 
           if (!gene) {
             return;
