@@ -4731,10 +4731,9 @@ var GenotypeGeneListCtrl =
 
         $scope.hasDeletionHash = {};
 
-        $scope.$watch('genotypes',
-          function () {
-            $scope.makeHasDeletionHash();
-          }, true);
+        $scope.$watch('genotypes', function () {
+          $scope.makeHasDeletionHash();
+        }, true);
 
         $scope.hasDeletionGenotype = function(gene_id) {
           return !$scope.multiOrganismMode && !!$scope.hasDeletionHash[gene_id];
@@ -4742,15 +4741,14 @@ var GenotypeGeneListCtrl =
 
         $scope.makeHasDeletionHash = function () {
           $scope.hasDeletionHash = {};
-          $.map($scope.genotypes,
-            function (genotype) {
-              if (genotype.alleles.length == 1) {
-                var allele = genotype.alleles[0];
-                if (allele.type === 'deletion') {
-                  $scope.hasDeletionHash[allele.gene_id] = true;
-                }
+          $.map($scope.genotypes, function (genotype) {
+            if (genotype.alleles.length == 1) {
+              var allele = genotype.alleles[0];
+              if (allele.type === 'deletion') {
+                $scope.hasDeletionHash[allele.gene_id] = true;
               }
-            });
+            }
+          });
         };
 
         $scope.singleAlleleQuick = function (gene_display_name, gene_systematic_id, gene_id) {
@@ -4761,22 +4759,33 @@ var GenotypeGeneListCtrl =
           }
 
           var taxonId = gene.organism.taxonid;
-          var editInstance = makeAlleleEditInstance($uibModal, {
+          var editInstance = makeAlleleEditInstance(
+            $uibModal,
+            {
               gene_display_name: gene_display_name,
               gene_systematic_id: gene_systematic_id,
               gene_id: gene_id,
             },
-            taxonId);
+            taxonId
+          );
 
           editInstance.result.then(function (editResults) {
             var alleleData = editResults.alleleData;
             var strainName = editResults.strainName;
-            var storePromise =
-                CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined, [alleleData], taxonId, strainName, undefined);
+            var storePromise = CursGenotypeList.storeGenotype(
+              toaster,
+              $http,
+              undefined,
+              undefined,
+              undefined,
+              [alleleData],
+              taxonId,
+              strainName,
+              undefined
+            );
 
             storePromise.then(function (data) {
-              window.location.href =
-                CantoGlobals.curs_root_uri +
+              window.location.href = CantoGlobals.curs_root_uri +
                 '/' + getGenotypeManagePath($scope.genotypeType) +
                 '#/select/' +
                 data.genotype_id;
@@ -4799,7 +4808,7 @@ var GenotypeGeneListCtrl =
 
         $scope.geneById = function (geneId) {
           if ($scope.genes) {
-            for (var i=0, len=$scope.genes.length; i < len; i++) {
+            for (var i = 0, len = $scope.genes.length; i < len; i++) {
               // find gene by ID
               if ($scope.genes[i].gene_id == geneId) {
                 return $scope.genes[i];
@@ -4830,16 +4839,23 @@ var GenotypeGeneListCtrl =
           };
 
           var taxonId = gene.organism.taxonid;
-          var storePromise =
-              CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined, [deletionAllele],
-                                             taxonId, $scope.selectedStrain, undefined);
+          var storePromise = CursGenotypeList.storeGenotype(
+            toaster,
+            $http,
+            undefined,
+            undefined,
+            undefined,
+            [deletionAllele],
+            taxonId,
+            $scope.selectedStrain,
+            undefined
+          );
 
           storePromise.then(function (data) {
             if (data.status === "existing") {
               toaster.pop('info', "Using existing genotype: " + data.genotype_display_name);
             } else {
-              window.location.href =
-                CantoGlobals.curs_root_uri +
+              window.location.href = CantoGlobals.curs_root_uri +
                 '/' + getGenotypeManagePath($scope.genotypeType) +
                 '#/select/' +
                 data.genotype_id;
