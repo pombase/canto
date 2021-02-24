@@ -4802,6 +4802,11 @@ function GenotypeGeneListCtrl(
     });
   };
 
+  $scope.quickWildType = function (geneDisplayName, geneSystematicId, geneId) {
+    var alleleType = 'wild type';
+    $scope.singleAlleleQuick(geneDisplayName, geneSystematicId, geneId, alleleType);
+  };
+
   $scope.quickDeletion = CantoGlobals.strains_mode ?
     deleteSelectStrainPicker :
     makeDeletionAllele;
