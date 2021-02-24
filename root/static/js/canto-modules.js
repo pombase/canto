@@ -3794,10 +3794,6 @@ var alleleEditDialogCtrl =
 
     $scope.userIsAdmin = CantoGlobals.current_user_is_admin;
     $scope.pathogenHostMode = CantoGlobals.pathogen_host_mode;
-
-    if (args.alleleType) {
-      $scope.alleleData.type = args.alleleType;
-    }
     
     $scope.showAlleleTypeField = (
       ! args.alleleType && (
@@ -3848,6 +3844,11 @@ var alleleEditDialogCtrl =
 
     $scope.env.allele_type_names_promise = CantoConfig.get('allele_type_names');
     $scope.env.allele_types_promise = CantoConfig.get('allele_types');
+
+    if (args.alleleType) {
+      $scope.alleleData.type = args.alleleType;
+      updateAlleleType('wild type', '');
+    }
 
     $scope.env.allele_type_names_promise.then(function (data) {
       $scope.env.allele_type_names = data;
