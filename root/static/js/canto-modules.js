@@ -3778,6 +3778,7 @@ var alleleEditDialogCtrl =
     copyObject(args.allele, $scope.alleleData);
     $scope.taxonId = args.taxonId;
     $scope.isCopied = args.isCopied;
+    $scope.alleleType = args.alleleType;
     $scope.alleleData.primary_identifier = $scope.alleleData.primary_identifier || '';
     $scope.alleleData.name = $scope.alleleData.name || '';
     $scope.alleleData.description = $scope.alleleData.description || '';
@@ -3793,6 +3794,17 @@ var alleleEditDialogCtrl =
 
     $scope.userIsAdmin = CantoGlobals.current_user_is_admin;
     $scope.pathogenHostMode = CantoGlobals.pathogen_host_mode;
+
+    if (args.alleleType) {
+      $scope.alleleData.type = args.alleleType;
+    }
+    
+    $scope.showAlleleTypeField = (
+      ! args.alleleType && (
+        $scope.alleleData.type != 'aberration' ||
+        $scope.alleleData.type != 'aberration wild type'
+      )
+    );
 
     function processSynonyms() {
       $.map($scope.alleleData.synonyms || [],
@@ -4075,7 +4087,7 @@ function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotyp
     });
 }
 
-function makeAlleleEditInstance($uibModal, allele, taxonId, isCopied) {
+function makeAlleleEditInstance($uibModal, allele, taxonId, isCopied, alleleType) {
   return $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/allele_edit.html',
     controller: 'AlleleEditDialogCtrl',
@@ -4089,6 +4101,7 @@ function makeAlleleEditInstance($uibModal, allele, taxonId, isCopied) {
           allele: allele,
           taxonId: taxonId,
           isCopied: isCopied,
+          alleleType: alleleType
         };
       }
     },
@@ -4744,8 +4757,9 @@ function GenotypeGeneListCtrl(
     return !$scope.multiOrganismMode && !!hasDeletionHash[geneId];
   };
 
-  $scope.singleAlleleQuick = function (geneDisplayName, geneSystematicId, geneId) {
+  $scope.singleAlleleQuick = function (geneDisplayName, geneSystematicId, geneId, alleleType) {
     var gene = getGeneById(geneId);
+    var isCopied = false;
 
     if (!gene) {
       return;
@@ -4759,7 +4773,9 @@ function GenotypeGeneListCtrl(
         gene_systematic_id: geneSystematicId,
         gene_id: geneId,
       },
-      taxonId
+      taxonId,
+      isCopied,
+      alleleType
     );
 
     editInstance.result.then(function (editResults) {
