@@ -3871,31 +3871,7 @@ var alleleEditDialogCtrl =
       return this.alleleData.name;
     };
 
-    $scope.$watch('alleleData.type',
-      function (newType, oldType) {
-        $scope.env.allele_types_promise.then(function (data) {
-          $scope.current_type_config = data[newType];
-
-          if (newType === oldType) {
-            return;
-          }
-
-          if ($scope.alleleData.primary_identifier) {
-            return;
-          }
-
-          if ($scope.name_autopopulated) {
-            if ($scope.name_autopopulated == $scope.alleleData.name) {
-              $scope.alleleData.name = '';
-            }
-            $scope.name_autopopulated = '';
-          }
-
-          $scope.name_autopopulated = $scope.maybe_autopopulate();
-          $scope.alleleData.description = '';
-          $scope.alleleData.expression = '';
-        });
-      });
+    $scope.$watch('alleleData.type', updateAlleleType);
 
     $scope.nameSelectedCallback = function(alleleData) {
       $scope.alleleData.primary_identifier = alleleData.primaryIdentifier;
@@ -3996,6 +3972,31 @@ var alleleEditDialogCtrl =
         $scope.strainData.strains = filterStrainsByTaxonId(strains, taxonId);
       }).catch(function () {
         toaster.pop('error', 'failed to get strain list from server');
+      });
+    }
+
+    function updateAlleleType(newType, oldType) {
+      $scope.env.allele_types_promise.then(function (data) {
+        $scope.current_type_config = data[newType];
+
+        if (newType === oldType) {
+          return;
+        }
+
+        if ($scope.alleleData.primary_identifier) {
+          return;
+        }
+
+        if ($scope.name_autopopulated) {
+          if ($scope.name_autopopulated == $scope.alleleData.name) {
+            $scope.alleleData.name = '';
+          }
+          $scope.name_autopopulated = '';
+        }
+
+        $scope.name_autopopulated = $scope.maybe_autopopulate();
+        $scope.alleleData.description = '';
+        $scope.alleleData.expression = '';
       });
     }
   };
