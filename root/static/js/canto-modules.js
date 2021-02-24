@@ -4747,6 +4747,7 @@ function GenotypeGeneListCtrl(
   $scope.multiOrganismMode = CantoGlobals.multi_organism_mode;
   $scope.showQuickDeletionButtons = CantoGlobals.show_quick_deletion_buttons;
   $scope.showQuickWildTypeButtons = CantoGlobals.show_quick_wild_type_buttons;
+  $scope.columnCount = getColumnCount();
 
   var hasDeletionHash = {};
   var selectedStrain = '';
@@ -4898,6 +4899,17 @@ function GenotypeGeneListCtrl(
       }
     });
   };
+
+  function getColumnCount() {
+    var columnCount = 1;
+    if ($scope.showQuickDeletionButtons) {
+      columnCount += 1;
+    }
+    if ($scope.showQuickWildTypeButtons) {
+      columnCount += 1;
+    }
+    return columnCount;
+  }
 }
 
 canto.controller('genotypeGeneListCtrl', [
