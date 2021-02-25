@@ -14,7 +14,7 @@ var genes_in_session = <% $genes_in_session_js |n %>;
 <div class="curs-box curs-half-width-section">
   <div class="curs-box-title">
 Choose curation type for <% $gene->display_name() %>:
-    <& /curs/inline_help.mhtml, key => 'gene_page_choose_curation_type' &>
+    <help-icon key="gene_page_choose_curation_type"></help-icon>
   </div>
   <div class="curs-box-body">
   <ul class="annotation-start">
