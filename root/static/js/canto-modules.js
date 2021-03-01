@@ -8254,9 +8254,6 @@ var annotationSingleRowTable =
       controller: function ($scope) {
         $scope.displayFeatureType = capitalizeFirstLetter($scope.featureType);
 
-        $scope.displayEvidence = '';
-        $scope.conditionsString = '';
-        $scope.withGeneDisplayName = '';
         $scope.showEvidenceColumn = true;
 
         AnnotationTypeConfig.getByName($scope.annotationTypeName)
@@ -8267,6 +8264,38 @@ var annotationSingleRowTable =
               annotationType.evidence_codes &&
               annotationType.evidence_codes.length > 0;
           });
+      },
+    };
+  };
+
+canto.directive('annotationSingleRowTable',
+  ['AnnotationTypeConfig', 'CantoConfig', 'CantoService', 'Curs',
+    annotationSingleRowTable
+  ]);
+
+
+var annotationSingleRow =
+  function (AnnotationTypeConfig, CantoConfig, CantoService, Curs) {
+    return {
+      restrict: 'A',
+      scope: {
+        featureDisplayName: '@',
+        annotationType: '=',
+        annotationDetails: '=',
+      },
+      replace: true,
+      templateUrl: function () {
+        return app_static_path + 'ng_templates/annotation_single_row.html';
+      },
+      controller: function ($scope) {
+        $scope.displayEvidence = '';
+        $scope.conditionsString = '';
+        $scope.withGeneDisplayName = '';
+        $scope.showEvidenceColumn = true;
+
+        $scope.showEvidenceColumn =
+          $scope.annotationType.evidence_codes &&
+          $scope.annotationType.evidence_codes.length > 0;
 
         $scope.$watch('annotationDetails.term_ontid',
           function (newId) {
@@ -8328,10 +8357,11 @@ var annotationSingleRowTable =
     };
   };
 
-canto.directive('annotationSingleRowTable',
+canto.directive('annotationSingleRow',
   ['AnnotationTypeConfig', 'CantoConfig', 'CantoService', 'Curs',
-    annotationSingleRowTable
+    annotationSingleRow
   ]);
+
 
 
 var interactionAnnotationSingleRow =

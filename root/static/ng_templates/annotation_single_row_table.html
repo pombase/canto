@@ -1,5 +1,5 @@
 <div class="annotation-table annotation-single-row-table">
-<table ng-if="annotationType" class="list">
+<table ng-if="annotationType && annotationDetails" class="list">
   <thead>
     <tr>
       <th>
@@ -28,39 +28,12 @@
       </th>
     </tr>
   </thead>
-
-  <tr>
-    <td>
-      <span ng-bind-html="featureDisplayName | encodeAlleleSymbols | toTrusted"></span>
-    </td>
-    <td>
-      {{annotationDetails.term_ontid}}
-    </td>
-    <td>
-      {{termDetails.name}}
-    </td>
-    <td ng-if="showEvidenceColumn">
-      {{displayEvidence}}
-    </td>
-    <td ng-if="annotationType.can_have_with && annotationDetails.with_gene_id">
-      {{withGeneDisplayName}}
-    </td>
-    <td ng-if="annotationType.can_have_conditions && annotationDetails.conditions.length > 0">
-      {{conditionsString}}
-    </td>
-    <td ng-if="annotationDetails.extension && annotationDetails.extension.length > 0">
-      <extension-display extension="annotationDetails.extension"></extension-display>
-    </td>
-    <td ng-if="annotationDetails.term_suggestion_name || annotationDetails.term_suggestion_definition">
-      <div>
-        <div style="font-weight: bold">
-          {{annotationDetails.term_suggestion_name}}
-        </div>
-        <div>
-          {{annotationDetails.term_suggestion_definition}}
-        </div>
-      </div>
-    </td>
-  </tr>
+  <tbody>
+    <tr annotation-single-row
+        feature-display-name="{{featureDisplayName}}"
+        annotation-type="annotationType"
+        annotation-details="annotationDetails">
+    </tr>
+  </tbody>
 </table>
 </div>
