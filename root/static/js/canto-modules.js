@@ -8237,7 +8237,7 @@ canto.directive('annotationTableRow',
   ]);
 
 
-var annotationSingleRow =
+var annotationSingleRowTable =
   function (AnnotationTypeConfig, CantoConfig, CantoService, Curs) {
     return {
       restrict: 'E',
@@ -8249,7 +8249,7 @@ var annotationSingleRow =
       },
       replace: true,
       templateUrl: function () {
-        return app_static_path + 'ng_templates/annotation_single_row.html';
+        return app_static_path + 'ng_templates/annotation_single_row_table.html';
       },
       controller: function ($scope) {
         $scope.displayFeatureType = capitalizeFirstLetter($scope.featureType);
@@ -8328,9 +8328,9 @@ var annotationSingleRow =
     };
   };
 
-canto.directive('annotationSingleRow',
+canto.directive('annotationSingleRowTable',
   ['AnnotationTypeConfig', 'CantoConfig', 'CantoService', 'Curs',
-    annotationSingleRow
+    annotationSingleRowTable
   ]);
 
 
