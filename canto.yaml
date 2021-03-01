@@ -2362,6 +2362,12 @@ curs_config:
   follow_inverse_cv_names:
     - fission_yeast_phenotype
 
+  # Help text shown above the experimental conditions picker
+  experimental_conditions_help_text: >
+    Please add experimental conditions. Conditions are the aspects of the 
+    experimental setup that are independent of what cells (strain, genotype,
+    constructs, etc.) are used.
+
   finish_form:
     # the "extra_text" is always shown on the finish form, the
     # extra_text_gene_information is only shown if the user added some genes to

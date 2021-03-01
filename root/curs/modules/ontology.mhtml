@@ -99,9 +99,5 @@ if ($feature_type eq 'gene') {
 } else {
   $feature_display_name = $feature->display_name($c->config());
 }
-my $conditions_help_text = "Please add experimental conditions. Conditions are the aspects of the experimental setup that are independent of what cells (strain, genotype, constructs, etc.) are used.";
-my $annotation_type_config = $c->config()->{annotation_types}->{$annotation_type_name};
-if (defined $annotation_type_config->{conditions_help_text}) {
-  $conditions_help_text = $annotation_type_config->{conditions_help_text};
-}
+my $conditions_help_text = $c->config()->{curs_config}->{experimental_conditions_help_text};
 </%init>
