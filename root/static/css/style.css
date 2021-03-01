@@ -507,7 +507,7 @@ table.list thead img.sort-direction-icon {
   padding-right: 5px;
 }
 
-.annotation-single-row td {
+.annotation-single-row-table td {
   padding: 5px !important;
   padding-right: 8px !important;
 }
