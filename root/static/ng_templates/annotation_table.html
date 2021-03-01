@@ -28,6 +28,9 @@
         <table ng-switch-when="ontology" class="list">
           <thead>
             <tr>
+              <th ng-if="showCheckboxes">
+                &nbsp;
+              </th>
               <th ng-if="multiOrganismMode && annotationType.feature_type !== 'metagenotype'"> 
                 <a class="curs-sort-button" href=""
                    title="Click to sort" ng-click="setSortBy('organism_full_name')">
@@ -133,6 +136,9 @@
                 annotation-type-name="ontology"
                 feature-status-filter="{{featureStatusFilter}}"
                 show-metagenotype-link="{{showMetagenotypeLink}}"
+                show-checkboes="showCheckboxes"
+                checkbox-changed="checkboxChanged(annotationId, checkboxChecked)"
+                show-menu="showMenu"
                 ng-repeat="annotation in data.sortedAnnotations">
             </tr>
           </tbody>
@@ -211,6 +217,7 @@
           <tbody>
             <tr annotation-table-row annotation-type-name="interaction"
                 feature-status-filter="{{featureStatusFilter}}"
+                show-menu="showMenu"
                 ng-repeat="annotation in data.sortedAnnotations">
             </tr>
           </tbody>

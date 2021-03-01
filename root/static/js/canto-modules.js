@@ -6275,7 +6275,7 @@ var genotypeDetails =
 
 
 canto.directive('genotypeDetails',
-  ['CantoGlobals', genotypeDetails]);
+                ['CantoGlobals', '$uibModal', genotypeDetails]);
 
 
 canto.service('CantoConfig', function ($http) {
@@ -7434,6 +7434,137 @@ canto.controller('AnnotationTransferDialogCtrl',
   ]);
 
 
+var annotationTransferAllDialogCtrl =
+  function ($scope, $uibModal, $uibModalInstance, $q,
+            AnnotationProxy,
+            AnnotationTypeConfig, CursGenotypeList, CursGeneList,
+            CantoConfig, Curs, toaster, args) {
+    $scope.data = {};
+
+    $scope.data.featureId = args.featureId;
+    $scope.data.featureDisplayName = args.featureDisplayName;
+    $scope.data.annotationType = args.annotationType;
+    $scope.data.featureType = $scope.data.annotationType.feature_type;
+    $scope.data.annotations = args.annotations;
+    $scope.data.feature = null;
+    $scope.data.allFeatures = null;
+    $scope.data.otherFeatures = null;
+    $scope.data.chosenDestFeatureId = null;
+    $scope.data.selectedAnnotationIds = [];
+
+    $scope.data.annotationsById = {};
+
+    $.map($scope.data.annotations,
+          function(annotation) {
+            $scope.data.annotationsById[annotation.annotation_id] = annotation;
+          });
+
+    $scope.processFeatures = function() {
+      $scope.data.otherFeatures = [];
+      $.map($scope.data.allFeatures,
+            function(feature) {
+              if (feature.feature_id == $scope.data.featureId) {
+                $scope.data.feature = feature;
+              } else {
+                $scope.data.otherFeatures.push(feature);
+              }
+            });
+    };
+
+    $scope.getGeneFeatures = function() {
+      CursGeneList.geneList().then(function (features) {
+        $scope.data.allFeatures = features;
+      }).catch(function (err) {
+        toaster.pop('note', "couldn't read the gene list from the server");
+      });
+    };
+
+    $scope.openSingleGeneAddDialog = function () {
+      var modal = openSingleGeneAddDialog($uibModal);
+      modal.result.then(function () {
+        $scope.getGeneFeatures();
+      });
+    };
+
+    if ($scope.data.featureType === 'gene') {
+      $scope.getGeneFeatures();
+    } else {
+      if ($scope.data.featureType === 'genotype') {
+        CursGenotypeList.cursGenotypeList({include_allele: 1})
+          .then(function (features) {
+            $scope.data.allFeatures = features;
+            $scope.processFeatures();
+          }).catch(function (err) {
+            toaster.pop('note', "couldn't read the genotype list from the server");
+          });
+      } else {
+        toaster.pop('error', "annotation transfer not available for this " +
+                    "annotation type");
+      }
+    }
+
+    $scope.selectionChanged = function(annotationIds) {
+      $scope.data.selectedAnnotationIds = annotationIds;
+    };
+
+    $scope.canTransfer = function() {
+      return $scope.data.chosenDestFeatureId && $scope.data.selectedAnnotationIds.length > 0;
+    };
+
+    $scope.okButtonTitleMessage = function() {
+      return "Transfer";
+    };
+
+    $scope.ok = function () {
+      $.map($scope.data.selectedAnnotationIds,
+            function(sourceAnnotationId) {
+              var sourceAnnotation = $scope.data.annotationsById[sourceAnnotationId];
+
+              var annotationCopy = {};
+              copyObject(sourceAnnotation, annotationCopy);
+
+              annotationCopy.feature_id = $scope.data.chosenDestFeatureId;
+              loadingStart();
+              var q = AnnotationProxy.newAnnotation(annotationCopy);
+
+              var storePop = toaster.pop({
+                type: 'info',
+                title: 'Storing annotation...',
+                timeout: 0, // last until the finally()
+                showCloseButton: false
+              });
+              q.then(function (annotation) {
+                $uibModalInstance.close();
+                toaster.pop({
+                  type: 'success',
+                  title: 'Annotation stored successfully.',
+                  timeout: 5000,
+                  showCloseButton: true
+                });
+              })
+              .catch(function (message) {
+                toaster.pop('error', message);
+              })
+              .finally(function () {
+                loadingEnd();
+                toaster.clear(storePop);
+              });
+            });
+    };
+
+    $scope.cancel = function () {
+      $uibModalInstance.dismiss('cancel');
+    };
+  };
+
+canto.controller('AnnotationTransferAllDialogCtrl',
+  ['$scope', '$uibModal', '$uibModalInstance', '$q',
+   'AnnotationProxy',
+   'AnnotationTypeConfig', 'CursGenotypeList', 'CursGeneList',
+   'CantoConfig', 'Curs', 'toaster', 'args',
+    annotationTransferAllDialogCtrl
+  ]);
+
 angular.module('cantoApp')
   .directive('ngAltEnter', function ($document) {
     return {
@@ -7497,6 +7628,31 @@ function startTransfer($uibModal, annotation, currentFeatureDisplayName) {
         return {
           annotation: annotation,
           currentFeatureDisplayName: currentFeatureDisplayName,
+        };
+      }
+    },
+    backdrop: 'static',
+  });
+
+  return transferInstance.result;
+}
+
+
+function startTransferAll($uibModal, featureId, featureDisplayName,
+                          annotationType, annotations) {
+  var transferInstance = $uibModal.open({
+    templateUrl: app_static_path + 'ng_templates/annotation_transfer_all.html',
+    controller: 'AnnotationTransferAllDialogCtrl',
+    title: 'Transfer annotations',
+    animate: false,
+    size: 'lg',
+    resolve: {
+      args: function () {
+        return {
+          featureId: featureId,
+          featureDisplayName: featureDisplayName,
+          annotationType: annotationType,
+          annotations: annotations
         };
       }
     },
@@ -7684,6 +7840,9 @@ var annotationTableCtrl =
         featureStatusFilter: '@',
         alleleCountFilter: '@',
         showMetagenotypeLink: '<',
+        showCheckboxes: '<?',
+        checkboxesChanged: '&?',
+        showMenu: '<',
       },
       restrict: 'E',
       replace: true,
@@ -7701,6 +7860,8 @@ var annotationTableCtrl =
 
         $scope.showInteractionTermColumns = false;
 
+        $scope.checkboxesChecked = [];
+
         $scope.data = {};
 
         // default is no sorting
@@ -7711,6 +7872,22 @@ var annotationTableCtrl =
           sortedAnnotations: null,
           hideColumns: {},
           publicationUniquename: null,
+        };
+
+        $scope.checkboxChanged = function(annotationId, checkboxChecked) {
+          if ($scope.showCheckboxes && $scope.checkboxesChanged !== undefined) {
+            var idx = $scope.checkboxesChecked.indexOf(annotationId);
+
+            if (idx !== -1 && !checkboxChecked) {
+              $scope.checkboxesChecked.splice(idx, 1);
+            }
+
+            if (idx === -1 && checkboxChecked) {
+              $scope.checkboxesChecked.push(annotationId);
+            }
+
+            $scope.checkboxesChanged({annotationIds: $scope.checkboxesChecked});
+          }
         };
 
         $scope.annotationTypeConfigPromise =
@@ -7905,7 +8082,7 @@ canto.directive('annotationTable',
 
 
 var annotationTableList =
-  function (AnnotationProxy, AnnotationTypeConfig, CantoGlobals) {
+  function ($uibModal, AnnotationProxy, AnnotationTypeConfig, CantoGlobals) {
     return {
       scope: {
         featureIdFilter: '@',
@@ -8000,11 +8177,32 @@ var annotationTableList =
             $scope.data.serverError = "couldn't read annotation types from the server ";
           } // otherwise the request was cancelled
         });
+
+        $scope.filterAnnotationsForTransfer = function(annotationType) {
+          var params = {
+            featureId: $scope.featureIdFilter,
+            featureType: $scope.featureTypeFilter,
+            featureStatus: 'new',
+            alleleCount: undefined,
+          };
+
+          return filterAnnotations($scope.annotationsByType[annotationType.name], params);
+        };
+
+        $scope.transferAll = function(annotationType) {
+          var annotationsToTransfer = $scope.filterAnnotationsForTransfer(annotationType);
+
+          startTransferAll($uibModal, $scope.featureIdFilter,
+                           $scope.featureFilterDisplayName,
+                           annotationType, annotationsToTransfer);
+        };
       },
     };
   };
 
-canto.directive('annotationTableList', ['AnnotationProxy', 'AnnotationTypeConfig', 'CantoGlobals', annotationTableList]);
+canto.directive('annotationTableList',
+                ['$uibModal', 'AnnotationProxy', 'AnnotationTypeConfig', 'CantoGlobals',
+                 annotationTableList]);
 
 
 var annotationTableRow =
@@ -8030,6 +8228,7 @@ var annotationTableRow =
         $scope.hasWildTypeHost = false;
         $scope.showTransferLink = false;
         $scope.isMetagenotypeAnnotation = false;
+        $scope.checkboxChecked = false;
 
         CursSessionDetails.get()
           .then(function (sessionDetails) {
@@ -8072,6 +8271,14 @@ var annotationTableRow =
         };
 
         $scope.displayEvidence = annotation.evidence_code;
+
+        $scope.checkboxClick = function() {
+          $scope.checkboxChecked = !$scope.checkboxChecked;
+          if ($scope.showCheckboxes && $scope.checkboxChanged !== undefined) {
+            $scope.checkboxChanged(annotation.annotation_id,
+                                   $scope.checkboxChecked);
+          }
+        };
 
         $scope.hasWildTypeHost = (
           $scope.annotation.feature_type == 'metagenotype' &&
@@ -8145,6 +8352,7 @@ var annotationTableRow =
 
         $scope.addLinks = function () {
           return !CantoGlobals.read_only_curs &&
+            ($scope.showMenu === undefined || $scope.showMenu) &&
             $attrs.featureStatusFilter == 'new';
         };
 
