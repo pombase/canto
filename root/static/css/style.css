@@ -1875,3 +1875,40 @@ a:not([href]) {
   padding: 1em 0.5em 0.5em 0.5em;
   font-size: 95%;
 }
+
+.curs-annotation-table-transfer-all {
+  float: right;
+  padding-right: 10em;
+}
+
+.curs-annotation-transfer-all .modal-body {
+  min-height: 20em;
+}
+
+.curs-annotation-transfer-all-single-row {
+  white-space: nowrap;
+}
+
+.curs-annotation-transfer-all-single-row * {
+  white-space: normal;
+}
+
+.curs-annotation-transfer-all-single-row > div {
+  display: inline-block;
+}
+
+.curs-annotation-transfer-all-single-row table {
+  display: inline-table;
+  max-width: 100%;
+}
+
+.curs-annotation-transfer-all-select-annotation {
+  margin-top: 0.5em;
+  margin-bottom: 1.5em;
+  max-height: 30em;
+  overflow-y: scroll;
+}
+
+.curs-annotation-transfer-all-select-annotation table {
+  display: inline-table;
+}

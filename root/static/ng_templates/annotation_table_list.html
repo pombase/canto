@@ -14,6 +14,13 @@ Annotation loading...
         <div class="curs-box-title">
           {{capitalizeFirstLetter(annotationType.display_name)}}
         </div>
+        <div>
+          <a ng-if="featureIdFilter && annotationType.feature_type == 'genotype'"
+             ng-click="transferAll(annotationType)"
+             href="#"
+             title="{{'Copy all annotations from this ' + annotationType.feature_type + ' to another'}}"
+             class="curs-annotation-table-transfer-all">Transfer {{annotationType.display_name}} annotation ...</a>
+        </div>
         <div class="curs-box-body" ng-show="serverErrorsByType[annotationType.name]">
           <div class="error_message" >
             Error for {{annotationType.name}}: {{serverErrorsByType[annotationType.name]}}
