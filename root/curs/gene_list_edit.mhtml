@@ -24,8 +24,8 @@ var hostsWithNoGenes = <% $hosts_with_no_genes_js |n %>;
 <% $title %>
   </div>
   <div class="curs-box-body">
-% if ($pathogen_host_mode) {
     <% $gene_page_top_message | n %>
+% if ($pathogen_host_mode) {
     <edit-organisms></edit-organisms>
 % } else {
 
