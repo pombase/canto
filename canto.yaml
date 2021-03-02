@@ -2362,6 +2362,9 @@ curs_config:
   follow_inverse_cv_names:
     - fission_yeast_phenotype
 
+  # A message for curators, shown at the top of the gene confirmation page.
+  # gene_page_top_message: SET_ME
+
   finish_form:
     # the "extra_text" is always shown on the finish form, the
     # extra_text_gene_information is only shown if the user added some genes to
