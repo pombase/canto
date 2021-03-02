@@ -7435,10 +7435,10 @@ canto.controller('AnnotationTransferDialogCtrl',
 
 
 var annotationTransferAllDialogCtrl =
-  function ($scope, $uibModal, $uibModalInstance, $q,
+  function ($scope, $window, $uibModal, $uibModalInstance, $q,
             AnnotationProxy,
             AnnotationTypeConfig, CursGenotypeList, CursGeneList,
-            CantoConfig, Curs, toaster, args) {
+            CantoGlobals, Curs, toaster, args) {
     $scope.data = {};
 
     $scope.data.featureId = args.featureId;
@@ -7541,6 +7541,11 @@ var annotationTransferAllDialogCtrl =
                   timeout: 5000,
                   showCloseButton: true
                 });
+                var destFeatureUrl =
+                    CantoGlobals.curs_root_uri + '/feature/' +
+                    $scope.data.annotationType.feature_type +
+                    '/view/' + $scope.data.chosenDestFeatureId;
+                $window.location.href = destFeatureUrl;
               })
               .catch(function (message) {
                 toaster.pop('error', message);
@@ -7558,10 +7563,10 @@ var annotationTransferAllDialogCtrl =
   };
 
 canto.controller('AnnotationTransferAllDialogCtrl',
-  ['$scope', '$uibModal', '$uibModalInstance', '$q',
+  ['$scope', '$window', '$uibModal', '$uibModalInstance', '$q',
    'AnnotationProxy',
    'AnnotationTypeConfig', 'CursGenotypeList', 'CursGeneList',
-   'CantoConfig', 'Curs', 'toaster', 'args',
+   'CantoGlobals', 'Curs', 'toaster', 'args',
     annotationTransferAllDialogCtrl
   ]);
 
