@@ -2,7 +2,7 @@
   <div class="modal-header">
     <h4 class="modal-title">
       Transfer {{data.annotationType.display_name}} annotation
-      from {{data.featureDisplayName}} to:
+      from {{data.featureDisplayName}}
     </h4>
 
     <div class="modal-body">
@@ -13,7 +13,7 @@
 
       <div ng-if="data.otherFeatures">
         <div class="curs-annotation-transfer-all-select-annotation">
-          Select annotations to transfer:
+          Select annotation to transfer:
           <annotation-table annotation-type-name="{{data.annotationType.name}}"
                             annotations="data.annotations"
                             feature-status-filter="selecting"
@@ -25,7 +25,7 @@
         </div>
 
         <div>
-          Destination {{data.featureType}}:
+          Select destination {{data.featureType}}:
           <feature-chooser feature-type="{{data.featureType}}"
                            features="data.otherFeatures"
                            chosen-feature-id="data.chosenDestFeatureId"></feature-chooser>
