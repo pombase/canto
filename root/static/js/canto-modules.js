@@ -7455,6 +7455,8 @@ var annotationTransferAllDialogCtrl =
             AnnotationProxy,
             AnnotationTypeConfig, CursGenotypeList, CursGeneList,
             CantoGlobals, Curs, toaster, args) {
+    $scope.read_only_curs = CantoGlobals.read_only_curs;
+
     $scope.data = {};
 
     $scope.data.featureId = args.featureId;
@@ -7532,6 +7534,10 @@ var annotationTransferAllDialogCtrl =
     };
 
     $scope.ok = function () {
+      if (CantoGlobals.read_only_curs) {
+        return;
+      }
+
       $.map($scope.data.selectedAnnotationIds,
             function(sourceAnnotationId) {
               var sourceAnnotation = $scope.data.annotationsById[sourceAnnotationId];
@@ -8198,6 +8204,11 @@ var annotationTableList =
             $scope.data.serverError = "couldn't read annotation types from the server ";
           } // otherwise the request was cancelled
         });
+
+        $scope.canTransfer = function(annotationType) {
+          return !CantoGlobals.read_only_curs && $scope.featureIdFilter &&
+            annotationType.feature_type == 'genotype';
+        };
 
         $scope.filterAnnotationsForTransfer = function(annotationType) {
           var params = {

@@ -15,7 +15,7 @@ Annotation loading...
           {{capitalizeFirstLetter(annotationType.display_name)}}
         </div>
         <div>
-          <a ng-if="featureIdFilter && annotationType.feature_type == 'genotype'"
+          <a ng-if="canTransfer(annotationType)"
              ng-click="transferAll(annotationType)"
              href="#"
              title="{{'Copy all annotations from this ' + annotationType.feature_type + ' to another'}}"
