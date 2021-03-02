@@ -8206,7 +8206,8 @@ var annotationTableList =
         });
 
         $scope.canTransfer = function(annotationType) {
-          return !CantoGlobals.read_only_curs && $scope.featureIdFilter &&
+          return CantoGlobals.is_admin_user &&
+            !CantoGlobals.read_only_curs && $scope.featureIdFilter &&
             annotationType.feature_type == 'genotype';
         };
 
