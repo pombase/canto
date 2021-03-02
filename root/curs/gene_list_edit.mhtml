@@ -24,8 +24,8 @@ var hostsWithNoGenes = <% $hosts_with_no_genes_js |n %>;
 <% $title %>
   </div>
   <div class="curs-box-body">
+    <% $gene_page_top_message | n %>
 % if ($pathogen_host_mode) {
-    <p><b>Note:</b> PHI-Canto does not use UniProt identifiers at taxonomic ranks lower than species. If you have entered UniProt identifiers that are at the strain or subspecies level, their corresponding NCBI Taxonomy identifiers will have been reassigned to the nearest species-level identifier (the UniProt identifier itself is not modified). Please use the 'experimental strains' field to specify lower taxonomic ranks (such as strains, pathovars, and subspecies).</p>
     <edit-organisms></edit-organisms>
 % } else {
 
@@ -69,6 +69,8 @@ if ($c->config()->{pathogen_host_mode}) {
   $add_more_genes_message =
     'Add more genes from ' . $pub->uniquename();
 }
+
+my $gene_page_top_message = $c->config()->{curs_config}->{gene_page_top_message};
 
 my @col_names = ("Systematic identifier", "Name", "Synonyms", "Product");
 
