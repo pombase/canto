@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 53;
+use Test::More tests => 61;
 use Test::Exception;
 
 use Canto::TestUtil;
@@ -57,25 +57,25 @@ is($FBal0119310_allele->name(), 'Dmel\Cdk2_UAS.Tag:MYC');
 is($FBal0119310_allele->description(), 'description of FBal0119310');
 is($FBal0119310_allele->comment(), 'comment on FBal0119310');
 
-my $genotype_FBal0119310 =
-  $created_cursdb->resultset('Genotype')->find({ identifier => "genotype-FBal0119310" });
+my @FBal0119310_genotypes = $FBal0119310_allele->genotypes();
 
-my $FBal0119310_genotype_allele = ($genotype_FBal0119310->alleles()->all())[0];
-is ($FBal0119310_genotype_allele->allele_id(), $FBal0119310_allele->allele_id());
+is (@FBal0119310_genotypes, 1);
 
-is($FBal0119310_allele->name(), 'Dmel\Cdk2_UAS.Tag:MYC');
 
 my @FBal0119310_allelesynonyms = sort map { $_->synonym() } $FBal0119310_allele->allelesynonyms()->all();
 is (@FBal0119310_allelesynonyms, 2);
 is ($FBal0119310_allelesynonyms[0], "UAS-Cdk2");
 is ($FBal0119310_allelesynonyms[1], "UAS-Cdk2-myc");
 
-my $genotype_FBab0037918 =
-  $created_cursdb->resultset('Genotype')->find({ identifier => "genotype-FBab0037918" });
 
-my $FBab0037918_allele = ($genotype_FBab0037918->alleles()->all())[0];
-
+my $FBab0037918_allele =
+  $created_cursdb->resultset('Allele')->find({ primary_identifier => "FBab0037918" });
 is($FBab0037918_allele->name(), 'Df(2L)Exel7046');
+
+my @FBab0037918_genotypes = $FBal0119310_allele->genotypes();
+
+is (@FBab0037918_genotypes, 1);
+
 
 
 # load the same file to test session updating
@@ -231,6 +231,48 @@ is ($FBal0009999_allele->name(), 'Dmel\Cdk88_V1.allele');
 ($created_sessions, $updated_sessions) =
   $load_util->create_sessions_from_json($config, $test_json_extra_gene_and_allele_file,
                                         'test.user@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org', 7227);
+
+is (@$created_sessions, 0);
+is (@$updated_sessions, 0);
+
+
+# load a JSON file where some genes are removed
+my $test_json_removed_genes_and_alleles_file =
+  $test_util->root_dir() . '/t/data/sessions_from_json_removed_genes_alleles.json';
+
+# gene and allele exists before:
+$FBgn0009999 =
+  $updated_cursdb->resultset('Gene')->find({ primary_identifier => "FBgn0009999" });
+ok (defined $FBgn0009999);
+
+my $FBal0119310 =
+  $updated_cursdb->resultset('Allele')->find({ primary_identifier => "FBal0119310" });
+ok (defined $FBal0119310);
+
+
+($created_sessions, $updated_sessions) =
+  $load_util->create_sessions_from_json($config, $test_json_removed_genes_and_alleles_file,
+                                        'test.user@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org', 7227);
+
+
+is (@$created_sessions, 0);
+is (@$updated_sessions, 1);
+
+# gene and allele gone after:
+$FBgn0009999 =
+  $updated_cursdb->resultset('Gene')->find({ primary_identifier => "FBgn0009999" });
+ok (!defined $FBgn0009999);
+
+$FBal0119310 =
+  $updated_cursdb->resultset('Allele')->find({ primary_identifier => "FBal0119310" });
+ok (!defined $FBal0119310);
+
+
+# check that we can load it again without change
+($created_sessions, $updated_sessions) =
+  $load_util->create_sessions_from_json($config, $test_json_removed_genes_and_alleles_file,
+                                        'test.user@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org', 7227);
+
 
 is (@$created_sessions, 0);
 is (@$updated_sessions, 0);

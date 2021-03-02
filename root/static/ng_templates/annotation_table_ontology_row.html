@@ -1,4 +1,9 @@
 <tr ng-class="{ 'curs-row-checked' : sessionState == 'APPROVAL_IN_PROGRESS' && checked == 'yes' }">
+  <td ng-if="showCheckboxes">
+    <input type="checkbox" name="selectAnnotation"
+           ng-checked="checkboxChecked"
+           ng-click="checkboxClick()" />
+  </td>
   <td ng-if="multiOrganismMode && annotationType.feature_type !== 'metagenotype'">
     <span class="organism-name" ng-if="annotation.organism">{{annotation.organism.scientific_name | abbreviateGenus}}</span>
     <span class="organism-name" ng-if="!annotation.organism">{{annotation.taxonid | abbreviateGenus}}</span>

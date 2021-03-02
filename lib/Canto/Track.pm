@@ -573,26 +573,31 @@ sub refresh_gene_cache
   my %current_genes = ();
   my @current_gene_primary_identifiers = ();
 
-  map {
-    my $gene = $_;
-    $current_genes{$_->primary_identifier()} =
-      {
-        primary_identifier => $_->primary_identifier(),
-        primary_name => $_->primary_name(),
-        synonyms => [map {
-          my $synonym = $_;
-          $synonym->identifier();
-        } $_->genesynonyms()->all()],
-        product => $gene->product(),
-        organism_id => $gene->organism()->organism_id(),
-      };
+  my $delete_genes = sub {
+    map {
+      my $gene = $_;
+      $current_genes{$_->primary_identifier()} =
+        {
+          primary_identifier => $_->primary_identifier(),
+          primary_name => $_->primary_name(),
+          synonyms => [map {
+            my $synonym = $_;
+            $synonym->identifier();
+          } $_->genesynonyms()->all()],
+          product => $gene->product(),
+          organism_id => $gene->organism()->organism_id(),
+        };
 
-    push @current_gene_primary_identifiers, $_->primary_identifier();
+      push @current_gene_primary_identifiers, $_->primary_identifier();
 
     } $track_schema->resultset('Gene', {}, { prefetch => 'organism' })->all();
 
-  $track_schema->resultset('Genesynonym')->delete();
-  $track_schema->resultset('Gene')->delete();
+    $track_schema->resultset('Genesynonym')->delete();
+    $track_schema->resultset('Gene')->delete();
+  };
+
+  $track_schema->txn_do($delete_genes);
+
 
   my @missing_ids = ();
 
@@ -600,14 +605,18 @@ sub refresh_gene_cache
   my $iter = natatime 50, @current_gene_primary_identifiers;
 
   while (my @ids = $iter->()) {
-    my $lookup_results = $adaptor->lookup(\@ids);
+    my $lookup_proc = sub {
+      my $lookup_results = $adaptor->lookup(\@ids);
 
-    if (@{$lookup_results->{missing}}) {
-      push @missing_ids, @{$lookup_results->{missing}};
-    }
+      if (@{$lookup_results->{missing}}) {
+        push @missing_ids, @{$lookup_results->{missing}};
+      }
+    };
+
+    $track_schema->txn_do($lookup_proc);
   }
 
-  if (@missing_ids) {
+  my $restore_missing_proc = sub {
     for my $missing_id (@missing_ids) {
       my $saved_gene = $current_genes{$missing_id};
       if ($saved_gene) {
@@ -623,7 +632,9 @@ sub refresh_gene_cache
                                 $saved_gene->{synonyms}, $saved_gene->{product});
       }
     }
-  }
+  };
+
+  $track_schema->txn_do($restore_missing_proc);
 }
 
 1;

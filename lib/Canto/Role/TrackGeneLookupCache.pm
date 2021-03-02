@@ -82,8 +82,12 @@ around 'lookup' => sub {
     # this is to handle the case where we don't find the gene in the TrackDB when
     # searching using the primary_name but we do find it in UniProt because the name
     # has changed:
-    $schema->resultset('Gene')->search({ primary_identifier => $_->{primary_identifier} })
-      ->delete();
+    my $gene = $schema->resultset('Gene')
+      ->find({ primary_identifier => $_->{primary_identifier} });
+    if ($gene) {
+      $gene->genesynonyms()->delete();
+      $gene->delete();
+    }
 
     my $gene_load = Canto::Track::GeneLoad->new(organism => $organism, schema => $schema);
 

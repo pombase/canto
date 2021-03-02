@@ -277,11 +277,11 @@ sub all_annotations
 =head2 genotypes
 
  Usage   : my $genotypes_rs = $self->genotypes();
- Function:
- Args    :
- Returns :
+ Function: Return a ResultSet of the genotypes that contain alleles of
+           this gene
 
 =cut
+
 sub genotypes
 {
   my $self = shift;

@@ -10,22 +10,20 @@
   <div class="curs-box-body">
     <ul class="curs-quick-links-list">
 % for my $annotation_type (@annotation_type_list) {
-%   my $feature_subtype = $annotation_type->{feature_subtype} || 'NONE';
-%   my $show_link = ($feature_subtype eq 'NONE' || $feature_subtype eq 'host' && $has_host_genotypes || $feature_subtype eq 'pathogen' && $has_pathogen_genotypes) ? 'true' : 'false';
-
     <li ng-if="getAnnotationMode() == 'advanced' || '<% $annotation_type->{category} %>' == 'interaction' && '<% $annotation_type->{feature_type} %>' == 'metagenotype'">
-      <annotation-quick-add ng-if="<% $show_link %>"
-                            annotation-type-name="<% $annotation_type->{name} %>"
+%   if ($_show_link->($annotation_type)) {
+      <annotation-quick-add annotation-type-name="<% $annotation_type->{name} %>"
                             link-label="<% ucfirst($annotation_type->{display_name}) %>"
                             feature-type="<% $annotation_type->{feature_type} %>"
                             feature-taxon-id="">
       </annotation-quick-add>
-      <span ng-if="!<% $show_link %>" style="color: #888"
-            title="Add a <% $annotation_type->{feature_subtype} || '' %> genotype to make a phenotype annotation">
+%   } else {
+      <span style="color: #888"
+            uib-tooltip="Add a <% $_display_subtype->($annotation_type) %> to make an annotation">
         <% ucfirst $annotation_type->{display_name} %>
       </span>
     </li>
-
+%   }
 % }
     </ul>
   </div>
@@ -37,4 +35,41 @@ my $read_only_curs = $c->stash()->{read_only_curs};
 
 my $has_host_genotypes = $c->stash()->{has_host_genotypes};
 my $has_pathogen_genotypes = $c->stash()->{has_pathogen_genotypes};
+my $has_pathogen_host_metagenotypes = $c->stash()->{has_pathogen_host_metagenotypes};
+
+my $schema = $c->stash()->{schema};
+my $genotype_count = $schema->resultset('Genotype')->count();
+
+my $has_genotypes = $genotype_count > 0;
+
+my $_show_link = sub {
+  my ($annotation_type) = @_;
+
+  if (($annotation_type->{feature_type} eq 'genotype' ||
+       $annotation_type->{feature_type} eq 'metagenotype') &&
+      !$has_genotypes) {
+    return 0;
+  }
+
+  my $feature_subtype = $annotation_type->{feature_subtype} || 'NONE';
+
+  if ($feature_subtype eq 'pathogen-host') {
+    return $has_pathogen_host_metagenotypes;
+  }
+
+  return $feature_subtype eq 'NONE' || $feature_subtype eq 'host' && $has_host_genotypes || $feature_subtype eq 'pathogen' && $has_pathogen_genotypes
+};
+
+my $_display_subtype = sub {
+  my ($annotation_type) = @_;
+
+  my $feature_subtype = $annotation_type->{feature_subtype} || 'NONE';
+
+  if ($feature_subtype eq 'pathogen-host') {
+    return 'pathogen-host metagenotype';
+  }
+
+  return ($annotation_type->{feature_subtype} . ' ' || '') . 'genotype';
+};
+
 </%init>

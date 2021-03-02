@@ -353,7 +353,8 @@ sub metagenotypes
   return $self->metagenotype_second_genotypes()->all();
 }
 
-# returns either the count of metagenotypes that this genotype is part of
+# returns a hash of counts of metagenotypes of this genotype by
+# metagenotype type
 sub metagenotype_count_by_type
 {
   my $self = shift;
@@ -411,6 +412,20 @@ sub genotype_type
     return $organism_details->{pathogen_or_host};
   }
 }
+
+=head2 is_wild_type
+
+ Usage   : if ($genotype->is_wild_type()) { ... }
+ Function: Return 1 iff is genotype has no alleles
+
+=cut
+
+sub is_wild_type {
+  my $self = shift;
+
+  return $self->allele_genotypes()->count() == 0;
+}
+
 
 sub delete
 {

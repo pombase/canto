@@ -814,23 +814,46 @@ sub load_pub_from_pubmed
 }
 
 
-sub _update_allele_name_and_type
+sub _update_allele_details
 {
-  my ($existing_allele, $json_allele_details) = @_;
+  my ($existing_allele, $json_allele_details, $db_genes) = @_;
 
   my $session_updated = 0;
 
   if (($existing_allele->name() // '') ne ($json_allele_details->{name} // '')) {
     $existing_allele->name($json_allele_details->{name});
-    $existing_allele->update();
+    print "updated allele name of ", ($json_allele_details->{name} // ''), "\n";
+    $session_updated = 1;
+  }
+
+  if (($existing_allele->comment() // '') ne ($json_allele_details->{comment} // '')) {
+    $existing_allele->comment($json_allele_details->{comment});
+    print "updated comment of allele ", ($json_allele_details->{name} // ''), "\n";
     $session_updated = 1;
   }
 
   if ($json_allele_details->{type} &&
         $existing_allele->type() ne $json_allele_details->{type}) {
     $existing_allele->type($json_allele_details->{type});
-    $existing_allele->update();
     $session_updated = 1;
+  }
+
+  my $allele_gene_uniquename = $json_allele_details->{gene};
+
+  if ($allele_gene_uniquename && $existing_allele->gene() &&
+        $existing_allele->gene()->primary_identifier() ne $allele_gene_uniquename) {
+    my $new_gene = $db_genes->{$allele_gene_uniquename};
+
+    warn qq|gene for "|, $existing_allele->primary_identifier(),
+      qq|" changed from "|, $existing_allele->gene()->primary_identifier(),
+      qq| to "$allele_gene_uniquename"\n|;
+
+    $existing_allele->gene($new_gene);
+    $session_updated = 1;
+  }
+
+  if ($session_updated) {
+    $existing_allele->update();
   }
 
   return $session_updated;
@@ -870,7 +893,7 @@ sub create_sessions_from_json
  };
 
   my $gene_lookup = Canto::Track::get_adaptor($config, 'gene');
-  my $sessions_data = decode_json($json_text);
+  my $sessions_data = JSON->new->utf8(0)->decode($json_text);
 
   my $curator_manager = Canto::Track::CuratorManager->new(config => $config);
 
@@ -902,6 +925,8 @@ sub create_sessions_from_json
 
  PUB:
   while (my ($pub_uniquename, $session_data) = each %$sessions_data) {
+    $success = 0;
+
     $pub = undef;
     $curs = undef;
     $cursdb = undef;
@@ -913,6 +938,7 @@ sub create_sessions_from_json
     my $new_allele_count = 0;
 
     my $error_message;
+    # the publication should be in the track DB at this point
     ($pub, $error_message) = $self->load_pub_from_pubmed($config, $pub_uniquename);
 
     if (!$pub) {
@@ -936,7 +962,6 @@ sub create_sessions_from_json
     } else {
       ($curs, $cursdb) =
         Canto::Track::create_curs($config, $self->schema(), $pub, $connect_options);
-      push @new_sessions, $curs;
     }
 
     my %existing_session_gene_uniquenames = ();
@@ -959,6 +984,7 @@ sub create_sessions_from_json
     my $alleles_from_json = $session_data->{alleles};
     my $genes_from_json = $session_data->{genes};
 
+    # do some checks for consistency
     if ($using_existing_session) {
       my %secondary_gene_identifier_counts = ();
 
@@ -1014,6 +1040,8 @@ sub create_sessions_from_json
           if ($existing_session_gene) {
             $existing_session_gene->primary_identifier($json_gene_uniquename);
             $existing_session_gene->update();
+            delete $existing_session_gene_uniquenames{$secondary_identifier};
+            $existing_session_gene_uniquenames{$json_gene_uniquename} = $existing_session_gene;
             next GENE;
           }
         }
@@ -1022,12 +1050,13 @@ sub create_sessions_from_json
       }
 
       my $lookup_result = $gene_lookup->lookup([$json_gene_uniquename]);
-      push @gene_lookup_results, $gene_lookup->lookup([$json_gene_uniquename]);
 
       if (@{$lookup_result->{missing}} != 0) {
         print "no gene found in the database for ID $json_gene_uniquename, skipping $pub_uniquename\n";
         next PUB;
       }
+
+      push @gene_lookup_results, $lookup_result;
     }
 
     my $allele_manager =
@@ -1068,25 +1097,29 @@ sub create_sessions_from_json
     }
 
     if ($alleles_from_json) {
-      my %existing_allele_uniquenames = ();
-
-      if ($using_existing_session) {
-        my @existing_alleles = $cursdb->resultset('Allele')->all();
-
-        for my $existing_allele (@existing_alleles) {
-          $existing_allele_uniquenames{$existing_allele->primary_identifier()} =
-            $existing_allele;
-        }
-      }
-
       my @genotype_details = ();
 
     ALLELE:
       while (my ($allele_uniquename, $json_allele_details) = each %$alleles_from_json) {
+        my $allele_gene_uniquename = $json_allele_details->{gene};
+
+        if ($json_allele_details->{type} ne 'aberration') {
+          if (!defined $allele_gene_uniquename) {
+            print qq|no "gene" field in details for $allele_uniquename in $pub_uniquename\n|;
+            next PUB;
+          }
+
+          my $gene = $db_genes{$allele_gene_uniquename};
+          if (!defined $gene) {
+            print qq|error while loading $pub_uniquename: gene $allele_gene_uniquename (from allele $allele_uniquename) missing from the "genes" section\n|;
+            next PUB;
+          }
+        }
+
         if ($using_existing_session) {
-          if ($existing_allele_uniquenames{$allele_uniquename}) {
-            my $existing_allele = $existing_allele_uniquenames{$allele_uniquename};
-            if (_update_allele_name_and_type($existing_allele, $json_allele_details)) {
+          if ($existing_session_alleles_by_uniquenames{$allele_uniquename}) {
+            my $existing_allele = $existing_session_alleles_by_uniquenames{$allele_uniquename};
+            if (_update_allele_details($existing_allele, $json_allele_details, \%db_genes)) {
               $session_updated = 1;
             }
             next;
@@ -1102,7 +1135,7 @@ sub create_sessions_from_json
             if ($existing_session_allele) {
               $existing_session_allele->primary_identifier($allele_uniquename);
               $existing_session_allele->update();
-              _update_allele_name_and_type($existing_session_allele, $json_allele_details);
+              _update_allele_details($existing_session_allele, $json_allele_details, \%db_genes);
               next ALLELE;
             }
           }
@@ -1110,23 +1143,12 @@ sub create_sessions_from_json
           print "adding new allele to existing session: $allele_uniquename\n";
         }
 
-        my $allele_gene_uniquename = delete $json_allele_details->{gene};
-
         $json_allele_details->{source_identifier} = $allele_uniquename;
 
         my $gene = undef;
 
         if ($json_allele_details->{type} ne 'aberration') {
-          if (!defined $allele_gene_uniquename) {
-            print qq|no "gene" field in details for $allele_uniquename in $pub_uniquename\n|;
-            next PUB;
-          }
-
           $gene = $db_genes{$allele_gene_uniquename};
-          if (!defined $gene) {
-            print qq|error while loading $pub_uniquename: gene $allele_gene_uniquename (from allele $allele_uniquename) missing from the "genes" section\n|;
-            next PUB;
-          }
 
           $json_allele_details->{gene_id} = $gene->gene_id();
         }
@@ -1148,6 +1170,8 @@ sub create_sessions_from_json
           $gene_display_name = "(aberration)";
         }
 
+        delete $json_allele_details->{gene};
+
         my $allele_display_name =
           Canto::Curs::Utils::make_allele_display_name($config,
                                                        $json_allele_details->{name},
@@ -1160,7 +1184,7 @@ sub create_sessions_from_json
           allele => $json_allele_details,
           allele_display_name => lc $allele_display_name,
           gene_display_name => lc $gene_display_name,
-          identifier => "genotype-$allele_uniquename",
+          identifier => undef,
           taxonid => $default_organism_taxonid,
         };
       }
@@ -1208,25 +1232,87 @@ sub create_sessions_from_json
     }
 
     if ($using_existing_session) {
-      # check for genes that are in the Canto database but aren't in input file
-      for my $gene ($cursdb->resultset('Gene')->all()) {
-        if (!exists $genes_from_json->{$gene->primary_identifier()}) {
-          warn "gene ", $gene->primary_identifier(),
-            " is the Canto database is not in the JSON input for session: ",
-            $curs->curs_key(), "\n";
-        }
-      }
-
-      # check for alleles
+      # check for alleles that are in the Canto database but aren't in input file
+    ALLELE:
       for my $allele ($cursdb->resultset('Allele')->all()) {
-        if (!exists $alleles_from_json->{$allele->primary_identifier()}) {
-          warn "allele ", $allele->primary_identifier(),
-            " is the Canto database is not in the JSON input for session: ",
+        my $allele_primary_identifier = $allele->primary_identifier();
+        if (!exists $alleles_from_json->{$allele_primary_identifier}) {
+          warn "allele $allele_primary_identifier - ",
+            $allele->long_identifier($config),
+            " is in the Canto database is not in the JSON input for session: ",
             $curs->curs_key(), "\n";
+
+          my @allele_genotypes = $allele->genotypes()->all();
+
+          map {
+            my $genotype = $_;
+
+            if ($genotype->annotations()->count() > 0) {
+              warn "  can't remove $allele_primary_identifier - one or more ",
+                "genotypes containing this allele has annotation\n";
+              next ALLELE;
+            }
+            if ($genotype->metagenotypes() > 0) {
+              warn "  can't remove $allele_primary_identifier - one or more ",
+                "genotypes containing this allele are part of an interaction ",
+                "or metagenotype\n";
+              next ALLELE;
+            }
+          } @allele_genotypes;
+
+          $session_updated = 1;
+          map {
+            my $genotype = $_;
+            $genotype->delete();
+          } @allele_genotypes;
+          $allele->allele_notes()->delete();
+          $allele->allelesynonyms()->delete();
+          $allele->delete();
+          warn "  - successfully deleted from the Canto database\n";
         }
       }
 
-     if ($new_allele_count > 0) {
+      # check for genes
+    GENE:
+      for my $gene ($cursdb->resultset('Gene')->all()) {
+        my $gene_primary_identifier = $gene->primary_identifier();
+        if (!exists $genes_from_json->{$gene_primary_identifier}) {
+          warn "gene $gene_primary_identifier ",
+            "is in the Canto database is not in the JSON input for session: ",
+            $curs->curs_key(), "\n";
+
+          my @gene_alleles = $gene->alleles();
+
+          map {
+            my $allele = $_;
+
+            my @gene_allele_genotypes = $allele->genotypes()->all();
+
+            map {
+              my $genotype = $_;
+
+              if ($genotype->annotations()->count() > 0) {
+                warn "  can't remove $gene_primary_identifier - one or more ",
+                  "genotypes containing an allele from this gene has annotation\n";
+                next GENE;
+              }
+              if ($genotype->metagenotypes() > 0) {
+                warn "  can't remove $gene_primary_identifier - one or more ",
+                  "genotypes containing this allele from this gene are part of ",
+                  "an interaction or metagenotype\n";
+                next GENE;
+              }
+
+            } @gene_allele_genotypes;
+          } @gene_alleles;
+
+          $session_updated = 1;
+          $gene->delete();
+          warn "  - successfully deleted from the Canto database\n";
+        }
+      }
+
+      if ($new_allele_count > 0) {
         $session_updated = 1;
       } else {
         print "no new alleles adding to session: ", $curs->curs_key(), "\n";
@@ -1245,6 +1331,7 @@ sub create_sessions_from_json
 
     if (!$using_existing_session) {
       if ($success) {
+        push @new_sessions, $curs;
         print "created session: ", $curs->curs_key(), " pub: ", $pub->uniquename(),
           " for: $curator_email_address\n";
         $success = 0;

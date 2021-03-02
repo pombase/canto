@@ -11,6 +11,8 @@
 <li><a href="go_annotation">Gene Ontology annotations</a></li>
 <li><a href="modification_annotation">Protein modification</a></li>
 <li><a href="physical_interaction_annotation">Physical interaction</a></li>
+<li><a href="gene_expression">RNA level</a></li>
+<li><a href="gene_expression">Protein level</a></li>
 </ul>
 </li>
 <li>Annotating genotypes<ul>
@@ -20,6 +22,7 @@
 </li>
 <li>Annotating metagenotypes<ul>
 <li><a href="phipo_annotation#pathogen_host_interaction_phenotypes">Pathogen-host interaction phenotype</a></li>
+<li><a href="phipo_annotation#pathogen_host_interaction_phenotypes">Gene-for-gene phenotype</a></li>
 </ul>
 </li>
 <li><a href="phipo_annotation#experimental_evidence">Experimental evidence</a></li>

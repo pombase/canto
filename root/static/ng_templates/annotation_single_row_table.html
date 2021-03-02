@@ -1,0 +1,39 @@
+<div class="annotation-table annotation-single-row-table">
+<table ng-if="annotationType && annotationDetails" class="list">
+  <thead>
+    <tr>
+      <th>
+        {{displayFeatureType}}
+      </th>
+      <th>
+        Term ID
+      </th>
+      <th>
+        Term name
+      </th>
+      <th ng-if="showEvidenceColumn">
+        Evidence
+      </th>
+      <th ng-if="annotationType.can_have_with && annotationDetails.with_gene_id">
+        With
+      </th>
+      <th ng-if="annotationType.can_have_conditions && annotationDetails.conditions.length > 0">
+        Conditions
+      </th>
+      <th ng-if="annotationDetails.extension && annotationDetails.extension.length > 0">
+        Extension
+      </th>
+      <th ng-if="annotationDetails.term_suggestion_name || annotationDetails.term_suggestion_definition">
+        Term suggestion
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr annotation-single-row
+        feature-display-name="{{featureDisplayName}}"
+        annotation-type="annotationType"
+        annotation-details="annotationDetails">
+    </tr>
+  </tbody>
+</table>
+</div>

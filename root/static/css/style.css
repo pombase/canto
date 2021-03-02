@@ -507,7 +507,7 @@ table.list thead img.sort-direction-icon {
   padding-right: 5px;
 }
 
-.annotation-single-row td {
+.annotation-single-row-table td {
   padding: 5px !important;
   padding-right: 8px !important;
 }
@@ -1600,11 +1600,6 @@ a:not([href]) {
   margin-top: 10px;
 }
 
-.curs-metagenotype-manage-pathogen, .curs-metagenotype-manage-host {
-  width: 49%;
-  float: left;
-}
-
 .gene-button-delete-text-disabled {
   color: whitesmoke;
 }
@@ -1731,6 +1726,17 @@ a:not([href]) {
   display: inline-block;
   font-weight: 700;
   margin-bottom: 10px;
+}
+.curs-metagenotype-picker-columns {
+  display: flex;
+  flex-wrap: wrap;
+}
+.curs-metagenotype-picker-column-pathogen {
+  flex-basis: 530px;
+  padding-right: 30px;
+}
+.curs-metagenotype-picker-column-host {
+  flex-shrink: 1;
 }
 
 .curs-warning-container {
@@ -1868,4 +1874,41 @@ a:not([href]) {
 .curs-paused-message {
   padding: 1em 0.5em 0.5em 0.5em;
   font-size: 95%;
+}
+
+.curs-annotation-table-transfer-all {
+  float: right;
+  padding-right: 10em;
+}
+
+.curs-annotation-transfer-all .modal-body {
+  min-height: 20em;
+}
+
+.curs-annotation-transfer-all-single-row {
+  white-space: nowrap;
+}
+
+.curs-annotation-transfer-all-single-row * {
+  white-space: normal;
+}
+
+.curs-annotation-transfer-all-single-row > div {
+  display: inline-block;
+}
+
+.curs-annotation-transfer-all-single-row table {
+  display: inline-table;
+  max-width: 100%;
+}
+
+.curs-annotation-transfer-all-select-annotation {
+  margin-top: 0.5em;
+  margin-bottom: 1.5em;
+  max-height: 30em;
+  overflow-y: scroll;
+}
+
+.curs-annotation-transfer-all-select-annotation table {
+  display: inline-table;
 }

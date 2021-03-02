@@ -25,7 +25,7 @@ header_image: logos/curation_tool.png
 
 canto_url: https://curation.pombase.org/
 
-app_version: v1586
+app_version: v1599
 
 schema_version: 33
 
@@ -2167,7 +2167,7 @@ help_text:
       These are the types of data you can annotate. Follow one of the links for more detailed instructions.
   gene_page_single_allele:
     inline: >
-      One or more mutations, or an expression change, in one copy of a gene at one locus.
+      Annotate phenotypes for single mutants (i.e. mutation(s) or expression change in one copy of a gene at one locus). Use "Genotype management" for multi-locus (e.g. double mutant) genotypes and their phenotypes.
     docs_path: "fypo_annotation#single-allele-phenotypes"
   gene_page_multi_allele:
     inline: >
@@ -2201,28 +2201,28 @@ help_text:
   physical_interaction_evidence:
     url: "http://wiki.thebiogrid.org/doku.php/experimental_systems#physical_interactions"
   biological_process_definition:
-    inline: Click for help on biological process
+    inline: Annotate a gene product's role in a process.
     docs_path: "go_annotation#process"
   cellular_component_definition:
-    inline: Click for help on cellular component
+    inline: Annotate the location in a cell where a gene product acts.
     docs_path: "go_annotation#component"
   molecular_function_definition:
-    inline: Click for help on molecular function
+    inline: Annotate a gene product's molecular activity.
     docs_path: "go_annotation#function"
   post_translational_modification_definition:
-    inline: Click for help on modification annotation
+    inline: Annotate the type, position, timing, etc. of covalent protein modifications.
     docs_path: "modification_annotation"
   wt_rna_expression_definition:
-    inline: Click for help on WT RNA expression
+    inline: Annotate qualitative descriptions for the normal level and timing of RNA expression from a gene.
     docs_path: "gene_expression"
   wt_protein_expression_definition:
-    inline: Click for help on WT protein expression
+    inline: Annotate qualitative descriptions for the normal level and timing of protein expression from a gene.
     docs_path: "gene_expression"
   physical_interaction_definition:
-    inline: Click for help on physical interaction annotation
+    inline: Annotate interacting gene products and supporting evidence.
     docs_path: "physical_interaction_annotation"
   genetic_interaction_definition:
-    inline: Click for help on genetic interaction annotation
+    inline: Annotate interaction type and interacting genes.
     docs_path: "genetic_interaction_annotation"
 
 contact_email:
@@ -2367,6 +2367,9 @@ curs_config:
     Please add experimental conditions. Conditions are the aspects of the 
     experimental setup that are independent of what cells (strain, genotype,
     constructs, etc.) are used.
+
+  # A message for curators, shown at the top of the gene confirmation page.
+  # gene_page_top_message: SET_ME
 
   finish_form:
     # the "extra_text" is always shown on the finish form, the
