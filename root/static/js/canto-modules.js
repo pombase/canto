@@ -6554,6 +6554,7 @@ var annotationEditDialogCtrl =
     $scope.selectedOrganism = args.annotation.organism;
     $scope.selectedOrganismB = null;
     $scope.hideRelationNames = [];
+    $scope.conditionsHelpText = null;
 
     $scope.multiOrganismMode = CantoGlobals.multi_organism_mode;
 
@@ -6599,6 +6600,7 @@ var annotationEditDialogCtrl =
     $scope.organismPromise = Curs.list('organism', [{ include_counts: 1 }]);
     $scope.instanceOrganismPromise = CantoConfig.get('instance_organism');
     $scope.extConfigPromise = CantoConfig.get('extension_configuration');
+    $scope.cursConfigPromise = CantoConfig.get('curs_config');
 
     // the term+extensions in these annotations will be used as term suggestions in
     // interaction annotations
@@ -6610,6 +6612,11 @@ var annotationEditDialogCtrl =
           return [];
         }
       });
+    
+    $scope.cursConfigPromise.then(function(data) {
+      var conditionsHelpText = data['experimental_conditions_help_text'];
+      $scope.conditionsHelpText = conditionsHelpText;
+    });
 
     $scope.allPromise = null;
 

@@ -181,9 +181,7 @@
         <td class="title">Conditions</td>
         <td class="curs-evidence-conditions">
           <div ng-if="filteredFeatures && filteredFeatures.length != 0">
-          Please add experimental conditions.  Conditions are the aspects of the
-          experimental setup that are independent of what cells (strain, genotype,
-          constructs, etc.) are used.
+            {{conditionsHelpText}}
           <condition-picker conditions="annotation.conditions"></condition-picker>
           </div>
         </td>
