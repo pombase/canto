@@ -3778,7 +3778,7 @@ var alleleEditDialogCtrl =
     copyObject(args.allele, $scope.alleleData);
     $scope.taxonId = args.taxonId;
     $scope.isCopied = args.isCopied;
-    $scope.alleleType = args.alleleType;
+    $scope.lockedAlleleType = args.lockedAlleleType;
     $scope.alleleData.primary_identifier = $scope.alleleData.primary_identifier || '';
     $scope.alleleData.name = $scope.alleleData.name || '';
     $scope.alleleData.description = $scope.alleleData.description || '';
@@ -3796,7 +3796,7 @@ var alleleEditDialogCtrl =
     $scope.pathogenHostMode = CantoGlobals.pathogen_host_mode;
     
     $scope.showAlleleTypeField = (
-      ! args.alleleType && (
+      ! $scope.lockedAlleleType && (
         $scope.alleleData.type != 'aberration' ||
         $scope.alleleData.type != 'aberration wild type'
       )
@@ -3845,8 +3845,8 @@ var alleleEditDialogCtrl =
     $scope.env.allele_type_names_promise = CantoConfig.get('allele_type_names');
     $scope.env.allele_types_promise = CantoConfig.get('allele_types');
 
-    if (args.alleleType) {
-      $scope.alleleData.type = args.alleleType;
+    if ($scope.lockedAlleleType) {
+      $scope.alleleData.type = $scope.lockedAlleleType;
       updateAlleleType('wild type', '');
     }
 
@@ -4089,7 +4089,7 @@ function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotyp
     });
 }
 
-function makeAlleleEditInstance($uibModal, allele, taxonId, isCopied, alleleType) {
+function makeAlleleEditInstance($uibModal, allele, taxonId, isCopied, lockedAlleleType) {
   return $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/allele_edit.html',
     controller: 'AlleleEditDialogCtrl',
@@ -4103,7 +4103,7 @@ function makeAlleleEditInstance($uibModal, allele, taxonId, isCopied, alleleType
           allele: allele,
           taxonId: taxonId,
           isCopied: isCopied,
-          alleleType: alleleType
+          lockedAlleleType: lockedAlleleType
         };
       }
     },
@@ -4760,7 +4760,7 @@ function GenotypeGeneListCtrl(
     return !$scope.multiOrganismMode && !!hasDeletionHash[geneId];
   };
 
-  $scope.singleAlleleQuick = function (geneDisplayName, geneSystematicId, geneId, alleleType) {
+  $scope.singleAlleleQuick = function (geneDisplayName, geneSystematicId, geneId, lockedAlleleType) {
     var gene = getGeneById(geneId);
     var isCopied = false;
 
@@ -4778,7 +4778,7 @@ function GenotypeGeneListCtrl(
       },
       taxonId,
       isCopied,
-      alleleType
+      lockedAlleleType
     );
 
     editInstance.result.then(function (editResults) {
@@ -4806,8 +4806,8 @@ function GenotypeGeneListCtrl(
   };
 
   $scope.quickWildType = function (geneDisplayName, geneSystematicId, geneId) {
-    var alleleType = 'wild type';
-    $scope.singleAlleleQuick(geneDisplayName, geneSystematicId, geneId, alleleType);
+    var lockedAlleleType = 'wild type';
+    $scope.singleAlleleQuick(geneDisplayName, geneSystematicId, geneId, lockedAlleleType);
   };
 
   $scope.quickDeletion = CantoGlobals.strains_mode ?
