@@ -81,7 +81,7 @@
         </tr>
 
         <tr class="curs-allele-type-select">
-          <td>
+          <td ng-if="showAlleleTypeField">
             Allele type
           </td>
           <td ng-if="alleleData.type == 'aberration'">
@@ -90,7 +90,7 @@
           <td ng-if="alleleData.type == 'aberration wild type'">
             Wild type for aberration
           </td>
-          <td ng-if="alleleData.type != 'aberration' && alleleData.type != 'aberration wild type'"
+          <td ng-if="showAlleleTypeField"
               ng-class="{ 'has-error': !isValidType() }">
             <select class="form-control"
                     ng-model="alleleData.type" name="curs-allele-type"

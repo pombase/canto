@@ -851,6 +851,7 @@ canto.service('CantoGlobals', function ($window) {
   this.flybase_mode = $window.flybase_mode;
   this.max_term_name_select_count = $window.max_term_name_select_count;
   this.show_quick_deletion_buttons = $window.show_quick_deletion_buttons;
+  this.show_quick_wild_type_buttons = $window.show_quick_wild_type_buttons;
   this.organismsAndGenes = $window.organismsAndGenes;
   this.confirmGenes = $window.confirmGenes;
   this.highlightTerms = $window.highlightTerms;
@@ -3777,6 +3778,7 @@ var alleleEditDialogCtrl =
     copyObject(args.allele, $scope.alleleData);
     $scope.taxonId = args.taxonId;
     $scope.isCopied = args.isCopied;
+    $scope.lockedAlleleType = args.lockedAlleleType;
     $scope.alleleData.primary_identifier = $scope.alleleData.primary_identifier || '';
     $scope.alleleData.name = $scope.alleleData.name || '';
     $scope.alleleData.description = $scope.alleleData.description || '';
@@ -3792,6 +3794,13 @@ var alleleEditDialogCtrl =
 
     $scope.userIsAdmin = CantoGlobals.current_user_is_admin;
     $scope.pathogenHostMode = CantoGlobals.pathogen_host_mode;
+    
+    $scope.showAlleleTypeField = (
+      ! $scope.lockedAlleleType && (
+        $scope.alleleData.type != 'aberration' ||
+        $scope.alleleData.type != 'aberration wild type'
+      )
+    );
 
     function processSynonyms() {
       $.map($scope.alleleData.synonyms || [],
@@ -3836,6 +3845,11 @@ var alleleEditDialogCtrl =
     $scope.env.allele_type_names_promise = CantoConfig.get('allele_type_names');
     $scope.env.allele_types_promise = CantoConfig.get('allele_types');
 
+    if ($scope.lockedAlleleType) {
+      $scope.alleleData.type = $scope.lockedAlleleType;
+      updateAlleleType($scope.alleleData.type, '');
+    }
+
     $scope.env.allele_type_names_promise.then(function (data) {
       $scope.env.allele_type_names = data;
     });
@@ -3858,31 +3872,7 @@ var alleleEditDialogCtrl =
       return this.alleleData.name;
     };
 
-    $scope.$watch('alleleData.type',
-      function (newType, oldType) {
-        $scope.env.allele_types_promise.then(function (data) {
-          $scope.current_type_config = data[newType];
-
-          if (newType === oldType) {
-            return;
-          }
-
-          if ($scope.alleleData.primary_identifier) {
-            return;
-          }
-
-          if ($scope.name_autopopulated) {
-            if ($scope.name_autopopulated == $scope.alleleData.name) {
-              $scope.alleleData.name = '';
-            }
-            $scope.name_autopopulated = '';
-          }
-
-          $scope.name_autopopulated = $scope.maybe_autopopulate();
-          $scope.alleleData.description = '';
-          $scope.alleleData.expression = '';
-        });
-      });
+    $scope.$watch('alleleData.type', updateAlleleType);
 
     $scope.nameSelectedCallback = function(alleleData) {
       $scope.alleleData.primary_identifier = alleleData.primaryIdentifier;
@@ -3985,6 +3975,31 @@ var alleleEditDialogCtrl =
         toaster.pop('error', 'failed to get strain list from server');
       });
     }
+
+    function updateAlleleType(newType, oldType) {
+      $scope.env.allele_types_promise.then(function (data) {
+        $scope.current_type_config = data[newType];
+
+        if (newType === oldType) {
+          return;
+        }
+
+        if ($scope.alleleData.primary_identifier) {
+          return;
+        }
+
+        if ($scope.name_autopopulated) {
+          if ($scope.name_autopopulated == $scope.alleleData.name) {
+            $scope.alleleData.name = '';
+          }
+          $scope.name_autopopulated = '';
+        }
+
+        $scope.name_autopopulated = $scope.maybe_autopopulate();
+        $scope.alleleData.description = '';
+        $scope.alleleData.expression = '';
+      });
+    }
   };
 
 canto.controller('AlleleEditDialogCtrl',
@@ -4074,7 +4089,7 @@ function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotyp
     });
 }
 
-function makeAlleleEditInstance($uibModal, allele, taxonId, isCopied) {
+function makeAlleleEditInstance($uibModal, allele, taxonId, isCopied, lockedAlleleType) {
   return $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/allele_edit.html',
     controller: 'AlleleEditDialogCtrl',
@@ -4088,6 +4103,7 @@ function makeAlleleEditInstance($uibModal, allele, taxonId, isCopied) {
           allele: allele,
           taxonId: taxonId,
           isCopied: isCopied,
+          lockedAlleleType: lockedAlleleType
         };
       }
     },
@@ -4732,6 +4748,8 @@ function GenotypeGeneListCtrl(
   $scope.read_only_curs = CantoGlobals.read_only_curs;
   $scope.multiOrganismMode = CantoGlobals.multi_organism_mode;
   $scope.showQuickDeletionButtons = CantoGlobals.show_quick_deletion_buttons;
+  $scope.showQuickWildTypeButtons = CantoGlobals.show_quick_wild_type_buttons;
+  $scope.columnCount = getColumnCount();
 
   var hasDeletionHash = {};
   var selectedStrain = '';
@@ -4742,8 +4760,9 @@ function GenotypeGeneListCtrl(
     return !$scope.multiOrganismMode && !!hasDeletionHash[geneId];
   };
 
-  $scope.singleAlleleQuick = function (geneDisplayName, geneSystematicId, geneId) {
+  $scope.singleAlleleQuick = function (geneDisplayName, geneSystematicId, geneId, lockedAlleleType) {
     var gene = getGeneById(geneId);
+    var isCopied = false;
 
     if (!gene) {
       return;
@@ -4757,7 +4776,9 @@ function GenotypeGeneListCtrl(
         gene_systematic_id: geneSystematicId,
         gene_id: geneId,
       },
-      taxonId
+      taxonId,
+      isCopied,
+      lockedAlleleType
     );
 
     editInstance.result.then(function (editResults) {
@@ -4782,6 +4803,11 @@ function GenotypeGeneListCtrl(
           data.genotype_id;
       });
     });
+  };
+
+  $scope.quickWildType = function (geneDisplayName, geneSystematicId, geneId) {
+    var lockedAlleleType = 'wild type';
+    $scope.singleAlleleQuick(geneDisplayName, geneSystematicId, geneId, lockedAlleleType);
   };
 
   $scope.quickDeletion = CantoGlobals.strains_mode ?
@@ -4875,6 +4901,17 @@ function GenotypeGeneListCtrl(
       }
     });
   };
+
+  function getColumnCount() {
+    var columnCount = 1;
+    if ($scope.showQuickDeletionButtons) {
+      columnCount += 1;
+    }
+    if ($scope.showQuickWildTypeButtons) {
+      columnCount += 1;
+    }
+    return columnCount;
+  }
 }
 
 canto.controller('genotypeGeneListCtrl', [
