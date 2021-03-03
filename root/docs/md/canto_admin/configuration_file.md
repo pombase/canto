@@ -199,12 +199,11 @@ all annotation types from `available_annotation_type_list` will be enabled.
 The path to the extra configuration file needed while testing.
 
 ### help_text
-The keys under `help_text` identify a page in Canto and under the key is one
-or both of `inline` or `url`. The help text and link is rendered by the
-`inline_help.mhtml` template. If a `url` is given, the text under `inline`
-will be `title` attribute of a link with that URL. Without a `url` a help link
-(a "?" icon) will be shown and the `inline` text will be displayed in a pop-up
-DIV.
+The keys under `help_text` identify a part of Canto's user interface for which
+the help text should apply. Under the key is one or both of `inline` or `url`.
+The help text and link are rendered as a help icon with a tooltip that appears
+on mouse-over. If a `url` is given, clicking the help icon will send the user
+to the page specified by the `url`.
 
 ### contact_email
 This email address is shown anytime a contact address is needed. See the
