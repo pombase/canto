@@ -15,7 +15,7 @@ Genes from this publication
 % } else {
 Annotate genes
 % }
-    <& /curs/inline_help.mhtml, key => 'choose_gene' &>
+    <help-icon key="choose_gene"></help-icon>
     </div>
   </div>
   <div class="curs-box-body">
@@ -66,7 +66,7 @@ Genotypes from this publication
 % } else {
 Annotate genotypes
 % }
-    <& /curs/inline_help.mhtml, key => 'choose_genotype' &>
+    <help-icon key="choose_genotype"></help-icon>
     </div>
   </div>
 %   if ($pathogen_host_mode) {
