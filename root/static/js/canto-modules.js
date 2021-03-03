@@ -3847,7 +3847,7 @@ var alleleEditDialogCtrl =
 
     if ($scope.lockedAlleleType) {
       $scope.alleleData.type = $scope.lockedAlleleType;
-      updateAlleleType('wild type', '');
+      updateAlleleType($scope.alleleData.type, '');
     }
 
     $scope.env.allele_type_names_promise.then(function (data) {
