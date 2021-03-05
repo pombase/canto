@@ -1,20 +1,21 @@
-<tr ng-class="{ 'curs-row-checked' : sessionState == 'APPROVAL_IN_PROGRESS' && checked == 'yes' }">
-  <td ng-if="showCheckboxes">
+<tr ng-class="{ 'curs-row-checked' : sessionState == 'APPROVAL_IN_PROGRESS' && checked == 'yes' || showCheckboxes && checkboxChecked }"
+    ng-click="showCheckboxes && checkboxClick()">
+  <td class="curs-annotation-table-checkbox" ng-if="showCheckboxes">
     <input type="checkbox" name="selectAnnotation"
            ng-checked="checkboxChecked"
            ng-click="checkboxClick()" />
   </td>
-  <td ng-if="multiOrganismMode && annotationType.feature_type !== 'metagenotype'">
+  <td ng-if="showFeatures && multiOrganismMode && annotationType.feature_type !== 'metagenotype'">
     <span class="organism-name" ng-if="annotation.organism">{{annotation.organism.scientific_name | abbreviateGenus}}</span>
     <span class="organism-name" ng-if="!annotation.organism">{{annotation.taxonid | abbreviateGenus}}</span>
     <span class="curs-strain-name-inline" ng-if="showStrain"> ({{annotation.strain_name}})</span>
   </td>
-  <td ng-if="annotationType.feature_type == 'genotype'">
+  <td ng-if="showFeatures && annotationType.feature_type == 'genotype'">
     <div style="white-space: nowrap" ng-repeat="locus in displayLoci">
       {{locus.gene_display_name}}
     </div>
   </td>
-  <td ng-if="annotationType.feature_type == 'metagenotype'">
+  <td ng-if="showFeatures && annotationType.feature_type == 'metagenotype'">
     <a ng-href="{{featureLink('genotype', annotation.pathogen_genotype.genotype_id)}}"><span ng-bind-html="annotation.pathogen_genotype.genotype_display_name | encodeAlleleSymbols | toTrusted"></span></a>
     <div>
       <span class="organism-name">{{annotation.pathogen_genotype.organism.scientific_name | abbreviateGenus}}</span>
