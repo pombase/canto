@@ -1959,3 +1959,8 @@ button.curs-annotation-edit-suggest {
 .curs-annotation-interaction-edit-type-select {
   padding-bottom: 0.5em;
 }
+
+.curs-annotation-select-dialog {
+  max-height: 30em;
+  overflow: auto;
+}

@@ -6695,13 +6695,66 @@ canto.directive('termChildrenDisplay',
     termChildrenDisplayCtrl
   ]);
 
-/*
+
+var selectInteractionAnnotationsDialogCtrl =
+  function ($scope, $uibModalInstance,
+            CantoGlobals, Curs, toaster, args) {
+    $scope.data = {};
+
+    $scope.data.phenotypeAnnotation = args.phenotypeAnnotation;
+    $scope.data.annotationType = args.annotationType;
+    $scope.data.filteredAnnotations = args.filteredAnnotations;
+
+    $scope.data.selectedAnnotationIds = [];
+
+    $scope.data.annotationsById = {};
+
+    $.map($scope.data.filteredAnnotations,
+          function(annotation) {
+            $scope.data.annotationsById[annotation.annotation_id] = annotation;
+          });
+
+    $scope.selectionChanged = function(annotationIds) {
+      $scope.data.selectedAnnotationIds = annotationIds;
+    };
+
+    $scope.canSelect = function() {
+      return $scope.data.selectedAnnotationIds.length > 0;
+    };
+
+    $scope.okButtonTitleMessage = function() {
+      return "Select";
+    };
+
+    $scope.ok = function () {
+      var selectedAnnotations =
+          $.map($scope.data.selectedAnnotationIds,
+                function(annotationId) {
+                  return $scope.data.annotationsById[annotationId];
+                });
+
+      $uibModalInstance.close({
+        selectedAnnotations: selectedAnnotations,
+      });
+    };
+
+    $scope.cancel = function () {
+      $uibModalInstance.dismiss('cancel');
+    };
+  };
+
+canto.controller('SelectInteractionAnnotationsDialogCtrl',
+  ['$scope', '$uibModalInstance',
+   'CantoGlobals', 'Curs', 'toaster', 'args',
+    selectInteractionAnnotationsDialogCtrl
+  ]);
+
 
 function startSelectInteractionAnnotations($uibModal, phenotypeAnnotation,
-                                           annotationType) {
+                                           annotationType, filteredAnnotations) {
   var selectInstance = $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/select_interaction_annotations.html',
-    controller: 'SelectInteractionAnnotationsCtrl',
+    controller: 'SelectInteractionAnnotationsDialogCtrl',
     title: 'Select interactors',
     animate: false,
     size: 'lg',
@@ -6710,6 +6763,7 @@ function startSelectInteractionAnnotations($uibModal, phenotypeAnnotation,
         return {
           phenotypeAnnotation: phenotypeAnnotation,
           annotationType: annotationType,
+          filteredAnnotations: filteredAnnotations,
         };
       }
     },
@@ -6719,13 +6773,12 @@ function startSelectInteractionAnnotations($uibModal, phenotypeAnnotation,
   return selectInstance.result;
 }
 
-*/
-
 
 var annotationInteractionEdit =
-    function($CantoConfig, CursGenotypeList) {
+  function($uibModal, AnnotationProxy) {
     return {
       scope: {
+        annotationType: '=',
         interactionType: '=',
         phenotypeAnnotation: '=',
         interactingAnnotations: '=',
@@ -6763,14 +6816,27 @@ var annotationInteractionEdit =
         };
 
         $scope.selectAnnotations = function() {
-//          var promise = startSelectInteractionAnnotations();
+          AnnotationProxy.getAnnotation($scope.annotationType.name)
+            .then(function (annotations) {
+              var filteredAnnotations = annotations;
+              var promise =
+                  startSelectInteractionAnnotations($uibModal,
+                                                    $scope.phenotypeAnnotation,
+                                                    $scope.annotationType,
+                                                    filteredAnnotations);
+
+              promise.then(function(result) {
+                console.log(result.selectedAnnotations);
+                $scope.interactingAnnotations = result.selectedAnnotations;
+              });
+            });
         };
       },
     };
   };
 
 canto.directive('annotationInteractionEdit',
-                ['CantoConfig', 'CursGenotypeList',
+                ['$uibModal', 'AnnotationProxy',
                  annotationInteractionEdit]);
 
 
