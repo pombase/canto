@@ -1,33 +1,26 @@
 <div class="curs-select-interaction-annotations">
   <div class="modal-header">
     <h4 class="modal-title">
-      Select interactors
+      Select phenotypes of interactors
     </h4>
+  </div>
 
-    <div class="modal-body">
-      <div ng-if="!data.annotations">
-        Loading ...
-      </div>
+  <div class="modal-body curs-annotation-select-dialog">
+    <annotation-table annotation-type-name="{{data.annotationType.name}}"
+                      annotations="data.filteredAnnotations"
+                      feature-status-filter="selecting"
+                      show-menu="false"
+                      show-checkboxes="true"
+                      show-features="false"
+                      checkboxes-changed="selectionChanged(annotationIds)"
+                      show-metagenotype-link="false">
+    </annotation-table>
+  </div>
 
-      <div ng-if="data.annotations">
-        Select annotation to transfer:
-        <annotation-table annotation-type-name="{{data.annotationType.name}}"
-                          annotations="data.filteredAnnotations"
-                          feature-status-filter="selecting"
-                          show-menu="false"
-                          show-checkboxes="true"
-                          checkboxes-changed="selectionChanged(annotationIds)"
-                          show-metagenotype-link="false">
-        </annotation-table>
-
-      </div>
-    </div>
-
-    <div class="modal-footer">
-      <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-      <button class="btn btn-primary" ng-click="ok()" ng-alt-enter="ok()"
-              title="{{ okButtonTitleMessage() }}"
-              ng-disabled="!canSelect()">OK</button>
-    </div>
+  <div class="modal-footer">
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-primary" ng-click="ok()" ng-alt-enter="ok()"
+            title="{{ okButtonTitleMessage() }}"
+            ng-disabled="!canSelect()">OK</button>
   </div>
 </div>
