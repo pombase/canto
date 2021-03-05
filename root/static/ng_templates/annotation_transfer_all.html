@@ -4,7 +4,7 @@
       Transfer {{data.annotationType.display_name}} annotation
       from {{data.featureDisplayName}}
     </h4>
-
+  </div>
     <div class="modal-body">
 
       <div ng-if="!data.otherFeatures">
@@ -40,5 +40,4 @@
               title="{{ okButtonTitleMessage() }}"
               ng-disabled="!canTransfer()">OK</button>
     </div>
-  </div>
 </div>
