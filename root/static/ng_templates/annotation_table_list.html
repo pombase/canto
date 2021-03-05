@@ -30,36 +30,60 @@ Annotation loading...
           <div ng-if="annotationType.feature_type != 'genotype'">
             <annotation-table annotation-type-name="{{annotationType.name}}"
                               annotations="byTypeSplit[annotationType.name].new"
+                              show-features="true"
+                              show-menu="true"
+                              show-checkboxes="false"
                               feature-status-filter="new"
                               feature-filter-display-name="{{featureFilterDisplayName}}"
-                              show-metagenotype-link="showMetagenotypeLink"></annotation-table>
+                              show-metagenotype-link="showMetagenotypeLink">
+            </annotation-table>
             <annotation-table annotation-type-name="{{annotationType.name}}"
                               annotations="byTypeSplit[annotationType.name].existing"
+                              show-features="true"
+                              show-menu="false"
+                              show-checkboxes="false"
                               feature-status-filter="existing"
                               feature-filter-display-name="{{featureFilterDisplayName}}"
-                              show-metagenotype-link="showMetagenotypeLink"></annotation-table>
+                              show-metagenotype-link="showMetagenotypeLink">
+            </annotation-table>
           </div>
           <div ng-if="annotationType.feature_type == 'genotype'">
             <annotation-table annotation-type-name="{{annotationType.name}}"
                               annotations="byTypeSplit[annotationType.name].new.single"
+                              show-features="true"
+                              show-menu="true"
+                              show-checkboxes="false"
                               feature-status-filter="new"
                               allele-count-filter="single"
-                              feature-filter-display-name="{{featureFilterDisplayName}}"></annotation-table>
+                              feature-filter-display-name="{{featureFilterDisplayName}}">
+            </annotation-table>
             <annotation-table annotation-type-name="{{annotationType.name}}"
                               annotations="byTypeSplit[annotationType.name].new.multi"
+                              show-features="true"
+                              show-menu="true"
+                              show-checkboxes="false"
                               feature-status-filter="new"
                               allele-count-filter="multi"
-                              feature-filter-display-name="{{featureFilterDisplayName}}"></annotation-table>
+                              feature-filter-display-name="{{featureFilterDisplayName}}">
+            </annotation-table>
             <annotation-table annotation-type-name="{{annotationType.name}}"
                               annotations="byTypeSplit[annotationType.name].existing.single"
+                              show-features="true"
+                              show-menu="false"
+                              show-checkboxes="false"
                               feature-status-filter="existing"
                               allele-count-filter="single"
-                              feature-filter-display-name="{{featureFilterDisplayName}}"></annotation-table>
+                              feature-filter-display-name="{{featureFilterDisplayName}}">
+            </annotation-table>
             <annotation-table annotation-type-name="{{annotationType.name}}"
                               annotations="byTypeSplit[annotationType.name].existing.multi"
+                              show-features="true"
+                              show-menu="false"
+                              show-checkboxes="false"
                               feature-status-filter="existing"
                               allele-count-filter="multi"
-                              feature-filter-display-name="{{featureFilterDisplayName}}"></annotation-table>
+                              feature-filter-display-name="{{featureFilterDisplayName}}">
+            </annotation-table>
           </div>
         </div>
     </div>

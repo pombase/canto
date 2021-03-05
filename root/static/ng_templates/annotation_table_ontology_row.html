@@ -25,7 +25,7 @@
       <b>bkg:</b> <span ng-bind-html="annotation.pathogen_genotype.genotype_background | encodeAlleleSymbols | toTrusted"></span>
     </div>
   </td>
-  <td ng-if="annotationType.feature_type == 'metagenotype'">
+  <td ng-if="showFeatures && annotationType.feature_type == 'metagenotype'">
     <div ng-switch="hasWildTypeHost">
       <a ng-switch-when="false" ng-href="{{featureLink('genotype', annotation.host_genotype.genotype_id)}}">
         <span ng-bind-html="annotation.host_genotype.genotype_display_name | encodeAlleleSymbols | toTrusted"></span>
@@ -40,13 +40,13 @@
       <b>bkg:</b> <span ng-bind-html="annotation.host_genotype.genotype_background | encodeAlleleSymbols | toTrusted"></span>
     </div>
   </td>
-  <td ng-if="annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_background">
+  <td ng-if="showFeatures && annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_background">
     <span ng-bind-html="annotation.genotype_background | encodeAlleleSymbols | toTrusted"></span>
   </td>
-  <td ng-if="annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_name">
+  <td ng-if="showFeatures && annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_name">
     <span ng-bind-html="annotation.genotype_name | encodeAlleleSymbols | toTrusted"></span>
   </td>
-  <td ng-if="annotationType.feature_type === 'gene' && !featureIdFilter">
+  <td ng-if="showFeatures && annotationType.feature_type === 'gene' && !featureIdFilter">
     <a ng-if="annotation.status === 'new' && addLinks()"
        href="{{featureLink(annotationType.feature_type, annotation.feature_id)}}">
       {{annotation.gene_name_or_identifier}}
@@ -55,7 +55,7 @@
       {{annotation.gene_name_or_identifier}}
     </span>
   </td>
-  <td ng-if="annotationType.feature_type == 'genotype'">
+  <td ng-if="showFeatures && annotationType.feature_type == 'genotype'">
     <span ng-if="annotation.status === 'new'">
       <a ng-if="addLinks()"
          href="{{featureLink(annotationType.feature_type, annotation.feature_id)}}">

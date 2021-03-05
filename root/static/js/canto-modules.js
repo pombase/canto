@@ -7911,9 +7911,10 @@ var annotationTableCtrl =
         featureStatusFilter: '@',
         alleleCountFilter: '@',
         showMetagenotypeLink: '<',
-        showCheckboxes: '<?',
+        showCheckboxes: '<',
         checkboxesChanged: '&?',
         showMenu: '<',
+        showFeatures: '<'
       },
       restrict: 'E',
       replace: true,
