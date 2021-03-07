@@ -844,7 +844,7 @@ sub _update_allele_details
         $existing_allele->gene()->primary_identifier() ne $allele_gene_uniquename) {
     my $new_gene = $db_genes->{$allele_gene_uniquename};
 
-    warn qq|gene for "|, $existing_allele->primary_identifier(),
+    print qq|gene for "|, $existing_allele->primary_identifier(),
       qq|" changed from "|, $existing_allele->gene()->primary_identifier(),
       qq| to "$allele_gene_uniquename"\n|;
 
@@ -1237,7 +1237,7 @@ sub create_sessions_from_json
       for my $allele ($cursdb->resultset('Allele')->all()) {
         my $allele_primary_identifier = $allele->primary_identifier();
         if (!exists $alleles_from_json->{$allele_primary_identifier}) {
-          warn "allele $allele_primary_identifier - ",
+          print "allele $allele_primary_identifier - ",
             $allele->long_identifier($config),
             " is in the Canto database is not in the JSON input for session: ",
             $curs->curs_key(), "\n";
@@ -1248,12 +1248,12 @@ sub create_sessions_from_json
             my $genotype = $_;
 
             if ($genotype->annotations()->count() > 0) {
-              warn "  can't remove $allele_primary_identifier - one or more ",
+              print "  can't remove $allele_primary_identifier - one or more ",
                 "genotypes containing this allele has annotation\n";
               next ALLELE;
             }
             if ($genotype->metagenotypes() > 0) {
-              warn "  can't remove $allele_primary_identifier - one or more ",
+              print "  can't remove $allele_primary_identifier - one or more ",
                 "genotypes containing this allele are part of an interaction ",
                 "or metagenotype\n";
               next ALLELE;
@@ -1268,7 +1268,7 @@ sub create_sessions_from_json
           $allele->allele_notes()->delete();
           $allele->allelesynonyms()->delete();
           $allele->delete();
-          warn "  - successfully deleted from the Canto database\n";
+          print "  - successfully deleted from the Canto database\n";
         }
       }
 
@@ -1277,7 +1277,7 @@ sub create_sessions_from_json
       for my $gene ($cursdb->resultset('Gene')->all()) {
         my $gene_primary_identifier = $gene->primary_identifier();
         if (!exists $genes_from_json->{$gene_primary_identifier}) {
-          warn "gene $gene_primary_identifier ",
+          print "gene $gene_primary_identifier ",
             "is in the Canto database is not in the JSON input for session: ",
             $curs->curs_key(), "\n";
 
@@ -1292,12 +1292,12 @@ sub create_sessions_from_json
               my $genotype = $_;
 
               if ($genotype->annotations()->count() > 0) {
-                warn "  can't remove $gene_primary_identifier - one or more ",
+                print "  can't remove $gene_primary_identifier - one or more ",
                   "genotypes containing an allele from this gene has annotation\n";
                 next GENE;
               }
               if ($genotype->metagenotypes() > 0) {
-                warn "  can't remove $gene_primary_identifier - one or more ",
+                print "  can't remove $gene_primary_identifier - one or more ",
                   "genotypes containing this allele from this gene are part of ",
                   "an interaction or metagenotype\n";
                 next GENE;
@@ -1308,7 +1308,7 @@ sub create_sessions_from_json
 
           $session_updated = 1;
           $gene->delete();
-          warn "  - successfully deleted from the Canto database\n";
+          print "  - successfully deleted from the Canto database\n";
         }
       }
 
