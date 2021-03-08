@@ -7513,6 +7513,7 @@ var annotationTransferAllDialogCtrl =
     $scope.data.otherFeatures = null;
     $scope.data.chosenDestFeatureId = null;
     $scope.data.selectedAnnotationIds = [];
+    $scope.data.transferExtension = true;
 
     $scope.data.annotationsById = {};
 
@@ -7569,6 +7570,10 @@ var annotationTransferAllDialogCtrl =
       $scope.data.selectedAnnotationIds = annotationIds;
     };
 
+    $scope.toggleExtensionTransfer = function() {
+      $scope.data.transferExtension = !$scope.data.transferExtension;
+    };
+
     $scope.canTransfer = function() {
       return $scope.data.chosenDestFeatureId && $scope.data.selectedAnnotationIds.length > 0;
     };
@@ -7588,6 +7593,10 @@ var annotationTransferAllDialogCtrl =
 
               var annotationCopy = {};
               copyObject(sourceAnnotation, annotationCopy);
+
+              if (!$scope.data.transferExtension) {
+                annotationCopy.extension = [];
+              }
 
               annotationCopy.feature_id = $scope.data.chosenDestFeatureId;
               loadingStart();

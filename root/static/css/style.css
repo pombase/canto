@@ -1797,6 +1797,7 @@ a:not([href]) {
 
 .curs-annotation-transfer-extension {
   margin-top: 1.5em;
+  user-select: none;
 }
 
 .curs-annotation-transfer-choose-interactor > div {
@@ -1905,7 +1906,7 @@ a:not([href]) {
 .curs-annotation-transfer-all-select-annotation {
   margin-top: 0.5em;
   margin-bottom: 1.5em;
-  max-height: 30em;
+  max-height: 24em;
   overflow-y: scroll;
 }
 

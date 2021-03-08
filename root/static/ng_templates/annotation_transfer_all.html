@@ -31,6 +31,16 @@
                            features="data.otherFeatures"
                            chosen-feature-id="data.chosenDestFeatureId"></feature-chooser>
         </div>
+
+        <div class="curs-annotation-transfer-extension"
+             ng-if="data.chosenDestFeatureId">
+          <label>
+            <input type="checkbox" name="transferExtension"
+                   ng-checked="data.transferExtension"
+                   ng-click="toggleExtensionTransfer()" />
+            Transfer extensions
+          </label>
+        </div>
       </div>
     </div>
 
