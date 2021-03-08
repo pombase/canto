@@ -1,0 +1,32 @@
+<table ng-show="ready" class="list">
+  <thead>
+    <tr>
+      <th>
+        Genotype
+      </th>
+      <th>
+        Interaction type
+      </th>
+      <th>
+        Genotype
+      </th>
+      <th>
+        Phenotypes
+      </th>
+      <th ng-if="allowDeletion" style="border: 0; background-color: white;">
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="interaction in interactions">
+      <td>{{interaction.genotype_a.display_name}}</td>
+      <td>{{evidenceTypes[interaction.interaction_type].name}}</td>
+      <td>{{interaction.genotype_b.display_name}}</td>
+      <td ng-if="showPhenotypesLink"><a>View ...</a></td>
+      <td ng-if="allowDeletion" style="border: 0; background-color: white;">
+        <a title="delete" href="#" ng-click="deleteInteraction(interaction)"
+           style="color: red">X</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
