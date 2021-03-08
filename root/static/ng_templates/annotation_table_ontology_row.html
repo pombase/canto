@@ -2,8 +2,7 @@
     ng-click="showCheckboxes && checkboxClick()">
   <td class="curs-annotation-table-checkbox" ng-if="showCheckboxes">
     <input type="checkbox" name="selectAnnotation"
-           ng-checked="checkboxChecked"
-           ng-click="checkboxClick()" />
+           ng-checked="checkboxChecked"/>
   </td>
   <td ng-if="showFeatures && multiOrganismMode && annotationType.feature_type !== 'metagenotype'">
     <span class="organism-name" ng-if="annotation.organism">{{annotation.organism.scientific_name | abbreviateGenus}}</span>
