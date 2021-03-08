@@ -912,6 +912,7 @@ sub create_sessions_from_json
   my @updated_sessions = ();
 
   # load the publication in batches in advance
+  print "loading publications from PubMed\n";
   PubmedUtil::load_by_ids($config, $self->schema(), [keys %$sessions_data], 'admin_load');
 
   my $success = 0;
@@ -922,6 +923,8 @@ sub create_sessions_from_json
   my $curation_priority_cv = $self->find_cv('Canto curation priorities');
 
   my $session_updated = 0;
+
+  print "Creating sessions\n";
 
  PUB:
   while (my ($pub_uniquename, $session_data) = each %$sessions_data) {
