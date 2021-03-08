@@ -2087,9 +2087,12 @@ available_annotation_type_list:
       - Western blot
     detailed_help_path: /docs/gene_expression
   - name: genetic_interaction
+    namespace: fission_yeast_phenotype
+    can_have_conditions: 1
     category: interaction
-    display_name: 'legacy genetic interaction'
-    feature_type: 'gene'
+    term_suggestions_annotation_type: phenotype
+    display_name: 'genetic interaction'
+    feature_type: 'metagenotype'
     help_text: 'Examples: synthetic lethality, dosage suppression, phenotype enhancement.'
     evidence_codes:
       - Dosage Growth Defect
