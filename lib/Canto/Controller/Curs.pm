@@ -65,6 +65,8 @@ use Canto::Curs::State;
 use Canto::Curs::ServiceUtils;
 use Canto::Util qw(trim);
 
+use Canto::Curs 'EXTERNAL_NOTES_KEY';
+
 use constant {
   MESSAGE_FOR_CURATORS_KEY => 'message_for_curators',
 };
