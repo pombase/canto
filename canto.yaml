@@ -2027,6 +2027,7 @@ available_annotation_type_list:
     annotation_table_columns_to_hide: [term_ontid]
     evidence_codes:
       - Expression microarray
+      - In situ hybridization evidence used in manual assertion
       - Northern assay
       - Quantitative PCR
       - Reporter gene assay
@@ -2043,6 +2044,7 @@ available_annotation_type_list:
     more_help_text: ~
     annotation_table_columns_to_hide: [term_ontid]
     evidence_codes:
+      - Microscopy
       - Reporter gene assay
       - Western blot
     detailed_help_path: /docs/gene_expression
