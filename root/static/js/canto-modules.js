@@ -73,16 +73,6 @@ function countKeys(o) {
   return size;
 }
 
-function arrayContains(array, predicate) {
-  var i, len = array.length;
-  for (i = 0; i < len; i += 1) {
-    if (predicate(array[i]) === true) {
-      return true;
-    }
-  }
-  return false;
-}
-
 function arrayRemoveOne(array, item) {
   var i = array.indexOf(item);
   if (i >= 0) {
@@ -4990,7 +4980,7 @@ var genotypeManageCtrl =
 
         var readOrganisms = function () {
           Curs.list('organism').then(function (organisms) {
-            $scope.data.hostOrganismExists = arrayContains(organisms, function (org) {
+            $scope.data.hostOrganismExists = organisms.some(function (org) {
               return org.pathogen_or_host === 'host';
             });
             $scope.data.organisms = filterOrganisms(organisms, $scope.genotypeType);
@@ -5121,7 +5111,7 @@ var genotypeManageCtrl =
         };
 
         function findPathogenGenotype(genotypes) {
-          return arrayContains(genotypes, function (g) {
+          return genotypes.some(function (g) {
             return g.organism.pathogen_or_host === 'pathogen';
           });
         }
@@ -9437,7 +9427,7 @@ var genotypeSimpleListViewCtrl =
           function hasBackground(genotype) {
             return !! genotype.background;
           }
-          $scope.showBackground = arrayContains($scope.genotypeList, hasBackground);
+          $scope.showBackground = $scope.genotypeList.some(hasBackground);
         }
       }
     };
@@ -9677,8 +9667,8 @@ var metagenotypeListView = function () {
           };
         };
         return {
-          'pathogen': arrayContains(metagenotypes, backgroundFinder('pathogen')),
-          'host': arrayContains(metagenotypes, backgroundFinder('host')),
+          'pathogen': metagenotypes.some(backgroundFinder('pathogen')),
+          'host': metagenotypes.some(backgroundFinder('host')),
         };
       }
 
