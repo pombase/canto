@@ -759,6 +759,9 @@ canto.service('Metagenotype', function ($rootScope, $http, toaster, Curs) {
         if (message.match('metagenotype .* has annotations')) {
           toaster.pop('warning', "couldn't delete the metagenotype: " +
             "delete the annotations that use it first");
+        } else if (message.match('metagenotype .* used in extensions')) {
+              toaster.pop('warning', "couldn't delete the metagenotype: " +
+                "delete the annotation extensions that use it first");
         } else {
           toaster.pop('error', "couldn't delete the metagenotype: " + message);
         }
