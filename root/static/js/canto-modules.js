@@ -5633,7 +5633,13 @@ var genotypeListViewCtrl =
               name: true,
               strain: true,
             };
-            $.map($scope.genotypeList,
+            var allGenotypes;
+            if ($scope.diploid_mode) {
+              allGenotypes = $scope.genotypeList.concat($scope.diploidList);
+            } else {
+              allGenotypes = $scope.genotypeList;
+            }
+            $.map(allGenotypes,
               function (genotype) {
                 if (genotype.background) {
                   $scope.columnsToHide.background = false;
