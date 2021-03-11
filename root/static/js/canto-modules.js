@@ -9661,7 +9661,9 @@ var metagenotypeListView = function () {
       $scope.$watchCollection('metagenotypes', setBackgroundColumnSettings);
 
       function setBackgroundColumnSettings(metagenotypes) {
-        $scope.showBackground = getBackgroundColumnSettings(metagenotypes);
+        if (metagenotypes) {
+          $scope.showBackground = getBackgroundColumnSettings(metagenotypes);
+        }
       }
 
       function getBackgroundColumnSettings(metagenotypes) {
