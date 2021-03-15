@@ -213,16 +213,16 @@ sub _get_annotations
           $data{curator}->{community_curated} = JSON::false;
         }
       } else {
-        my $metadata = _get_metadata($track_schema, $schema, $options);
+        my $metadata = _get_metadata($config, $track_schema, $schema, $options);
         die "community_curated not set for annotation ",
           $annotation->annotation_id(), " in session ",
-          $metadata->{curs_key};
+          $metadata->{canto_session};
       }
     } else {
-      my $metadata = _get_metadata($track_schema, $schema, $options);
+      my $metadata = _get_metadata($config, $track_schema, $schema, $options);
       die "community_curated not set for annotation ",
         $annotation->annotation_id(), " in session ",
-        $metadata->{curs_key};
+        $metadata->{canto_session};
     }
 
     my $gene = _get_annotation_gene($organism_lookup, $schema, $annotation);

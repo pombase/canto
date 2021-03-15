@@ -515,14 +515,14 @@ is ($curs_schema->resultset('Annotation')->search({ annotation_id => $new_annota
 
 # test interaction annotation services
 
-my $genetic_interaction_annotation =
-  $curs_schema->resultset('Annotation')->find({ type => 'genetic_interaction',
+my $genotype_interaction_annotation =
+  $curs_schema->resultset('Annotation')->find({ type => 'genotype_interaction',
                                                 data => { -like => '%Synthetic Haploinsufficiency%' } });
 
 
 # test illegal field type
 $stderr = capture_stderr {
-  $res = $service_utils->change_annotation($genetic_interaction_annotation->annotation_id(),
+  $res = $service_utils->change_annotation($genotype_interaction_annotation->annotation_id(),
                                            'new',
                                            {
                                              key => $curs_key,
@@ -539,7 +539,7 @@ my $metagenotype_rs = $curs_schema->resultset('Metagenotype')->search();
 my $test_metagenotype = $metagenotype_rs->first();
 
 # test editing
-$res = $service_utils->change_annotation($genetic_interaction_annotation->annotation_id(),
+$res = $service_utils->change_annotation($genotype_interaction_annotation->annotation_id(),
                                          'new',
                                          {
                                            key => $curs_key,
@@ -552,7 +552,7 @@ cmp_deeply ($res->{annotation},
             {
               'publication_uniquename' => 'PMID:19756689',
               'score' => '',
-              'annotation_id' => $genetic_interaction_annotation->annotation_id(),
+              'annotation_id' => $genotype_interaction_annotation->annotation_id(),
               'curator' => 'Some Testperson <some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org>',
               'genotype_a_display_name' => 'SPCC63.05delta ssm4KE',
               'genotype_a_id' => 1,
@@ -589,7 +589,7 @@ cmp_deeply ($res->{annotation},
               'submitter_comment' => '',
               'figure' => '',
               'is_obsolete_term' => 0,
-              'annotation_type' => 'genetic_interaction',
+              'annotation_type' => 'genotype_interaction',
               'annotation_type_display_name' => 'genetic interaction',
               'checked' => 'no',
             }
@@ -1035,7 +1035,7 @@ cmp_deeply($annotation_res,
               'annotation_id' => 4,
               'status' => 'new',
               'is_obsolete_term' => 0,
-              'annotation_type' => 'genetic_interaction',
+              'annotation_type' => 'genotype_interaction',
               'annotation_type_display_name' => 'genetic interaction',
               'curator' => 'Some Testperson <some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org>',
               'completed' => 1

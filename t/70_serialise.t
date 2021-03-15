@@ -244,7 +244,7 @@ my $full_expected_curation_session =
         gene => 'Schizosaccharomyces pombe SPBC14F5.07',
       },
       {
-        type => 'genetic_interaction',
+        type => 'genotype_interaction',
         publication => 'PMID:19756689',
         conditions => ['PECO:0000137'],
         metagenotype => 'test-metagenotype-1',
@@ -523,7 +523,7 @@ my $full_expected_curation_session_with_names =
         gene => 'Schizosaccharomyces pombe SPBC14F5.07',
       },
       {
-        type => 'genetic_interaction',
+        type => 'genotype_interaction',
         publication => 'PMID:19756689',
         conditions => ['PECO:0000137'],
         metagenotype => 'test-metagenotype-1',
