@@ -393,29 +393,35 @@ canto.filter('encodeGeneSymbols', symbolEncoder);
 
 canto.filter('featureChooserFilter', ['CantoGlobals', function (CantoGlobals) {
   return function (feature, showOrganism) {
-    var ret = feature.display_name;
     var showOrganismName = (
       CantoGlobals.multi_organism_mode &&
       (feature.gene_id || feature.genotype_id && showOrganism)
     );
-    if (showOrganismName) {
-      ret += " (" + feature.organism.full_name + ")";
+    if (feature.metagenotype_id) {
+      var pathogenPart = formatGenotype(feature.pathogen_genotype, showOrganismName);
+      var hostPart = formatGenotype(feature.host_genotype, showOrganismName);
+      return pathogenPart + ' / ' + hostPart;
     }
-    if (feature.background) {
-      ret += "  (bkg: " + feature.background.substr(0, 15);
-      if (feature.background.length > 15) {
-        ret += "...";
+    return formatGenotype(feature, showOrganismName);
+
+    function formatGenotype(genotype, showOrganism) {
+      var displayName = genotype.display_name;
+      if (showOrganism) {
+        displayName += ' ' + genotype.organism.full_name;
       }
-      ret += ")";
-    }
-    if (feature.strain_name) {
-      ret += "  (strain: " + feature.strain_name.substr(0, 15);
-      if (feature.strain_name.length > 15) {
-        ret += " ...";
+      if (genotype.strain_name) {
+        displayName += ' (' + genotype.strain_name + ')';
       }
-      ret += ")";
+      if (genotype.background) {
+        displayName += ' ' + formatBackground(genotype.background);
+      }
+      return displayName;
     }
-    return ret;
+
+    function formatBackground(background) {
+      var truncated = background.length > 15;
+      return '(bkg: ' + background.substr(0, 15) + (truncated ? '...' : '') + ')';
+    }
   };
 }]);
 
