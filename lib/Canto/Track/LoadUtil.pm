@@ -1069,7 +1069,9 @@ sub create_sessions_from_json
     my $gene_manager =
       Canto::Curs::GeneManager->new(config => $config, curs_schema => $cursdb);
 
-    $curator_manager->set_curator($curs->curs_key(), $curator_email_address);
+    if (!$using_existing_session) {
+      $curator_manager->set_curator($curs->curs_key(), $curator_email_address);
+    }
 
     if (!$pub->corresponding_author()) {
       $pub->corresponding_author($curator);
