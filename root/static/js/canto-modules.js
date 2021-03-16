@@ -391,18 +391,14 @@ function symbolEncoder() {
 canto.filter('encodeAlleleSymbols', symbolEncoder);
 canto.filter('encodeGeneSymbols', symbolEncoder);
 
-canto.filter('featureChooserFilter', ['CantoGlobals', function (CantoGlobals) {
+canto.filter('featureChooserFilter', function () {
   return function (feature, showOrganism) {
-    var showOrganismName = (
-      CantoGlobals.multi_organism_mode &&
-      (feature.gene_id || feature.genotype_id && showOrganism)
-    );
     if (feature.metagenotype_id) {
-      var pathogenPart = formatGenotype(feature.pathogen_genotype, showOrganismName);
-      var hostPart = formatGenotype(feature.host_genotype, showOrganismName);
+      var pathogenPart = formatGenotype(feature.pathogen_genotype, showOrganism);
+      var hostPart = formatGenotype(feature.host_genotype, showOrganism);
       return pathogenPart + ' / ' + hostPart;
     }
-    return formatGenotype(feature, showOrganismName);
+    return formatGenotype(feature, showOrganism);
 
     function formatGenotype(genotype, showOrganism) {
       var displayName = genotype.display_name;
@@ -423,7 +419,7 @@ canto.filter('featureChooserFilter', ['CantoGlobals', function (CantoGlobals) {
       return '(bkg: ' + background.substr(0, 15) + (truncated ? '...' : '') + ')';
     }
   };
-}]);
+});
 
 canto.filter('renameGenotypeType', function () {
   return function (type) {
@@ -1751,6 +1747,7 @@ var featureChooser =
       replace: true,
       controller: function ($scope) {
         $scope.app_static_path = CantoGlobals.app_static_path;
+        $scope.showOrganism = CantoGlobals.multi_organism_mode;
         $scope.showCompleter = false;
 
         $scope.search = function() {
