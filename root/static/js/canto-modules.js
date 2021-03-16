@@ -9710,7 +9710,9 @@ var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Met
 
       $scope.$on('metagenotype:updated', function (event, data) {
         $scope.metagenotypes = data;
-        $scope.filteredMetagenotypes = $scope.metagenotypes;
+        $scope.filteredMetagenotypes = filterMetagenotypesBySelectedOrganisms(
+          $scope.selectedPathogen, $scope.selectedHost, $scope.metagenotypes
+        );
       });
       $scope.$on('metagenotype list changed', function () {
         Metagenotype.load();
