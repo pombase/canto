@@ -314,3 +314,15 @@ extension_conf_files:
 
 email:
   from_address: DO_NOT_EMAIL
+
+enabled_annotation_type_list:
+  - disease_formation_phenotype
+  - molecular_function
+  - biological_process
+  - cellular_component
+  - phenotype
+  - post_translational_modification
+  - wt_rna_expression
+  - wt_protein_expression
+  - genetic_interaction
+  - physical_interaction

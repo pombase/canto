@@ -3189,6 +3189,11 @@ sub ws_annotation_create : Chained('top') PathPart('ws/annotation/create')
 
   my $json_data = $c->req()->body_data();
 
+  use Data::Dumper;
+$Data::Dumper::Maxdepth = 3;
+warn Dumper([$json_data]);
+
+
   $c->stash->{json_data} = $service_utils->create_annotation($json_data);
 
   $c->forward('View::JSON');

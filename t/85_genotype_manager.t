@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 42;
+use Test::More tests => 43;
 
 use Try::Tiny;
 
@@ -286,3 +286,30 @@ ok (defined $metagenotype_2);
 is ($metagenotype_2->identifier(), 'aaaa0007-metagenotype-2');
 
 
+my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $curs_schema,
+                                                   config => $config);
+
+my $res = $service_utils->create_annotation({
+  key => $curs_key,
+  feature_id => $metagenotype_1->metagenotype_id(),
+  feature_type => 'metagenotype',
+  annotation_type => 'disease_formation_phenotype',
+  term_ontid => 'FYPO:0002060',
+  evidence_code => 'Microscopy',
+  extension =>
+    [
+      [
+        {
+          'relation' => 'depends_on_metagenoype',
+          'rangeType' => 'Metagenotype',
+          'rangeValue' => $metagenotype_2->metagenotype_id(),
+        }
+      ]
+    ],
+});
+
+
+my $delete_result =
+  $genotype_manager->delete_metagenotype($metagenotype_2->metagenotype_id());
+
+ok ($delete_result =~ /delete failed/);
