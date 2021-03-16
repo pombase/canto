@@ -1696,7 +1696,7 @@ function featureChooserControlHelper($scope, $uibModal, CursGeneList,
 
 
 var multiFeatureChooser =
-  function ($uibModal, CursGeneList, CursGenotypeList, Curs, toaster) {
+  function ($uibModal, CantoGlobals, CursGeneList, CursGenotypeList, Curs, toaster) {
     return {
       scope: {
         features: '=',
@@ -1708,6 +1708,8 @@ var multiFeatureChooser =
       controller: function ($scope) {
         featureChooserControlHelper($scope, $uibModal, CursGeneList,
           CursGenotypeList, Curs, toaster);
+
+        $scope.showOrganism = CantoGlobals.multi_organism_mode;
 
         $scope.toggleSelection = function toggleSelection(featureId) {
           var idx = $scope.selectedFeatureIds.indexOf(featureId);
@@ -1728,7 +1730,7 @@ var multiFeatureChooser =
   };
 
 canto.directive('multiFeatureChooser',
-  ['$uibModal', 'CursGeneList', 'CursGenotypeList', 'Curs', 'toaster',
+  ['$uibModal', 'CantoGlobals', 'CursGeneList', 'CursGenotypeList', 'Curs', 'toaster',
     multiFeatureChooser
   ]);
 
