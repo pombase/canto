@@ -391,33 +391,35 @@ function symbolEncoder() {
 canto.filter('encodeAlleleSymbols', symbolEncoder);
 canto.filter('encodeGeneSymbols', symbolEncoder);
 
-canto.filter('featureChooserFilter', ['CantoGlobals', function (CantoGlobals) {
+canto.filter('featureChooserFilter', function () {
   return function (feature, showOrganism) {
-    var ret = feature.display_name;
-    var showOrganismName = (
-      CantoGlobals.multi_organism_mode &&
-      (feature.gene_id || feature.genotype_id && showOrganism)
-    );
-    if (showOrganismName) {
-      ret += " (" + feature.organism.full_name + ")";
+    if (feature.metagenotype_id) {
+      var pathogenPart = formatGenotype(feature.pathogen_genotype, showOrganism);
+      var hostPart = formatGenotype(feature.host_genotype, showOrganism);
+      return pathogenPart + ' / ' + hostPart;
     }
-    if (feature.background) {
-      ret += "  (bkg: " + feature.background.substr(0, 15);
-      if (feature.background.length > 15) {
-        ret += "...";
+    return formatGenotype(feature, showOrganism);
+
+    function formatGenotype(genotype, showOrganism) {
+      var displayName = genotype.display_name;
+      if (showOrganism) {
+        displayName += ' ' + genotype.organism.full_name;
       }
-      ret += ")";
-    }
-    if (feature.strain_name) {
-      ret += "  (strain: " + feature.strain_name.substr(0, 15);
-      if (feature.strain_name.length > 15) {
-        ret += " ...";
+      if (genotype.strain_name) {
+        displayName += ' (' + genotype.strain_name + ')';
       }
-      ret += ")";
+      if (genotype.background) {
+        displayName += ' ' + formatBackground(genotype.background);
+      }
+      return displayName;
     }
-    return ret;
+
+    function formatBackground(background) {
+      var truncated = background.length > 15;
+      return '(bkg: ' + background.substr(0, 15) + (truncated ? '...' : '') + ')';
+    }
   };
-}]);
+});
 
 canto.filter('renameGenotypeType', function () {
   return function (type) {
@@ -1694,7 +1696,7 @@ function featureChooserControlHelper($scope, $uibModal, CursGeneList,
 
 
 var multiFeatureChooser =
-  function ($uibModal, CursGeneList, CursGenotypeList, Curs, toaster) {
+  function ($uibModal, CantoGlobals, CursGeneList, CursGenotypeList, Curs, toaster) {
     return {
       scope: {
         features: '=',
@@ -1706,6 +1708,8 @@ var multiFeatureChooser =
       controller: function ($scope) {
         featureChooserControlHelper($scope, $uibModal, CursGeneList,
           CursGenotypeList, Curs, toaster);
+
+        $scope.showOrganism = CantoGlobals.multi_organism_mode;
 
         $scope.toggleSelection = function toggleSelection(featureId) {
           var idx = $scope.selectedFeatureIds.indexOf(featureId);
@@ -1726,7 +1730,7 @@ var multiFeatureChooser =
   };
 
 canto.directive('multiFeatureChooser',
-  ['$uibModal', 'CursGeneList', 'CursGenotypeList', 'Curs', 'toaster',
+  ['$uibModal', 'CantoGlobals', 'CursGeneList', 'CursGenotypeList', 'Curs', 'toaster',
     multiFeatureChooser
   ]);
 
@@ -1745,6 +1749,7 @@ var featureChooser =
       replace: true,
       controller: function ($scope) {
         $scope.app_static_path = CantoGlobals.app_static_path;
+        $scope.showOrganism = CantoGlobals.multi_organism_mode;
         $scope.showCompleter = false;
 
         $scope.search = function() {
