@@ -99,5 +99,5 @@ my $mock_formatter = consumer_of('Canto::Role::GAFFormatter');
 
   is(keys %expected_filenames, 0);
 
-  is($member_count, 10);
+  is($member_count, 11);
 }
