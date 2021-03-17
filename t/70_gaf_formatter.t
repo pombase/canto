@@ -69,6 +69,7 @@ my $mock_formatter = consumer_of('Canto::Role::GAFFormatter');
     'genotype_interaction.tsv' => 0,
     'physical_interaction.tsv' => 0,
     'genetic_interaction.tsv' => 0,
+    'disease_formation_phenotype.tsv' => 0,
   );
 
   my $member_count = 0;

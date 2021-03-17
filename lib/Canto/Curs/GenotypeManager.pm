@@ -768,6 +768,29 @@ sub delete_metagenotype
     return "metagenotype $metagenotype_id has annotations - delete failed";
   }
 
+  my $annotation_rs = $schema->resultset('Annotation');
+  while (defined (my $annotation = $annotation_rs->next())) {
+    my $extension = $annotation->data()->{extension};
+    if (defined $extension) {
+      map {
+        my $or_part = $_;
+        map {
+          my $and_part = $_;
+          my $is_metagenotype_extension = (
+            $and_part->{rangeType}
+            && $and_part->{rangeType} eq 'Metagenotype'
+          );
+          if ($is_metagenotype_extension) {
+            my $rangeValue = $and_part->{rangeValue};
+            if ($rangeValue == $metagenotype_id) {
+              return "metagenotype $metagenotype_id used in extensions - delete failed";
+            }
+          }
+        } @$or_part;
+      } @$extension;
+    }
+  }
+
   my $host_genotype = $metagenotype->host_genotype();
   my $pathogen_genotype = $metagenotype->pathogen_genotype();
 
