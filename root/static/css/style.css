@@ -1387,6 +1387,15 @@ form label.error {
   color: red;
 }
 
+.curs-allele-conditions {
+  float: left;
+  width: 500px;
+}
+
+.curs-used-conditions {
+  clear: left;
+}
+
 .curs-allele-condition-button span.ui-button-text {
   font-size: 80%;
 }
@@ -1915,12 +1924,4 @@ a:not([href]) {
 
 .tagit-new {
   width: 25em;
-}
-
-.curs-conditions-help-icon {
-  padding: 0.3em;
-}
-
-.curs-allele-condition-buttons-help {
-  margin-right: 0.8em;
 }
