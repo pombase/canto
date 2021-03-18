@@ -568,7 +568,6 @@ td.table-row-actions div {
 }
 .curs-evidence-conditions .tagit {
   font-size: 80%;
-  max-width: 50em;
 }
 .curs-evidence-conditions-help {
   color: #111;
@@ -1388,6 +1387,15 @@ form label.error {
   color: red;
 }
 
+.curs-allele-conditions {
+  float: left;
+  width: 500px;
+}
+
+.curs-used-conditions {
+  clear: left;
+}
+
 .curs-allele-condition-button span.ui-button-text {
   font-size: 80%;
 }
@@ -1912,4 +1920,8 @@ a:not([href]) {
 
 .curs-annotation-transfer-all-select-annotation table {
   display: inline-table;
+}
+
+.tagit-new {
+  width: 25em;
 }

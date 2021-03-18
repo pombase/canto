@@ -181,8 +181,8 @@
         <td class="title">Conditions</td>
         <td class="curs-evidence-conditions">
           <div ng-if="filteredFeatures && filteredFeatures.length != 0">
-            {{conditionsHelpText}}
-          <condition-picker conditions="annotation.conditions"></condition-picker>
+            <span ng-if="conditionsHelpText">{{conditionsHelpText}}</span>
+            <condition-picker conditions="annotation.conditions"></condition-picker>
           </div>
         </td>
       </tr>

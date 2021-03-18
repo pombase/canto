@@ -3625,7 +3625,7 @@ var conditionPicker =
               minLength: 2,
               fieldName: 'curs-allele-condition-names',
               allowSpaces: true,
-              placeholderText: 'Type a condition',
+              placeholderText: 'Start typing to add a condition',
               tagSource: fetch_conditions,
               autocomplete: {
                 focus: ferret_choose.show_autocomplete_def,
@@ -6653,7 +6653,7 @@ var annotationEditDialogCtrl =
           return [];
         }
       });
-    
+
     $scope.cursConfigPromise.then(function(data) {
       var conditionsHelpText = data['experimental_conditions_help_text'];
       $scope.conditionsHelpText = conditionsHelpText;
