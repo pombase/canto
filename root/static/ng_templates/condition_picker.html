@@ -3,7 +3,7 @@
     <ul class="curs-allele-conditions"></ul>
     <help-icon key="experimental_conditions_definition"></help-icon>
   </div>
-  <div ng-if="usedConditions.length > 0">
+  <div ng-if="usedConditions.length > 0" class="curs-used-conditions" >
     <span>Previously used conditions (click to add to list):</span>
     <span ng-repeat="cond in usedConditions">
       <button type="button" class="btn btn-default btn-sm"
