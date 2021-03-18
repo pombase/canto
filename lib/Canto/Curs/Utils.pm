@@ -1327,11 +1327,11 @@ sub make_allele_display_name
 
   $description ||= $type || 'unknown';
 
-  if ($name =~ /$description/) {
+  if ($name =~ /[^a-z\d]$description$/) {
     $description = '';
   }
 
-  if ($type =~ /^mutation|substitution/) {
+  if ($type =~ /substitution/) {
     if ($type =~ /amino acid/) {
       $description =~ s/^/aa/g;
     } else {
