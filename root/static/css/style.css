@@ -1526,6 +1526,14 @@ a.curs-editable-table-field img, a.curs-editable-table-long-field img
   overflow: hidden;
 }
 
+.curs-annotation-edit .curs-term-suggest-name {
+  margin-bottom: 0.5em;
+}
+
+.curs-annotation-edit .curs-term-suggest button {
+  margin-left: 0.3em;
+}
+
 .modal-dialog {
 /*  margin-top: 5%;*/
 }

@@ -6586,6 +6586,13 @@ var annotationEditDialogCtrl =
     $scope.newlyAdded = args.newlyAdded;
     $scope.featureEditable = args.featureEditable;
     $scope.matchingConfigurations = [];
+    $scope.termSuggestionVisible = false;
+
+    if (args.annotation.term_suggestion_name ||
+        args.annotation.term_suggestion_definition) {
+      $scope.termSuggestionVisible = true;
+    }
+
     $scope.status = {
       validEvidence: false,
       showEvidence: true,
@@ -6990,6 +6997,10 @@ var annotationEditDialogCtrl =
       return $scope.isValidTerm() && $scope.annotationType.category == 'ontology' &&
         $scope.annotationType.ontology_size !== 'small' &&
         $scope.filteredFeatures && $scope.filteredFeatures.length != 0;
+    };
+
+    $scope.setTermSuggestionVisible = function(newValue) {
+      $scope.termSuggestionVisible = newValue;
     };
 
     $scope.annotationChanged = function () {
