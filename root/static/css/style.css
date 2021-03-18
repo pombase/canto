@@ -568,7 +568,6 @@ td.table-row-actions div {
 }
 .curs-evidence-conditions .tagit {
   font-size: 80%;
-  max-width: 50em;
 }
 .curs-evidence-conditions-help {
   color: #111;
@@ -1912,4 +1911,16 @@ a:not([href]) {
 
 .curs-annotation-transfer-all-select-annotation table {
   display: inline-table;
+}
+
+.tagit-new {
+  width: 25em;
+}
+
+.curs-conditions-help-icon {
+  padding: 0.3em;
+}
+
+.curs-allele-condition-buttons-help {
+  margin-right: 0.8em;
 }

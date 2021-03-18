@@ -99,5 +99,6 @@ if ($feature_type eq 'gene') {
 } else {
   $feature_display_name = $feature->display_name($c->config());
 }
-my $conditions_help_text = $c->config()->{curs_config}->{experimental_conditions_help_text};
+my $conditions_help_text =
+  $c->config()->{curs_config}->{experimental_conditions_help_text} // 'Please add experimental conditions:';
 </%init>

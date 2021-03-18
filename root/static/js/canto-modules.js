@@ -3583,7 +3583,7 @@ canto.directive('annotationEvidence',
                  annotationEvidence]);
 
 var conditionPicker =
-  function (CursConditionList, toaster) {
+  function (CursConditionList, CantoConfig, CantoGlobals, toaster) {
     var directive = {
       scope: {
         conditions: '=',
@@ -3602,7 +3602,18 @@ var conditionPicker =
       },
       templateUrl: app_static_path + 'ng_templates/condition_picker.html',
       link: function ($scope, elem) {
+        $scope.cursConfigPromise = CantoConfig.get('curs_config');
+        $scope.conditionsHelpTooltipText = '';
+
         var $field = elem.find('.curs-allele-conditions');
+
+        $scope.cursConfigPromise.then(function(data) {
+          var conditionsHelpTooltipText = data['experimental_conditions_help_tooltip_text'];
+          $scope.conditionsHelpTooltipText = conditionsHelpTooltipText;
+        });
+
+        $scope.helpIconUrl = CantoGlobals.app_static_path +
+          '/images/help.png';
 
         if (typeof ($scope.conditions) != 'undefined') {
           CursConditionList.conditionList().then(function (results) {
@@ -3625,7 +3636,7 @@ var conditionPicker =
               minLength: 2,
               fieldName: 'curs-allele-condition-names',
               allowSpaces: true,
-              placeholderText: 'Type a condition',
+              placeholderText: 'Start typing to add a condition',
               tagSource: fetch_conditions,
               autocomplete: {
                 focus: ferret_choose.show_autocomplete_def,
@@ -3654,7 +3665,8 @@ var conditionPicker =
     return directive;
   };
 
-canto.directive('conditionPicker', ['CursConditionList', 'toaster', conditionPicker]);
+canto.directive('conditionPicker',
+                ['CursConditionList', 'CantoConfig', 'CantoGlobals', 'toaster', conditionPicker]);
 
 var alleleNameComplete =
   function (CursAlleleList, toaster) {
@@ -6653,7 +6665,7 @@ var annotationEditDialogCtrl =
           return [];
         }
       });
-    
+
     $scope.cursConfigPromise.then(function(data) {
       var conditionsHelpText = data['experimental_conditions_help_text'];
       $scope.conditionsHelpText = conditionsHelpText;
