@@ -2242,6 +2242,10 @@ help_text:
   genetic_interaction_definition:
     inline: Annotate interaction type and interacting genes.
     docs_path: "genetic_interaction_annotation"
+  experimental_conditions_definition:
+    inline: >
+      Conditions are the aspects of the experimental setup that are independent
+      of what cells (strain, genotype, constructs, etc.) are used.
 
 contact_email:
   address: "set_me@localhost"
@@ -2382,12 +2386,6 @@ curs_config:
 
   # Help text shown above the experimental conditions picker
   experimental_conditions_help_text: ~
-
-  # Text for help tooltip for the experimental conditions picker
-  experimental_conditions_help_tooltip_text: >
-    Conditions are the aspects of the
-    experimental setup that are independent of what cells (strain, genotype,
-    constructs, etc.) are used.
 
   # A message for curators, shown at the top of the gene confirmation page.
   # gene_page_top_message: SET_ME

@@ -3583,7 +3583,7 @@ canto.directive('annotationEvidence',
                  annotationEvidence]);
 
 var conditionPicker =
-  function (CursConditionList, CantoConfig, CantoGlobals, toaster) {
+  function (CursConditionList, toaster) {
     var directive = {
       scope: {
         conditions: '=',
@@ -3602,18 +3602,7 @@ var conditionPicker =
       },
       templateUrl: app_static_path + 'ng_templates/condition_picker.html',
       link: function ($scope, elem) {
-        $scope.cursConfigPromise = CantoConfig.get('curs_config');
-        $scope.conditionsHelpTooltipText = '';
-
         var $field = elem.find('.curs-allele-conditions');
-
-        $scope.cursConfigPromise.then(function(data) {
-          var conditionsHelpTooltipText = data['experimental_conditions_help_tooltip_text'];
-          $scope.conditionsHelpTooltipText = conditionsHelpTooltipText;
-        });
-
-        $scope.helpIconUrl = CantoGlobals.app_static_path +
-          '/images/help.png';
 
         if (typeof ($scope.conditions) != 'undefined') {
           CursConditionList.conditionList().then(function (results) {
@@ -3665,8 +3654,7 @@ var conditionPicker =
     return directive;
   };
 
-canto.directive('conditionPicker',
-                ['CursConditionList', 'CantoConfig', 'CantoGlobals', 'toaster', conditionPicker]);
+canto.directive('conditionPicker', ['CursConditionList', 'toaster', conditionPicker]);
 
 var alleleNameComplete =
   function (CursAlleleList, toaster) {
