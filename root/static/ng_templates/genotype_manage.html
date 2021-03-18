@@ -51,9 +51,9 @@
                            ng-if="data.selectedOrganism && data.genes.length === 0">
                           No genes have been added for this organism.
                         </p>
-                        <a ng-if="data.splitGenotypesByOrganism"
+                        <a ng-if="pathogen_host_mode"
                            href="edit_genes">Delete or edit genes and organisms</a>
-                        <a ng-if="!data.splitGenotypesByOrganism"
+                        <a ng-if="!pathogen_host_mode"
                            ng-click="openSingleGeneAddDialog()">Add another gene</a>
                         </div>
                     </div>
