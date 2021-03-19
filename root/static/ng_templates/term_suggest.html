@@ -29,6 +29,7 @@ that differentiate your new term "A" from other members of the group "B")&rdquo;
   <div class="modal-footer">
     <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
     <button class="btn btn-primary" ng-click="ok()"
+            ng-alt-enter="ok()"
             title="{{ isValid() ? 'Submit suggestion' : 'Please suggest a name and definition' }}"
             ng-disabled="!isValid()">Submit suggestion</button>
   </div>

@@ -12,6 +12,7 @@
   <div class="modal-footer">
   <div>
     <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-    <button class="btn btn-primary" ng-click="ok()" title="{{currentError}}" ng-disabled="!isValid()">OK</button>
+    <button class="btn btn-primary" ng-click="ok()" ng-alt-enter="ok()"
+            title="{{currentError}}" ng-disabled="!isValid()">OK</button>
   </div>
 </div>
