@@ -2103,7 +2103,6 @@ available_annotation_type_list:
       - Phenotypic Enhancement
       - Phenotypic Suppression
       - Synthetic Growth Defect
-      - Synthetic Haploinsufficiency
       - Synthetic Lethality
       - Synthetic Rescue
     detailed_help_path: /docs/genetic_interaction_annotation
@@ -2119,7 +2118,6 @@ available_annotation_type_list:
       - Phenotypic Enhancement
       - Phenotypic Suppression
       - Synthetic Growth Defect
-      - Synthetic Haploinsufficiency
       - Synthetic Lethality
       - Synthetic Rescue
     detailed_help_path: /docs/genetic_interaction_annotation
