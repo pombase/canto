@@ -1933,3 +1933,9 @@ a:not([href]) {
 .tagit-new {
   width: 25em;
 }
+
+.curs-term-confirm-no-child-finish {
+  font-weight: bold;
+  margin-top: 2em;
+  font-size: 110%;
+}
