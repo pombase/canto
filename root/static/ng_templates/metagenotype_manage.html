@@ -8,7 +8,8 @@
                 <div class="curs-metagenotype-picker-heading">Pathogen</div>
                 <organism-selector
                     organisms="pathogenOrganisms"
-                    organism-selected="onPathogenSelected(organism)">
+                    organism-selected="onPathogenSelected(organism)"
+                    allow-unset="true">
                 </organism-selector>
                 <metagenotype-genotype-picker
                     is-host="false"
@@ -21,7 +22,8 @@
                 <div class="curs-metagenotype-picker-heading">Host</div>
                 <organism-selector
                     organisms="hostOrganisms"
-                    organism-selected="onHostSelected(organism)">
+                    organism-selected="onHostSelected(organism)"
+                    allow-unset="true">
                 </organism-selector>
                 <metagenotype-genotype-picker
                     is-host="true"
