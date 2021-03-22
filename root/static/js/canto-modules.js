@@ -9894,14 +9894,26 @@ var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Met
       }
 
       function filterMetagenotypesBySelectedOrganisms(selectedPathogen, selectedHost, metagenotypes) {
+        var selectedPathogenId;
+        var selectedHostId;
         function filterByOrganisms(metagenotype) {
           var pathogenId = metagenotype.pathogen_genotype.organism.taxonid;
           var hostId = metagenotype.host_genotype.organism.taxonid;
-          return pathogenId == selectedPathogenId && hostId == selectedHostId;
+          if (!selectedHostId) {
+            return pathogenId == selectedPathogenId;
+          } else if (!selectedPathogenId) {
+            return hostId == selectedHostId;
+          } else {
+            return pathogenId == selectedPathogenId && hostId == selectedHostId;
+          }
         }
-        if (selectedPathogen && selectedHost) {
-          var selectedPathogenId = selectedPathogen.taxonid;
-          var selectedHostId = selectedHost.taxonid;
+        if (selectedPathogen) {
+          selectedPathogenId = selectedPathogen.taxonid;
+        }
+        if (selectedHost) {
+          selectedHostId = selectedHost.taxonid;
+        }
+        if (selectedPathogenId || selectedHostId) {
           return metagenotypes.filter(filterByOrganisms);
         }
         return metagenotypes;
