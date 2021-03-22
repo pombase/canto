@@ -9743,10 +9743,14 @@ var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Met
       $scope.display = (!CantoGlobals.read_only_curs);
 
       $scope.onPathogenSelected = function (organism) {
-        var taxonId = organism.taxonid;
         $scope.selectedPathogen = organism;
         $scope.selectedGenotypePathogen = null;
-        $scope.selectedPathogenGenotypes = $scope.taxonGenotypeMap[taxonId];
+        if (organism) {
+          var taxonId = organism.taxonid;
+          $scope.selectedPathogenGenotypes = $scope.taxonGenotypeMap[taxonId];
+        } else {
+          $scope.selectedPathogenGenotypes = null;
+        }
         $scope.filteredMetagenotypes = filterMetagenotypesBySelectedOrganisms(
           $scope.selectedPathogen, $scope.selectedHost, $scope.metagenotypes
         );
@@ -9757,13 +9761,22 @@ var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Met
       };
 
       $scope.onHostSelected = function (organism) {
-        var taxonId = organism.taxonid;
         $scope.selectedHost = organism;
         $scope.selectedGenotypeHost = null;
         $scope.selectedHostStrain = null;
-        $scope.selectedHostGenotypes = taxonId in $scope.taxonGenotypeMap ?
-          $scope.taxonGenotypeMap[taxonId] :
-          {'single': [], 'multi': []};
+        if (organism) {
+          var taxonId = organism.taxonid;
+          if (taxonId in $scope.taxonGenotypeMap) {
+            $scope.selectedHostGenotypes = $scope.taxonGenotypeMap[taxonId];
+          } else {
+            $scope.selectedHostGenotypes = {
+              'single': [],
+              'multi': []
+            };
+          }
+        } else {
+          $scope.selectedHostGenotypes = null;
+        }
         $scope.filteredMetagenotypes = filterMetagenotypesBySelectedOrganisms(
           $scope.selectedPathogen, $scope.selectedHost, $scope.metagenotypes
         );
