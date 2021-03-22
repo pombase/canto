@@ -4637,7 +4637,8 @@ var organismSelector = function () {
       organismSelected: '&',
       organisms: '<',
       initialSelectionTaxonId: '@',
-      label: '@'
+      label: '@',
+      allowUnset: '<',
     },
     restrict: 'E',
     templateUrl: app_static_path + 'ng_templates/organism_selector.html',
@@ -4657,6 +4658,11 @@ var organismSelectorCtrl = function ($scope, CantoGlobals) {
     $scope.organismSelected({
       organism: $scope.data.selectedOrganism
     });
+  };
+
+  $scope.unsetOrganism = function () {
+    $scope.data.selectedOrganism = null;
+    $scope.organismChanged();
   };
 
   $scope.$watch('organisms', function () {
