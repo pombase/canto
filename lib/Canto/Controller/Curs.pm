@@ -413,7 +413,7 @@ sub _metagenotype_flags
     $organism_page_valid = 0;
   }
 
-  if ($has_host_genes && $has_pathogen_genes) {
+  if ($has_pathogen_genes) {
     my $rs = $schema->resultset('Metagenotype')
       ->search({}, { prefetch => { first_genotype => 'organism',
                                    second_genotype => 'organism' } });
