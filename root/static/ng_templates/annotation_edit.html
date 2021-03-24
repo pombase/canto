@@ -229,6 +229,29 @@
         </td>
       </tr>
 
+      <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+      </tr>
+
+      <tr>
+        <td class="title">Interaction details</td>
+        <td> 
+          <div ng-if="!annotationInteractionEditVisble">
+            (Optional)
+            <button class="btn btn-default btn-sm"
+                    ng-click="showAnnotationInteractionEdit()">Add ...</button>
+          </div>
+          <div ng-if="annotationInteractionEditVisble">
+            <annotation-interaction-edit
+              interaction-type="annotation.interaction_type"
+              phenotype-annotation="annotation"
+              interacting-annotation-ids="annotation.interacting_annotation_ids">
+            </annotation-interaction-edit>
+          </div>
+        </td>
+      </tr>
+
     </table>
 
   </div>
