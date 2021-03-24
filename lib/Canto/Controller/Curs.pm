@@ -387,9 +387,15 @@ sub _metagenotype_flags
 
     if ($organism_details->{pathogen_or_host} eq 'host') {
       $has_host = 1;
-      if ($org->genotypes()->count() > 0) {
-        $has_host_genotypes = 1;
+      my $org_genotypes_rs = $org->genotypes();
+
+      while (defined (my $genotype = $org_genotypes_rs->next())) {
+        if ($genotype->alleles()->count() > 0) {
+          $has_host_genotypes = 1;
+          last;
+        }
       }
+
       if ($org->genes()->count() > 0) {
         $has_host_genes = 1;
       }
