@@ -28,7 +28,7 @@ Actions
       <a title="<% $title %>" href="<% $action_path %>">
 %   }
       <span class="annotation-type">
-Add a new <% $type_display_name %> for this genotype
+Add a new <% $type_display_name %> for this metagenotype
       </span>
 %   if (!$annotation_type->{disabled}) {
       </a>
