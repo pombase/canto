@@ -4,7 +4,7 @@
     <thead>
       <tr ng-if="diploid_mode">
         <th ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column"></th>
-        <th colspan="3">Haploid genotypes</th>
+        <th colspan="5 - hiddenColumnsCount">Haploid genotypes</th>
       </tr>
       <tr>
         <th ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column" rowspan="2">
@@ -43,7 +43,7 @@ Annotations
       </tr>
       <tr ng-if="diploid_mode && diploidList.length > 0">
         <th ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column"></th>
-        <th colspan="3">Diploid genotypes</th>
+        <th colspan="5 - hiddenColumnsCount">Diploid genotypes</th>
       </tr>
       <tr genotype-list-row ng-repeat="currentGenotype in diploidList"
           set-selected-genotype-id="setSelectedGenotypeId(genotypeId)"
