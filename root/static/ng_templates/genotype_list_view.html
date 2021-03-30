@@ -3,7 +3,7 @@
   <table class="list curs-genotype-list">
     <thead>
       <tr ng-if="diploid_mode">
-        <th class="curs-genotype-checkbox-column"></th>
+        <th ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column"></th>
         <th colspan="3">Haploid genotypes</th>
       </tr>
       <tr>
@@ -42,7 +42,7 @@ Annotations
           genotype="currentGenotype">
       </tr>
       <tr ng-if="diploid_mode && diploidList.length > 0">
-        <th class="curs-genotype-checkbox-column"></th>
+        <th ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column"></th>
         <th colspan="3">Diploid genotypes</th>
       </tr>
       <tr genotype-list-row ng-repeat="currentGenotype in diploidList"
