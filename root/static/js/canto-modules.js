@@ -195,19 +195,24 @@ function isSingleAlleleGenotype(genotype) {
   return genotype.alleles.length === 1;
 }
 
-function isSingleLocusDiploid(genotype) {
+function diploidAlleleCount(genotype) {
   var diploidNames = {};
-
   for (var i = 0; i < genotype.alleles.length; i++) {
     var allele = genotype.alleles[i];
     if (!allele.diploid_name) {
-      return;
+      return 0;
     }
-
     diploidNames[allele.diploid_name] = true;
   }
+  return Object.keys(diploidNames).length;
+}
 
-  return Object.keys(diploidNames).length === 1;
+function isSingleLocusDiploid(genotype) {
+  return diploidAlleleCount(genotype) === 1;
+}
+
+function isMultiLocusDiploid(genotype) {
+  return diploidAlleleCount(genotype) > 1;
 }
 
 function isWildTypeGenotype(genotype) {
@@ -4947,6 +4952,7 @@ var genotypeManageCtrl =
           singleAlleleGenotypes: [],
           singleLocusDiploids: [],
           multiAlleleGenotypes: [],
+          multiLocusDiploids: [],
           allGenes: [],
           visibleGenes: [],
           waitingForServer: true,
@@ -5082,6 +5088,7 @@ var genotypeManageCtrl =
           $scope.data.singleAlleleGenotypes = [];
           $scope.data.singleLocusDiploids = [];
           $scope.data.multiAlleleGenotypes = [];
+          $scope.data.multiLocusDiploids = [];
 
           if (allGenotypes) {
             $.map(allGenotypes,
@@ -5097,6 +5104,8 @@ var genotypeManageCtrl =
 
                     if (isSingleLocusDiploid(genotype)) {
                       $scope.data.singleLocusDiploids.push(genotype);
+                    } else if (isMultiLocusDiploid(genotype)) {
+                      $scope.data.multiLocusDiploids.push(genotype);
                     } else {
                       if (isSingleAlleleGenotype(genotype)) {
                         $scope.data.singleAlleleGenotypes.push(genotype);
