@@ -191,7 +191,7 @@ function conditionsToStringHighlightNew(conditions) {
   }).join(", ");
 }
 
-function isSingleAlleleGenotype(genotype) {
+function isSingleLocusGenotype(genotype) {
   if (isWildTypeGenotype(genotype)) {
     return false;
   }
@@ -208,7 +208,7 @@ function isSingleAlleleGenotype(genotype) {
   }
 }
 
-function isMultiAlleleGenotype(genotype) {
+function isMultiLocusGenotype(genotype) {
   if (isWildTypeGenotype(genotype)) {
     return false;
   }
@@ -230,14 +230,14 @@ function isDiploidAllele(allele) {
 }
 
 function isSingleLocusDiploid(genotype) {
-  if (isWildTypeGenotype(genotype) || isMultiAlleleGenotype(genotype)) {
+  if (isWildTypeGenotype(genotype) || isMultiLocusGenotype(genotype)) {
     return false;
   }
   return isDiploidAllele(genotype.alleles[0]);
 }
 
 function isMultiLocusDiploid(genotype) {
-  if (isWildTypeGenotype(genotype) || isSingleAlleleGenotype(genotype)) {
+  if (isWildTypeGenotype(genotype) || isSingleLocusGenotype(genotype)) {
     return false;
   }
   return genotype.alleles.some(isDiploidAllele);
@@ -5131,7 +5131,7 @@ var genotypeManageCtrl =
                       }
                     }
 
-                    if (isSingleAlleleGenotype(genotype)) {
+                    if (isSingleLocusGenotype(genotype)) {
                       if (isSingleLocusDiploid(genotype)) {
                         $scope.data.singleLocusDiploids.push(genotype);
                       } else {
@@ -9923,7 +9923,7 @@ var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Met
           'multi': []
         };
         genotypes.forEach(function (g) {
-          if (isSingleAlleleGenotype(g)) {
+          if (isSingleLocusGenotype(g)) {
             splitObject['single'].push(g);
           } else {
             splitObject['multi'].push(g);
