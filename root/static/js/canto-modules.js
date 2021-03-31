@@ -192,32 +192,61 @@ function conditionsToStringHighlightNew(conditions) {
 }
 
 function isSingleAlleleGenotype(genotype) {
-  return genotype.alleles.length === 1;
+  if (isWildTypeGenotype(genotype)) {
+    return false;
+  }
+  if (genotype.alleles.length === 1) {
+    return true;
+  }
+  var firstGeneId = genotype.alleles[0].gene_id;
+  return genotype.alleles.every(geneIdEquals(firstGeneId));
+
+  function geneIdEquals(id) {
+    return function (allele) {
+      return allele.gene_id === id;
+    }
+  }
 }
 
-function diploidAlleleCount(genotype) {
-  var diploidNames = {};
-  for (var i = 0; i < genotype.alleles.length; i++) {
-    var allele = genotype.alleles[i];
-    if (!allele.diploid_name) {
-      return 0;
-    }
-    diploidNames[allele.diploid_name] = true;
+function isMultiAlleleGenotype(genotype) {
+  if (isWildTypeGenotype(genotype)) {
+    return false;
   }
-  return Object.keys(diploidNames).length;
+  if (genotype.alleles.length === 1) {
+    return false;
+  }
+  var firstGeneId = genotype.alleles[0].gene_id;
+  return genotype.alleles.some(geneIdNotEquals(firstGeneId));
+
+  function geneIdNotEquals(id) {
+    return function (allele) {
+      return allele.gene_id !== id;
+    }
+  }
+}
+
+function isDiploidAllele(allele) {
+  return allele.hasOwnProperty('diploid_name');
 }
 
 function isSingleLocusDiploid(genotype) {
-  return diploidAlleleCount(genotype) === 1;
+  if (isWildTypeGenotype(genotype) || isMultiAlleleGenotype(genotype)) {
+    return false;
+  }
+  return isDiploidAllele(genotype.alleles[0]);
 }
 
 function isMultiLocusDiploid(genotype) {
-  return diploidAlleleCount(genotype) > 1;
+  if (isWildTypeGenotype(genotype) || isSingleAlleleGenotype(genotype)) {
+    return false;
+  }
+  return genotype.alleles.some(isDiploidAllele);
 }
 
 function isWildTypeGenotype(genotype) {
-  return genotype.alleles.length == 0;
+  return genotype.alleles.length === 0;
 }
+
 function getGenotypeManagePath(organismMode) {
   var paths = {
     'unknown': 'genotype_manage',
@@ -5102,13 +5131,15 @@ var genotypeManageCtrl =
                       }
                     }
 
-                    if (isSingleLocusDiploid(genotype)) {
-                      $scope.data.singleLocusDiploids.push(genotype);
-                    } else if (isMultiLocusDiploid(genotype)) {
-                      $scope.data.multiLocusDiploids.push(genotype);
-                    } else {
-                      if (isSingleAlleleGenotype(genotype)) {
+                    if (isSingleAlleleGenotype(genotype)) {
+                      if (isSingleLocusDiploid(genotype)) {
+                        $scope.data.singleLocusDiploids.push(genotype);
+                      } else {
                         $scope.data.singleAlleleGenotypes.push(genotype);
+                      }
+                    } else { // multi-locus genotype
+                      if (isMultiLocusDiploid(genotype)) {
+                        $scope.data.multiLocusDiploids.push(genotype);
                       } else {
                         $scope.data.multiAlleleGenotypes.push(genotype);
                       }
