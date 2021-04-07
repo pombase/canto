@@ -237,19 +237,9 @@
       <tr>
         <td class="title">Interaction details</td>
         <td> 
-          <div ng-if="!annotationInteractionEditVisble">
-            (Optional)
-            <button class="btn btn-default btn-sm"
-                    ng-click="showAnnotationInteractionEdit()">Add ...</button>
-          </div>
-          <div ng-if="annotationInteractionEditVisble">
-            <annotation-interaction-edit
-              annotation-type="annotationType"
-              interaction-type="annotation.interaction_type"
-              phenotype-annotation="annotation"
-              interacting-annotation-ids="annotation.interacting_annotation_ids">
-            </annotation-interaction-edit>
-          </div>
+          (Optional)
+          <button class="btn btn-default btn-sm"
+                  ng-click="showAnnotationInteractionEdit()">Add ...</button>
         </td>
       </tr>
 

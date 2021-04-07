@@ -6774,71 +6774,97 @@ function startSelectInteractionAnnotations($uibModal, phenotypeAnnotation,
 }
 
 
-var annotationInteractionEdit =
-  function($uibModal, AnnotationProxy) {
-    return {
-      scope: {
-        annotationType: '=',
-        interactionType: '=',
-        phenotypeAnnotation: '=',
-        interactingAnnotations: '=',
-      },
-      restrict: 'E',
-      replace: true,
-      templateUrl: app_static_path + 'ng_templates/annotation_interaction_edit.html',
-      controller: function ($scope) {
-        $scope.data = {
-          interactionForward: null,
-          annotationSelectorVisible: false,
-          symmetricInteractionNote: false,
-          directionSelectorVisible: false,
-        };
+var interactionAnnotationsEditDialogCtrl =
+  function ($scope, $uibModalInstance, $uibModal, AnnotationProxy,
+            CantoGlobals, Curs, toaster, args) {
 
-        var typeWatcher = function() {
-          $scope.data.symmetricInteractionNote = false;
-          $scope.data.annotationSelectorVisible = false;
-          $scope.data.directionSelectorVisible = false;
+    $scope.data = {
+      interactionForward: null,
+      annotationSelectorVisible: false,
+      symmetricInteractionNote: false,
+      directionSelectorVisible: false,
+      phenotypeAnnotation: args.phenotypeAnnotation,
+      annotationType: args.annotationType
+    };
 
-          if ($scope.interactionType) {
-            if ($scope.interactionType === 'Synthetic Lethality') {
-              $scope.data.symmetricInteractionNote = true;
-            } else {
-              $scope.data.directionSelectorVisible = true;
-            }
-          }
-        };
-        $scope.$watch('interactionType', typeWatcher);
 
-        $scope.directionChanged = function() {
-          if ($scope.data.interactionForward !== null) {
-            $scope.data.annotationSelectorVisible = true;
-          }
-        };
+    var typeWatcher = function() {
+      $scope.data.symmetricInteractionNote = false;
+      $scope.data.annotationSelectorVisible = false;
+      $scope.data.directionSelectorVisible = false;
 
-        $scope.selectAnnotations = function() {
-          AnnotationProxy.getAnnotation($scope.annotationType.name)
-            .then(function (annotations) {
-              var filteredAnnotations = annotations;
-              var promise =
-                  startSelectInteractionAnnotations($uibModal,
-                                                    $scope.phenotypeAnnotation,
-                                                    $scope.annotationType,
-                                                    filteredAnnotations);
+      if ($scope.interactionType) {
+        if ($scope.interactionType === 'Synthetic Lethality') {
+          $scope.data.symmetricInteractionNote = true;
+        } else {
+          $scope.data.directionSelectorVisible = true;
+        }
+      }
+    };
+    $scope.$watch('interactionType', typeWatcher);
 
-              promise.then(function(result) {
-                console.log(result.selectedAnnotations);
-                $scope.interactingAnnotations = result.selectedAnnotations;
-              });
-            });
-        };
-      },
+    $scope.directionChanged = function() {
+      if ($scope.data.interactionForward !== null) {
+        $scope.data.annotationSelectorVisible = true;
+      }
+    };
+
+    $scope.selectAnnotations = function() {
+      AnnotationProxy.getAnnotation($scope.data.annotationType.name)
+        .then(function (annotations) {
+          var filteredAnnotations = annotations;
+          var promise =
+              startSelectInteractionAnnotations($uibModal,
+                                                $scope.data.phenotypeAnnotation,
+                                                $scope.data.annotationType,
+                                                filteredAnnotations);
+
+          promise.then(function(result) {
+            console.log(result.selectedAnnotations);
+            $scope.interactingAnnotations = result.selectedAnnotations;
+          });
+        });
+    };
+
+    $scope.ok = function () {
+      $uibModalInstance.close({
+            ///////        selectedAnnotations: selectedAnnotations,
+      });
+    };
+
+    $scope.cancel = function () {
+      $uibModalInstance.dismiss('cancel');
     };
   };
 
-canto.directive('annotationInteractionEdit',
-                ['$uibModal', 'AnnotationProxy',
-                 annotationInteractionEdit]);
+canto.controller('InteractionAnnotationsEditDialogCtrl',
+                 ['$scope', '$uibModalInstance', '$uibModal', 'AnnotationProxy',
+                  'CantoGlobals', 'Curs', 'toaster', 'args',
+                  interactionAnnotationsEditDialogCtrl
+                 ]);
 
+
+function startInteractionAnnotationsEdit($uibModal, phenotypeAnnotation,
+                                         annotationType) {
+  var selectInstance = $uibModal.open({
+    templateUrl: app_static_path + 'ng_templates/annotation_interaction_edit_dialog.html',
+    controller: 'InteractionAnnotationsEditDialogCtrl',
+    title: 'Add an interaction',
+    animate: false,
+    size: 'lg',
+    resolve: {
+      args: function () {
+        return {
+          phenotypeAnnotation: phenotypeAnnotation,
+          annotationType: annotationType,
+        };
+      }
+    },
+    backdrop: 'static',
+  });
+
+  return selectInstance.result;
+}
 
 
 var annotationEditDialogCtrl =
@@ -6918,11 +6944,10 @@ var annotationEditDialogCtrl =
 
     $scope.hasFigure = $scope.annotation.figure;
 
-    $scope.annotationInteractionEditVisble = false;
-
     $scope.showAnnotationInteractionEdit = function() {
-      $scope.annotationInteractionEditVisble = true;
-    }
+      startInteractionAnnotationsEdit($uibModal, $scope.annotation,
+                                      $scope.annotationType);
+    };
 
     $scope.showStrainName = (
       CantoGlobals.strains_mode &&
