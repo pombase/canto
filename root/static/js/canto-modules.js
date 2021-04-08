@@ -6774,6 +6774,13 @@ function startSelectInteractionAnnotations($uibModal, genotypeB,
 }
 
 
+function filterAnnotationsByFeature(annotations, feature) {
+  return $.grep(annotations,
+               function(annotation) {
+                 return annotation.feature_id == feature.feature_id;
+               });
+}
+
 var AnnotationInteractionsEditDialogCtrl =
   function ($scope, $uibModalInstance, $uibModal, AnnotationProxy,
             CantoGlobals, Curs, toaster, args) {
@@ -6787,6 +6794,7 @@ var AnnotationInteractionsEditDialogCtrl =
       genotypeB: args.genotypeB,
       annotationType: args.annotationType,
       interactingAnnotations: [],
+      
     };
 
     $scope.interactionType = null;
@@ -6818,15 +6826,31 @@ var AnnotationInteractionsEditDialogCtrl =
       AnnotationProxy.getAnnotation($scope.data.annotationType.name)
         .then(function (annotations) {
           $scope.data.interactingAnnotations = [];
-          var filteredAnnotations = annotations;
-          var promise =
-              startSelectInteractionAnnotations($uibModal, $scope.data.genotypeB,
-                                                $scope.data.annotationType,
-                                                filteredAnnotations);
+          var objectGenotype;
 
-          promise.then(function(result) {
-            $scope.data.interactingAnnotations = result.selectedAnnotations;
-          });
+          if ($scope.data.interactionForward) {
+            objectGenotype = $scope.data.genotypeB;
+          } else {
+            objectGenotype = $scope.data.genotypeA;
+          }
+
+          var filteredAnnotations = filterAnnotationsByFeature(annotations, objectGenotype);
+
+          if (filteredAnnotations.length == 0) {
+            toaster.pop({
+              type: 'error',
+              title: 'No phenotypes for: ' + objectGenotype.display_name,
+            });
+          } else {
+            var promise =
+                startSelectInteractionAnnotations($uibModal, objectGenotype,
+                                                  $scope.data.annotationType,
+                                                  filteredAnnotations);
+
+            promise.then(function(result) {
+              $scope.data.interactingAnnotations = result.selectedAnnotations;
+            });
+          }
         });
     };
 
@@ -6835,16 +6859,10 @@ var AnnotationInteractionsEditDialogCtrl =
     };
 
     $scope.ok = function () {
-      var phenotypeAnnotations =
-          $.map($scope.data.interactingAnnotations,
-                function(phenotypeAnnotation) {
-                  return phenotypeAnnotation;
-                });
-
       $uibModalInstance.close({
         genotypeA: $scope.data.genotypeA,
         genotypeB: $scope.data.genotypeB,
-        phenotypeAnnotations: phenotypeAnnotations,
+        phenotypeAnnotations: $scope.data.interactingAnnotations,
       });
     };
 
