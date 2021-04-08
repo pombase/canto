@@ -1,14 +1,14 @@
 <div class="curs-dialog curs-annotation-interaction-edit">
   <div class="modal-header">
     <h4 class="modal-title">
-      Select phenotypes of interactors
+      Add interactions
     </h4>
   </div>
 
   <div class="modal-body">
 
     <div>
-      <div class="curs-annotation-interaction-edit-type-select">
+      <div ng-show="!interactionType" class="curs-annotation-interaction-edit-type-select">
         <select class="form-control" ng-model="interactionType">
           <option value="">Select an interaction type ...</option>
 
@@ -34,9 +34,9 @@
                  ng-change="directionChanged()"
                  id="annotation-interaction-direction-1"/>
           <label for="annotation-interaction-direction-1">
-            {{data.phenotypeAnnotation.alleles[0].long_display_name}}
-            recuses
-            {{data.phenotypeAnnotation.alleles[1].long_display_name}}
+            {{data.genotypeA.display_name}}
+            <span style="font-weight: bold">recuses</span>
+            {{data.genotypeB.display_name}}
           </label>
         </div>
 
@@ -46,17 +46,45 @@
                  ng-change="directionChanged()"
                  id="annotation-interaction-direction-2"/>
           <label for="annotation-interaction-direction-2">
-            {{data.phenotypeAnnotation.alleles[1].long_display_name}}
-            recuses
-            {{data.phenotypeAnnotation.alleles[0].long_display_name}}
+            {{data.genotypeB.display_name}}
+            <span style="font-weight: bold">recuses</span>
+            {{data.genotypeA.display_name}}
           </label>
         </div>
       </div>
 
+
       <div ng-if="data.annotationSelectorVisible">
-        Select rescued phenotypes:
-        <button ng-click="selectAnnotations()"
-                class="btn btn-default btn-sm">Select ...</button>
+        <div ng-if="data.interactionForward">
+          {{data.genotypeA.display_name}}
+          <span style="font-weight: bold">recuses</span>
+          {{data.genotypeB.display_name}}
+        </div>
+
+        <div ng-if="!data.interactionForward">
+          {{data.genotypeB.display_name}}
+          <span style="font-weight: bold">recuses</span>
+          {{data.genotypeA.display_name}}
+        </div>
+
+        <div style="padding-top: 1em">
+          <div ng-if="data.interactingAnnotations.length == 0">
+            Select rescued phenotypes:
+            <button ng-click="selectAnnotations()"
+                    class="btn btn-default btn-sm">Select ...</button>
+          </div>
+
+          <div ng-if="data.interactingAnnotations.length != 0">
+            Rescued phenotypes:
+            <annotation-table annotation-type-name="{{data.annotationType.name}}"
+                              annotations="data.interactingAnnotations"
+                              show-menu="false"
+                              show-checkboxes="false"
+                              show-features="false"
+                              show-metagenotype-link="false">
+            </annotation-table>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -66,6 +94,6 @@
     <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
     <button class="btn btn-primary" ng-click="ok()" ng-alt-enter="ok()"
             title="{{ okButtonTitleMessage() }}"
-            ng-disabled="!canSelect()">OK</button>
+            ng-disabled="!canFinish()">OK</button>
   </div>
 </div>
