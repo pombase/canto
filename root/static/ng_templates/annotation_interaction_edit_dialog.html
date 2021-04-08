@@ -12,12 +12,9 @@
         <select class="form-control" ng-model="interactionType">
           <option value="">Select an interaction type ...</option>
 
-          <option value="Synthetic rescue">Synthetic rescue</option>
-          <option value="Dosage Rescue">Dosage Rescue</option>
-          <option value="Phenotypic enhancement">Phenotypic enhancement</option>
-          <option value="Phenotypic suppression">Phenotypic suppression</option>
-          <option value="Synthetic growth defect">Synthetic growth defect</option>
-          <option value="Synthetic Lethality">Synthetic Lethality</option>
+          <option ng-repeat="code in evidenceCodes" value="{{code}}">
+            {{data.evidenceConfig[code].name}}
+          </option>
         </select>
       </div>
 
