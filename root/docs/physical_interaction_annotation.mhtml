@@ -20,8 +20,8 @@ pulldown menus and a text field for optional comments.
 <p>
 Choose an evidence type from the first pulldown menu. Some
 evidence types have a brief description that indicates the
-directionality. Further information on evidence supporting genetic
-interactions is available an the <a
+directionality. Further information on evidence supporting physical
+interactions, including examples of experiment types in each category, is available an the <a
 href="http://wiki.thebiogrid.org/doku.php/experimental_systems#genetic_interactions">BioGRID
 help wiki</a> and in the Directionality section below.
 </p>
@@ -45,8 +45,8 @@ fused to the DNA binding domain, may or may not have been done.
 </p>
 <p>
 For such "asymmetric" interactions, Canto allows you to curate in only
-one direction starting from the gene you have selected, as indicated
-in the evidence selector.
+one direction starting from the gene you select first, as indicated
+in the interaction type selector.
 </p>
 <p>
 If the evidence description looks the wrong way around, you will have
@@ -82,7 +82,7 @@ wrong gene.)
     <td>captures</td>
   </tr>
   <tr>
-    <td>FRET</td>
+    <td>FRET (fluorescence resonance energy transfer)</td>
     <td>fluorescence resonance energy donor to</td>
   </tr>
   <tr>
@@ -134,7 +134,7 @@ entered once, and you can start from either of the interacting genes.
     <td>forms complex with</td>
   </tr>
   <tr>
-    <td>PCA*</td>
+    <td>PCA* (protein-fragment complementation assay)</td>
     <td>interacts with</td>
   </tr>
 </table>
