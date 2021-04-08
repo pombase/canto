@@ -6801,6 +6801,8 @@ var AnnotationInteractionsEditDialogCtrl =
 
     $scope.interactionType = null;
 
+    $scope.evidenceCodes = Object.keys($scope.data.evidenceConfig);
+
     var typeWatcher = function() {
       $scope.data.symmetricInteractionNote = false;
       $scope.data.annotationSelectorVisible = false;
@@ -6811,6 +6813,18 @@ var AnnotationInteractionsEditDialogCtrl =
           $scope.data.symmetricInteractionNote = true;
         } else {
           $scope.data.directionSelectorVisible = true;
+
+          // no need to select a direction:
+          if ($scope.data.genotypeAnnotationsA.length == 0) {
+            $scope.data.interactionForward = true;
+            $scope.data.directionSelectorVisible = false;
+            $scope.data.annotationSelectorVisible = true;
+          }
+          if ($scope.data.genotypeAnnotationsB.length == 0) {
+            $scope.data.interactionForward = false;
+            $scope.data.directionSelectorVisible = false;
+            $scope.data.annotationSelectorVisible = true;
+          }
         }
       }
     };
@@ -6894,6 +6908,17 @@ function startInteractionAnnotationsEdit($uibModal, annotationType, initialData)
   return selectInstance.result;
 }
 
+
+// if it's possible to make a genotype interaction annotation attached, return
+// {
+//   genotypeA: ...,
+//   genotypeB: ...,
+//   evidenceConfig: ...        // the possible interaction types,
+//   genotypeAnnotationsA: ...  // the annotations for genotypeA
+//   genotypeAnnotationsB: ...  // the annotations for genotypeB
+// }
+//
+// returns null if no interactions are possible 
 function getInteractionInitialData($q, CantoConfig, AnnotationProxy,
                                    phenotypeAnnotationType, genotypeId, allGenotypes) {
   var evidencePromise = CantoConfig.get('evidence_types');
@@ -6940,16 +6965,21 @@ function getInteractionInitialData($q, CantoConfig, AnnotationProxy,
         return null;
       }
 
-      var evidenceConfig =
-          $.map(genotypeInteractionEvidenceCodes,
-                function(code) {
-                  return evidenceTypes[code];
-                });
+      var evidenceConfig = {};
+
+      $.map(genotypeInteractionEvidenceCodes,
+            function(code) {
+              evidenceConfig[code] = evidenceTypes[code];
+            });
 
       var genotypeAnnotationsA =
           filterAnnotationsByFeature(annotations, alleleGenotypeA);
       var genotypeAnnotationsB =
           filterAnnotationsByFeature(annotations, alleleGenotypeB);
+
+      if (genotypeAnnotationsA.length == 0 && genotypeAnnotationsB.length == 0) {
+        return null;
+      }
 
       return {
         genotypeA: alleleGenotypeA,
