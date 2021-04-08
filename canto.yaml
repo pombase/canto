@@ -2032,7 +2032,17 @@ available_annotation_type_list:
     synonyms_to_display:
       - exact
     feature_type: 'genotype'
-    enable_interaction_annotation: 1
+    associated_interaction_annotation_type:
+      name: genotype_interaction
+      evidence_codes:
+        - Dosage Growth Defect
+        - Dosage Lethality
+        - Dosage Rescue
+        - Phenotypic Enhancement
+        - Phenotypic Suppression
+        - Synthetic Growth Defect
+        - Synthetic Lethality
+        - Synthetic Rescue
     can_have_conditions: 1
     evidence_codes:
       - Cell growth assay
@@ -2123,24 +2133,6 @@ available_annotation_type_list:
       - Reporter gene assay
       - Western blot
     detailed_help_path: /docs/gene_expression
-  - name: genotype_interaction
-    namespace: fission_yeast_phenotype
-    can_have_conditions: 1
-    category: interaction
-    term_suggestions_annotation_type: phenotype
-    display_name: 'genetic interaction'
-    feature_type: 'metagenotype'
-    help_text: 'Examples: synthetic lethality, dosage suppression, phenotype enhancement.'
-    evidence_codes:
-      - Dosage Growth Defect
-      - Dosage Lethality
-      - Dosage Rescue
-      - Phenotypic Enhancement
-      - Phenotypic Suppression
-      - Synthetic Growth Defect
-      - Synthetic Lethality
-      - Synthetic Rescue
-    detailed_help_path: /docs/genetic_interaction_annotation
   - name: genetic_interaction
     category: interaction
     display_name: 'genetic interaction'
