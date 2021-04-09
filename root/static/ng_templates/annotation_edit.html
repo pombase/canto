@@ -242,11 +242,16 @@
                   ng-click="editAnnotationInteractions()">Add ...</button>
           </div>
 
-          <div ng-if="annotation.interactionAnnotations.length != 0">
-            Interactions:
+          <div ng-if="annotation.symmetricInteractionAnnotations.length != 0">
             <genotype-interaction-annotation-table
-              interactions="annotation.interactionAnnotations"
-              allow-deletion="true">
+              interactions="annotation.symmetricInteractionAnnotations"
+              show-phenotypes="false" allow-deletion="true">
+            </genotype-interaction-annotation-table>
+          </div>
+          <div ng-if="annotation.directionalInteractionAnnotations.length != 0">
+            <genotype-interaction-annotation-table
+              interactions="annotation.directionalInteractionAnnotations"
+              show-phenotypes="true" allow-deletion="true">
             </genotype-interaction-annotation-table>
           </div>
         </td>
