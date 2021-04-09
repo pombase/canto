@@ -6815,7 +6815,19 @@ var AnnotationInteractionsEditDialogCtrl =
     };
 
     $scope.canFinish = function() {
-      return $scope.data.interactingAnnotations.length > 0;
+      if ($scope.data.interactingAnnotations.length > 0) {
+        return true;
+      }
+
+      if ($scope.interactionType) {
+        var conf = $scope.data.evidenceConfig[$scope.interactionType];
+
+        if (conf.is_symmetric) {
+          return true;
+        }
+      }
+
+      return false;
     };
 
     $scope.ok = function () {
