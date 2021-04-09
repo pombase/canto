@@ -18,10 +18,6 @@
         </select>
       </div>
 
-      <div ng-if="data.symmetricInteractionNote">
-        No further information needed
-      </div>
-
       <div ng-if="data.directionSelectorVisible">
         Select direction:
 
@@ -32,7 +28,7 @@
                  id="annotation-interaction-direction-1"/>
           <label for="annotation-interaction-direction-1">
             {{data.genotypeA.display_name}}
-            <span style="font-weight: bold">recuses</span>
+            <span style="font-weight: bold">{{interactionType}}</span>
             {{data.genotypeB.display_name}}
           </label>
         </div>
@@ -44,7 +40,7 @@
                  id="annotation-interaction-direction-2"/>
           <label for="annotation-interaction-direction-2">
             {{data.genotypeB.display_name}}
-            <span style="font-weight: bold">recuses</span>
+            <span style="font-weight: bold">{{interactionType}}</span>
             {{data.genotypeA.display_name}}
           </label>
         </div>
@@ -54,13 +50,13 @@
       <div ng-if="data.annotationSelectorVisible">
         <div ng-if="data.interactionForward">
           {{data.genotypeA.display_name}}
-          <span style="font-weight: bold">recuses</span>
+          <span style="font-weight: bold">{{interactionType}}</span>
           {{data.genotypeB.display_name}}
         </div>
 
         <div ng-if="!data.interactionForward">
           {{data.genotypeB.display_name}}
-          <span style="font-weight: bold">recuses</span>
+          <span style="font-weight: bold">{{interactionType}}</span>
           {{data.genotypeA.display_name}}
         </div>
 
@@ -83,6 +79,13 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <div ng-if="data.symmetricInteractionNote">
+      Confirm:&nbsp;&nbsp;
+      <span style="font-weight: bold">{{interactionType}}: </span>
+      {{data.genotypeA.display_name}}
+      {{data.genotypeB.display_name}}
     </div>
 
   </div>
