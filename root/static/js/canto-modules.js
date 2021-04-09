@@ -6701,6 +6701,7 @@ var GenotypeInteractionAnnotationTableCtrl =
     return {
       scope: {
         interactions: '=',
+        showPhenotypes: '<',
         allowDeletion: '<',
       },
       restrict: 'E',
@@ -7122,9 +7123,11 @@ var annotationEditDialogCtrl =
                                           $scope.genotypeInteractionInitialData);
 
       newInteractionsPromise.then(function(result) {
-        console.log(result);
-
-        $scope.annotation.interactionAnnotations.push(result);
+        if (result.phenotypeAnnotations.length == 0) {
+          $scope.annotation.symmetric_interaction_annotations.push(result);
+        } else {
+          $scope.annotation.directional_interaction_annotations.push(result);
+        }
       });
     };
 
@@ -7595,8 +7598,11 @@ var annotationEditDialogCtrl =
               interactionInitialDataPromise.then(function(initialData) {
                 if (typeof(initialData) === 'object') {
                   $scope.allowInteractionAnnotations = true;
-                  if (!$scope.annotation.interactionAnnotations) {
-                    $scope.annotation.interactionAnnotations = [];
+                  if (!$scope.annotation.symmetric_interaction_annotations) {
+                    $scope.annotation.symmetric_interaction_annotations = [];
+                  }
+                  if (!$scope.annotation.directional_interaction_annotations) {
+                    $scope.annotation.directional_interaction_annotations = [];
                   }
 
                   $scope.genotypeInteractionInitialData = initialData;
