@@ -6835,7 +6835,21 @@ var AnnotationInteractionsEditDialogCtrl =
 
     $scope.interactionType = null;
 
-    $scope.evidenceCodes = Object.keys($scope.data.evidenceConfig);
+    $scope.hideAsymmetricTypes =
+      $scope.data.genotypeAnnotationsA.length == 0 &&
+      $scope.data.genotypeAnnotationsB.length == 0;
+
+    $scope.evidenceCodes =
+      $.grep(Object.keys($scope.data.evidenceConfig),
+            function(evCode) {
+              var conf = $scope.data.evidenceConfig[evCode];
+
+              if (conf.is_symmetric) {
+                return true;
+              }
+
+              return !$scope.hideAsymmetricTypes;
+            });
 
     var typeWatcher = function() {
       $scope.data.symmetricInteractionNote = false;
@@ -6843,7 +6857,7 @@ var AnnotationInteractionsEditDialogCtrl =
       $scope.data.directionSelectorVisible = false;
 
       if ($scope.interactionType) {
-        if ($scope.interactionType === 'Synthetic Lethality') {
+        if ($scope.data.evidenceConfig[$scope.interactionType].is_symmetric) {
           $scope.data.symmetricInteractionNote = true;
         } else {
           $scope.data.directionSelectorVisible = true;
@@ -7011,10 +7025,6 @@ function getInteractionInitialData($q, CantoConfig, AnnotationProxy,
           filterAnnotationsByFeature(annotations, alleleGenotypeA);
       var genotypeAnnotationsB =
           filterAnnotationsByFeature(annotations, alleleGenotypeB);
-
-      if (genotypeAnnotationsA.length == 0 && genotypeAnnotationsB.length == 0) {
-        return null;
-      }
 
       return {
         genotypeA: alleleGenotypeA,
