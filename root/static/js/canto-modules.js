@@ -10077,19 +10077,15 @@ var strainPickerCtrl = function ($scope, StrainsService, CantoService, CantoGlob
   };
 
   $scope.strainFilter = function (value, index, array) {
+    function containsSearchText(synonym) {
+      return synonym.toUpperCase().indexOf(searchText) !== -1;
+    }
     if ($scope.data.selectedStrain) {
       var searchText = $scope.data.selectedStrain.toUpperCase();
       var strainName = value.strain_name.toUpperCase();
-      if (strainName.indexOf(searchText) !== -1) {
-        return true;
-      } else {
-        for (const synonym of value.synonyms) {
-          if (synonym.toUpperCase().indexOf(searchText) !== -1) {
-            return true;
-          }
-        }
+      if (strainName.indexOf(searchText) === -1) {
+        return value.synonyms.some(containsSearchText);
       }
-      return false;
     }
     return true; // show all results if no text is entered
   };
@@ -10102,25 +10098,23 @@ var strainPickerCtrl = function ($scope, StrainsService, CantoService, CantoGlob
       if (strain.strain_name === 'Unknown strain') {
         isCustom = false;
       } else {
-        for (const existingStrain of $scope.data.strains) {
-          if (strain.strain_id === existingStrain.strain_id) {
-            isCustom = false;
-            break;
-          }
-        }
+        isCustom = ! strainExists(strain, $scope.data.strains);
       }
       strain['is_custom'] = isCustom;
       return strain;
     }
+
+    function strainExists(newStrain, existingStrains) {
+      return existingStrains.some(function (existingStrain) {
+        return existingStrain.strain_id === newStrain.strain_id;
+      });
+    }
   }
 
   function isUnknownStrainSet() {
-    for (const sessionStrain of $scope.data.sessionStrains) {
-      if (sessionStrain.strain_name === 'Unknown strain') {
-        return true;
-      }
-    }
-    return false;
+    return $scope.data.sessionStrains.some(function (strain) {
+      return strain.strain_name === 'Unknown strain';
+    });
   }
 
 };
