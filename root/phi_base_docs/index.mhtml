@@ -23,6 +23,7 @@
 <li>Annotating metagenotypes<ul>
 <li><a href="phipo_annotation#pathogen_host_interaction_phenotypes">Pathogen-host interaction phenotype</a></li>
 <li><a href="phipo_annotation#pathogen_host_interaction_phenotypes">Gene-for-gene phenotype</a></li>
+<li><a href="disease_annotation">Disease name</a></li>
 </ul>
 </li>
 <li><a href="phipo_annotation#experimental_evidence">Experimental evidence</a></li>
