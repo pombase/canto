@@ -7629,7 +7629,7 @@ var annotationTransferAllDialogCtrl =
                 timeout: 0, // last until the finally()
                 showCloseButton: false
               });
-              q.then(function (annotation) {
+              q.then(function () {
                 $uibModalInstance.close();
                 toaster.pop({
                   type: 'success',
