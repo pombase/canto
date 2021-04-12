@@ -1327,7 +1327,11 @@ sub make_allele_display_name
 
   $description ||= $type || 'unknown';
 
-  if ($type =~ /^mutation|substitution/) {
+  if ($name =~ /[^a-z\d]$description$/) {
+    $description = '';
+  }
+
+  if ($type =~ /substitution/) {
     if ($type =~ /amino acid/) {
       $description =~ s/^/aa/g;
     } else {
@@ -1337,7 +1341,8 @@ sub make_allele_display_name
     }
   }
 
-  if ($type eq 'other' && $name eq $description) {
+  if ($type eq 'other' && $name eq $description ||
+      length $description == 0) {
     return $name;
   }
 
