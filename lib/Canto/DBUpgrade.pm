@@ -742,21 +742,22 @@ CREATE TABLE strainsynonym (
 
       $curs_dbh->do("
 CREATE TABLE symmetric_genotype_interaction (
-       asymmetric_genotype_interaction_id integer PRIMARY KEY,
+       symmetric_genotype_interaction_id integer PRIMARY KEY,
        interaction_type TEXT NOT NULL,
-       primary_annotation_id integer REFERENCES genotype_annotation(genotype_annotation_id)       -- phenotype annotation for the combined genotype
+       primary_genotype_annotation_id integer NOT NULL REFERENCES genotype_annotation(genotype_annotation_id),   -- phenotype annotation for the combined genotype
+       genotype_a_id integer NOT NULL REFERENCES genotype(genotype_id),                                    -- genotype A of the interaction
+       genotype_b_id integer NOT NULL REFERENCES genotype(genotype_id)                                     -- genotype B of the interaction
 );
 ");
 
       $curs_dbh->do("
-CREATE TABLE asymmetric_genotype_interaction (
-       asymmetric_genotype_interaction_id integer PRIMARY KEY,
+CREATE TABLE directional_genotype_interaction (
+       directional_genotype_interaction_id integer PRIMARY KEY,
        interaction_type TEXT NOT NULL,
-       primary_annotation_id integer REFERENCES genotype_annotation(genotype_annotation_id),      -- phenotype annotation for the combined genotype
-       genotype_a_id integer REFERENCES genotype(genotype_id),                                    -- genotype A of the interaction
-       genotype_annotation_b_id integer REFERENCES genotype_annotation(genotype_annotation_id)    -- genotype B and the phenotype rescued, suppressed, etc.
+       primary_genotype_annotation_id integer NOT NULL REFERENCES genotype_annotation(genotype_annotation_id),   -- phenotype annotation for the combined genotype
+       genotype_a_id integer NOT NULL REFERENCES genotype(genotype_id),                                    -- genotype A of the interaction
+       genotype_annotation_b_id integer NOT NULL REFERENCES genotype_annotation(genotype_annotation_id)    -- genotype B and the phenotype rescued, suppressed, etc.
 );
-");
     };
 
     Canto::Track::curs_map($config, $track_schema, $update_proc);
