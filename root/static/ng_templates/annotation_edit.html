@@ -235,21 +235,22 @@
       </tr>
 
       <tr ng-if="allowInteractionAnnotations">
-        <td class="title">Interaction details</td>
-        <td> 
+        <td class="title"><div>Interaction details</div><div>(Optional)</div></td>
+        <td>
           <div>
-          (Optional)
           <button class="btn btn-default btn-sm"
                   ng-click="editAnnotationInteractions()">Add ...</button>
           </div>
-<!--
+
           <div ng-if="annotation.interactionAnnotations.length != 0">
+            Interactions:
             <genotype-interaction-annotation-table
-              interactions="annotation.interactionAnnotations">
+              interactions="annotation.interactionAnnotations"
+              allow-deletion="true">
             </genotype-interaction-annotation-table>
           </div>
--->
         </td>
+
       </tr>
 
     </table>
