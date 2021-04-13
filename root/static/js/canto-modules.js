@@ -6696,6 +6696,40 @@ canto.directive('termChildrenDisplay',
   ]);
 
 
+var GenotypeInteractionAnnotationTableCtrl =
+  function (CantoConfig) {
+    return {
+      scope: {
+        interactions: '=',
+        allowDeletion: '<',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/genotype_interaction_annotation_table.html',
+      controller: function ($scope) {
+        $scope.ready = false;
+        $scope.evidenceTypes = {};
+
+        CantoConfig.get('evidence_types').
+          then(function(result) {
+            $scope.evidenceTypes = result;
+            $scope.ready = true;
+          });
+
+        $scope.deleteInteraction = function(interaction) {
+          var idx = $scope.interactions.indexOf(interaction);
+
+          $scope.interactions.splice(idx, 1);
+        };
+      },
+    };
+  };
+
+canto.directive('genotypeInteractionAnnotationTable',
+                ['CantoConfig', GenotypeInteractionAnnotationTableCtrl]);
+
+
+
 var selectInteractionAnnotationsDialogCtrl =
   function ($scope, $uibModalInstance,
             CantoGlobals, Curs, toaster, args) {
@@ -6871,6 +6905,7 @@ var AnnotationInteractionsEditDialogCtrl =
       $uibModalInstance.close({
         genotypeA: $scope.data.genotypeA,
         genotypeB: $scope.data.genotypeB,
+        interactionType: $scope.interactionType,
         phenotypeAnnotations: $scope.data.interactingAnnotations,
       });
     };
@@ -7079,7 +7114,7 @@ var annotationEditDialogCtrl =
       newInteractionsPromise.then(function(result) {
         console.log(result);
 
-        $scope.annotation.interactionAnnotations = result;
+        $scope.annotation.interactionAnnotations.push(result);
       });
     };
 
