@@ -948,6 +948,8 @@ var keysForServer = {
   second_feature_id: true,
   second_feature_type: true,
   interacting_gene_id: true,
+  symmetric_interaction_annotations: true,
+  directional_interaction_annotations: true,
 };
 
 var annotationProxy =
@@ -6701,7 +6703,7 @@ var GenotypeInteractionAnnotationTableCtrl =
     return {
       scope: {
         interactions: '=',
-        showPhenotypes: '<',
+        showPhenotypesLink: '<',
         allowDeletion: '<',
       },
       restrict: 'E',
@@ -6930,10 +6932,10 @@ var AnnotationInteractionsEditDialogCtrl =
 
     $scope.ok = function () {
       $uibModalInstance.close({
-        genotypeA: $scope.data.genotypeA,
-        genotypeB: $scope.data.genotypeB,
-        interactionType: $scope.interactionType,
-        phenotypeAnnotations: $scope.data.interactingAnnotations,
+        genotype_a: $scope.data.genotypeA,
+        genotype_b: $scope.data.genotypeB,
+        interaction_type: $scope.interactionType,
+        genotype_b_phenotype_annotations: $scope.data.interactingAnnotations,
       });
     };
 
@@ -7135,7 +7137,7 @@ var annotationEditDialogCtrl =
                                           $scope.genotypeInteractionInitialData);
 
       newInteractionsPromise.then(function(result) {
-        if (result.phenotypeAnnotations.length == 0) {
+        if (result.genotype_b_phenotype_annotations.length == 0) {
           $scope.annotation.symmetric_interaction_annotations.push(result);
         } else {
           $scope.annotation.directional_interaction_annotations.push(result);

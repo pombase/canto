@@ -63,17 +63,17 @@ CREATE TABLE genotype_annotation (
 CREATE TABLE symmetric_genotype_interaction (
        symmetric_genotype_interaction_id integer PRIMARY KEY,
        interaction_type TEXT NOT NULL,
-       primary_annotation_id integer REFERENCES genotype_annotation(genotype_annotation_id),      -- phenotype annotation for the combined genotype
-       genotype_a_id integer REFERENCES genotype(genotype_id),                                    -- genotype A of the interaction
-       genotype_b_id integer REFERENCES genotype(genotype_id)
+       primary_annotation_id integer NOT NULL REFERENCES annotation(annotation_id),                        -- phenotype annotation for the combined genotype
+       genotype_a_id integer NOT NULL REFERENCES genotype(genotype_id),                                    -- genotype A of the interaction
+       genotype_b_id integer NOT NULL REFERENCES genotype(genotype_id)                                     -- genotype B of the interaction
 );
 
 CREATE TABLE directional_genotype_interaction (
        directional_genotype_interaction_id integer PRIMARY KEY,
        interaction_type TEXT NOT NULL,
-       primary_annotation_id integer REFERENCES genotype_annotation(genotype_annotation_id),      -- phenotype annotation for the combined genotype
-       genotype_a_id integer REFERENCES genotype(genotype_id),                                    -- genotype A of the interaction
-       genotype_annotation_b_id integer REFERENCES genotype_annotation(genotype_annotation_id)    -- genotype B and the phenotype rescued, suppressed, etc.
+       primary_annotation_id integer NOT NULL REFERENCES annotation(annotation_id),                        -- phenotype annotation for the combined genotype
+       genotype_a_id integer NOT NULL REFERENCES genotype(genotype_id),                                    -- genotype A of the interaction
+       genotype_annotation_b_id integer NOT NULL REFERENCES genotype_annotation(genotype_annotation_id)    -- genotype B and the phenotype rescued, suppressed, etc.
 );
 
 CREATE TABLE strain (

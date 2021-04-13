@@ -110,6 +110,21 @@ __PACKAGE__->add_unique_constraint(
 
 =head1 RELATIONS
 
+=head2 directional_genotype_interactions
+
+Type: has_many
+
+Related object: L<Canto::CursDB::DirectionalGenotypeInteraction>
+
+=cut
+
+__PACKAGE__->has_many(
+  "directional_genotype_interactions",
+  "Canto::CursDB::DirectionalGenotypeInteraction",
+  { "foreign.primary_annotation_id" => "self.annotation_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 gene_annotations
 
 Type: has_many
@@ -175,9 +190,24 @@ __PACKAGE__->belongs_to(
   },
 );
 
+=head2 symmetric_genotype_interactions
 
-# Created by DBIx::Class::Schema::Loader v0.07048 @ 2018-06-26 15:30:54
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Zk79YeQGrCiXRJi6uEWPcg
+Type: has_many
+
+Related object: L<Canto::CursDB::SymmetricGenotypeInteraction>
+
+=cut
+
+__PACKAGE__->has_many(
+  "symmetric_genotype_interactions",
+  "Canto::CursDB::SymmetricGenotypeInteraction",
+  { "foreign.primary_annotation_id" => "self.annotation_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-04-13 20:57:38
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:PRz3GTnRuENhwhiVZewArQ
 
 
 __PACKAGE__->many_to_many('genes' => 'gene_annotations', 'gene');
