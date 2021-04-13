@@ -89,17 +89,6 @@ $pub
               </span>
 %           }
           </div>
-          <div class="feature-list-action">
-%           if ($show_metagenotype_links) {
-              <a href="<% $metagenotype_manage_url %>">
-                <% $read_only_curs ? 'View metagenotypes' : 'Metagenotype management' %>
-              </a>
-%           } else {
-              <span style="color: #888" title="Add at least one host organism and at least one pathogen genotype to make a metagenotype">
-                <% $read_only_curs ? 'View metagenotypes' : 'Metagenotype management' %>
-              </span>
-%           }
-          </div>
 %       } else {
           <div class="feature-list-action">
             <a href="<% $genotype_manage_url %>">
@@ -109,6 +98,30 @@ $pub
 %       }
       </div>
 %   }
+</div>
+
+<div class="curs-box">
+  <div class="curs-box-title">
+%   if ($read_only_curs) {
+      Metagenotypes from this publication
+%   } else {
+      Annotate metagenotypes
+%   }
+    <help-icon key="choose_metagenotype"></help-icon>
+  </div>
+  <div class="curs-box-body">
+    <div class="feature-list-action">
+%     if ($show_metagenotype_links) {
+        <a href="<% $metagenotype_manage_url %>">
+          <% $read_only_curs ? 'View metagenotypes' : 'Metagenotype management' %>
+        </a>
+%     } else {
+        <span style="color: #888" title="Add at least one host organism and at least one pathogen genotype to make a metagenotype">
+          <% $read_only_curs ? 'View metagenotypes' : 'Metagenotype management' %>
+        </span>
+%     }
+    </div>
+  </div>
 </div>
 
 <%init>
