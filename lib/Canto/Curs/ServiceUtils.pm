@@ -1221,7 +1221,7 @@ sub _store_directional_interaction_annotation
 {
   my $curs_schema = shift;
   my $interaction_type = shift;
-  my $primary_annotation_id = shift;
+  my $primary_genotype_annotation_id = shift;
   my $genotype_a_id = shift;
   my $genotype_b_id = shift;
   my $genotype_b_phenotype_annotation_id = shift;
@@ -1235,7 +1235,7 @@ sub _store_directional_interaction_annotation
   $curs_schema->resultset('DirectionalGenotypeInteraction')
     ->find_or_create({
       interaction_type => $interaction_type,
-      primary_annotation_id => $primary_annotation_id,
+      primary_genotype_annotation_id => $primary_genotype_annotation_id,
       genotype_a_id => $genotype_a_id,
       genotype_annotation_b_id => $genotype_annotation->genotype_annotation_id(),
     });
@@ -1245,14 +1245,14 @@ sub _store_symmetric_interaction_annotation
 {
   my $curs_schema = shift;
   my $interaction_type = shift;
-  my $primary_annotation_id = shift;
+  my $primary_genotype_annotation_id = shift;
   my $genotype_a_id = shift;
   my $genotype_b_id = shift;
 
   $curs_schema->resultset('SymmetricGenotypeInteraction')
     ->find_or_create({
       interaction_type => $interaction_type,
-      primary_annotation_id => $primary_annotation_id,
+      primary_genotype_annotation_id => $primary_genotype_annotation_id,
       genotype_a_id => $genotype_a_id,
       genotype_b_id => $genotype_b_id,
     });
@@ -1420,54 +1420,6 @@ sub _ontology_change_keys
       warn "storing of alleles is not implemented\n";
       return 1;
     },
-    directional_interaction_annotations => sub {
-      my $directional_interaction_annotations = shift;
-
-      my $primary_genotype_id = $annotation->annotation_id();
-
-      map {
-        my $dir_annotation = $_;
-
-        my $interaction_type = $dir_annotation->{interaction_type};
-        my $genotype_a_id = $dir_annotation->{genotype_a}->{genotype_id};
-        my $genotype_b_id = $dir_annotation->{genotype_b}->{genotype_id};
-        map {
-          my $genotype_b_phenotype_id = $_->{annotation_id};
-
-          _store_directional_interaction_annotation($self->curs_schema(),
-                                                    $interaction_type,
-                                                    $primary_genotype_id,
-                                                    $genotype_a_id,
-                                                    $genotype_b_id,
-                                                    $genotype_b_phenotype_id);
-
-        } @{$dir_annotation->{genotype_b_phenotype_annotations}};
-      } @$directional_interaction_annotations;
-
-      return 1;
-    },
-    symmetric_interaction_annotations => sub {
-      my $symmetric_interaction_annotations = shift;
-
-      my $primary_genotype_id = $annotation->annotation_id();
-
-      map {
-        my $dir_annotation = $_;
-
-        my $interaction_type = $dir_annotation->{interaction_type};
-        my $genotype_a_id = $dir_annotation->{genotype_a}->{genotype_id};
-        my $genotype_b_id = $dir_annotation->{genotype_b}->{genotype_id};
-
-        _store_symmetric_interaction_annotation($self->curs_schema(),
-                                                $interaction_type,
-                                                $primary_genotype_id,
-                                                $genotype_a_id,
-                                                $genotype_b_id);
-
-      } @$symmetric_interaction_annotations;
-
-      return 1;
-    }
   )
 }
 
@@ -1614,6 +1566,56 @@ sub _store_change_hash
       !$annotation->genotype_annotations()) {
     die "annotation ", $annotation->annotation_id(),
       " has no gene or genotype\n";
+  }
+
+  if ($data->{directional_interaction_annotations}) {
+    my $directional_interaction_annotations =
+      $data->{directional_interaction_annotations};
+
+    my $primary_genotype_annotation_id =
+      $annotation->genotype_annotations()->first()->genotype_annotation_id();
+
+    map {
+      my $dir_annotation = $_;
+
+      my $interaction_type = $dir_annotation->{interaction_type};
+      my $genotype_a_id = $dir_annotation->{genotype_a}->{genotype_id};
+      my $genotype_b_id = $dir_annotation->{genotype_b}->{genotype_id};
+      map {
+        my $genotype_b_phenotype_id = $_->{annotation_id};
+
+        _store_directional_interaction_annotation($self->curs_schema(),
+                                                  $interaction_type,
+                                                  $primary_genotype_annotation_id,
+                                                  $genotype_a_id,
+                                                  $genotype_b_id,
+                                                  $genotype_b_phenotype_id);
+
+      } @{$dir_annotation->{genotype_b_phenotype_annotations}};
+    } @$directional_interaction_annotations;
+  }
+
+  if ($data->{symmetric_interaction_annotations}) {
+    my $symmetric_interaction_annotations =
+      $data->{symmetric_interaction_annotations};
+
+    my $primary_genotype_annotation_id =
+      $annotation->genotype_annotations()->first()->genotype_annotation_id();
+
+    map {
+      my $dir_annotation = $_;
+
+      my $interaction_type = $dir_annotation->{interaction_type};
+      my $genotype_a_id = $dir_annotation->{genotype_a}->{genotype_id};
+      my $genotype_b_id = $dir_annotation->{genotype_b}->{genotype_id};
+
+      _store_symmetric_interaction_annotation($self->curs_schema(),
+                                              $interaction_type,
+                                              $primary_genotype_annotation_id,
+                                              $genotype_a_id,
+                                              $genotype_b_id);
+
+    } @$symmetric_interaction_annotations;
   }
 
   $annotation->data($data);

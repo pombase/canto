@@ -89,6 +89,23 @@ __PACKAGE__->belongs_to(
   },
 );
 
+=head2 directional_genotype_interaction_primary_genotype_annotations
+
+Type: has_many
+
+Related object: L<Canto::CursDB::DirectionalGenotypeInteraction>
+
+=cut
+
+__PACKAGE__->has_many(
+  "directional_genotype_interaction_primary_genotype_annotations",
+  "Canto::CursDB::DirectionalGenotypeInteraction",
+  {
+    "foreign.primary_genotype_annotation_id" => "self.genotype_annotation_id",
+  },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 directional_genotype_interactions
 
 Type: has_many
@@ -126,9 +143,26 @@ __PACKAGE__->belongs_to(
   },
 );
 
+=head2 symmetric_genotype_interactions
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-04-13 20:57:38
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:rsIbh/Vabb5Fb3HzTervHQ
+Type: has_many
+
+Related object: L<Canto::CursDB::SymmetricGenotypeInteraction>
+
+=cut
+
+__PACKAGE__->has_many(
+  "symmetric_genotype_interactions",
+  "Canto::CursDB::SymmetricGenotypeInteraction",
+  {
+    "foreign.primary_genotype_annotation_id" => "self.genotype_annotation_id",
+  },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-04-14 10:46:20
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pmoAqfVn0FOub7eSpgLXLQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

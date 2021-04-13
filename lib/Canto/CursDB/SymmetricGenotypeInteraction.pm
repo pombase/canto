@@ -37,7 +37,7 @@ __PACKAGE__->table("symmetric_genotype_interaction");
   data_type: 'text'
   is_nullable: 0
 
-=head2 primary_annotation_id
+=head2 primary_genotype_annotation_id
 
   data_type: 'integer'
   is_foreign_key: 1
@@ -62,7 +62,7 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "interaction_type",
   { data_type => "text", is_nullable => 0 },
-  "primary_annotation_id",
+  "primary_genotype_annotation_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "genotype_a_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
@@ -114,24 +114,24 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
-=head2 primary_annotation
+=head2 primary_genotype_annotation
 
 Type: belongs_to
 
-Related object: L<Canto::CursDB::Annotation>
+Related object: L<Canto::CursDB::GenotypeAnnotation>
 
 =cut
 
 __PACKAGE__->belongs_to(
-  "primary_annotation",
-  "Canto::CursDB::Annotation",
-  { annotation_id => "primary_annotation_id" },
+  "primary_genotype_annotation",
+  "Canto::CursDB::GenotypeAnnotation",
+  { genotype_annotation_id => "primary_genotype_annotation_id" },
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-04-13 20:57:38
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:IoRHHBq4Tbc6uQX/wX/IaA
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-04-14 10:46:20
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:ezA5g+HfVbRHfrEoLzD/YA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
