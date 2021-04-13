@@ -1,105 +1,74 @@
 <div class="curs-genotype-list-view">
   <div ng-if="genotypeList.length != 0">
-  <table class="list curs-genotype-list">
-    <thead>
-      <tr>
-        <th ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column" rowspan="2">
-          &nbsp;
-        </th>
-        <th style="border-bottom: 1px solid grey">
-Alleles
-        </th>
-        <th ng-hide="columnsToHide.name">
-          Name
-        </th>
-        <th ng-hide="columnsToHide.strain">
-          Strain
-        </th>
-        <th ng-hide="columnsToHide.background">
-          Background
-        </th>
-        <th>
-Annotations
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-<!-- border fix for FireFox -->
-      </tr>
-      <tr genotype-list-row ng-repeat="currentGenotype in genotypeList"
-           set-selected-genotype-id="setSelectedGenotypeId(genotypeId)"
-           selected-genotype-id="{{selectedGenotypeId}}"
-           show-check-box-actions="showCheckBoxActions"
-           check-box-is-checked="checkBoxChecked[currentGenotype.genotype_id]"
-          navigate-on-click="{{navigateOnClick}}"
-          columns-to-hide="columnsToHide"
-          genotypes="genotypeList"
-          genotype="currentGenotype">
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="curs-genotype-list-view-no-checkbox"
-       ng-if="showCheckBoxActions && userIsAdmin && diploid_mode && diploidList.length != 0">
-    Actions:
-    <button class="btn btn-primary btn-xs"
-            ng-disabled="!validForDiploid()"
-            title="{{checkedGenotypeCount() < 1 ? 'Select a single allele genotype to create a diploid' : 'Create a diploid genotype the includes the selected allele'}}"
-            ng-click="createDiploid()">Create diploid locus</button>
+    <table class="list curs-genotype-list">
+      <thead>
+        <tr ng-if="diploid_mode">
+          <th ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column"></th>
+          <th colspan="5 - hiddenColumnsCount">Haploid genotypes</th>
+        </tr>
+        <tr>
+          <th ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column" rowspan="2">
+            &nbsp;
+          </th>
+          <th style="border-bottom: 1px solid grey">
+            Alleles
+          </th>
+          <th ng-hide="columnsToHide.name">
+            Name
+          </th>
+          <th ng-hide="columnsToHide.strain">
+            Strain
+          </th>
+          <th ng-hide="columnsToHide.background">
+            Background
+          </th>
+          <th>
+            Annotations
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <!-- border fix for FireFox -->
+        </tr>
+        <tr genotype-list-row ng-repeat="currentGenotype in genotypeList"
+            set-selected-genotype-id="setSelectedGenotypeId(genotypeId)"
+            selected-genotype-id="{{selectedGenotypeId}}"
+            show-check-box-actions="showCheckBoxActions"
+            check-box-is-checked="checkBoxChecked[currentGenotype.genotype_id]"
+            navigate-on-click="{{navigateOnClick}}"
+            columns-to-hide="columnsToHide"
+            genotypes="genotypeList"
+            genotype="currentGenotype">
+        </tr>
+        <tr ng-if="diploid_mode && diploidList.length > 0">
+          <th ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column"></th>
+          <th colspan="5 - hiddenColumnsCount">Diploid genotypes</th>
+        </tr>
+        <tr genotype-list-row ng-repeat="currentGenotype in diploidList"
+            set-selected-genotype-id="setSelectedGenotypeId(genotypeId)"
+            selected-genotype-id="{{selectedGenotypeId}}"
+            show-check-box-actions="showCheckBoxActions"
+            check-box-is-checked="checkBoxChecked[currentGenotype.genotype_id]"
+            navigate-on-click="{{navigateOnClick}}"
+            columns-to-hide="columnsToHide"
+            genotypes="diploidList"
+            genotype="currentGenotype">
+        </tr>
+      </tbody>
+    </table>
   </div>
-  </div>
-
-  <table class="curs-genotype-list" ng-if="diploidList.length != 0">
-    <thead>
-      <tr>
-        <th ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column" rowspan="2">
-          &nbsp;
-        </th>
-        <th style="border-bottom: 1px solid grey">
-          Alleles
-        </th>
-        <th ng-hide="columnsToHide.name">
-          Name
-        </th>
-        <th ng-hide="columnsToHide.strain">
-          Strain
-        </th>
-        <th ng-hide="columnsToHide.background">
-          Background
-        </th>
-        <th>
-Annotations
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-<!-- border fix for FireFox -->
-      </tr>
-      <tr genotype-list-row ng-repeat="currentGenotype in diploidList"
-           set-selected-genotype-id="setSelectedGenotypeId(genotypeId)"
-           selected-genotype-id="{{selectedGenotypeId}}"
-           show-check-box-actions="showCheckBoxActions"
-           check-box-is-checked="checkBoxChecked[currentGenotype.genotype_id]"
-           navigate-on-click="{{navigateOnClick}}"
-           columns-to-hide="columnsToHide"
-           genotypes="diploidList"
-           genotype="currentGenotype">
-      </tr>
-    </tbody>
-  </table>
 
   <div class="curs-genotype-list-view-no-checkbox" ng-if="showCheckBoxActions">
     Actions: <button class="btn btn-primary btn-xs"
-                    ng-disabled="checkedGenotypeCount() < 2"
-                    title="{{checkedGenotypeCount() < 2 ? 'Select two or more genotypes' : 'Combine the selected genotypes'}}"
-                    ng-click="combineGenotypes()">Combine selected genotypes</button>
-    <span ng-if="userIsAdmin && diploid_mode && diploidList.length == 0">
+                     ng-disabled="checkedGenotypeCount() < 2"
+                     title="{{checkedGenotypeCount() < 2 ? 'Select two or more genotypes' : 'Combine the selected genotypes'}}"
+                     ng-click="combineGenotypes()">Combine selected genotypes</button>
+    <span ng-if="userIsAdmin && diploid_mode">
       <button class="btn btn-primary btn-xs"
-                      ng-disabled="!validForDiploid()"
-                      title="{{checkedGenotypeCount() < 1 ? 'Select a single allele genotype to create a diploid' : 'Create a diploid genotype the includes the selected allele'}}"
-                      ng-click="createDiploid()">Create diploid locus</button>
+              ng-disabled="!validForDiploid()"
+              title="{{checkedGenotypeCount() < 1 ? 'Select a single allele genotype to create a diploid' : 'Create a diploid genotype the includes the selected allele'}}"
+              ng-click="createDiploid()">Create diploid locus</button>
     </span>
     <span ng-if="checkedGenotypeCount() != 0" style="padding-left: 3em">
       <a href="" ng-click="selectNone()">Unselect all</a>

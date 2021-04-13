@@ -191,28 +191,42 @@ function conditionsToStringHighlightNew(conditions) {
   }).join(", ");
 }
 
-function isSingleAlleleGenotype(genotype) {
-  return genotype.alleles.length === 1;
+function isSingleLocusGenotype(genotype) {
+  if (isWildTypeGenotype(genotype)) {
+    return false;
+  }
+  return genotype.locus_count == 1;
+}
+
+function isMultiLocusGenotype(genotype) {
+  if (isWildTypeGenotype(genotype)) {
+    return false;
+  }
+  return genotype.locus_count > 1;
+}
+
+function isDiploidAllele(allele) {
+  return allele.hasOwnProperty('diploid_name');
 }
 
 function isSingleLocusDiploid(genotype) {
-  var diploidNames = {};
-
-  for (var i = 0; i < genotype.alleles.length; i++) {
-    var allele = genotype.alleles[i];
-    if (!allele.diploid_name) {
-      return;
-    }
-
-    diploidNames[allele.diploid_name] = true;
+  if (isWildTypeGenotype(genotype) || isMultiLocusGenotype(genotype)) {
+    return false;
   }
+  return isDiploidAllele(genotype.alleles[0]);
+}
 
-  return Object.keys(diploidNames).length === 1;
+function isMultiLocusDiploid(genotype) {
+  if (isWildTypeGenotype(genotype) || isSingleLocusGenotype(genotype)) {
+    return false;
+  }
+  return genotype.alleles.some(isDiploidAllele);
 }
 
 function isWildTypeGenotype(genotype) {
-  return genotype.alleles.length == 0;
+  return genotype.alleles.length === 0;
 }
+
 function getGenotypeManagePath(organismMode) {
   var paths = {
     'unknown': 'genotype_manage',
@@ -4947,6 +4961,7 @@ var genotypeManageCtrl =
           singleAlleleGenotypes: [],
           singleLocusDiploids: [],
           multiAlleleGenotypes: [],
+          multiLocusDiploids: [],
           allGenes: [],
           visibleGenes: [],
           waitingForServer: true,
@@ -5082,6 +5097,7 @@ var genotypeManageCtrl =
           $scope.data.singleAlleleGenotypes = [];
           $scope.data.singleLocusDiploids = [];
           $scope.data.multiAlleleGenotypes = [];
+          $scope.data.multiLocusDiploids = [];
 
           if (allGenotypes) {
             $.map(allGenotypes,
@@ -5095,11 +5111,15 @@ var genotypeManageCtrl =
                       }
                     }
 
-                    if (isSingleLocusDiploid(genotype)) {
-                      $scope.data.singleLocusDiploids.push(genotype);
-                    } else {
-                      if (isSingleAlleleGenotype(genotype)) {
+                    if (isSingleLocusGenotype(genotype)) {
+                      if (isSingleLocusDiploid(genotype)) {
+                        $scope.data.singleLocusDiploids.push(genotype);
+                      } else {
                         $scope.data.singleAlleleGenotypes.push(genotype);
+                      }
+                    } else { // multi-locus genotype
+                      if (isMultiLocusDiploid(genotype)) {
+                        $scope.data.multiLocusDiploids.push(genotype);
                       } else {
                         $scope.data.multiAlleleGenotypes.push(genotype);
                       }
@@ -9883,7 +9903,7 @@ var metagenotypeManage = function ($q, CantoGlobals, Curs, CursGenotypeList, Met
           'multi': []
         };
         genotypes.forEach(function (g) {
-          if (isSingleAlleleGenotype(g)) {
+          if (isSingleLocusGenotype(g)) {
             splitObject['single'].push(g);
           } else {
             splitObject['multi'].push(g);
