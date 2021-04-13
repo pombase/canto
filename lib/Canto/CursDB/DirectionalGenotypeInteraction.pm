@@ -41,19 +41,19 @@ __PACKAGE__->table("directional_genotype_interaction");
 
   data_type: 'integer'
   is_foreign_key: 1
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 genotype_a_id
 
   data_type: 'integer'
   is_foreign_key: 1
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 genotype_annotation_b_id
 
   data_type: 'integer'
   is_foreign_key: 1
-  is_nullable: 1
+  is_nullable: 0
 
 =cut
 
@@ -63,11 +63,11 @@ __PACKAGE__->add_columns(
   "interaction_type",
   { data_type => "text", is_nullable => 0 },
   "primary_annotation_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "genotype_a_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "genotype_annotation_b_id",
-  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -96,12 +96,7 @@ __PACKAGE__->belongs_to(
   "genotype_a",
   "Canto::CursDB::Genotype",
   { genotype_id => "genotype_a_id" },
-  {
-    is_deferrable => 0,
-    join_type     => "LEFT",
-    on_delete     => "NO ACTION",
-    on_update     => "NO ACTION",
-  },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 genotype_annotation_b
@@ -116,37 +111,27 @@ __PACKAGE__->belongs_to(
   "genotype_annotation_b",
   "Canto::CursDB::GenotypeAnnotation",
   { genotype_annotation_id => "genotype_annotation_b_id" },
-  {
-    is_deferrable => 0,
-    join_type     => "LEFT",
-    on_delete     => "NO ACTION",
-    on_update     => "NO ACTION",
-  },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 primary_annotation
 
 Type: belongs_to
 
-Related object: L<Canto::CursDB::GenotypeAnnotation>
+Related object: L<Canto::CursDB::Annotation>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "primary_annotation",
-  "Canto::CursDB::GenotypeAnnotation",
-  { genotype_annotation_id => "primary_annotation_id" },
-  {
-    is_deferrable => 0,
-    join_type     => "LEFT",
-    on_delete     => "NO ACTION",
-    on_update     => "NO ACTION",
-  },
+  "Canto::CursDB::Annotation",
+  { annotation_id => "primary_annotation_id" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-04-09 14:18:39
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0TDbD9tlxgWxB41YG49XQQ
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-04-13 20:57:38
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:odFaSbLcm1ZNcx7fUOjQgg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

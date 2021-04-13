@@ -89,7 +89,7 @@ __PACKAGE__->belongs_to(
   },
 );
 
-=head2 directional_genotype_interaction_genotype_annotation_bs
+=head2 directional_genotype_interactions
 
 Type: has_many
 
@@ -98,27 +98,10 @@ Related object: L<Canto::CursDB::DirectionalGenotypeInteraction>
 =cut
 
 __PACKAGE__->has_many(
-  "directional_genotype_interaction_genotype_annotation_bs",
+  "directional_genotype_interactions",
   "Canto::CursDB::DirectionalGenotypeInteraction",
   {
     "foreign.genotype_annotation_b_id" => "self.genotype_annotation_id",
-  },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-=head2 directional_genotype_interaction_primary_annotations
-
-Type: has_many
-
-Related object: L<Canto::CursDB::DirectionalGenotypeInteraction>
-
-=cut
-
-__PACKAGE__->has_many(
-  "directional_genotype_interaction_primary_annotations",
-  "Canto::CursDB::DirectionalGenotypeInteraction",
-  {
-    "foreign.primary_annotation_id" => "self.genotype_annotation_id",
   },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -143,26 +126,9 @@ __PACKAGE__->belongs_to(
   },
 );
 
-=head2 symmetric_genotype_interactions
 
-Type: has_many
-
-Related object: L<Canto::CursDB::SymmetricGenotypeInteraction>
-
-=cut
-
-__PACKAGE__->has_many(
-  "symmetric_genotype_interactions",
-  "Canto::CursDB::SymmetricGenotypeInteraction",
-  {
-    "foreign.primary_annotation_id" => "self.genotype_annotation_id",
-  },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-04-09 14:18:39
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:O1RI0Kp/CXMeZEKwNPeN8A
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-04-13 20:57:38
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:rsIbh/Vabb5Fb3HzTervHQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
