@@ -3,108 +3,112 @@ $pub
 </%args>
 
 <script language="javascript" type="text/javascript">
-var organismsAndGenes = <% $organisms_and_genes_js |n %>;
+  var organismsAndGenes = <% $organisms_and_genes_js |n %>;
 </script>
 
 <div class="curs-box">
   <div class="curs-box-title">
     <div>
-
-% if ($read_only_curs) {
-Genes from this publication
-% } else {
-Annotate genes
-% }
-    <help-icon key="choose_gene"></help-icon>
+%     if ($read_only_curs) {
+        Genes from this publication
+%     } else {
+        Annotate genes
+%     }
+      <help-icon key="choose_gene"></help-icon>
     </div>
   </div>
   <div class="curs-box-body">
-% if ($pathogen_host_mode) {
-  <summary-page-gene-list> </summary-page-gene-list>
-% } else {
-% for my $org_and_gene_hashes (@gene_hashes_by_organism) {
-%   my @gene_hashes = @{$org_and_gene_hashes->{gene_hashes}};
-
-<div class="curs-front-page-gene-table">
-%   if (@gene_hashes) {
-<& /curs/front_gene_table.mhtml, gene_hashes => \@gene_hashes &>
-%   }
-</div>
-% }
-%   if ($no_genes) {
-  <div class="no-genes-message">
-    [No genes]
-  </div>
-%   }
-% }
-  <div style="margin-top: 20px;">
-% if (!$read_only_curs) {
-  <div class="feature-list-action" style="margin-bottom: 20px;">
-    <a href="<% $edit_path %>">
-%   if ($multi_organism_mode) {
-Delete or edit genes and organisms
-%   } else {
-Edit gene list
-%   }
-    </a>
-  </div>
-% }
-
-% if ($pathogen_host_mode && $read_only_curs) {
-  <div class="feature-list-action" style="margin-bottom: 20px;">
-    <a href="<% $view_genes_and_strains_path %>">
-View genes, organisms and strains from this session
-    </a>
-  </div>
-% }
-
-% if ($genotype_annotation_configured) {
-  <div class="curs-box-title">
-    <div>
-% if ($read_only_curs) {
-Genotypes from this publication
-% } else {
-Annotate genotypes
-% }
-    <help-icon key="choose_genotype"></help-icon>
-    </div>
-  </div>
 %   if ($pathogen_host_mode) {
-  <div class="feature-list-action">
-% if ($has_pathogen_genes) {
-    <a href="<% $pathogen_genotype_manage_url %>"><% $read_only_curs ? 'View pathogen genotypes' : 'Pathogen genotype management' %></a>
-% } else {
-    <span style="color: #888" title="Add at least one pathogen gene to the session to make a pathogen genotype">
-      <% $read_only_curs ? 'View pathogen genotypes' : 'Pathogen genotype management' %>
-    </span>
-% }
-  </div>
-  <div class="feature-list-action">
-% if ($show_host_genotype_link) {
-    <a href="<% $host_genotype_manage_url %>"><% $read_only_curs ? 'View host genotypes' : 'Host genotype management' %></a>
-% } else {
-    <span style="color: #888" title="Add at least one host gene to make a host genotype">
-      <% $read_only_curs ? 'View host genotypes' : 'Host genotype management' %>
-    </span>
-% }
-  </div>
-  <div class="feature-list-action">
-% if ($show_metagenotype_links) {
-    <a href="<% $metagenotype_manage_url %>"><% $read_only_curs ? 'View metagenotypes' : 'Metagenotype management' %></a>
-% } else {
-    <span style="color: #888" title="Add at least one host organism and at least one pathogen genotype to make a metagenotype">
-      <% $read_only_curs ? 'View metagenotypes' : 'Metagenotype management' %>
-    </span>
-% }
-  </div>
+      <summary-page-gene-list></summary-page-gene-list>
 %   } else {
-  <div class="feature-list-action">
-    <a href="<% $genotype_manage_url %>"><% $read_only_curs ? 'View genotypes' : 'Genotype management' %></a>
-  </div>
+%     for my $org_and_gene_hashes (@gene_hashes_by_organism) {
+%       my @gene_hashes = @{$org_and_gene_hashes->{gene_hashes}};
+
+        <div class="curs-front-page-gene-table">
+%       if (@gene_hashes) {
+          <& /curs/front_gene_table.mhtml, gene_hashes => \@gene_hashes &>
+%       }
+        </div>
+%     }
+%     if ($no_genes) {
+        <div class="no-genes-message">
+          [No genes]
+        </div>
+%     }
 %   }
-% }
+  </div>
 </div>
+
+<div class="curs-box">
+  <div class="curs-box-body">
+%   if (!$read_only_curs) {
+      <div class="feature-list-action">
+        <a href="<% $edit_path %>">
+%         if ($multi_organism_mode) {
+            Delete or edit genes and organisms
+%         } else {
+            Edit gene list
+%         }
+        </a>
+      </div>
+%   }
+  </div>
 </div>
+
+<div class="curs-box">
+%   if ($genotype_annotation_configured) {
+      <div class="curs-box-title">
+%       if ($read_only_curs) {
+          Genotypes from this publication
+%       } else {
+          Annotate genotypes
+%       }
+        <help-icon key="choose_genotype"></help-icon>
+      </div>
+      <div class="curs-box-body">
+%       if ($pathogen_host_mode) {
+          <div class="feature-list-action">
+%           if ($has_pathogen_genes) {
+              <a href="<% $pathogen_genotype_manage_url %>">
+                <% $read_only_curs ? 'View pathogen genotypes' : 'Pathogen genotype management' %>
+              </a>
+%           } else {
+              <span style="color: #888" title="Add at least one pathogen gene to the session to make a pathogen genotype">
+                <% $read_only_curs ? 'View pathogen genotypes' : 'Pathogen genotype management' %>
+              </span>
+%           }
+          </div>
+          <div class="feature-list-action">
+%           if ($show_host_genotype_link) {
+              <a href="<% $host_genotype_manage_url %>">
+                <% $read_only_curs ? 'View host genotypes' : 'Host genotype management' %>
+              </a>
+%           } else {
+              <span style="color: #888" title="Add at least one host gene to make a host genotype">
+                <% $read_only_curs ? 'View host genotypes' : 'Host genotype management' %>
+              </span>
+%           }
+          </div>
+          <div class="feature-list-action">
+%           if ($show_metagenotype_links) {
+              <a href="<% $metagenotype_manage_url %>">
+                <% $read_only_curs ? 'View metagenotypes' : 'Metagenotype management' %>
+              </a>
+%           } else {
+              <span style="color: #888" title="Add at least one host organism and at least one pathogen genotype to make a metagenotype">
+                <% $read_only_curs ? 'View metagenotypes' : 'Metagenotype management' %>
+              </span>
+%           }
+          </div>
+%       } else {
+          <div class="feature-list-action">
+            <a href="<% $genotype_manage_url %>">
+              <% $read_only_curs ? 'View genotypes' : 'Genotype management' %>
+            </a>
+          </div>
+%       }
+      </div>
+%   }
 </div>
 
 <%init>
