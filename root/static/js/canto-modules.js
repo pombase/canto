@@ -195,34 +195,14 @@ function isSingleLocusGenotype(genotype) {
   if (isWildTypeGenotype(genotype)) {
     return false;
   }
-  if (genotype.alleles.length === 1) {
-    return true;
-  }
-  var firstGeneId = genotype.alleles[0].gene_id;
-  return genotype.alleles.every(geneIdEquals(firstGeneId));
-
-  function geneIdEquals(id) {
-    return function (allele) {
-      return allele.gene_id === id;
-    }
-  }
+  return genotype.locus_count == 1;
 }
 
 function isMultiLocusGenotype(genotype) {
   if (isWildTypeGenotype(genotype)) {
     return false;
   }
-  if (genotype.alleles.length === 1) {
-    return false;
-  }
-  var firstGeneId = genotype.alleles[0].gene_id;
-  return genotype.alleles.some(geneIdNotEquals(firstGeneId));
-
-  function geneIdNotEquals(id) {
-    return function (allele) {
-      return allele.gene_id !== id;
-    }
-  }
+  return genotype.locus_count > 1;
 }
 
 function isDiploidAllele(allele) {
