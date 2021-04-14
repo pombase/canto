@@ -61,6 +61,56 @@ sub _make_allelesynonym_hashes
   } $allele->allelesynonyms()->all();
 }
 
+sub _get_symmetric_interaction_annotations
+{
+  my $config = shift;
+  my $annotation = shift;
+
+  my %interactions = ();
+
+  my $interaction_rs = $annotation->genotype_annotations()
+    ->search_related('symmetric_genotype_interactions', {},
+                     {
+                       prefetch => ['genotype_a', 'genotype_b'],
+                     });
+
+  while (defined (my $interaction_row = $interaction_rs->next())) {
+    my $key = $interaction_row->genotype_a()->genotype_id() . '-' .
+      $interaction_row->interaction_type() . '-' .
+      $interaction_row->genotype_b()->genotype_id();
+
+    my $interaction = undef;
+
+    if (!exists $interactions{$key}) {
+      my $genotype_a = $interaction_row->genotype_a();
+      my $genotype_b = $interaction_row->genotype_b();
+
+      $interaction = {
+        interaction_type => $interaction_row->interaction_type(),
+        genotype_a => {
+          genotype_id => $genotype_a->genotype_id(),
+          display_name => $genotype_a->display_name($config),
+        },
+        genotype_b => {
+          genotype_id => $genotype_b->genotype_id(),
+          display_name => $genotype_b->display_name($config),
+        },
+      };
+      $interactions{$key} = $interaction;
+    }
+  }
+
+  return (values %interactions);
+}
+
+sub _get_directional_interaction_annotations
+{
+  my $config = shift;
+  my $annotation = shift;
+
+  return ();
+}
+
 sub _make_genotype_details
 {
   my $curs_schema = shift;
@@ -187,7 +237,7 @@ sub _make_genotype_details
 
   my $genotype_display_name = $genotype->display_name($config);
 
-  return (
+  my @res = (
     genotype_id => $genotype->genotype_id(),
     genotype_identifier => $genotype->identifier(),
     genotype_name => $genotype->name(),
@@ -200,6 +250,8 @@ sub _make_genotype_details
     feature_id => $genotype->genotype_id(),
     alleles => [@allele_hashes],
   );
+
+  return @res;
 }
 
 sub _make_metagenotype_details
@@ -433,6 +485,22 @@ sub make_ontology_annotation
     is_not => JSON::false,
     checked => $data->{checked} || 'no',
   };
+
+  if (defined $annotation_type_config->{associated_interaction_annotation_type}) {
+    my @symmetric_interaction_annotations =
+      _get_symmetric_interaction_annotations($config, $annotation);
+
+    if (@symmetric_interaction_annotations) {
+      $ret->{symmetric_interaction_annotations} = \@symmetric_interaction_annotations;
+    }
+
+    my @directional_interaction_annotations =
+      _get_directional_interaction_annotations($config, $annotation);
+
+    if (@directional_interaction_annotations) {
+      $ret->{directional_interaction_annotations} = \@directional_interaction_annotations;
+    }
+  }
 
   if ($feature_type ne 'gene') {
     $ret->{conditions} =

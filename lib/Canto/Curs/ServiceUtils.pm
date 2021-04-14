@@ -1420,6 +1420,12 @@ sub _ontology_change_keys
       warn "storing of alleles is not implemented\n";
       return 1;
     },
+    symmetric_interaction_annotations => sub {
+      return 1;
+    },
+    directional_interaction_annotations => sub {
+      return 1;
+    }
   )
 }
 
@@ -1568,9 +1574,9 @@ sub _store_change_hash
       " has no gene or genotype\n";
   }
 
-  if ($data->{directional_interaction_annotations}) {
+  if ($changes->{directional_interaction_annotations}) {
     my $directional_interaction_annotations =
-      $data->{directional_interaction_annotations};
+      $changes->{directional_interaction_annotations};
 
     my $primary_genotype_annotation_id =
       $annotation->genotype_annotations()->first()->genotype_annotation_id();
@@ -1595,9 +1601,9 @@ sub _store_change_hash
     } @$directional_interaction_annotations;
   }
 
-  if ($data->{symmetric_interaction_annotations}) {
+  if ($changes->{symmetric_interaction_annotations}) {
     my $symmetric_interaction_annotations =
-      $data->{symmetric_interaction_annotations};
+      $changes->{symmetric_interaction_annotations};
 
     my $primary_genotype_annotation_id =
       $annotation->genotype_annotations()->first()->genotype_annotation_id();
