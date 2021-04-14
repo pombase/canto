@@ -1227,7 +1227,7 @@ sub _store_directional_interaction_annotation
   my $genotype_b_phenotype_annotation_id = shift;
 
   my $genotype_annotation = $curs_schema->resultset('GenotypeAnnotation')
-    ->find_or_create({
+    ->find({
       genotype => $genotype_b_id,
       annotation => $genotype_b_phenotype_annotation_id,
     });
