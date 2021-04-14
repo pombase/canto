@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 20;
+use Test::More tests => 21;
 use MooseX::Test::Role;
 use IO::String;
 
@@ -67,6 +67,7 @@ my $mock_formatter = consumer_of('Canto::Role::GAFFormatter');
     'wt_rna_expression.tsv' => 0,
     'wt_protein_expression.tsv' => 0,
     'physical_interaction.tsv' => 0,
+    'genotype_interaction.tsv' => 0,
     'genetic_interaction.tsv' => 0,
     'disease_formation_phenotype.tsv' => 0,
     'protein_sequence_feature_or_motif.tsv' => 0,
@@ -99,5 +100,5 @@ my $mock_formatter = consumer_of('Canto::Role::GAFFormatter');
 
   is(keys %expected_filenames, 0);
 
-  is($member_count, 10);
+  is($member_count, 11);
 }
