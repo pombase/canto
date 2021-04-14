@@ -358,6 +358,28 @@ sub setup
     my @available_annotation_type_list =
       @{$self->{available_annotation_type_list}};
 
+    map {
+      if ($_->{category} eq 'genotype_interaction') {
+        my $interaction_annotation_type = $_;
+        my $associated_phenotype_type_name =
+          $interaction_annotation_type->{associated_phenotype_annotation_type};
+        if (!defined $associated_phenotype_type_name) {
+          use Data::Dumper;
+          die 'no associated_phenotype_annotation_type field for configuration: ',
+            Dumper([$interaction_annotation_type]);
+        }
+
+        map {
+          if ($_->{name} eq $associated_phenotype_type_name) {
+            my $associated_phenotype_type = $_;
+
+            $associated_phenotype_type->{associated_interaction_annotation_type} =
+              $interaction_annotation_type;
+          }
+        } @available_annotation_type_list;
+      }
+    } @available_annotation_type_list;
+
     my @annotation_type_list = ();
 
     # default to enabling all annotation types
