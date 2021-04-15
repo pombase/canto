@@ -106,7 +106,10 @@ sub _get_symmetric_interaction_annotations
 sub _get_directional_interaction_annotations
 {
   my $config = shift;
+  my $schema = shift;
   my $annotation = shift;
+  my $ontology_lookup = shift;
+  my $organism_lookup = shift;
 
   my %interactions = ();
 
@@ -122,15 +125,16 @@ sub _get_directional_interaction_annotations
                      });
 
   while (defined (my $interaction_row = $interaction_rs->next())) {
+    my $genotype_annotation_b = $interaction_row->genotype_annotation_b();
     my $key = $interaction_row->genotype_a()->genotype_id() . '-' .
       $interaction_row->interaction_type() . '-' .
-      $interaction_row->genotype_annotation_b()->genotype()->genotype_id();
+      $genotype_annotation_b->genotype()->genotype_id();
 
     my $interaction = undef;
 
     if (!exists $interactions{$key}) {
       my $genotype_a = $interaction_row->genotype_a();
-      my $genotype_b = $interaction_row->genotype_annotation_b()->genotype();
+      my $genotype_b = $genotype_annotation_b->genotype();
 
       $interaction = {
         interaction_type => $interaction_row->interaction_type(),
@@ -147,9 +151,8 @@ sub _get_directional_interaction_annotations
     }
 
     push @{$interaction->{genotype_b_phenotype_annotations}},
-      {
-
-      };
+      make_ontology_annotation($config, $schema, $genotype_annotation_b->annotation(),
+                               $ontology_lookup, $organism_lookup, 0, 0);
   }
 
   return (values %interactions);
@@ -353,6 +356,8 @@ sub make_ontology_annotation
     Canto::Track::get_adaptor($config, 'ontology');
   my $organism_lookup = shift //
     Canto::Track::get_adaptor($config, 'organism');
+  my $include_feature_details = shift // 1;
+  my $include_associated_interaction_details = shift // 1;
 
   my $data = $annotation->data();
   my $term_ontid = $data->{term_ontid};
@@ -378,7 +383,7 @@ sub make_ontology_annotation
   my %genotype_details = ();
   my %metagenotype_details = ();
 
-  if ($feature_type eq 'genotype') {
+  if ($include_feature_details && $feature_type eq 'genotype') {
     my @annotation_genotypes = $annotation->genotypes();
 
     if (@annotation_genotypes > 1) {
@@ -396,7 +401,7 @@ sub make_ontology_annotation
                                                $ontology_lookup, $organism_lookup);
   }
 
-  if ($feature_type eq 'metagenotype') {
+  if ($include_feature_details && $feature_type eq 'metagenotype') {
     my @annotation_metagenotypes = $annotation->metagenotypes();
 
     if (@annotation_metagenotypes > 1) {
@@ -414,7 +419,7 @@ sub make_ontology_annotation
                                                        $ontology_lookup, $organism_lookup);
   }
 
-  if ($feature_type eq 'gene') {
+  if ($include_feature_details && $feature_type eq 'gene') {
     my @annotation_genes = $annotation->genes();
 
     if (@annotation_genes > 1) {
@@ -530,7 +535,8 @@ sub make_ontology_annotation
     checked => $data->{checked} || 'no',
   };
 
-  if (defined $annotation_type_config->{associated_interaction_annotation_type}) {
+  if ($include_associated_interaction_details &&
+      defined $annotation_type_config->{associated_interaction_annotation_type}) {
     my @symmetric_interaction_annotations =
       _get_symmetric_interaction_annotations($config, $annotation);
 
@@ -539,7 +545,8 @@ sub make_ontology_annotation
     }
 
     my @directional_interaction_annotations =
-      _get_directional_interaction_annotations($config, $annotation);
+      _get_directional_interaction_annotations($config, $schema, $annotation,
+                                               $ontology_lookup, $organism_lookup);
 
     if (@directional_interaction_annotations) {
       $ret->{directional_interaction_annotations} = \@directional_interaction_annotations;
@@ -951,7 +958,7 @@ sub get_annotation_table
     my @entries;
     if ($annotation_type_category eq 'ontology') {
       @entries = make_ontology_annotation($config, $schema, $annotation,
-                                          $ontology_lookup, $organism_lookup);
+                                          $ontology_lookup, $organism_lookup, 1, 1);
     } else {
       if ($annotation_type_category eq 'interaction') {
 

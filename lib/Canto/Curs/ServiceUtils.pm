@@ -1739,7 +1739,8 @@ sub change_annotation
       $annotation_hash =
         Canto::Curs::Utils::make_ontology_annotation($self->config(),
                                                      $curs_schema,
-                                                     $annotation);
+                                                     $annotation, undef, undef,
+                                                     1, 1);
     } else {
       $annotation_hash =
         Canto::Curs::Utils::make_interaction_annotation($self->config(),
