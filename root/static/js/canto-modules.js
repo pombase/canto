@@ -6884,9 +6884,20 @@ var AnnotationInteractionsEditDialogCtrl =
     };
 
     $scope.ok = function () {
+      var genotypeA;
+      var genotypeB;
+
+      if ($scope.data.interactionForward) {
+        genotypeA = $scope.data.genotypeA;
+        genotypeB = $scope.data.genotypeB;
+      } else {
+        genotypeA = $scope.data.genotypeB;
+        genotypeB = $scope.data.genotypeA;
+      }
+
       $uibModalInstance.close({
-        genotype_a: $scope.data.genotypeA,
-        genotype_b: $scope.data.genotypeB,
+        genotype_a: genotypeA,
+        genotype_b: genotypeB,
         interaction_type: $scope.interactionType,
         genotype_b_phenotype_annotations: $scope.data.interactingAnnotations,
       });
@@ -6926,7 +6937,8 @@ function startInteractionAnnotationsEdit($uibModal, annotationType, initialData)
 }
 
 
-// if it's possible to make a genotype interaction annotation attached, return
+// if it's possible to make a genotype interaction annotation attached to
+// the phenotype, return:
 // {
 //   genotypeA: ...,
 //   genotypeB: ...,
