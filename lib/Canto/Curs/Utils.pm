@@ -533,12 +533,13 @@ sub make_ontology_annotation
     status => $annotation->status(),
     is_not => JSON::false,
     checked => $data->{checked} || 'no',
-    directional_interaction_annotations => [],
-    symmetric_genotype_interactions => [],
   };
 
   if ($include_associated_interaction_details &&
       defined $annotation_type_config->{associated_interaction_annotation_type}) {
+    $ret->{directional_interaction_annotations} = [];
+    $ret->{symmetric_interaction_annotations} = [];
+
     my @symmetric_interaction_annotations =
       _get_symmetric_interaction_annotations($config, $annotation);
 

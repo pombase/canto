@@ -944,6 +944,8 @@ cmp_deeply($annotation_res,
                   'synonyms' => [],
                 }
               ],
+              directional_interaction_annotations => [],
+              symmetric_interaction_annotations => [],
             },
             {
               'evidence_code' => 'Co-immunoprecipitation experiment',
@@ -1004,6 +1006,8 @@ cmp_deeply($annotation_res,
                   'synonyms' => [{ edit_status => 'new', synonym => 'ssm4-c1' }],
                 }
               ],
+              directional_interaction_annotations => [],
+              symmetric_interaction_annotations => [],
             },
             $cycloheximide_annotation_res,
             $post_translational_modification_res,
