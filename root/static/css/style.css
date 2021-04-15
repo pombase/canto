@@ -470,7 +470,6 @@ table.curs-genotype-list tbody {
 .curs-genotype-list-row-actions {
   border: 2px solid #bbb;
   padding: 3px;
-  font-size: 90%;
   z-index: 100;
   position: absolute;
   overflow: visible;
