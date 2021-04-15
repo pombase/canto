@@ -7673,7 +7673,7 @@ var annotationEditDialogCtrl =
                                             annotationType, featureId, $scope.allFeatures);
 
               interactionInitialDataPromise.then(function(initialData) {
-                if (typeof(initialData) === 'object') {
+                if (initialData !== null) {
                   $scope.allowInteractionAnnotations = true;
                   if (!$scope.annotation.symmetric_interaction_annotations) {
                     $scope.annotation.symmetric_interaction_annotations = [];
