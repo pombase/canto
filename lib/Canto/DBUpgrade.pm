@@ -758,6 +758,7 @@ CREATE TABLE directional_genotype_interaction (
        genotype_a_id integer NOT NULL REFERENCES genotype(genotype_id),                                    -- genotype A of the interaction
        genotype_annotation_b_id integer NOT NULL REFERENCES genotype_annotation(genotype_annotation_id)    -- genotype B and the phenotype rescued, suppressed, etc.
 );
+");
     };
 
     Canto::Track::curs_map($config, $track_schema, $update_proc);
