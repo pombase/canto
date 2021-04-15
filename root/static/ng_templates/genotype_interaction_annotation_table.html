@@ -22,7 +22,9 @@
       <td>{{interaction.genotype_a.display_name}}</td>
       <td>{{evidenceTypes[interaction.interaction_type].name}}</td>
       <td>{{interaction.genotype_b.display_name}}</td>
-      <td ng-if="showPhenotypesLink"><a>View ...</a></td>
+      <td ng-show="showPhenotypesLink">
+        <a ng-click="viewPhenotypes(interaction)">View ...</a>
+      </td>
       <td ng-if="allowDeletion" style="border: 0; background-color: white;">
         <a title="delete" href="#" ng-click="deleteInteraction(interaction)"
            style="color: red">X</a>

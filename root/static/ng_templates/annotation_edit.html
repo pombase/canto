@@ -245,12 +245,14 @@
           <div ng-if="annotation.symmetric_interaction_annotations.length != 0">
             <genotype-interaction-annotation-table
               interactions="annotation.symmetric_interaction_annotations"
+              phenotype-annotation-type="annotationType"
               show-phenotypes-link="false" allow-deletion="true">
             </genotype-interaction-annotation-table>
           </div>
           <div ng-if="annotation.directional_interaction_annotations.length != 0">
             <genotype-interaction-annotation-table
               interactions="annotation.directional_interaction_annotations"
+              phenotype-annotation-type="annotationType"
               show-phenotypes-link="true" allow-deletion="true">
             </genotype-interaction-annotation-table>
           </div>

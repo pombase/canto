@@ -1,0 +1,21 @@
+<div class="curs-select-interaction-annotations">
+  <div class="modal-header">
+    <h4 class="modal-title">
+      Phenotypes of {{data.genotype.display_name}}
+    </h4>
+  </div>
+
+  <div class="modal-body">
+    <annotation-table annotation-type-name="{{data.annotationType.name}}"
+                      annotations="data.annotations"
+                      show-menu="false"
+                      show-checkboxes="false"
+                      show-features="false"
+                      show-metagenotype-link="false">
+    </annotation-table>
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-primary" ng-click="ok()" ng-alt-enter="ok()">OK</button>
+  </div>
+</div>
