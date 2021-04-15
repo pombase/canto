@@ -1479,8 +1479,14 @@ sub _store_change_hash
     my $directional_interaction_annotations =
       $changes->{directional_interaction_annotations};
 
+    my $primary_genotype_annotation =
+      $annotation->genotype_annotations()->first();
     my $primary_genotype_annotation_id =
-      $annotation->genotype_annotations()->first()->genotype_annotation_id();
+      $primary_genotype_annotation->genotype_annotation_id();
+
+    $primary_genotype_annotation
+      ->directional_genotype_interaction_primary_genotype_annotations()
+      ->delete();
 
     map {
       my $dir_annotation = $_;
@@ -1506,8 +1512,12 @@ sub _store_change_hash
     my $symmetric_interaction_annotations =
       $changes->{symmetric_interaction_annotations};
 
+    my $primary_genotype_annotation =
+      $annotation->genotype_annotations()->first();
     my $primary_genotype_annotation_id =
-      $annotation->genotype_annotations()->first()->genotype_annotation_id();
+      $primary_genotype_annotation->genotype_annotation_id();
+
+    $primary_genotype_annotation->symmetric_genotype_interactions()->delete();
 
     map {
       my $dir_annotation = $_;

@@ -518,6 +518,8 @@ sub make_ontology_annotation
     status => $annotation->status(),
     is_not => JSON::false,
     checked => $data->{checked} || 'no',
+    directional_interaction_annotations => [],
+    symmetric_genotype_interactions => [],
   };
 
   if ($include_associated_interaction_details &&
