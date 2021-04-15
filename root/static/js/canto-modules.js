@@ -6699,10 +6699,11 @@ canto.directive('termChildrenDisplay',
 
 
 var GenotypeInteractionAnnotationTableCtrl =
-  function (CantoConfig) {
+  function ($uibModal, CantoConfig) {
     return {
       scope: {
         interactions: '=',
+        phenotypeAnnotationType: '<',
         showPhenotypesLink: '<',
         allowDeletion: '<',
       },
@@ -6719,6 +6720,12 @@ var GenotypeInteractionAnnotationTableCtrl =
             $scope.ready = true;
           });
 
+        $scope.viewPhenotypes = function(interaction) {
+          startViewInteractionPhenotypes($uibModal, interaction.genotype_b,
+                                         $scope.phenotypeAnnotationType,
+                                         interaction.genotype_b_phenotype_annotations);
+        };
+
         $scope.deleteInteraction = function(interaction) {
           var idx = $scope.interactions.indexOf(interaction);
 
@@ -6729,8 +6736,52 @@ var GenotypeInteractionAnnotationTableCtrl =
   };
 
 canto.directive('genotypeInteractionAnnotationTable',
-                ['CantoConfig', GenotypeInteractionAnnotationTableCtrl]);
+                ['$uibModal', 'CantoConfig', GenotypeInteractionAnnotationTableCtrl]);
 
+
+var viewInteractionPhenotypesDialogCtrl =
+  function ($scope, $uibModalInstance,
+            CantoGlobals, Curs, toaster, args) {
+    $scope.data = {};
+
+    $scope.data.genotype = args.genotype;
+    $scope.data.annotationType = args.annotationType;
+    $scope.data.annotations = args.annotations;
+
+    $scope.ok = function () {
+      $uibModalInstance.dismiss('ok');
+    };
+  };
+
+canto.controller('ViewInteractionPhenotypesDialogCtrl',
+  ['$scope', '$uibModalInstance',
+   'CantoGlobals', 'Curs', 'toaster', 'args',
+    viewInteractionPhenotypesDialogCtrl
+  ]);
+
+
+function startViewInteractionPhenotypes($uibModal, genotype,
+                                        annotationType, annotations) {
+  var instance = $uibModal.open({
+    templateUrl: app_static_path + 'ng_templates/view_interaction_phenotypes.html',
+    controller: 'ViewInteractionPhenotypesDialogCtrl',
+    title: 'Interaction phenotypes',
+    animate: false,
+    size: 'lg',
+    resolve: {
+      args: function () {
+        return {
+          genotype: genotype,
+          annotationType: annotationType,
+          annotations: annotations,
+        };
+      }
+    },
+    backdrop: 'static',
+  });
+
+  return instance.result;
+}
 
 
 var selectInteractionAnnotationsDialogCtrl =
