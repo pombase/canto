@@ -20,7 +20,7 @@
   <tbody>
     <tr ng-repeat="interaction in interactions">
       <td>{{interaction.genotype_a.display_name}}</td>
-      <td>{{evidenceTypes[interaction.interaction_type].name}}</td>
+      <td>{{interaction.interaction_type}}</td>
       <td>{{interaction.genotype_b.display_name}}</td>
       <td ng-show="showPhenotypesLink">
         <a ng-click="viewPhenotypes(interaction)">View ...</a>
