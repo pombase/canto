@@ -154,8 +154,12 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   if ($state eq APPROVAL_IN_PROGRESS) {
     my $approver_name = $self->get_metadata($schema, 'approver_name');
     my $approver_email = $self->get_metadata($schema, 'approver_email');
-    $st->{notice} =
+    push @{$st->{notice}},
       "Session is being checked by $approver_name <$approver_email>";
+  }
+
+  if (defined $config->{message_of_the_day}) {
+    push @{$st->{notice}}, $config->{message_of_the_day};
   }
 
   $st->{is_admin_session} =
