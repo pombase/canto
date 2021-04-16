@@ -28,6 +28,9 @@ The subtitle to use on the front greeting page.
 ### header_image
 A path (relative to `root/static`) of the logo to put in the header.
 
+### message_of_the_day
+If set, show this text as a notice at the top of curation session pages.
+
 ### instance_organism
 Canto has two modes: single or multi organism.  Single organism mode is
 activated by setting an "instance organism".  That organism will be assumed
