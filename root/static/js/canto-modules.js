@@ -9523,13 +9523,6 @@ var wildGenotypeView =
       restrict: 'E',
       replace: true,
       templateUrl: app_static_path + 'ng_templates/wild_genotype_view.html',
-      controller: function ($scope) {
-        $scope.onStrainChange = function (strain) {
-          $scope.onStrainSelect({
-            strain: strain
-          });
-        };
-      }
     };
   };
 

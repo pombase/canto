@@ -1,21 +1,14 @@
-<div class="curs-genotype-list-view">
-  <div ng-if="(strains.length > 0)">
-    <table class="curs-genotype-list">
-      <thead>
-        <tr>
-          <th ng-if="showCheckBoxActions" class="curs-genotype-checkbox-column" rowspan="2">&nbsp;</th>
-        </tr>
-        <tr>
-          <th>Strain</th>
-        </tr>
-      </thead>
-      <tbody
-        wild-genotype-row
-        ng-repeat="strain in strains track by strain.strain_name"
-        show-check-box-actions="showCheckBoxActions"
-        strain="strain"
-        on-strain-select="onStrainChange(strain)"
-      </tbody>
-    </table>
-  </div>
+<div>
+  <ul class="curs-wild-type-genotype-list">
+    <li ng-repeat="strain in strains track by strain.strain_name">
+      <input
+        id="wild-type-strain-{{$index}}"
+        type="radio"
+        name="host_genotype"
+        ng-model="selectedStrain"
+        ng-click="onStrainSelect({strain: strain})"
+        value="{{strain}}"
+      ><label for="wild-type-strain-{{$index}}">{{strain.strain_name}}</label>
+    </li>
+  </ul>
 </div>
