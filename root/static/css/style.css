@@ -802,7 +802,7 @@ tr .curs-genotype-allele-gene {
 
 .curs-genotype-list .selected, .curs-genotype-details .selected {
   background-color: #eee !important;
-  border: 2.5px solid #888;
+  outline: 2.5px solid #888;
 }
 
 .feature-list-action {
