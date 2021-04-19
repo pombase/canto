@@ -9480,8 +9480,7 @@ var genotypeSimpleListViewCtrl =
 
 canto.directive('genotypeSimpleListView', [genotypeSimpleListViewCtrl]);
 
-var wildGenotypeView =
-  function () {
+var wildTypeGenotypePicker = function () {
     return {
       scope: {
         strains: '<',
@@ -9489,11 +9488,11 @@ var wildGenotypeView =
       },
       restrict: 'E',
       replace: true,
-      templateUrl: app_static_path + 'ng_templates/wild_genotype_view.html',
+      templateUrl: app_static_path + 'ng_templates/wild_type_genotype_picker.html',
     };
   };
 
-canto.directive('wildGenotypeView', [wildGenotypeView]);
+canto.directive('wildTypeGenotypePicker', [wildTypeGenotypePicker]);
 
 var metagenotypeGenotypePicker =
   function (CantoGlobals, CursGenotypeList, toaster, Metagenotype, StrainsService) {
