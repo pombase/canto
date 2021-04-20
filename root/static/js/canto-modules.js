@@ -9480,61 +9480,19 @@ var genotypeSimpleListViewCtrl =
 
 canto.directive('genotypeSimpleListView', [genotypeSimpleListViewCtrl]);
 
-
-var wildGenotypeRow =
-  function (CantoGlobals) {
-    return {
-      restrict: 'A',
-      scope: {
-        strain: '<',
-        showCheckBoxActions: '<',
-        onStrainSelect: '&'
-      },
-      replace: true,
-      templateUrl: CantoGlobals.app_static_path + 'ng_templates/wild_genotype_row.html',
-      controller: function ($scope) {
-
-        $scope.inputNameValue = 'host_genotype';
-
-        $scope.data = {
-          selectedStrain: null
-        };
-
-        $scope.strainSelected = function(strain) {
-          $scope.onStrainSelect({
-            strain: strain
-          });
-        };
-      }
-    };
-  };
-
-canto.directive('wildGenotypeRow', ['CantoGlobals', wildGenotypeRow]);
-
-
-var wildGenotypeView =
-  function () {
+var wildTypeGenotypePicker = function () {
     return {
       scope: {
         strains: '<',
-        showCheckBoxActions: '<',
         onStrainSelect: '&'
       },
       restrict: 'E',
       replace: true,
-      templateUrl: app_static_path + 'ng_templates/wild_genotype_view.html',
-      controller: function ($scope) {
-        $scope.onStrainChange = function (strain) {
-          $scope.onStrainSelect({
-            strain: strain
-          });
-        };
-      }
+      templateUrl: app_static_path + 'ng_templates/wild_type_genotype_picker.html',
     };
   };
 
-canto.directive('wildGenotypeView', [wildGenotypeView]);
-
+canto.directive('wildTypeGenotypePicker', [wildTypeGenotypePicker]);
 
 var metagenotypeGenotypePicker =
   function (CantoGlobals, CursGenotypeList, toaster, Metagenotype, StrainsService) {

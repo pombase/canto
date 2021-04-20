@@ -1753,6 +1753,15 @@ a:not([href]) {
   flex-shrink: 1;
 }
 
+.curs-wild-type-genotype-list {
+  font-size: 90%;
+  padding-left: 0;
+}
+.curs-wild-type-genotype-list > li > label {
+  font-weight: normal;
+  padding-left: 10px;
+}
+
 .curs-warning-container {
   display: flex;
   justify-content: flex-end;

@@ -26,13 +26,12 @@
 
         <div ng-if="isHost">
             <div class="curs-genotype-list-instructions curs-genotype-list-view-no-checkbox">
-                <span>Wild-type genotypes</span>
+                <span>Wild type genotypes</span>
             </div>
-            <wild-genotype-view
+            <wild-type-genotype-picker
                 strains="data.wildTypeStrains"
-                show-check-box-actions="true"
                 on-strain-select="onStrainChange(strain)">
-            </wild-genotype-view>
+            </wild-type-genotype-picker>
         </div>
 
         <p class="metagenotype-genotype-shortcut">
