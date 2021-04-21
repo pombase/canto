@@ -3,7 +3,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
-  entry: './root/static/js/canto-modules.js',
+  entry: './root/static/js/index.js',
   output: {
     filename: 'main.js',
     path: path.resolve(__dirname, 'root/dist'),
