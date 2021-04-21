@@ -39,7 +39,19 @@ module.exports = {
             }
           }
         ]
-      }
+      },
+      {
+        test: /\.(gif|png)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'images/'
+            }
+          }
+        ]
+      },
     ]
   },
   plugins: [
