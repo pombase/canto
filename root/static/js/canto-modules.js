@@ -7,6 +7,7 @@ import 'angular-ui-bootstrap';
 import 'angular-confirm';
 import 'angularjs-toaster';
 import 'angular-chart.js';
+import 'bootstrap';
 import 'tag-it';
 import {
   ferret_choose,
