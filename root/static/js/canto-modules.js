@@ -2145,7 +2145,7 @@ function arrayIntersection(arr1, arr2) {
 // only those where the "domain" term ID in the configuration matches one of
 // subsetIds.  Also ignore any configs where the "role" is "admin" and the
 // current, logged in user isn't an admin.
-function extensionConfFilter(allConfigs, subsetIds, userRole, annotationTypeName) {
+function extensionConfFilter(allConfigs, subsetIds, userRole, annotationTypeName, featureType) {
   return allConfigs.filter(isValidExtension).map(getProperties);
   
   function getProperties(config) {
