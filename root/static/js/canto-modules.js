@@ -2700,6 +2700,7 @@ var extensionBuilder =
         featureDisplayName: '@',
         isValid: '=',
         annotationTypeName: '@',
+        featureType: '<',
       },
       restrict: 'E',
       replace: true,
@@ -2729,9 +2730,13 @@ var extensionBuilder =
           if ($scope.extensionConfiguration.length > 0 &&
             subset_ids && subset_ids.length > 0) {
             var newConf =
-              extensionConfFilter($scope.extensionConfiguration, subset_ids,
-                                  CantoGlobals.current_user_is_admin ? 'admin' : 'user',
-                                  $scope.annotationTypeName);
+              extensionConfFilter(
+                $scope.extensionConfiguration,
+                subset_ids,
+                CantoGlobals.current_user_is_admin ? 'admin' : 'user',
+                $scope.annotationTypeName,
+                $scope.featureType
+              );
             copyObject(newConf, $scope.matchingConfigurations);
             return;
           }
