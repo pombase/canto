@@ -2145,48 +2145,57 @@ function arrayIntersection(arr1, arr2) {
 // only those where the "domain" term ID in the configuration matches one of
 // subsetIds.  Also ignore any configs where the "role" is "admin" and the
 // current, logged in user isn't an admin.
-function extensionConfFilter(allConfigs, subsetIds, role, annotationTypeName) {
-  return $.map(allConfigs,
-    function (conf) {
-      if (conf.role == 'admin' &&
-        role != 'admin') {
-        return;
-      }
-      if (conf.annotation_type_name &&
-          conf.annotation_type_name !== annotationTypeName) {
-        var found = false;
-        var parts = conf.annotation_type_name.split(/\|/);
+function extensionConfFilter(allConfigs, subsetIds, userRole, annotationTypeName) {
+  return allConfigs.filter(isValidExtension).map(getProperties);
+  
+  function getProperties(config) {
+    return {
+      displayText: config.display_text,
+      relation: config.allowed_relation,
+      domain: config.domain,
+      role: config.role,
+      range: config.range,
+      rangeValue: null,
+      cardinality: config.cardinality,
+    };
+  }
+  
+  function isValidExtension(config) {
+    var userNotPermitted = (config.role == 'admin' && userRole != 'admin');
+    var noAnnotationTypeMatch = (
+      !! config.annotation_type_name &&
+      config.annotation_type_name !== annotationTypeName
+    );
+    if (userNotPermitted) {
+      return false;
+    }
+    if (noAnnotationTypeMatch) {
+      var found = false;
+      var annotationTypeParts = config.annotation_type_name.split(/\|/);
 
-        $.map(parts, function(part) {
-          if (part.match(/\w/) && annotationTypeName === part) {
-            found = true;
-          }
-        });
-        if (!found) {
-          return;
-        }
+      found = annotationTypeParts.some(function (part) {
+        return part.match(/\w/) && annotationTypeName === part;
+      });
+      if (! found) {
+        return false;
       }
-      var matched =
-        $.grep(conf.subset_rel,
-          function (rel) {
-            return $.inArray(rel + "(" + conf.domain + ")", subsetIds) != -1;
-          }).length > 0;
-      if (matched) {
-        if (!conf.exclude_subset_ids ||
-          arrayIntersection(conf.exclude_subset_ids,
-            subsetIds).length == 0) {
-          return {
-            displayText: conf.display_text,
-            relation: conf.allowed_relation,
-            domain: conf.domain,
-            role: conf.role,
-            range: conf.range,
-            rangeValue: null,
-            cardinality: conf.cardinality,
-          };
-        }
-      }
+    }
+    var isSubsetIdMatch = config.subset_rel.some(function (subsetRelation) {
+      var subsetId = subsetRelation + '(' + config.domain + ')';
+      return subsetIds.indexOf(subsetId) !== -1;
     });
+    if (! isSubsetIdMatch) {
+      return false;
+    }
+    var isSubsetExcluded = (
+      !! config.exclude_subset_ids &&
+      arrayIntersection(config.exclude_subset_ids, subsetIds).length > 0
+    );
+    if (isSubsetExcluded) {
+      return false;
+    }
+    return true;
+  }
 }
 
 
