@@ -585,6 +585,21 @@ canto.service('CursGeneList', function ($q, Curs) {
 
     return q.promise;
   };
+
+  this.getGeneById = function (geneId) {
+    var genesPromise = this.geneList();
+    return genesPromise.then(function (genes) {
+      var filteredGenes = genes.filter(function (gene) {
+        return gene.gene_id === geneId;
+      });
+
+      if (filteredGenes.length === 1) {
+        return filteredGenes[0];
+      } else {
+        return null;
+      }
+    });
+  };
 });
 
 canto.service('CursGenotypeList', function ($q, Curs) {
