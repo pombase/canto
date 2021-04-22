@@ -3131,13 +3131,14 @@ canto.directive('extensionOrGroupDisplay',
 
 var ontologyWorkflowCtrl =
   function ($scope, toaster, $http, CantoGlobals, AnnotationTypeConfig, CantoService,
-    CantoConfig, CursGenotypeList, CursStateService, $attrs) {
+    CantoConfig, CursGeneList, CursGenotypeList, CursStateService, $attrs) {
     $scope.states = ['searching', 'selectingEvidence', 'buildExtension', 'commenting'];
 
     CursStateService.setState($scope.states[0]);
     $scope.annotationForServer = null;
     $scope.data = CursStateService;
     $scope.annotationTypeName = $attrs.annotationTypeName;
+    $scope.finalFeatureType = $attrs.featureType;
 
     $scope.extensionBuilderReady = false;
     $scope.matchingExtensionConfigs = null;
@@ -3149,17 +3150,20 @@ var ontologyWorkflowCtrl =
     $scope.storeInProgress = false;
 
     $scope.updateMatchingConfig = function () {
-      var subset_ids = $scope.termDetails.subset_ids;
+      var subsetIds = $scope.termDetails.subset_ids;
+      var matchingExtensionConfigs = [];
 
-      if (subset_ids && subset_ids.length > 0) {
-        $scope.matchingExtensionConfigs =
-          extensionConfFilter($scope.extensionConfiguration, subset_ids,
-                              CantoGlobals.current_user_is_admin ? 'admin' : 'user',
-                              $scope.annotationTypeName);
-        return;
+      if (subsetIds && subsetIds.length > 0) {
+        matchingExtensionConfigs = extensionConfFilter(
+          $scope.extensionConfiguration,
+          subsetIds,
+          CantoGlobals.current_user_is_admin ? 'admin' : 'user',
+          $scope.annotationTypeName,
+          $scope.finalFeatureType
+        );
       }
 
-      $scope.matchingExtensionConfigs = [];
+      $scope.matchingExtensionConfigs = matchingExtensionConfigs;
     };
 
     $scope.termFoundCallback =
@@ -3348,39 +3352,54 @@ var ontologyWorkflowCtrl =
       return 'normal';
     }
 
-    AnnotationTypeConfig.getByName($scope.annotationTypeName)
+    AnnotationTypeConfig
+      .getByName($scope.annotationTypeName)
       .then(function (annotationType) {
-        $scope.annotationType = annotationType;
+        var featureType = annotationType.feature_type;
+        var featureId = $attrs.featureId;
+        var backToFeatureUrl = (
+          CantoGlobals.curs_root_uri +
+          '/feature/' + featureType +
+          '/view/' + featureId
+        );
 
-        if (annotationType.evidence_codes.length == 0) {
+        if (annotationType.evidence_codes.length === 0) {
           // skip the evidence selection state if there are no evidence codes
           $scope.states = ['searching', 'buildExtension', 'commenting'];
         }
 
-        if (annotationType.feature_type == 'genotype') {
-          CursGenotypeList.getGenotypeById(Number($attrs.featureId))
+        if (featureType == 'genotype') {
+          CursGenotypeList
+            .getGenotypeById(Number(featureId))
             .then(function (genotype) {
               var organismMode = getOrganismMode(
                 genotype,
                 CantoGlobals.pathogen_host_mode
               );
-              $scope.backToFeatureUrl =
+              backToFeatureUrl = (
                 CantoGlobals.curs_root_uri +
                 '/' + getGenotypeManagePath(organismMode) +
-                '#/select/' + $attrs.featureId;
+                '#/select/' + featureId
+              );
             });
-        } else {
-          $scope.backToFeatureUrl =
-            CantoGlobals.curs_root_uri + '/feature/' + annotationType.feature_type +
-            '/view/' + $attrs.featureId;
+        } else if (featureType == 'gene' && CantoGlobals.pathogen_host_mode) {
+          CursGeneList
+            .getGeneById(Number(featureId))
+            .then(function (gene) {
+              var organismRole = gene.organism.pathogen_or_host;
+              $scope.finalFeatureType = organismRole + '_gene';
+            });
         }
+
+        $scope.annotationType = annotationType;
+        $scope.backToFeatureUrl = backToFeatureUrl;
       });
   };
 
 canto.controller('OntologyWorkflowCtrl',
   ['$scope', 'toaster', '$http', 'CantoGlobals',
     'AnnotationTypeConfig', 'CantoService',
-    'CantoConfig', 'CursGenotypeList', 'CursStateService', '$attrs',
+    'CantoConfig', 'CursGeneList', 'CursGenotypeList', 'CursStateService', '$attrs',
     ontologyWorkflowCtrl
   ]);
 
