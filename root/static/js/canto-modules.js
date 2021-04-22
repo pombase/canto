@@ -2166,7 +2166,12 @@ function extensionConfFilter(allConfigs, subsetIds, userRole, annotationTypeName
       !! config.annotation_type_name &&
       config.annotation_type_name !== annotationTypeName
     );
-    if (userNotPermitted) {
+    var wrongFeatureType = (
+      !! featureType && !! config.feature_type &&  
+      config.feature_type != featureType
+    );
+
+    if (userNotPermitted || wrongFeatureType) {
       return false;
     }
     if (noAnnotationTypeMatch) {
