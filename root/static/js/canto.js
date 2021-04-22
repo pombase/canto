@@ -1,7 +1,9 @@
 // @ts-check
 
 import $ from 'jquery';
-import 'jquery-ui';
+import 'jquery-ui/ui/widgets/autocomplete';
+import 'jquery-ui/ui/widgets/tooltip';
+import 'jquery-ui/ui/widgets/dialog';
 import 'jquery-form';
 import {error as pnotify_error} from '@pnotify/core';
 
