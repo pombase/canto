@@ -1,0 +1,14 @@
+<div>
+  <ul class="curs-wild-type-genotype-list">
+    <li ng-repeat="strain in strains track by strain.strain_name">
+      <input
+        id="wild-type-strain-{{$index}}"
+        type="radio"
+        name="host_genotype"
+        ng-model="selectedStrain"
+        ng-click="onStrainSelect({strain: strain})"
+        value="{{strain}}"
+      ><label for="wild-type-strain-{{$index}}">{{strain.strain_name}}</label>
+    </li>
+  </ul>
+</div>
