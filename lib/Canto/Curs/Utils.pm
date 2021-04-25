@@ -132,7 +132,9 @@ sub _get_directional_interaction_annotations
 
     my $interaction = undef;
 
-    if (!exists $interactions{$key}) {
+    if (exists $interactions{$key}) {
+      $interaction = $interactions{$key};
+    } else {
       my $genotype_a = $interaction_row->genotype_a();
       my $genotype_b = $genotype_annotation_b->genotype();
 
