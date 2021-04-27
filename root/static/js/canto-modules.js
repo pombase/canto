@@ -2241,7 +2241,7 @@ canto.controller('ExtensionBuilderDialogCtrl',
   ]);
 
 
-function openExtensionBuilderDialog($uibModal, extension, termId, featureDisplayName, annotationTypeName) {
+function openExtensionBuilderDialog($uibModal, extension, termId, featureDisplayName, annotationTypeName, featureType) {
   return $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/extension_builder_dialog.html',
     controller: 'ExtensionBuilderDialogCtrl',
@@ -2255,6 +2255,7 @@ function openExtensionBuilderDialog($uibModal, extension, termId, featureDisplay
           termId: termId,
           featureDisplayName: featureDisplayName,
           annotationTypeName: annotationTypeName,
+          featureType: featureType,
         };
       },
     },
