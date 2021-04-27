@@ -22,7 +22,7 @@ cmp_deeply($conf[0],
              'cardinality' => [0,1],
              'allowed_relation' => 'has_substrate',
              'role' => 'user',
-             'annotation_type_name' => undef,
+             'annotation_type_name' => 'cellular_component',
            });
 
 cmp_deeply($conf[1]->{cardinality}, ['*']);

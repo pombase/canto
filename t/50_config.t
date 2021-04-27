@@ -99,7 +99,7 @@ cmp_deeply(
       'help_text' => '',
       'cardinality' => ['0', '1'],
       'role' => 'user',
-      'annotation_type_name' => undef,
+      'annotation_type_name' => 'cellular_component',
     },
     {
       'domain' => 'GO:0016023',
@@ -115,7 +115,7 @@ cmp_deeply(
       'help_text' => '',
       'cardinality' => ['*'],
       'role' => 'user',
-      'annotation_type_name' => undef,
+      'annotation_type_name' => 'cellular_component',
     },
     {
       'domain' => 'GO:0022857',
@@ -126,7 +126,7 @@ cmp_deeply(
       'help_text' => '',
       'cardinality' => ['0', '1'],
       'role' => 'user',
-      'annotation_type_name' => undef,
+      'annotation_type_name' => 'biological_process',
     },
     {
       'domain' => 'GO:0022857',
@@ -158,7 +158,7 @@ cmp_deeply(
       'help_text' => '',
       'cardinality' => ['0', '1'],
       'role' => 'user',
-      'annotation_type_name' => undef,
+      'annotation_type_name' => 'biological_process',
     },
     {
       'domain' => 'GO:0006810',
@@ -170,7 +170,7 @@ cmp_deeply(
       'help_text' => '',
       'cardinality' => ['0', '1'],
       'role' => 'user',
-      'annotation_type_name' => undef,
+      'annotation_type_name' => 'biological_process',
     },
     {
       'domain' => 'GO:0034762',
@@ -181,7 +181,7 @@ cmp_deeply(
       'help_text' => '',
       'cardinality' => ['0', '1'],
       'role' => 'user',
-      'annotation_type_name' => undef,
+      'annotation_type_name' => 'biological_process',
     },
     {
       'domain' => 'FYPO:0000002',
@@ -192,7 +192,7 @@ cmp_deeply(
       'help_text' => '',
       'cardinality' => ['0', '2'],
       'role' => 'user',
-      'annotation_type_name' => undef,
+      'annotation_type_name' => 'phenotype',
     },
     {
       'domain' => 'FYPO:0000002',
@@ -211,7 +211,7 @@ cmp_deeply(
       'help_text' => '',
       'cardinality' => ['0', '1'],
       'role' => 'user',
-      'annotation_type_name' => undef,
+      'annotation_type_name' => 'phenotype',
     }
   ]
 );
