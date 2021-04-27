@@ -100,6 +100,7 @@ cmp_deeply(
       'cardinality' => ['0', '1'],
       'role' => 'user',
       'annotation_type_name' => 'cellular_component',
+      'feature_type' => 'gene',
     },
     {
       'domain' => 'GO:0016023',
@@ -116,6 +117,7 @@ cmp_deeply(
       'cardinality' => ['*'],
       'role' => 'user',
       'annotation_type_name' => 'cellular_component',
+      'feature_type' => 'gene',
     },
     {
       'domain' => 'GO:0022857',
@@ -127,6 +129,7 @@ cmp_deeply(
       'cardinality' => ['0', '1'],
       'role' => 'user',
       'annotation_type_name' => 'biological_process',
+      'feature_type' => 'gene',
     },
     {
       'domain' => 'GO:0022857',
@@ -143,6 +146,7 @@ cmp_deeply(
       'cardinality' => ['0', '1'],
       'role' => 'user',
       'annotation_type_name' => 'biological_process',
+      'feature_type' => 'gene',
     },
     {
       'domain' => 'GO:0022857',
@@ -159,6 +163,7 @@ cmp_deeply(
       'cardinality' => ['0', '1'],
       'role' => 'user',
       'annotation_type_name' => 'biological_process',
+      'feature_type' => 'gene',
     },
     {
       'domain' => 'GO:0006810',
@@ -171,6 +176,7 @@ cmp_deeply(
       'cardinality' => ['0', '1'],
       'role' => 'user',
       'annotation_type_name' => 'biological_process',
+      'feature_type' => 'gene',
     },
     {
       'domain' => 'GO:0034762',
@@ -182,6 +188,7 @@ cmp_deeply(
       'cardinality' => ['0', '1'],
       'role' => 'user',
       'annotation_type_name' => 'biological_process',
+      'feature_type' => 'gene',
     },
     {
       'domain' => 'FYPO:0000002',
@@ -193,6 +200,7 @@ cmp_deeply(
       'cardinality' => ['0', '2'],
       'role' => 'user',
       'annotation_type_name' => 'phenotype',
+      'feature_type' => 'genotype',
     },
     {
       'domain' => 'FYPO:0000002',
@@ -212,6 +220,7 @@ cmp_deeply(
       'cardinality' => ['0', '1'],
       'role' => 'user',
       'annotation_type_name' => 'phenotype',
+      'feature_type' => 'genotype',
     }
   ]
 );
