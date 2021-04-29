@@ -7298,13 +7298,14 @@ var annotationEditDialogCtrl =
       };
 
     $scope.editExtension = function () {
+      var featureType = $scope.featureSubtype || $scope.annotation.feature_type;
       var editPromise = openExtensionBuilderDialog(
         $uibModal,
         $scope.annotation.extension,
         $scope.annotation.term_ontid,
         $scope.currentFeatureDisplayName,
         $scope.annotationTypeName,
-        $scope.featureSubtype
+        featureType
       );
 
       editPromise.then(function (result) {
