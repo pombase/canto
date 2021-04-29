@@ -53,7 +53,7 @@
 </div>
 <p>PHI-Canto supports the following extensions for disease annotations:</p>
 <ul>
-<li><strong>Host tissue infected:</strong> relates a disease annotation to the tissue type (or anatomical region) where the disease occurred. Terms describing the tissue types are specified by the <a href="https://brenda-enzymes.org/ontology.php?ontology_id=3">Brenda Tissue Ontology</a>.</li>
+<li><strong>Host tissue infected:</strong> relates a disease annotation to the tissue type (or anatomical region) where the disease occurred. Terms describing the tissue types are specified by the <a href="https://brenda-enzymes.org/ontology.php?ontology_id=3">BRENDA Tissue Ontology</a>.</li>
 </ul>
 <h3 id="finalizing_the_annotation">Finalizing the annotation</h3>
 <p>Once you have entered all the data for your annotation, you will see a confirmation page that shows a preview of your annotation before it is created. The annotation preview will look like this:</p>
