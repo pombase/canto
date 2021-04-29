@@ -6667,6 +6667,7 @@ var annotationEditDialogCtrl =
     $scope.featureEditable = args.featureEditable;
     $scope.matchingConfigurations = [];
     $scope.termSuggestionVisible = false;
+    $scope.featureSubtype = null;
 
     if (args.annotation.term_suggestion_name ||
         args.annotation.term_suggestion_definition) {
@@ -6701,6 +6702,12 @@ var annotationEditDialogCtrl =
       $scope.selectedOrganism = args.annotation.organism.taxonid;
       if (!$scope.initialSelectedOrganismId) {
         $scope.initialSelectedOrganismId = args.annotation.organism.taxonid;
+      }
+      if (CantoGlobals.pathogen_host_mode) {
+        $scope.featureSubtype = setFeatureSubtype(
+          args.annotation.feature_type,
+          args.annotation.organism
+        );
       }
     }
 
@@ -7013,6 +7020,12 @@ var annotationEditDialogCtrl =
 
     $scope.organismSelected = function (organism) {
       $scope.selectedOrganism = organism;
+      if (CantoGlobals.pathogen_host_mode) {
+        $scope.featureSubtype = setFeatureSubtype(
+          $scope.annotation.feature_type,
+          organism
+        );
+      }
       $scope.allPromise.then(function () {
         setFilteredFeatures();
       });
@@ -7140,6 +7153,16 @@ var annotationEditDialogCtrl =
                     };
                   });
         });
+    }
+
+    function setFeatureSubtype(featureType, organism) {
+      if (organism) {
+        if (featureType == 'gene') {
+          var organismRole = organism.pathogen_or_host;
+          return organismRole + '_gene';
+        }
+      }
+      return null;
     }
 
     function featureIdWatcher(featureId) {
@@ -7275,11 +7298,14 @@ var annotationEditDialogCtrl =
       };
 
     $scope.editExtension = function () {
-      var editPromise =
-        openExtensionBuilderDialog($uibModal, $scope.annotation.extension,
-                                   $scope.annotation.term_ontid,
-                                   $scope.currentFeatureDisplayName,
-                                   $scope.annotationTypeName);
+      var editPromise = openExtensionBuilderDialog(
+        $uibModal,
+        $scope.annotation.extension,
+        $scope.annotation.term_ontid,
+        $scope.currentFeatureDisplayName,
+        $scope.annotationTypeName,
+        $scope.featureSubtype
+      );
 
       editPromise.then(function (result) {
         angular.copy(result.extension, $scope.annotation.extension);
