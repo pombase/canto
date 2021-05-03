@@ -45,7 +45,7 @@ databases.
           </li>
           <li>
   <a href="https://www.flybase.org">FlyBase</a> uses a Canto instance extended and
-  configured to support <i>drosophila</i> phenotype and genetic interaction annotation
+  configured to support <i>Drosophila</i> phenotype and genetic interaction annotation
           </li>
           <li>
   We are currently configuring Canto instance to support community
