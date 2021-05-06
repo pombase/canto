@@ -1465,6 +1465,8 @@ var pubmedIdStart =
           results: null,
         };
         $scope.userIsAdmin = CantoGlobals.is_admin_user == "1";
+        $scope.publicationPageUrl = "";
+
         CantoConfig.get('public_mode')
           .then(function (data) {
             $scope.publicMode = data.value != "0";
@@ -1483,6 +1485,7 @@ var pubmedIdStart =
             } else {
               $scope.data.results = results;
             }
+            $scope.publicationPageUrl = getPublicationPageUrl();
           }).
           catch(function (response) {
             var data = response.data;
@@ -1527,6 +1530,19 @@ var pubmedIdStart =
               '/restart_approval/';
           }
         };
+
+        function getPublicationPageUrl() {
+          var url = "";
+          if ($scope.userIsAdmin && $scope.data.results) {
+            var pubId = $scope.data.results.pub.pub_id;
+            url = (
+              CantoGlobals.application_root +
+              '/view/object/pub/' + pubId +
+              '?model=track'
+            );
+          }
+          return url;
+        }
       }
     };
   };
