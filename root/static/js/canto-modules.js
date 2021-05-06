@@ -6704,7 +6704,7 @@ var annotationEditDialogCtrl =
         $scope.initialSelectedOrganismId = args.annotation.organism.taxonid;
       }
       if (CantoGlobals.pathogen_host_mode) {
-        $scope.featureSubtype = setFeatureSubtype(
+        $scope.featureSubtype = getFeatureSubtype(
           args.annotation.feature_type,
           args.annotation.organism
         );
@@ -7021,7 +7021,7 @@ var annotationEditDialogCtrl =
     $scope.organismSelected = function (organism) {
       $scope.selectedOrganism = organism;
       if (CantoGlobals.pathogen_host_mode) {
-        $scope.featureSubtype = setFeatureSubtype(
+        $scope.featureSubtype = getFeatureSubtype(
           $scope.annotation.feature_type,
           organism
         );
@@ -7155,7 +7155,7 @@ var annotationEditDialogCtrl =
         });
     }
 
-    function setFeatureSubtype(featureType, organism) {
+    function getFeatureSubtype(featureType, organism) {
       if (organism) {
         if (featureType == 'gene') {
           var organismRole = organism.pathogen_or_host;
