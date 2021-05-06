@@ -7244,15 +7244,23 @@ var annotationEditDialogCtrl =
           .then(function (data) {
             var extensionConfiguration = data[0];
             var termDetails = data[1];
-
             var subset_ids = termDetails.subset_ids;
+            var featureType = $scope.featureSubtype || $scope.annotation.feature_type;
 
-            if (extensionConfiguration.length > 0 &&
-                subset_ids && subset_ids.length > 0) {
-              $scope.matchingConfigurations =
-                extensionConfFilter(extensionConfiguration, subset_ids,
-                                    CantoGlobals.current_user_is_admin ? 'admin' : 'user',
-                                    $scope.annotationTypeName);
+            var hasExtensionsAndSubsets = (
+              extensionConfiguration.length > 0 &&
+              subset_ids &&
+              subset_ids.length > 0
+            );
+
+            if (hasExtensionsAndSubsets) {
+              $scope.matchingConfigurations = extensionConfFilter(
+                extensionConfiguration,
+                subset_ids,
+                CantoGlobals.current_user_is_admin ? 'admin' : 'user',
+                $scope.annotationTypeName,
+                featureType,
+              );
             } else {
               $scope.matchingConfigurations = [];
             }
