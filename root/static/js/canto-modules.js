@@ -1487,6 +1487,7 @@ var pubmedIdStart =
               $scope.data.results = results;
             }
             $scope.publicationPageUrl = getPublicationPageUrl();
+            $scope.allowRestartApproval = getRestartApprovalPermission();
           }).
           catch(function (response) {
             var data = response.data;
@@ -1545,6 +1546,15 @@ var pubmedIdStart =
             );
           }
           return url;
+        }
+        
+        function getRestartApprovalPermission() {
+          var sessionExists = ($scope.data.results && $scope.data.results.sessions.length > 0);
+          if ($scope.userIsAdmin && sessionExists) {
+            var sessionState = $scope.data.results.sessions[0].state;
+            return sessionState == 'APPROVED';
+          }
+          return false;
         }
       }
     };
