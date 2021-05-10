@@ -16,7 +16,7 @@
         Please contact the curation team to suggest changes to the
         annotation.</span>
       </div>
-      <span ng-if="userIsAdmin">
+      <span ng-if="userIsAdmin && publicationPageUrl">
         Admin only: <a href="{{publicationPageUrl}}">publication page</a>.
       </span>
       <div ng-if="publicMode">
