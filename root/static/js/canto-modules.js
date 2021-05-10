@@ -1465,6 +1465,7 @@ var pubmedIdStart =
           results: null,
         };
         $scope.userIsAdmin = CantoGlobals.is_admin_user == "1";
+        $scope.allowRestartApproval = false;
         $scope.publicationPageUrl = "";
 
         CantoConfig.get('public_mode')

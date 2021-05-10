@@ -60,7 +60,7 @@
         <span ng-if="data.results.sessions.length == 0">Continue</span>
       </button>
       <button
-        ng-if="userIsAdmin && data.results.sessions.length > 0"
+        ng-if="allowRestartApproval"
         type="button"
         class="btn btn-primary"
         ng-click="restartApproval()">Restart approval</button>
