@@ -1508,18 +1508,18 @@ var pubmedIdStart =
         };
 
         $scope.startCuration = function () {
+          var root = CantoGlobals.application_root;
           loadingStart();
           if ($scope.data.results.sessions.length > 0) {
+            var sessionId = $scope.data.results.sessions[0].session;
             if ($scope.publicMode) {
-              window.location.href =
-                CantoGlobals.application_root + '/curs/' + $scope.data.results.sessions[0];
+              window.location.href = root + '/curs/' + sessionId;
             } else {
-              window.location.href =
-                CantoGlobals.application_root + '/curs/' + $scope.data.results.sessions[0] + '/ro';
+              window.location.href = root + '/curs/' + sessionId + '/ro';
             }
           } else {
-            window.location.href =
-              CantoGlobals.application_root + '/tools/start/' + $scope.data.results.pub.uniquename;
+            var publicationName = $scope.data.results.pub.uniquename;
+            window.location.href = root + '/tools/start/' + publicationName;
           }
         };
 
