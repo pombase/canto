@@ -1485,9 +1485,9 @@ var pubmedIdStart =
               toaster.pop('error', results.message);
             } else {
               $scope.data.results = results;
+              $scope.publicationPageUrl = getPublicationPageUrl();
+              $scope.allowRestartApproval = getRestartApprovalPermission();
             }
-            $scope.publicationPageUrl = getPublicationPageUrl();
-            $scope.allowRestartApproval = getRestartApprovalPermission();
           }).
           catch(function (response) {
             var data = response.data;
