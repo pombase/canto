@@ -1525,10 +1525,12 @@ var pubmedIdStart =
         };
 
         $scope.restartApproval = function () {
-          if ($scope.userIsAdmin) {
-            window.location.href = CantoGlobals.application_root + '/curs/' +
-              $scope.data.results.sessions[0] +
-              '/restart_approval/';
+          var sessionId = $scope.data.results.sessions[0].session;
+          var sessionLink = (
+            CantoGlobals.application_root + '/curs/' + sessionId + '/restart_approval/'
+          );
+          if ($scope.allowRestartApproval) {
+            window.location.href = sessionLink;
           }
         };
 
