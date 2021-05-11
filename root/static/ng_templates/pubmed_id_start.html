@@ -16,7 +16,7 @@
         Please contact the curation team to suggest changes to the
         annotation.</span>
       </div>
-      <span ng-if="userIsAdmin">
+      <span ng-if="userIsAdmin && publicationPageUrl">
         Admin only: <a href="{{publicationPageUrl}}">publication page</a>.
       </span>
       <div ng-if="publicMode">
@@ -60,7 +60,7 @@
         <span ng-if="data.results.sessions.length == 0">Continue</span>
       </button>
       <button
-        ng-if="userIsAdmin && data.results.sessions.length > 0"
+        ng-if="allowRestartApproval"
         type="button"
         class="btn btn-primary"
         ng-click="restartApproval()">Restart approval</button>

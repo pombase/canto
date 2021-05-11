@@ -1465,6 +1465,7 @@ var pubmedIdStart =
           results: null,
         };
         $scope.userIsAdmin = CantoGlobals.is_admin_user == "1";
+        $scope.allowRestartApproval = false;
         $scope.publicationPageUrl = "";
 
         CantoConfig.get('public_mode')
@@ -1484,8 +1485,9 @@ var pubmedIdStart =
               toaster.pop('error', results.message);
             } else {
               $scope.data.results = results;
+              $scope.publicationPageUrl = getPublicationPageUrl();
+              $scope.allowRestartApproval = getRestartApprovalPermission();
             }
-            $scope.publicationPageUrl = getPublicationPageUrl();
           }).
           catch(function (response) {
             var data = response.data;
@@ -1524,10 +1526,12 @@ var pubmedIdStart =
         };
 
         $scope.restartApproval = function () {
-          if ($scope.userIsAdmin) {
-            window.location.href = CantoGlobals.application_root + '/curs/' +
-              $scope.data.results.sessions[0] +
-              '/restart_approval/';
+          var sessionId = $scope.data.results.sessions[0].session;
+          var sessionLink = (
+            CantoGlobals.application_root + '/curs/' + sessionId + '/restart_approval/'
+          );
+          if ($scope.allowRestartApproval) {
+            window.location.href = sessionLink;
           }
         };
 
@@ -1542,6 +1546,15 @@ var pubmedIdStart =
             );
           }
           return url;
+        }
+        
+        function getRestartApprovalPermission() {
+          var sessionExists = ($scope.data.results && $scope.data.results.sessions.length > 0);
+          if ($scope.userIsAdmin && sessionExists) {
+            var sessionState = $scope.data.results.sessions[0].state;
+            return sessionState == 'APPROVED';
+          }
+          return false;
         }
       }
     };
