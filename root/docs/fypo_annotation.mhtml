@@ -719,3 +719,14 @@ phenotype terms (e.g. when you have only one or a few still pictures).
   transcription"). In either case, the specific gene(s) assayed can be
   put in annotation extensions.
 </p>
+
+<h3>Septation</h3>
+<p>
+  Usually, "abnormal septum assembly" (FYPO:0000117), "normal septum
+  assembly" (FYPO:0000673), or one of the more specific "septum
+  assembly" terms will apply. Also consider annotating to a
+  "actomyosin contractile ring contraction" term (abnormal,
+  FYPO:0001364; normal, FYPO:0004097; or a more specific term) in
+  cases where "septation" is used to refer to the coordinated
+  processes of ring contraction and septum formation.
+</p>
