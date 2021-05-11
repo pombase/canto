@@ -1193,6 +1193,17 @@ span.canto-select-buttons {
 .ui-dialog .ui-dialog-titlebar, .curs-ui-dialog-subheading .ui-dialog-title {
    padding: .2em 1em .1em;
 }
+/* Fix to show close icon on jQuery UI dialogs */
+/* from: https://stackoverflow.com/a/39618690 */
+.ui-dialog-titlebar-close:after {
+  content: '';
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  background-image: url(jquery-ui/themes/base/images/ui-icons_777777_256x240.png);
+  background-position: -97px -130px;
+  background-repeat: no-repeat;
+}
 
 .curs-ui-dialog-subheading {
   margin-left: -1em;
