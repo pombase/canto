@@ -2057,7 +2057,7 @@ available_annotation_type_list:
   - name: wt_rna_expression
     category: ontology
     ontology_size: small
-    namespace: PomGeneEx
+    namespace: PomGeneExRNA
     display_name: 'wild-type RNA level'
     feature_type: 'gene'
     broad_term_suggestions: ~
@@ -2075,7 +2075,7 @@ available_annotation_type_list:
   - name: wt_protein_expression
     category: ontology
     ontology_size: small
-    namespace: PomGeneEx
+    namespace: PomGeneExProt
     display_name: 'wild-type Protein level'
     feature_type: 'gene'
     broad_term_suggestions: ~
