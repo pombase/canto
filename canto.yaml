@@ -25,7 +25,7 @@ header_image: logos/curation_tool.png
 
 canto_url: https://curation.pombase.org/
 
-app_version: v1628
+app_version: v1629
 
 schema_version: 34
 
@@ -2080,7 +2080,7 @@ available_annotation_type_list:
   - name: wt_rna_expression
     category: ontology
     ontology_size: small
-    namespace: PomGeneEx
+    namespace: PomGeneExRNA
     display_name: 'wild-type RNA level'
     feature_type: 'gene'
     broad_term_suggestions: ~
@@ -2098,7 +2098,7 @@ available_annotation_type_list:
   - name: wt_protein_expression
     category: ontology
     ontology_size: small
-    namespace: PomGeneEx
+    namespace: PomGeneExProt
     display_name: 'wild-type Protein level'
     feature_type: 'gene'
     broad_term_suggestions: ~
