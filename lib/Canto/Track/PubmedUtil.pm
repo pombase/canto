@@ -68,12 +68,13 @@ sub _get_url
 
     if ($res->is_success) {
       if ($res->content()) {
-        my $decoded_content = $res->decoded_content(charset => 'iso-8859-1');
+        my $decoded_content = $res->decoded_content(charset => 'utf-8');
         return $decoded_content;
       } else {
         die "query returned no content: $url";
       }
     } else {
+      warn "failed to get $url\n  - retrying\n";
       # wait a bit and try again
       sleep 1.5;
     }

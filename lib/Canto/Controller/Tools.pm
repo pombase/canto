@@ -16,6 +16,7 @@ use Canto::Util qw(trim);
 use Canto::Track::CuratorManager;
 use Canto::ChadoDB;
 use Canto::Chado::Utils;
+use Canto::Curs::State qw/:all/;
 
 use Moose;
 
@@ -286,13 +287,22 @@ sub pubmed_id_lookup : Local Form {
 
       my $sessions_rs = $pub->curs();
       if ($sessions_rs->count() > 0) {
-        my $first_session = $sessions_rs->first();
+        my $config = $c->config();
+        my $state = Canto::Curs::State->new(config => $config);
 
-        my $curator_manager = Canto::Track::CuratorManager->new(config => $c->config());
+        my @sessions = map {
+          my $curs_key = $_->curs_key();
+          my $schema = Canto::Curs::get_schema_for_key($config, $curs_key);
 
-        if (defined $curator_manager->current_curator($first_session->curs_key())) {
-          $result->{sessions} = [ map { $_->curs_key(); } $sessions_rs->all() ],
-        }
+          my ($session_state) = $state->get_state($schema);
+
+          {
+            session => $curs_key,
+              state => $session_state,
+            }
+        } $sessions_rs->all();
+
+        $result->{sessions} = \@sessions;
       }
     } else {
       $result = {

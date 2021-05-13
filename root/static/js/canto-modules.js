@@ -585,6 +585,21 @@ canto.service('CursGeneList', function ($q, Curs) {
 
     return q.promise;
   };
+
+  this.getGeneById = function (geneId) {
+    var genesPromise = this.geneList();
+    return genesPromise.then(function (genes) {
+      var filteredGenes = genes.filter(function (gene) {
+        return gene.gene_id === geneId;
+      });
+
+      if (filteredGenes.length === 1) {
+        return filteredGenes[0];
+      } else {
+        return null;
+      }
+    });
+  };
 });
 
 canto.service('CursGenotypeList', function ($q, Curs) {
@@ -1467,6 +1482,9 @@ var pubmedIdStart =
           results: null,
         };
         $scope.userIsAdmin = CantoGlobals.is_admin_user == "1";
+        $scope.allowRestartApproval = false;
+        $scope.publicationPageUrl = "";
+
         CantoConfig.get('public_mode')
           .then(function (data) {
             $scope.publicMode = data.value != "0";
@@ -1484,6 +1502,8 @@ var pubmedIdStart =
               toaster.pop('error', results.message);
             } else {
               $scope.data.results = results;
+              $scope.publicationPageUrl = getPublicationPageUrl();
+              $scope.allowRestartApproval = getRestartApprovalPermission();
             }
           }).
           catch(function (response) {
@@ -1507,28 +1527,52 @@ var pubmedIdStart =
         };
 
         $scope.startCuration = function () {
+          var root = CantoGlobals.application_root;
           loadingStart();
           if ($scope.data.results.sessions.length > 0) {
+            var sessionId = $scope.data.results.sessions[0].session;
             if ($scope.publicMode) {
-              window.location.href =
-                CantoGlobals.application_root + '/curs/' + $scope.data.results.sessions[0];
+              window.location.href = root + '/curs/' + sessionId;
             } else {
-              window.location.href =
-                CantoGlobals.application_root + '/curs/' + $scope.data.results.sessions[0] + '/ro';
+              window.location.href = root + '/curs/' + sessionId + '/ro';
             }
           } else {
-            window.location.href =
-              CantoGlobals.application_root + '/tools/start/' + $scope.data.results.pub.uniquename;
+            var publicationName = $scope.data.results.pub.uniquename;
+            window.location.href = root + '/tools/start/' + publicationName;
           }
         };
 
         $scope.restartApproval = function () {
-          if ($scope.userIsAdmin) {
-            window.location.href = CantoGlobals.application_root + '/curs/' +
-              $scope.data.results.sessions[0] +
-              '/restart_approval/';
+          var sessionId = $scope.data.results.sessions[0].session;
+          var sessionLink = (
+            CantoGlobals.application_root + '/curs/' + sessionId + '/restart_approval/'
+          );
+          if ($scope.allowRestartApproval) {
+            window.location.href = sessionLink;
           }
         };
+
+        function getPublicationPageUrl() {
+          var url = "";
+          if ($scope.userIsAdmin && $scope.data.results) {
+            var pubId = $scope.data.results.pub.pub_id;
+            url = (
+              CantoGlobals.application_root +
+              '/view/object/pub/' + pubId +
+              '?model=track'
+            );
+          }
+          return url;
+        }
+        
+        function getRestartApprovalPermission() {
+          var sessionExists = ($scope.data.results && $scope.data.results.sessions.length > 0);
+          if ($scope.userIsAdmin && sessionExists) {
+            var sessionState = $scope.data.results.sessions[0].state;
+            return sessionState == 'APPROVED';
+          }
+          return false;
+        }
       }
     };
   };
@@ -2147,48 +2191,62 @@ function arrayIntersection(arr1, arr2) {
 // only those where the "domain" term ID in the configuration matches one of
 // subsetIds.  Also ignore any configs where the "role" is "admin" and the
 // current, logged in user isn't an admin.
-function extensionConfFilter(allConfigs, subsetIds, role, annotationTypeName) {
-  return $.map(allConfigs,
-    function (conf) {
-      if (conf.role == 'admin' &&
-        role != 'admin') {
-        return;
-      }
-      if (conf.annotation_type_name &&
-          conf.annotation_type_name !== annotationTypeName) {
-        var found = false;
-        var parts = conf.annotation_type_name.split(/\|/);
+function extensionConfFilter(allConfigs, subsetIds, userRole, annotationTypeName, featureType) {
+  return allConfigs.filter(isValidExtension).map(getProperties);
+  
+  function getProperties(config) {
+    return {
+      displayText: config.display_text,
+      relation: config.allowed_relation,
+      domain: config.domain,
+      role: config.role,
+      range: config.range,
+      rangeValue: null,
+      cardinality: config.cardinality,
+    };
+  }
+  
+  function isValidExtension(config) {
+    var userNotPermitted = (config.role == 'admin' && userRole != 'admin');
+    var noAnnotationTypeMatch = (
+      !! config.annotation_type_name &&
+      config.annotation_type_name !== annotationTypeName
+    );
+    var wrongFeatureType = (
+      !! featureType && !! config.feature_type &&  
+      config.feature_type != featureType
+    );
 
-        $.map(parts, function(part) {
-          if (part.match(/\w/) && annotationTypeName === part) {
-            found = true;
-          }
-        });
-        if (!found) {
-          return;
-        }
+    if (userNotPermitted || wrongFeatureType) {
+      return false;
+    }
+    if (noAnnotationTypeMatch) {
+      var found = false;
+      var annotationTypeParts = config.annotation_type_name.split(/\|/);
+
+      found = annotationTypeParts.some(function (part) {
+        return part.match(/\w/) && annotationTypeName === part;
+      });
+      if (! found) {
+        return false;
       }
-      var matched =
-        $.grep(conf.subset_rel,
-          function (rel) {
-            return $.inArray(rel + "(" + conf.domain + ")", subsetIds) != -1;
-          }).length > 0;
-      if (matched) {
-        if (!conf.exclude_subset_ids ||
-          arrayIntersection(conf.exclude_subset_ids,
-            subsetIds).length == 0) {
-          return {
-            displayText: conf.display_text,
-            relation: conf.allowed_relation,
-            domain: conf.domain,
-            role: conf.role,
-            range: conf.range,
-            rangeValue: null,
-            cardinality: conf.cardinality,
-          };
-        }
-      }
+    }
+    var isSubsetIdMatch = config.subset_rel.some(function (subsetRelation) {
+      var subsetId = subsetRelation + '(' + config.domain + ')';
+      return subsetIds.indexOf(subsetId) !== -1;
     });
+    if (! isSubsetIdMatch) {
+      return false;
+    }
+    var isSubsetExcluded = (
+      !! config.exclude_subset_ids &&
+      arrayIntersection(config.exclude_subset_ids, subsetIds).length > 0
+    );
+    if (isSubsetExcluded) {
+      return false;
+    }
+    return true;
+  }
 }
 
 
@@ -2214,7 +2272,7 @@ canto.controller('ExtensionBuilderDialogCtrl',
   ]);
 
 
-function openExtensionBuilderDialog($uibModal, extension, termId, featureDisplayName, annotationTypeName) {
+function openExtensionBuilderDialog($uibModal, extension, termId, featureDisplayName, annotationTypeName, featureType) {
   return $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/extension_builder_dialog.html',
     controller: 'ExtensionBuilderDialogCtrl',
@@ -2228,6 +2286,7 @@ function openExtensionBuilderDialog($uibModal, extension, termId, featureDisplay
           termId: termId,
           featureDisplayName: featureDisplayName,
           annotationTypeName: annotationTypeName,
+          featureType: featureType,
         };
       },
     },
@@ -2673,6 +2732,7 @@ var extensionBuilder =
         featureDisplayName: '@',
         isValid: '=',
         annotationTypeName: '@',
+        featureType: '<',
       },
       restrict: 'E',
       replace: true,
@@ -2702,9 +2762,13 @@ var extensionBuilder =
           if ($scope.extensionConfiguration.length > 0 &&
             subset_ids && subset_ids.length > 0) {
             var newConf =
-              extensionConfFilter($scope.extensionConfiguration, subset_ids,
-                                  CantoGlobals.current_user_is_admin ? 'admin' : 'user',
-                                  $scope.annotationTypeName);
+              extensionConfFilter(
+                $scope.extensionConfiguration,
+                subset_ids,
+                CantoGlobals.current_user_is_admin ? 'admin' : 'user',
+                $scope.annotationTypeName,
+                $scope.featureType
+              );
             copyObject(newConf, $scope.matchingConfigurations);
             return;
           }
@@ -3104,13 +3168,14 @@ canto.directive('extensionOrGroupDisplay',
 
 var ontologyWorkflowCtrl =
   function ($scope, toaster, $http, CantoGlobals, AnnotationTypeConfig, CantoService,
-    CantoConfig, CursGenotypeList, CursStateService, $attrs) {
+    CantoConfig, CursGeneList, CursGenotypeList, CursStateService, $attrs) {
     $scope.states = ['searching', 'selectingEvidence', 'buildExtension', 'commenting'];
 
     CursStateService.setState($scope.states[0]);
     $scope.annotationForServer = null;
     $scope.data = CursStateService;
     $scope.annotationTypeName = $attrs.annotationTypeName;
+    $scope.finalFeatureType = $attrs.featureType;
 
     $scope.extensionBuilderReady = false;
     $scope.matchingExtensionConfigs = null;
@@ -3122,17 +3187,20 @@ var ontologyWorkflowCtrl =
     $scope.storeInProgress = false;
 
     $scope.updateMatchingConfig = function () {
-      var subset_ids = $scope.termDetails.subset_ids;
+      var subsetIds = $scope.termDetails.subset_ids;
+      var matchingExtensionConfigs = [];
 
-      if (subset_ids && subset_ids.length > 0) {
-        $scope.matchingExtensionConfigs =
-          extensionConfFilter($scope.extensionConfiguration, subset_ids,
-                              CantoGlobals.current_user_is_admin ? 'admin' : 'user',
-                              $scope.annotationTypeName);
-        return;
+      if (subsetIds && subsetIds.length > 0) {
+        matchingExtensionConfigs = extensionConfFilter(
+          $scope.extensionConfiguration,
+          subsetIds,
+          CantoGlobals.current_user_is_admin ? 'admin' : 'user',
+          $scope.annotationTypeName,
+          $scope.finalFeatureType
+        );
       }
 
-      $scope.matchingExtensionConfigs = [];
+      $scope.matchingExtensionConfigs = matchingExtensionConfigs;
     };
 
     $scope.termFoundCallback =
@@ -3321,39 +3389,54 @@ var ontologyWorkflowCtrl =
       return 'normal';
     }
 
-    AnnotationTypeConfig.getByName($scope.annotationTypeName)
+    AnnotationTypeConfig
+      .getByName($scope.annotationTypeName)
       .then(function (annotationType) {
-        $scope.annotationType = annotationType;
+        var featureType = annotationType.feature_type;
+        var featureId = $attrs.featureId;
+        var backToFeatureUrl = (
+          CantoGlobals.curs_root_uri +
+          '/feature/' + featureType +
+          '/view/' + featureId
+        );
 
-        if (annotationType.evidence_codes.length == 0) {
+        if (annotationType.evidence_codes.length === 0) {
           // skip the evidence selection state if there are no evidence codes
           $scope.states = ['searching', 'buildExtension', 'commenting'];
         }
 
-        if (annotationType.feature_type == 'genotype') {
-          CursGenotypeList.getGenotypeById(Number($attrs.featureId))
+        if (featureType == 'genotype') {
+          CursGenotypeList
+            .getGenotypeById(Number(featureId))
             .then(function (genotype) {
               var organismMode = getOrganismMode(
                 genotype,
                 CantoGlobals.pathogen_host_mode
               );
-              $scope.backToFeatureUrl =
+              backToFeatureUrl = (
                 CantoGlobals.curs_root_uri +
                 '/' + getGenotypeManagePath(organismMode) +
-                '#/select/' + $attrs.featureId;
+                '#/select/' + featureId
+              );
             });
-        } else {
-          $scope.backToFeatureUrl =
-            CantoGlobals.curs_root_uri + '/feature/' + annotationType.feature_type +
-            '/view/' + $attrs.featureId;
+        } else if (featureType == 'gene' && CantoGlobals.pathogen_host_mode) {
+          CursGeneList
+            .getGeneById(Number(featureId))
+            .then(function (gene) {
+              var organismRole = gene.organism.pathogen_or_host;
+              $scope.finalFeatureType = organismRole + '_gene';
+            });
         }
+
+        $scope.annotationType = annotationType;
+        $scope.backToFeatureUrl = backToFeatureUrl;
       });
   };
 
 canto.controller('OntologyWorkflowCtrl',
   ['$scope', 'toaster', '$http', 'CantoGlobals',
     'AnnotationTypeConfig', 'CantoService',
-    'CantoConfig', 'CursGenotypeList', 'CursStateService', '$attrs',
+    'CantoConfig', 'CursGeneList', 'CursGenotypeList', 'CursStateService', '$attrs',
     ontologyWorkflowCtrl
   ]);
 
@@ -7034,6 +7117,7 @@ var annotationEditDialogCtrl =
     $scope.allowInteractionAnnotations = false;
 
     $scope.genotypeInteractionInitialData = null;
+    $scope.featureSubtype = null;
 
     if (args.annotation.term_suggestion_name ||
         args.annotation.term_suggestion_definition) {
@@ -7068,6 +7152,12 @@ var annotationEditDialogCtrl =
       $scope.selectedOrganism = args.annotation.organism.taxonid;
       if (!$scope.initialSelectedOrganismId) {
         $scope.initialSelectedOrganismId = args.annotation.organism.taxonid;
+      }
+      if (CantoGlobals.pathogen_host_mode) {
+        $scope.featureSubtype = getFeatureSubtype(
+          args.annotation.feature_type,
+          args.annotation.organism
+        );
       }
     }
 
@@ -7400,6 +7490,12 @@ var annotationEditDialogCtrl =
 
     $scope.organismSelected = function (organism) {
       $scope.selectedOrganism = organism;
+      if (CantoGlobals.pathogen_host_mode) {
+        $scope.featureSubtype = getFeatureSubtype(
+          $scope.annotation.feature_type,
+          organism
+        );
+      }
       $scope.allPromise.then(function () {
         setFilteredFeatures();
       });
@@ -7529,6 +7625,16 @@ var annotationEditDialogCtrl =
         });
     }
 
+    function getFeatureSubtype(featureType, organism) {
+      if (organism) {
+        if (featureType == 'gene') {
+          var organismRole = organism.pathogen_or_host;
+          return organismRole + '_gene';
+        }
+      }
+      return null;
+    }
+
     function featureIdWatcher(featureId) {
       $q.all([$scope.annotationTypePromise, $scope.filteredFeaturesPromise])
         .then(function (data) {
@@ -7634,15 +7740,23 @@ var annotationEditDialogCtrl =
           .then(function (data) {
             var extensionConfiguration = data[0];
             var termDetails = data[1];
-
             var subset_ids = termDetails.subset_ids;
+            var featureType = $scope.featureSubtype || $scope.annotation.feature_type;
 
-            if (extensionConfiguration.length > 0 &&
-                subset_ids && subset_ids.length > 0) {
-              $scope.matchingConfigurations =
-                extensionConfFilter(extensionConfiguration, subset_ids,
-                                    CantoGlobals.current_user_is_admin ? 'admin' : 'user',
-                                    $scope.annotationTypeName);
+            var hasExtensionsAndSubsets = (
+              extensionConfiguration.length > 0 &&
+              subset_ids &&
+              subset_ids.length > 0
+            );
+
+            if (hasExtensionsAndSubsets) {
+              $scope.matchingConfigurations = extensionConfFilter(
+                extensionConfiguration,
+                subset_ids,
+                CantoGlobals.current_user_is_admin ? 'admin' : 'user',
+                $scope.annotationTypeName,
+                featureType,
+              );
             } else {
               $scope.matchingConfigurations = [];
             }
@@ -7688,11 +7802,15 @@ var annotationEditDialogCtrl =
       };
 
     $scope.editExtension = function () {
-      var editPromise =
-        openExtensionBuilderDialog($uibModal, $scope.annotation.extension,
-                                   $scope.annotation.term_ontid,
-                                   $scope.currentFeatureDisplayName,
-                                   $scope.annotationTypeName);
+      var featureType = $scope.featureSubtype || $scope.annotation.feature_type;
+      var editPromise = openExtensionBuilderDialog(
+        $uibModal,
+        $scope.annotation.extension,
+        $scope.annotation.term_ontid,
+        $scope.currentFeatureDisplayName,
+        $scope.annotationTypeName,
+        featureType
+      );
 
       editPromise.then(function (result) {
         angular.copy(result.extension, $scope.annotation.extension);
