@@ -25,7 +25,10 @@
     "@types/angular-ui-bootstrap": "^1.0.0",
     "@types/bootstrap": "~3.3.39",
     "@types/chart.js": "~2.7.57",
+    "@types/jquery.form": "^3.26.30",
     "@types/jquery.pnotify": "^3.0.36",
+    "@types/jquery": "^3.5.4",
+    "@types/jqueryui": "^1.12.13",
     "@types/ngtoaster": "~2.2.1",
     "angular-mocks": "^1.5.11",
     "css-loader": "^5.2.4",
@@ -42,9 +45,6 @@
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
-    "@types/jquery": "^3.5.4",
-    "@types/jquery.form": "^3.26.30",
-    "@types/jqueryui": "^1.12.13",
     "angular": "1.8.2",
     "angular-animate": "1.5.11",
     "angular-chart.js": "1.1.1",
