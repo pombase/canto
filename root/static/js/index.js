@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import './canto.js';
 import './canto-modules.js';
 
