@@ -857,10 +857,6 @@ tr .curs-genotype-allele-gene {
   background: white url('../images/ui-anim_basic_16x16.gif') right top no-repeat;
 }
 
-.ui-menu-item {
-  font-size: 60%;
-}
-
 .curs-autocomplete-definition h3 {
   padding: 0;
   margin: 0;
@@ -935,7 +931,6 @@ tr .curs-genotype-allele-gene {
 }
 
 .term-id {
-  color: #000;
   font-weight: bold;
 }
 
@@ -1203,6 +1198,20 @@ span.canto-select-buttons {
   background-image: url(jquery-ui/themes/base/images/ui-icons_777777_256x240.png);
   background-position: -97px -130px;
   background-repeat: no-repeat;
+}
+/* Fix appearance of jQuery UI autocomplete */ 
+.ui-menu .ui-menu-item-wrapper {
+  display: block;
+}
+.ui-menu-item-wrapper.ui-state-active {
+  border-radius: 4px;
+  text-decoration: none;
+}
+.ui-menu-item {
+  font-size: 12px;
+}
+.ui-menu.ui-autocomplete {
+  border-radius: 4px;
 }
 
 .curs-ui-dialog-subheading {
