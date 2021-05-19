@@ -198,11 +198,14 @@
                     class="btn btn-default btn-xs">Suggest</button>
           </div>
 
-      <tr ng-if="showSuggestionFields()">
-        <td colspan="2">
-          <textarea class="form-control curs-edit-wide-field"
-                    placeholder="Definition" cols="60"
-                    ng-model="annotation.term_suggestion_definition"></textarea>
+          <div ng-if="termSuggestionVisible">
+            <input class="curs-term-suggest-name form-control curs-edit-wide-field"
+                   type="text" placeholder="Name" size="60"
+                   ng-model="annotation.term_suggestion_name"/>
+            <textarea class="form-control curs-edit-wide-field"
+                      placeholder="Definition" cols="60"
+                      ng-model="annotation.term_suggestion_definition"></textarea>
+          </div>
         </td>
       </tr>
 
