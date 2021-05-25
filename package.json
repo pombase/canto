@@ -34,6 +34,7 @@
     "css-loader": "^5.2.4",
     "file-loader": "^6.2.0",
     "jasmine-core": "^3.4.0",
+    "js-yaml": "^4.1.0",
     "karma": "^2.0.2",
     "karma-chrome-launcher": "^2.2.0",
     "karma-jasmine": "^1.1.2",
