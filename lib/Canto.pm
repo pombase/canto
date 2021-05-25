@@ -178,7 +178,7 @@ around 'uri_for' => sub {
   my $version = $config->{app_version};
 
   if (defined $ENV{PLACK_ENV}) {
-    $path =~ s:/static/(.*):/static/$version/$1:;
+    $path =~ s:/(static|dist)/(.*):/$1/$version/$2:;
   }
 
   $self->$orig($path, @_);
