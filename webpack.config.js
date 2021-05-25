@@ -1,13 +1,20 @@
+const fs = require('fs-extra');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 const webpack = require('webpack');
+const yaml = require('js-yaml');
+
+function getAppVersion() {
+  const cantoYaml = yaml.load(fs.readFileSync('./canto.yaml', 'utf8'));
+  return cantoYaml.app_version;
+}
 
 module.exports = {
   entry: './root/static/js/index.js',
   output: {
     filename: 'main.js',
     path: path.resolve(__dirname, 'root/dist'),
-    publicPath: '/dist/'
+    publicPath: '/dist/' + getAppVersion() + '/',
   },
   mode: 'development',
   resolve: {
