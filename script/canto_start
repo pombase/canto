@@ -89,6 +89,10 @@ $app = Plack::Middleware::Static->wrap($app,
                                        path => sub {
                                          s!^/+static/v\d+[\d\w\-]+/!! },
                                        root => 'root/static');
+$app = Plack::Middleware::Static->wrap($app,
+                                       path => sub {
+                                         s!^/+dist/v\d+[\d\w\-]+/!! },
+                                       root => 'dist');
 
 if (defined $ENV{PLACK_DEBUG}) {
   if ($ENV{PLACK_DEBUG} > 1) {
