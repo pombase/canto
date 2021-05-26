@@ -1,0 +1,53 @@
+<%args>
+$config
+$publication_uniquename
+$publication_title
+$session_link
+$curator_name
+$curator_known_as
+$help_index
+$existing_annotation_count
+$logged_in_user
+</%args>
+Dear <% $curator_known_as // $curator_name %>,
+
+We invite you to contribute annotations based on your recently
+published paper, <% $publication_uniquename %> - 
+<% wrap('  ', '  ', '"' . $publication_title . '"') %>,
+to JaponicusDB. We have identified the paper as suitable for curation in Canto,
+but if it reports data for a large number of genes, please let us know so we
+can collect the data by a different route.
+
+This is your permanent curation link, where you can sign in, and then
+either you can start curating, or assign the session to a colleague
+(e.g. a member of your lab):
+
+  <% $session_link %>
+
+% if ($existing_annotation_count > 0) {
+
+For this paper, there are several previously curated annotations in
+the database. These existing annotations will be shown in the curation
+tool, but cannot be altered. If you notice any problems with existing
+annotations, please let the curators know.
+% }
+
+Each page in Canto has links to the Canto manual, to specific help
+documentation, and to contact the JaponicusDB curators.
+
+We greatly appreciate your contribution. Because JaponicusDB has no
+dedicated professional curators, community curation is critical to its
+success. If you need help, PomBase curators can add phenotype terms to
+FYPO, request new terms from GO, or provide advice about curation.
+
+<% $session_link %>
+
+Sincerely yours,
+<% $logged_in_user->name() %>
+
+
+<%init>
+use Text::Wrap;
+
+$Text::Wrap::columns = 72;
+</%init>
