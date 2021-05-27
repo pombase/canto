@@ -45,6 +45,7 @@
     "mini-css-extract-plugin": "^1.5.0",
     "qunit": "^2.9.2",
     "style-loader": "^2.0.0",
+    "terser-webpack-plugin": "^4.2.3",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
     "webpack-merge": "^5.7.3"
