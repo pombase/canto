@@ -16,7 +16,6 @@ module.exports = {
     path: path.resolve(__dirname, 'root/dist'),
     publicPath: '/dist/' + getAppVersion() + '/',
   },
-  mode: 'development',
   resolve: {
     alias: {
       'tag-it': path.resolve(__dirname, 'root/static/js/tag-it.js')
@@ -73,5 +72,4 @@ module.exports = {
       ignoreOrder: false,
     }),
   ],
-  devtool: "source-map"
 };
