@@ -62,7 +62,8 @@ or provide advice about curation.
 <% $session_link %>
 
 Sincerely yours,
-<% $logged_in_user->name() %>
+
+Snezhana Oliferenko
 
 
 <%init>
