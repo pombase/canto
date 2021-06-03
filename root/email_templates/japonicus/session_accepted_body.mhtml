@@ -50,7 +50,8 @@ JaponicusDB literature curation comprehensive, accurate, and up to date.
 <% $session_link %>
 
 Sincerely yours,
-<% $logged_in_user->name() %>
+
+Snezhana Oliferenko
 
 
 <%init>
