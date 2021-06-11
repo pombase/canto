@@ -97,14 +97,16 @@ $total_annotation_count
 % }
 
 <div ng-if="messageForCuratorsIsReady()" class="curs-inline-message-to-curators">
-% if ($current_user_is_admin) {
+% if ($current_user_is_admin && !$read_only_curs) {
   <a href="#" ng-click="editMessageToCurators()">
     <span ng-show="messageForCurators">Edit</span>
     <span ng-show="!messageForCurators">Add</span>
     <% lc $message_for_curators_label %>
   </a>
 % } else {
+%   if (!$show_message_for_curators_on_front_page) {
   <a href="#" ng-click="viewMessageToCurators()">Display message to curators</a>
+%   }
 % }
 </div>
 
