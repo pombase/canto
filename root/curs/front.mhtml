@@ -105,7 +105,7 @@ $total_annotation_count
   </a>
 % } else {
 %   if (!$show_message_for_curators_on_front_page) {
-  <a href="#" ng-click="viewMessageToCurators()">Display message to curators</a>
+  <a href="#" ng-click="viewMessageToCurators()">Display <% lc $message_for_curators_label %></a>
 %   }
 % }
 </div>
