@@ -1302,6 +1302,14 @@ var cursFrontPageCtrl =
     $scope.annotationTypes = [];
     $scope.annotationsByType = {};
 
+    CursSettings.getAll().then(function (response) {
+      $scope.messageForCurators = response.data.message_for_curators || '';
+    });
+
+    $scope.messageForCuratorsIsReady = function() {
+      return $scope.messageForCurators !== undefined;
+    };
+
     $scope.checkAll = function () {
       CursAnnotationDataService.set('all', 'checked', 'yes').
       then(function () {
@@ -1316,11 +1324,9 @@ var cursFrontPageCtrl =
     };
 
     $scope.viewMessageToCurators = function() {
-      CursSettings.getAll().then(function (response) {
-        openSimpleDialog($uibModal, 'Message for curators',
-                         'Message for curators',
-                         response.data.message_for_curators);
-      });
+      openSimpleDialog($uibModal, 'Message for curators',
+                       'Message for curators',
+                       $scope.messageForCurators);
     };
 
     $scope.enableSubmitButton = function() {
@@ -1336,14 +1342,14 @@ var cursFrontPageCtrl =
     };
 
     $scope.editMessageToCurators = function () {
-      CursSettings.getAll().then(function (response) {
-        editStoredMessage($uibModal, 'Edit message for curators',
-                          response.data.message_for_curators,
-                          'message_for_curators')
-          .then(function(result) {
+      editStoredMessage($uibModal, 'Edit message for curators',
+                        $scope.messageForCurators,
+                        'message_for_curators')
+        .then(function(result) {
+          if (typeof(result) !== 'undefined') {
             $scope.messageForCurators = result;
-          });
-      });
+          }
+        });
     };
 
     $scope.getAnnotationMode = function () {

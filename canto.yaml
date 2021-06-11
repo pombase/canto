@@ -112,9 +112,15 @@ show_quick_deletion_buttons: 1
 # header for the external notes section on the front page
 external_notes_label: External notes
 
+# header for the message to curators section on the front page (if enabled)
+message_to_curators_label: Message to curators
+
 # if 1, show the external notes section on the front page even if there are
 # no notes - we show "[none]" in that case
 always_show_external_notes_section: 0
+
+# if 1, show the internal notes (from "Edit message to curators") on the front page
+show_message_for_curators_on_front_page: 0
 
 # from_address - used as the "from" field is all outgoing messages
 # admin_address - the contact address of the admin curators, used to
