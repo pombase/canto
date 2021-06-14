@@ -8544,8 +8544,8 @@ function setHideColumns(annotation, hideColumns) {
 }
 
 var annotationTableCtrl =
-  function (CantoGlobals, AnnotationTypeConfig, CursGenotypeList,
-    CursSessionDetails, CantoConfig) {
+  function ($timeout, CantoGlobals, AnnotationTypeConfig, CursGenotypeList,
+            CursSessionDetails, CantoConfig) {
     return {
       scope: {
         annotationTypeName: '@',
@@ -8555,6 +8555,7 @@ var annotationTableCtrl =
         showMetagenotypeLink: '<',
         showCheckboxes: '<',
         checkboxesChanged: '&?',
+        showSelectAll: '<',
         showMenu: '<',
         showFeatures: '<'
       },
@@ -8575,6 +8576,8 @@ var annotationTableCtrl =
         $scope.showInteractionTermColumns = false;
 
         $scope.checkboxesChecked = [];
+
+        $scope.selectAllModel = false;
 
         $scope.data = {};
 
@@ -8602,6 +8605,16 @@ var annotationTableCtrl =
 
             $scope.checkboxesChanged({annotationIds: $scope.checkboxesChecked});
           }
+        };
+
+        $scope.selectAll = function() {
+          $scope.selectAllModel = true;
+          // very dodgy:
+          $timeout(function() {
+            // we need to reset the model after the rows have finished calling
+            // checkboxChanged()
+            $scope.selectAllModel = false;
+          }, 1);
         };
 
         $scope.annotationTypeConfigPromise =
@@ -8789,7 +8802,7 @@ var annotationTableCtrl =
   };
 
 canto.directive('annotationTable',
-  ['CantoGlobals',
+   ['$timeout', 'CantoGlobals',
     'AnnotationTypeConfig', 'CursGenotypeList', 'CursSessionDetails', 'CantoConfig',
     annotationTableCtrl
   ]);
@@ -8992,13 +9005,26 @@ var annotationTableRow =
 
         $scope.displayEvidence = annotation.evidence_code;
 
-        $scope.checkboxClick = function() {
-          $scope.checkboxChecked = !$scope.checkboxChecked;
+        function checkboxCallback() {
           if ($scope.showCheckboxes && $scope.checkboxChanged !== undefined) {
             $scope.checkboxChanged(annotation.annotation_id,
                                    $scope.checkboxChecked);
           }
+        }
+
+        $scope.checkboxClick = function() {
+          $scope.checkboxChecked = !$scope.checkboxChecked;
+          checkboxCallback();
         };
+
+        // FIXME: this very dodgy because "selectAllModel" is from the parent scope
+        $scope.$watch('selectAllModel',
+                      function(newValue) {
+                        if (newValue) {
+                          $scope.checkboxChecked = true;
+                          checkboxCallback();
+                        }
+                      });
 
         $scope.hasWildTypeHost = (
           $scope.annotation.feature_type == 'metagenotype' &&
