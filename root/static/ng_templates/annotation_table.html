@@ -138,12 +138,16 @@
                 show-metagenotype-link="{{showMetagenotypeLink}}"
                 show-checkboxes="{{showCheckboxes}}"
                 checkbox-changed="checkboxChanged(annotationId, checkboxChecked)"
+                select-all-model="selectAllModel"
                 show-menu="{{showMenu}}"
                 show-features="{{showFeatures}}"
                 ng-repeat="annotation in data.sortedAnnotations">
             </tr>
           </tbody>
         </table>
+        <div style="padding-top: 0.5em;" ng-show="showSelectAll">
+          <a href="#" ng-click="selectAll()">Select all</a>
+        </div>
         <table ng-switch-when="interaction" class="list">
           <thead>
             <tr>
