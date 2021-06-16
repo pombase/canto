@@ -137,7 +137,7 @@ $(document).ready(function() {
     window.location.href = curs_root_uri + '/finish_form';
   });
 
-  $('#curs-pause-session').click(function () {
+  $('.curs-pause-session').click(function () {
     window.location.href = curs_root_uri + '/pause_curation';
   });
 

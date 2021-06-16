@@ -36,13 +36,13 @@ $total_annotation_count
 % if ($state eq Canto::Controller::Curs::CURATION_IN_PROGRESS) {
 <div ng-show="enableSubmitButton()">
 <button type="button" id="curs-finish-session" class="btn btn-primary curs-finish-button">Submit to curators</button>
-<button type="button" id="curs-pause-session" class="btn btn-primary curs-finish-button">Pause curation</button>
+<button type="button" class="curs-pause-session btn btn-primary curs-finish-button">Pause curation</button>
 </div>
 <form ng-hide="enableSubmitButton()"
       action="<% $finish_form_url %>" class="curs-finish-buttons" method="POST"
       ng-controller="SubmitToCuratorsCtrl" ng-init='init(<% $no_annotations_reasons_init_js |n%>)'>
   <div>
-    <button type="button" class="btn btn-primary" id="curs-pause-session">Pause curation</button>
+    <button type="button" class="curs-pause-session btn btn-primary">Pause curation</button>
     <input class="btn btn-primary button ng-cloak" type="submit"
            ng-disabled="!data.noAnnotation || !validReason()" id="curs-finish-session"
            title="{{ validReason() ? '' : 'Please add annotation or check the no results box' }}"
