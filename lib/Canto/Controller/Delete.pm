@@ -67,7 +67,7 @@ sub object : Local {
                            $object->delete();
                          });
 
-    $st->{message} = "Deleted: $type $object_id";
+    push @{$st->{message}}, "Deleted: $type $object_id";
   }
 
   $c->forward('/front');

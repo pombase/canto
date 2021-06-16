@@ -800,9 +800,9 @@ sub _edit_genes_helper
       if (@gene_ids == 0 &&
           (!$pathogen_host_mode || $pathogen_host_mode && @host_org_taxonids == 0)) {
         if ($pathogen_host_mode) {
-          $st->{message} = 'No genes or hosts selected for deletion';
+          push @{$st->{message}}, 'No genes or hosts selected for deletion';
         } else {
-          $st->{message} = 'No genes selected for deletion';
+          push @{$st->{message}}, 'No genes selected for deletion';
         }
       } else {
         my $delete_sub = sub {
@@ -839,15 +839,17 @@ sub _edit_genes_helper
 
         if ($self->get_ordered_gene_rs($schema)->count() == 0) {
           $self->unset_metadata($schema, Canto::Curs::State::CURATION_IN_PROGRESS_TIMESTAMP_KEY());
-          $c->flash()->{message} = 'All genes removed from the list';
+          push @{$c->flash()->{message}}, 'All genes removed from the list';
           _redirect_and_detach($c, 'gene_upload');
         } else {
           my $plu = scalar(@gene_ids) != 1 ? 's' : '';
-          $st->{message} = 'Removed ' . scalar(@gene_ids) . " gene$plu from list";
+          my $message = 'Removed ' . scalar(@gene_ids) . " gene$plu from list";
           if (@host_org_taxonids) {
-            $st->{message} .= ', removed ' . scalar(@host_org_taxonids) . ' host' .
+            $message .= ', removed ' . scalar(@host_org_taxonids) . ' host' .
               (scalar(@host_org_taxonids) != 1 ? 's' : '');
           }
+
+          push @{$st->{message}}, $message;
         }
       }
     }
@@ -1065,10 +1067,10 @@ sub gene_upload : Chained('top') Args(0) Form
         $self->set_metadata($schema, Canto::Curs::State::NO_ANNOTATION_REASON_KEY(),
                             $no_genes_reason);
       } else {
-        $st->{message} = $not_valid_message;
+        push @{$st->{message}}, $not_valid_message;
       }
 
-      $c->flash()->{message} = "Annotation complete";
+      push @{$c->flash()->{message}}, "Annotation complete";
 
       _redirect_and_detach($c, 'finish_form');
 
@@ -1180,7 +1182,7 @@ sub gene_upload : Chained('top') Args(0) Form
           ' host organism' . (@host_taxon_ids != 1 ? 's' : '');
       }
 
-      $c->flash()->{message} = $message;
+      push @{$c->flash()->{message}}, $message;
 
       if (!defined $self->get_metadata($schema, Canto::Curs::State::CURATION_IN_PROGRESS_TIMESTAMP_KEY())) {
         $self->set_metadata($schema, Canto::Curs::State::CURATION_IN_PROGRESS_TIMESTAMP_KEY(),
@@ -1271,7 +1273,7 @@ sub _delete_annotation : Private
     $annotation->delete();
   }
 
-  $c->flash()->{message} = "Annotation deleted";
+  push @{$c->flash()->{message}}, "Annotation deleted";
 }
 
 sub annotation_delete : Chained('annotation') PathPart('delete')
@@ -2133,16 +2135,19 @@ sub _genotype_store
         if (@alleles_data > 1) {
           $alleles_string = "alleles";
         }
+        my $message;
         if (defined $existing_genotype->name()) {
-          $c->flash()->{message} = qq(Using existing genotype with the same $alleles_string: ") .
+          $message = qq(Using existing genotype with the same $alleles_string: ") .
             $existing_genotype->name() . '"'
         } else {
-          $c->flash()->{message} = "Using existing genotype with the same $alleles_string";
+          $message = "Using existing genotype with the same $alleles_string";
         }
 
         if ($genotype_background) {
-          $c->flash()->{message} .= " and background";
+          $message .= " and background";
         }
+
+        push @{$c->flash()->{message}}, $message;
 
         $c->stash->{json_data} = {
           status => "existing",
@@ -2164,7 +2169,7 @@ sub _genotype_store
 
         my $genotype_display_name = $genotype->display_name($config);
 
-        $c->flash()->{message} = 'Created new genotype: ' . $genotype_display_name;
+        push @{$c->flash()->{message}}, 'Created new genotype: ' . $genotype_display_name;
 
         $c->stash->{json_data} = {
           status => "success",
@@ -2350,8 +2355,7 @@ sub finish_session : Chained('top') Arg(0)
     my $other_reason = $form->param_value('otherReason');
 
     if ($no_annotation eq 'on' && !defined $reason) {
-      $c->stash()->{message} =
-        'No reason given for having no annotation';
+      push @{$c->stash()->{message}}, 'No reason given for having no annotation';
       _redirect_and_detach($c);
     } else {
       if (lc $reason eq 'other' && defined $other_reason) {
@@ -2649,7 +2653,7 @@ sub _assign_session :Private
     if (defined $reassigner_name_value) {
       $reassigner_name_value = trim($reassigner_name_value);
       if ($reassigner_name_value =~ /\@/) {
-        $c->stash()->{message} =
+        push @{$c->stash()->{message}},
           "Names can't contain the '\@' character: $reassigner_name_value - please " .
             "try again";
         return;
@@ -2669,7 +2673,7 @@ sub _assign_session :Private
     my $submitter_orcid = trim($form->param_value('submitter_orcid'));
 
     if ($submitter_name =~ /\@/) {
-      $c->stash()->{message} =
+      push @{$c->stash()->{message}},
         "Names can't contain the '\@' character: $submitter_name - please " .
         "try again";
       return;
@@ -2718,7 +2722,7 @@ sub _assign_session :Private
                                          recipient_email => $reassigner_email,
                                          reassigner_email => $reassigner_email } );
 
-      $c->flash()->{message} = "Session has been reassigned to: $submitter_email";
+      push @{$c->flash()->{message}}, "Session has been reassigned to: $submitter_email";
 
       _redirect_to_top_and_detach($c);
     } else {
@@ -2764,7 +2768,7 @@ sub restart_curation : Chained('top') Args(0)
 
   $self->unset_metadata($schema, 'paused_message');
 
-  $c->flash()->{message} = 'Session has been restarted';
+  push @{$c->flash()->{message}}, 'Session has been restarted';
 
   _redirect_and_detach($c);
 }
@@ -2793,7 +2797,7 @@ sub reactivate_session : Chained('top') Args(0)
                       Canto::Util::get_current_datetime());
   $self->state()->store_statuses($c->stash()->{schema});
 
-  $c->flash()->{message} = 'Session has been reactivated';
+  push @{$c->flash()->{message}}, 'Session has been reactivated';
 
   _redirect_and_detach($c);
 }
@@ -2816,7 +2820,7 @@ sub unexport_session : Chained('top') Args(0)
 
   $self->state()->store_statuses($c->stash()->{schema});
 
-  $c->flash()->{message} = 'Session has been un-exported';
+  push @{$c->flash()->{message}}, 'Session has been un-exported';
 
   _redirect_and_detach($c);
 }
@@ -2837,7 +2841,7 @@ sub set_exported_state : Chained('top') Args(0)
   $self->state()->set_state($schema, EXPORTED,
                             { force => $state, current_user => $current_user});
 
-  $c->flash()->{message} = 'Session has been un-exported';
+  push @{$c->flash()->{message}}, 'Session has been un-exported';
 
   _redirect_and_detach($c);
 }
@@ -3023,7 +3027,7 @@ sub complete_approval : Chained('top') Args(0)
                               {
                                 current_user => $current_user,
                               });
-    $c->flash()->{message} = 'Session approved';
+    push @{$c->flash()->{message}}, 'Session approved';
   }
 
   _redirect_and_detach($c);
@@ -3476,7 +3480,7 @@ sub cancel_approval : Chained('top') Args(0)
   my $schema = $c->stash()->{schema};
   $self->state()->set_state($schema, NEEDS_APPROVAL,
                             { force => APPROVAL_IN_PROGRESS });
-  $c->flash()->{message} = 'Session approval cancelled';
+  push @{$c->flash()->{message}}, 'Session approval cancelled';
 
   _redirect_and_detach($c);
 }
