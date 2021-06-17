@@ -1216,12 +1216,15 @@ sub _process_interaction
     annotation_type => $row->{annotation_type},
     gene_identifier => $gene->{identifier},
     gene_display_name => $gene->{name} // $gene->{identifier},
+    feature_a_display_name => $gene->{name} // $gene->{identifier},
     gene_taxonid => $gene->{taxonid},
     gene_id => $gene_id,
     publication_uniquename => $publication->{uniquename},
     evidence_code => $row->{evidence_code},
     interacting_gene_identifier => $interacting_gene->{identifier},
     interacting_gene_display_name =>
+      $interacting_gene->{name} // $interacting_gene->{identifier},
+    feature_b_display_name =>
       $interacting_gene->{name} // $interacting_gene->{identifier},
     interacting_gene_taxonid => $interacting_gene->{taxonid},
     interacting_gene_id => $interacting_gene_id,
