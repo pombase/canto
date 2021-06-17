@@ -957,11 +957,11 @@ sub _process_existing_db_ontology
     $ret{alleles} = [map {
       my %ret = %$_;
       $ret{long_display_name} =
-        ($ret{name} || $ret{gene_display_name} . ':unnamed') .
-        '(' . ($ret{description} || 'unknown') . ')';
-
+        Canto::Curs::Utils::make_allele_display_name($config, $ret{name},
+                                                     $ret{description}, $ret{type});
       if ($_->{expression}) {
-        $ret{long_display_name} .= '[' . $_->{expression} . ']';
+        $ret{long_display_name} .=
+          '[' . ($_->{expression} =~ s/^wild type product level.*/WT level/ir) . ']';
       }
 
       \%ret;
