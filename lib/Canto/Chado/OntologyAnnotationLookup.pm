@@ -305,6 +305,15 @@ sub lookup
       my $evidence_code =
         $self->config()->{evidence_types_by_name}->{lc $evidence};
 
+      if (!defined $evidence_code) {
+        $evidence_code =
+          $self->config()->{evidence_types_by_name}->{(lc $evidence) =~ s/ evidence$//r};
+      }
+
+      if (!defined $evidence_code) {
+        $evidence_code = '[UNKNOWN]';
+      }
+
       if (grep { $_ eq $evidence } @evidence_codes_to_ignore or
           grep { $_ eq $evidence_code } @evidence_codes_to_ignore) {
         # adjust the total, but this is dodgy as the total will be too high if
