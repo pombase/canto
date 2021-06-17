@@ -105,7 +105,6 @@ sub get_cached_allele_details
       gene_display_name => $gene->name() || $gene->uniquename(),
       gene_id => $gene->feature_id(),
       taxonid => $taxonid,
-      allele_id => $allele->feature_id(),
     );
 
     return \%details;
