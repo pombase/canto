@@ -2126,7 +2126,7 @@ available_annotation_type_list:
     category: genotype_interaction
     feature_type: none
     creation_disabled: 1
-    display_name: genetic interaction 
+    display_name: genetic interaction
     associated_phenotype_annotation_type: phenotype
     evidence_codes:
       - Dosage Growth Defect
@@ -2139,7 +2139,7 @@ available_annotation_type_list:
       - Synthetic Rescue
   - name: genetic_interaction
     category: interaction
-    display_name: 'genetic interaction'
+    display_name: 'legacy genetic interaction'
     feature_type: 'gene'
     help_text: 'Examples: synthetic lethality, dosage suppression, phenotype enhancement.'
     evidence_codes:
