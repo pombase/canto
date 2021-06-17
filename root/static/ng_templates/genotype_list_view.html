@@ -1,5 +1,5 @@
 <div class="curs-genotype-list-view">
-  <div ng-if="genotypeList.length != 0">
+  <div ng-if="genotypeList.length != 0 || diploidList.length > 0">
     <table class="list curs-genotype-list">
       <thead>
         <tr ng-if="diploid_mode">
@@ -28,9 +28,6 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <!-- border fix for FireFox -->
-        </tr>
         <tr genotype-list-row ng-repeat="currentGenotype in genotypeList"
             set-selected-genotype-id="setSelectedGenotypeId(genotypeId)"
             selected-genotype-id="{{selectedGenotypeId}}"

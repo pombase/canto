@@ -25,7 +25,7 @@ header_image: logos/curation_tool.png
 
 canto_url: https://curation.pombase.org/
 
-app_version: v1619
+app_version: v1640
 
 schema_version: 34
 
@@ -112,9 +112,15 @@ show_quick_deletion_buttons: 1
 # header for the external notes section on the front page
 external_notes_label: External notes
 
+# header for the message to curators section on the front page (if enabled)
+message_to_curators_label: Message to curators
+
 # if 1, show the external notes section on the front page even if there are
 # no notes - we show "[none]" in that case
 always_show_external_notes_section: 0
+
+# if 1, show the internal notes (from "Edit message to curators") on the front page
+show_message_for_curators_on_front_page: 0
 
 # from_address - used as the "from" field is all outgoing messages
 # admin_address - the contact address of the admin curators, used to
@@ -1384,8 +1390,8 @@ ontology_index_dir: ontology_index
 relationship_ontology_path: etc/ro.obo
 
 external_sources:
-  pubmed_efetch_url: 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&retmax=99999&id='
-  pubmed_esearch_url: 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&remode=xml&retmax=99999&term='
+  pubmed_efetch_url: 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&retmax=99999&id='
+  pubmed_esearch_url: 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&remode=xml&retmax=99999&term='
 
 implementation_classes:
   gene_adaptor: Canto::Track::GeneLookup
@@ -2080,7 +2086,7 @@ available_annotation_type_list:
   - name: wt_rna_expression
     category: ontology
     ontology_size: small
-    namespace: PomGeneEx
+    namespace: PomGeneExRNA
     display_name: 'wild-type RNA level'
     feature_type: 'gene'
     broad_term_suggestions: ~
@@ -2098,7 +2104,7 @@ available_annotation_type_list:
   - name: wt_protein_expression
     category: ontology
     ontology_size: small
-    namespace: PomGeneEx
+    namespace: PomGeneExProt
     display_name: 'wild-type Protein level'
     feature_type: 'gene'
     broad_term_suggestions: ~

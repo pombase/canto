@@ -1,0 +1,61 @@
+<%args>
+$config
+$publication_uniquename
+$publication_title
+$session_link
+$curator_name
+$help_index
+$existing_annotation_count
+$logged_in_user
+</%args>
+Thank you for agreeing to curate:
+  <% $publication_uniquename %>
+<% wrap('  ', '  ', '"' . $publication_title . '"') %>
+
+Your curation link is:
+  <% $session_link %>
+
+You can annotate these data types in the tool:
+  Gene Ontology (molecular function, biological process, cellular component)
+  Phenotypes
+  Genetic Interactions
+  Physical Interactions
+  Protein Modifications
+
+If a colleague has asked you to annotate this paper, you will also be
+able to modify any annotations your colleague made.
+
+% if ($existing_annotation_count > 0) {
+For this paper, there are also several previously curated annotations in the
+database.  These existing annotations will be shown in the curation tool, but
+cannot be altered. If you notice any problems with existing annotations,
+please let the curators know.
+
+% }
+Help is available on each page, and you can also read the Canto manual
+(<% $help_index %>) or contact the JaponicusDB staff
+(<% $config->{contact_email}->{address} %>) for assistance at any time. You
+will also have an opportunity to provide any data that the tool does not
+capture so that curators can include it with your curation.
+
+The curation link will work indefinitely, so you can leave and return
+to the same URL as often as you want. When you have added all the
+annotations you can, you may either submit the annotations to the
+JaponicusDB volunteers, or send the paper to another co-author for
+further curation.
+
+We greatly appreciate your contribution -- all community annotations help keep
+JaponicusDB literature curation comprehensive, accurate, and up to date.
+
+<% $session_link %>
+
+Sincerely yours,
+
+Snezhana Oliferenko
+
+
+<%init>
+use Text::Wrap;
+
+$Text::Wrap::columns = 72;
+</%init>

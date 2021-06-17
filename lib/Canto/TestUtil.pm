@@ -108,7 +108,7 @@ our %shared_test_results = (
         expression => 'Knockdown',
       },
       {
-        'long_display_name' => 'ssm4delta(deletion)',
+        'long_display_name' => 'ssm4delta',
         'primary_identifier' => 'SPAC27D7.13c:allele-1',
         'name' => 'ssm4delta',
         'description' => 'deletion',

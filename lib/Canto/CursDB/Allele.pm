@@ -229,7 +229,7 @@ sub long_identifier
   my $expression = '';
 
   if ($self->expression()) {
-    $expression = '[' . ($self->expression() =~ s/^wild type product level.*/WT product/ir) . ']';
+    $expression = '[' . ($self->expression() =~ s/^wild type product level.*/WT level/ir) . ']';
   }
 
   $ret .= $expression;
