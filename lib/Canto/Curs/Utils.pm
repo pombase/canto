@@ -69,6 +69,14 @@ sub _make_genotype_details
   my $ontology_lookup = shift;
   my $organism_lookup = shift;
 
+  my %allele_type_order = ();
+
+  for (my $idx = 0; $idx < @{$config->{allele_type_list}}; $idx++) {
+    my $allele_config = $config->{allele_type_list}->[$idx];
+
+    $allele_type_order{$allele_config->{name}} = $idx;
+  }
+
   if (!defined $ontology_lookup) {
     die "internal error - no \$ontology_lookup passed to _make_genotype_details()";
   }
@@ -146,19 +154,26 @@ sub _make_genotype_details
     }
   } @allele_hashes;
 
+
   @allele_hashes = sort {
-    my $a_gene = $a->{gene_display_name};
-    my $b_gene = $b->{gene_display_name};
+    my $res = ($allele_type_order{$a->{type}} // 0) <=> ($allele_type_order{$b->{type}} // 0);
 
-    # sort upper case last
-    if ($a_gene =~ /[A-Z]/) {
-      $a_gene = '~' . $a_gene;
-    }
-    if ($b_gene =~ /[A-Z]/) {
-      $b_gene = '~' . $b_gene;
-    }
+    if ($res != 0) {
+      $res;
+    } else {
+      my $a_gene = $a->{gene_display_name};
+      my $b_gene = $b->{gene_display_name};
 
-    $a_gene cmp $b_gene;
+      # sort upper case last
+      if ($a_gene =~ /[A-Z]/) {
+        $a_gene = '~' . $a_gene;
+      }
+      if ($b_gene =~ /[A-Z]/) {
+        $b_gene = '~' . $b_gene;
+      }
+
+      $a_gene cmp $b_gene;
+    }
   } @allele_hashes;
 
   my $strain_name = undef;
