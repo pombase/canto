@@ -5597,7 +5597,7 @@ function getDisplayLoci(alleles) {
 
     $.map(alleles,
           function(allele) {
-            if (allele.gene_display_name) {
+            if (allele.gene_display_name && !geneDisplayName) {
               geneDisplayName = allele.gene_display_name;
             }
           });
