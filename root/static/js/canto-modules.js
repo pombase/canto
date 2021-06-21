@@ -306,6 +306,15 @@ canto.filter('wrapAtSpaces', function () {
   };
 });
 
+canto.filter('breakAtSpaces', function () {
+  return function (item) {
+    if (item == null) {
+      return null;
+    }
+    return item.replace(/\s+/g, '<br/>');
+  };
+});
+
 canto.filter('formatExpression', function () {
   return function (item) {
     if (item == null) {
