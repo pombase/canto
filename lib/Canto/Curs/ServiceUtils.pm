@@ -436,7 +436,7 @@ sub _genotype_details_hash
     name => $genotype->name(),
     background => $genotype->background(),
     comment => $genotype->comment(),
-    allele_string => $genotype->allele_string(),
+    allele_string => $genotype->allele_string($config),
     display_name => $genotype->display_name($config),
     genotype_id => $genotype->genotype_id(),
     annotation_count => $genotype->annotations()->count(),

@@ -306,6 +306,15 @@ canto.filter('wrapAtSpaces', function () {
   };
 });
 
+canto.filter('breakAtSpaces', function () {
+  return function (item) {
+    if (item == null) {
+      return null;
+    }
+    return item.replace(/\s+/g, '<br/>');
+  };
+});
+
 canto.filter('formatExpression', function () {
   return function (item) {
     if (item == null) {
@@ -5599,7 +5608,7 @@ function getDisplayLoci(alleles) {
 
     $.map(alleles,
           function(allele) {
-            if (allele.gene_display_name) {
+            if (allele.gene_display_name && !geneDisplayName) {
               geneDisplayName = allele.gene_display_name;
             }
           });
@@ -5611,7 +5620,7 @@ function getDisplayLoci(alleles) {
       long_display_name: displayName,
     };
 
-    displayLoci.push(diploidLocus);
+    displayLoci.unshift(diploidLocus);
   });
 
   return displayLoci;

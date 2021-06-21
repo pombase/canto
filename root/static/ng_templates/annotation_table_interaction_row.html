@@ -2,10 +2,10 @@
   <td>
     <a ng-if="annotation.status === 'new'"
        href="{{curs_root_uri + '/feature/' + interactionFeatureType + '/view/' + annotation.feature_a_id + (read_only_curs ? '/ro' : '')}}">
-      {{annotation.feature_a_display_name}}
+      <span ng-bind-html="annotation.feature_a_display_name | breakAtSpaces | toTrusted"></span>
     </a>
     <span ng-if="annotation.status === 'existing'">
-      {{annotation.feature_a_display_name}}
+      <span ng-bind-html="annotation.feature_a_display_name | breakAtSpaces | toTrusted"></span>
     </span>
   </td>
   <td ng-if="multiOrganismMode">
@@ -20,10 +20,10 @@
   <td>
     <a ng-if="annotation.status === 'new'"
        href="{{curs_root_uri + '/feature/' + interactionFeatureType + '/view/' + annotation.feature_b_id + (read_only_curs ? '/ro' : '')}}">
-      {{annotation.feature_b_display_name}}
+      <span ng-bind-html="annotation.feature_b_display_name | breakAtSpaces | toTrusted"></span>
     </a>
     <span ng-if="annotation.status === 'existing'">
-      {{annotation.feature_b_display_name}}
+      <span ng-bind-html="annotation.feature_b_display_name | breakAtSpaces | toTrusted"></span>
     </span>
   </td>
   <td ng-if="multiOrganismMode">

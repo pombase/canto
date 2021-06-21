@@ -168,6 +168,14 @@ sub _make_genotype_details
   my $ontology_lookup = shift;
   my $organism_lookup = shift;
 
+  my %allele_type_order = ();
+
+  for (my $idx = 0; $idx < @{$config->{allele_type_list}}; $idx++) {
+    my $allele_config = $config->{allele_type_list}->[$idx];
+
+    $allele_type_order{$allele_config->{name}} = $idx;
+  }
+
   if (!defined $ontology_lookup) {
     die "internal error - no \$ontology_lookup passed to _make_genotype_details()";
   }
@@ -245,19 +253,26 @@ sub _make_genotype_details
     }
   } @allele_hashes;
 
+
   @allele_hashes = sort {
-    my $a_gene = $a->{gene_display_name};
-    my $b_gene = $b->{gene_display_name};
+    my $res = ($allele_type_order{$a->{type}} // 0) <=> ($allele_type_order{$b->{type}} // 0);
 
-    # sort upper case last
-    if ($a_gene =~ /[A-Z]/) {
-      $a_gene = '~' . $a_gene;
-    }
-    if ($b_gene =~ /[A-Z]/) {
-      $b_gene = '~' . $b_gene;
-    }
+    if ($res != 0) {
+      $res;
+    } else {
+      my $a_gene = $a->{gene_display_name};
+      my $b_gene = $b->{gene_display_name};
 
-    $a_gene cmp $b_gene;
+      # sort upper case last
+      if ($a_gene =~ /[A-Z]/) {
+        $a_gene = '~' . $a_gene;
+      }
+      if ($b_gene =~ /[A-Z]/) {
+        $b_gene = '~' . $b_gene;
+      }
+
+      $a_gene cmp $b_gene;
+    }
   } @allele_hashes;
 
   my $strain_name = undef;
@@ -738,6 +753,11 @@ sub make_interaction_annotation
   my $genotype_a = $metagenotype->first_genotype();
   my $genotype_b = $metagenotype->second_genotype();
 
+  my %genotype_a_details = _make_genotype_details($schema, $genotype_a, $config,
+                                                  $ontology_lookup, $organism_lookup);
+  my %genotype_b_details = _make_genotype_details($schema, $genotype_b, $config,
+                                                  $ontology_lookup, $organism_lookup);
+
   my $organism_a = $genotype_a->organism();
   my $organism_b = $genotype_b->organism();
 
@@ -812,19 +832,19 @@ sub make_interaction_annotation
       organism => $organism_hash,
       annotation_type => $annotation_type,
       annotation_type_display_name => $annotation_type_display_name,
-      genotype_a_display_name => $genotype_a->display_name($config),
+      genotype_a_display_name => $genotype_a_details{genotype_display_name},
       genotype_a_id => $genotype_a->genotype_id(),
       genotype_a_taxonid => $organism_a->taxonid(),
-      feature_a_display_name => $genotype_a->display_name($config),
+      feature_a_display_name => $genotype_a_details{genotype_display_name},
       feature_a_id => $genotype_a->genotype_id(),
       feature_a_taxonid => $organism_a->taxonid(),
       genotype_a_gene_ids => \@genotype_a_gene_ids,
       publication_uniquename => $pub_uniquename,
       evidence_code => $evidence_code,
-      genotype_b_display_name => $genotype_b->display_name($config),
+      genotype_b_display_name => $genotype_b_details{genotype_display_name},
       genotype_b_id => $genotype_b->genotype_id(),
       genotype_b_taxonid => $organism_b->taxonid(),
-      feature_b_display_name => $genotype_b->display_name($config),
+      feature_b_display_name => $genotype_b_details{genotype_display_name},
       feature_b_id => $genotype_b->genotype_id(),
       feature_b_taxonid => $organism_b->taxonid(),
       genotype_b_gene_ids => \@genotype_b_gene_ids,

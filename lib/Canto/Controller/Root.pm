@@ -52,7 +52,8 @@ sub end : Private
   if (scalar @{ $c->error }) {
     my @canto_errors =
       map {
-            warn 'internal error: ', $_;
+        use Data::Dumper;
+        warn 'internal error: ', Dumper($_);
             {
               title => 'Internal error',
               text => $_

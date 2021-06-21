@@ -176,7 +176,7 @@ my $_proxy_gene = sub {
 
 };
 
-my $nowrap_allele_string = $genotype->allele_string() || '[none]';
+my $nowrap_allele_string = $genotype->allele_string($c->config()) || '[none]';
 
 use Canto::WebUtil;
 
