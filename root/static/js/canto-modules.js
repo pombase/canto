@@ -5609,7 +5609,7 @@ function getDisplayLoci(alleles) {
       long_display_name: displayName,
     };
 
-    displayLoci.push(diploidLocus);
+    displayLoci.unshift(diploidLocus);
   });
 
   return displayLoci;
