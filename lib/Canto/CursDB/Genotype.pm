@@ -276,6 +276,32 @@ sub all_annotations
   return $self->annotations();
 }
 
+sub alleles_in_config_order
+{
+  my $self = shift;
+  my $config = shift;
+
+  my %allele_type_order = ();
+
+  for (my $idx = 0; $idx < @{$config->{allele_type_list}}; $idx++) {
+    my $allele_config = $config->{allele_type_list}->[$idx];
+
+    $allele_type_order{$allele_config->{name}} = $idx;
+  }
+
+  my $allele_genotype_rs = $self->allele_genotypes()
+    ->search({},
+             {
+               prefetch => [qw[diploid allele]]
+             });
+
+  return sort {
+    ($allele_type_order{$a->allele()->type()} // 0)
+      <=>
+    ($allele_type_order{$b->allele()->type()} // 0);
+  } $allele_genotype_rs->all();
+}
+
 sub allele_string
 {
   my $self = shift;
@@ -284,41 +310,43 @@ sub allele_string
 
   my %diploid_groups = ();
 
-  my $allele_genotype_rs = $self->allele_genotypes()
-    ->search({},
-             {
-               prefetch => [qw[diploid allele]]
-             });
+  my @alleles_in_config_order = $self->alleles_in_config_order($config);
 
-  my $haploid_count = 1;
+  my @haploids = ();
 
-  while (defined (my $row = $allele_genotype_rs->next())) {
+  for my $row (@alleles_in_config_order) {
     my $allele = $row->allele();
     my $diploid = $row->diploid();
     if ($diploid) {
       push @{$diploid_groups{$diploid->name()}}, $allele;
     } else {
-      push @{$diploid_groups{"_haploid-" . $haploid_count++}}, $allele;
+      push @haploids, $row->allele();
     }
   }
 
   my @group_names = ();
 
+  my $_make_group_name = sub {
+    my $allele = shift;
+
+    my $long_id = $allele->long_identifier($config);
+    my $gene = $allele->gene();
+    if ($add_gene_primary_names && $gene) {
+      return $gene->primary_identifier() . '-' . $long_id;
+    } else {
+      return $long_id;
+    }
+  };
+
   for my $group_name (sort keys %diploid_groups) {
     push @group_names, (join ' / ',
-                        sort
                         map {
-                          my $long_id = $_->long_identifier($config);
-                          my $gene = $_->gene();
-                          if ($add_gene_primary_names && $gene) {
-                            $gene->primary_identifier() . '-' . $long_id;
-                          } else {
-                            $long_id;
-                          }
+                          my $allele = $_;
+                          $_make_group_name->($allele);
                         } @{$diploid_groups{$group_name}});
   }
 
-  return join " ", sort @group_names;
+  return join " ", ((sort @group_names), map { $_make_group_name->($_) } @haploids);
 }
 
 sub display_name

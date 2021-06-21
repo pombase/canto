@@ -629,6 +629,11 @@ sub make_interaction_annotation
   my $genotype_a = $metagenotype->first_genotype();
   my $genotype_b = $metagenotype->second_genotype();
 
+  my %genotype_a_details = _make_genotype_details($schema, $genotype_a, $config,
+                                                  $ontology_lookup, $organism_lookup);
+  my %genotype_b_details = _make_genotype_details($schema, $genotype_b, $config,
+                                                  $ontology_lookup, $organism_lookup);
+
   my $organism_a = $genotype_a->organism();
   my $organism_b = $genotype_b->organism();
 
@@ -703,19 +708,19 @@ sub make_interaction_annotation
       organism => $organism_hash,
       annotation_type => $annotation_type,
       annotation_type_display_name => $annotation_type_display_name,
-      genotype_a_display_name => $genotype_a->display_name($config),
+      genotype_a_display_name => $genotype_a_details{genotype_display_name},
       genotype_a_id => $genotype_a->genotype_id(),
       genotype_a_taxonid => $organism_a->taxonid(),
-      feature_a_display_name => $genotype_a->display_name($config),
+      feature_a_display_name => $genotype_a_details{genotype_display_name},
       feature_a_id => $genotype_a->genotype_id(),
       feature_a_taxonid => $organism_a->taxonid(),
       genotype_a_gene_ids => \@genotype_a_gene_ids,
       publication_uniquename => $pub_uniquename,
       evidence_code => $evidence_code,
-      genotype_b_display_name => $genotype_b->display_name($config),
+      genotype_b_display_name => $genotype_b_details{genotype_display_name},
       genotype_b_id => $genotype_b->genotype_id(),
       genotype_b_taxonid => $organism_b->taxonid(),
-      feature_b_display_name => $genotype_b->display_name($config),
+      feature_b_display_name => $genotype_b_details{genotype_display_name},
       feature_b_id => $genotype_b->genotype_id(),
       feature_b_taxonid => $organism_b->taxonid(),
       genotype_b_gene_ids => \@genotype_b_gene_ids,
