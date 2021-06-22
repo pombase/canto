@@ -1,23 +1,24 @@
-#! /bin/sh
+#!/bin/sh
 # /etc/init.d/canto
 
 # Installation instructions: https://github.com/pombase/canto/blob/master/etc/canto-init.d.md
 
 action=$1
-port=$2
 
+PORT=5000
 WORKERS=5
 CANTO_SPACE=/var/canto-space
-
 PID_PATH=import_export/canto.pid
+
+if [ -f /etc/default/canto ]; then
+  . /etc/default/canto
+fi
 
 # Carry out specific functions when asked to by the system
 case "$action" in
   start)
-
     echo "Starting Canto with $WORKERS workers"
-
-    (date; cd $CANTO_SPACE; canto/script/canto_docker --non-interactive --use-container-name start_server --pid-file=/$PID_PATH --port $port -- script/canto_start --workers $WORKERS --keepalive-timeout 5 -s Starman --preload) >> canto.log 2>&1 &
+    (date; cd $CANTO_SPACE; canto/script/canto_docker --non-interactive --use-container-name start_server --pid-file=/$PID_PATH --port $PORT -- script/canto_start --workers $WORKERS --keepalive-timeout 5 -s Starman --preload) >> canto.log 2>&1 &
     ;;
   stop)
     pid=`/bin/cat $CANTO_SPACE/$PID_PATH`
@@ -36,4 +37,3 @@ case "$action" in
 esac
 
 exit 0
-
