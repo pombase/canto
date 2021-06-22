@@ -1,6 +1,15 @@
 #!/bin/sh
 # /etc/init.d/canto
 
+### BEGIN INIT INFO
+# Provides:          canto
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Canto community annotation tool
+### END INIT INFO
+
 # Installation instructions: https://github.com/pombase/canto/blob/master/etc/canto-init.d.md
 
 action=$1
