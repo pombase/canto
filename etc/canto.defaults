@@ -1,6 +1,6 @@
 # Canto service configuration file for SysVinit
 
-# Move this file to /etc/default/canto. Set values for the variables below and 
+# Copy this file to /etc/default/canto. Set values for the variables below and 
 # uncomment them to override the default configuration in the init script. The 
 # file will be sourced by /etc/init.d/canto.
 
@@ -10,7 +10,9 @@
 # Number of workers for Server::Starter.
 #WORKERS=
 
-# Directory for Canto's source files.
+# Directory path for Canto. Note that this is the path to the containing 
+# directory for the 'canto', 'data' and 'import_export' directories, not the 
+# path to the 'canto' directory itself.
 #CANTO_SPACE=
 
 # Path to the process ID file for the Server::Starter process.
