@@ -279,7 +279,8 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
       # fall through, use dispatch table
       my $unused_genotype_count = _unused_genotype_count($c);
 
-      if ($unused_genotype_count > 0) {
+      # front page only:
+      if ($unused_genotype_count > 0 && $root_path eq $path) {
         if ($st->{message}) {
           if (!ref $st->{message}) {
             $st->{message} = [$st->{message}];
