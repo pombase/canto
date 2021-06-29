@@ -311,7 +311,7 @@ canto.filter('breakAtSpaces', function () {
     if (item == null) {
       return null;
     }
-    return item.replace(/\s+/g, '<br/>');
+    return item.replace(/(\S\S)\s+(\S\S)/g, '$1<br/>$2');
   };
 });
 
