@@ -295,18 +295,62 @@ sub alleles_in_config_order
                prefetch => [qw[diploid allele]]
              });
 
-  return sort {
-    ($allele_type_order{$a->allele()->type()} // 0)
-      <=>
-    ($allele_type_order{$b->allele()->type()} // 0);
-  } $allele_genotype_rs->all();
+  my $_secondary_sort = sub {
+    my $a = shift;
+    my $b = shift;
+
+    my $a_name = $a->name() // 'UNKNOWN';
+    my $a_description = $a->description() // 'UNKNOWN';
+    my $a_type = $a->type() // 'UNKNOWN';
+    my $a_expression = $a->expression() // 'UNKNOWN';
+
+    my $b_name = $b->name() // 'UNKNOWN';
+    my $b_description = $b->description() // 'UNKNOWN';
+    my $b_type = $b->type() // 'UNKNOWN';
+    my $b_expression = $b->expression() // 'UNKNOWN';
+
+    "$a_name-$a_description-$a_type-$a_expression"
+      cmp
+    "$b_name-$b_description-$b_type-$b_expression"
+  };
+
+  my $sorter = sub {
+    my $a = shift->allele();
+    my $b = shift->allele();
+
+    if (!defined $a->type() && !defined $b->type()) {
+      return $_secondary_sort($a, $b);
+    }
+
+    if (!defined $a->type()) {
+      return -1;
+    }
+
+    if (!defined $b->type()) {
+      return 1;
+    }
+
+    my $res =
+      ($allele_type_order{$a->type()} // 0)
+        <=>
+      ($allele_type_order{$b->type()} // 0);
+
+    if ($res == 0) {
+      $_secondary_sort->($a, $b)
+    } else {
+      $res;
+    }
+  };
+
+  return sort { $sorter->($a, $b) } $allele_genotype_rs->all();
 }
 
 sub allele_string
 {
   my $self = shift;
   my $config = shift;
-  my $add_gene_primary_names = shift;
+  my $add_gene_primary_identifer = shift;
+  my $include_type = shift;
 
   my %diploid_groups = ();
 
@@ -330,9 +374,13 @@ sub allele_string
     my $allele = shift;
 
     my $long_id = $allele->long_identifier($config);
+    if ($include_type) {
+      my $type = '<' . $allele->type() . '>';
+      $long_id .= $type;
+    }
     my $gene = $allele->gene();
-    if ($add_gene_primary_names && $gene) {
-      return $gene->primary_identifier() . '-' . $long_id;
+    if ($add_gene_primary_identifer && $gene) {
+      return $long_id . '-' . $gene->primary_identifier();
     } else {
       return $long_id;
     }
@@ -346,7 +394,7 @@ sub allele_string
                         } @{$diploid_groups{$group_name}});
   }
 
-  return join " ", ((sort @group_names), map { $_make_group_name->($_) } @haploids);
+  return join " ", (@group_names, map { $_make_group_name->($_) } @haploids);
 }
 
 sub display_name

@@ -95,44 +95,128 @@ sub _string_or_undef
   return $string // '<__UNDEF__>';
 }
 
+sub allele_hashes_in_config_order
+{
+  my $config = shift;
+  my @allele_hashes = @_;
+
+  my %allele_type_order = ();
+
+  for (my $idx = 0; $idx < @{$config->{allele_type_list}}; $idx++) {
+    my $allele_config = $config->{allele_type_list}->[$idx];
+
+    $allele_type_order{$allele_config->{name}} = $idx;
+  }
+
+  my $sorter = sub {
+    my $a = shift;
+    my $b = shift;
+
+    if (!defined $a->{type} && !defined $b->{type}) {
+      return 0;
+    }
+
+    if (!defined $a->{type}) {
+      return -1;
+    }
+
+    if (!defined $b->{type}) {
+      return 1;
+    }
+
+    my $res =
+      ($allele_type_order{$a->{type}} // 0)
+        <=>
+      ($allele_type_order{$b->{type}} // 0);
+
+    if ($res == 0) {
+      my $a_name = $a->{name};
+      my $a_description = $a->{description};
+      my $a_type = $a->{type};
+      my $a_expression = $a->{expression};
+
+      my $b_name = $b->{name};
+      my $b_description = $b->{description};
+      my $b_type = $b->{type};
+      my $b_expression = $b->{expression};
+
+      "$a_name-$a_description-$a_type-$a_expression"
+        cmp
+      "$b_name-$b_description-$b_type-$b_expression"
+    } else {
+      $res;
+    }
+  };
+
+  return sort { $sorter->($a, $b) } @allele_hashes;
+}
+
 sub _allele_string_from_json
 {
   my $config = shift;
   my $curs_key = shift;
   my $allele_manager = shift;
-  my $alleles_data = shift;
+  my $allele_data = shift;
+
+  my @allele_data_copy = map {
+    my $allele_hash = $_;
+
+    my %ret = %$allele_hash;
+
+    my $allele = $allele_manager->allele_from_json($allele_hash, $curs_key);
+
+    $ret{name} = $allele->name() // 'UNKNOWN';
+    $ret{description} = $allele->description() // 'UNKNOWN';
+    $ret{type} = $allele->type() // 'UNKNOWN';
+    $ret{expression} = $allele->expression() // 'UNKNOWN';
+
+    $ret{allele} = $allele;
+
+    \%ret;
+  } @$allele_data;
+
+  @allele_data_copy = allele_hashes_in_config_order($config, @allele_data_copy);
 
   my %diploid_groups= ();
 
-  my $haplod_count = 1;
+  my @haploids = ();
 
-  for my $allele_data (@$alleles_data) {
-    my $allele = $allele_manager->allele_from_json($allele_data, $curs_key);
-
+  for my $allele_data (@allele_data_copy) {
     if ($allele_data->{diploid_name}) {
-      push @{$diploid_groups{$allele_data->{diploid_name}}}, $allele;
+      push @{$diploid_groups{$allele_data->{diploid_name}}}, $allele_data->{allele};
     } else {
-      push @{$diploid_groups{"_haploid-" . $haplod_count++}}, $allele;
+      push @haploids, $allele_data->{allele};
     }
   }
 
   my @group_names = ();
 
-  for my $group_name (sort keys %diploid_groups) {
-    push @group_names, (join ' / ',
-                        sort
-                        map {
-                          my $gene = $_->gene();
-                          my $long_id = $_->long_identifier($config);
-                          if ($gene) {
-                            $gene->primary_identifier() . '-' . $long_id;
-                          } else {
-                            $long_id;
-                          }
-                        } @{$diploid_groups{$group_name}});
+  my $_make_allele_display_name = sub {
+    my $allele = shift;
+    my $gene = $allele->gene();
+    my $long_id = $allele->long_identifier($config);
+    my $type = '<' . $allele->type() . '>';
+    $long_id .= $type;
+    if ($gene) {
+      return $long_id . '-' . $gene->primary_identifier();
+    } else {
+      return $long_id;
+    }
+  };
+
+  my @diploid_group_names = ();
+
+  for my $diploid_name (sort keys %diploid_groups) {
+    push @diploid_group_names, (join ' / ',
+                                map {
+                                  my $allele = $_;
+                                  $_make_allele_display_name->($allele);
+                                } @{$diploid_groups{$diploid_name}});
   }
 
-  return join " ", sort @group_names;
+  my @haploid_names = map { $_make_allele_display_name->($_) } @haploids;
+
+  return join " ", (@diploid_group_names, @haploid_names);
 }
 
 
@@ -210,7 +294,7 @@ sub find_genotype
 
     next if scalar(@alleles) != scalar(@$search_alleles_data);
 
-    if ($search_allele_string eq $genotype->allele_string($self->config(), 1)) {
+    if ($search_allele_string eq $genotype->allele_string($self->config(), 1, 1)) {
       return $genotype;
     }
   }
