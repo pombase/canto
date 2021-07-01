@@ -12,5 +12,12 @@
       ng-options="o as o.full_name for o in organisms track by o.taxonid">
     <option value="" disabled>Select an organism...</option>
   </select>
+  <button
+      class="btn btn-default"
+      ng-if="allowUnset && organisms.length > 1"
+      ng-click="unsetOrganism()"
+      title="Clear selected organism">
+    <span class="glyphicon glyphicon-remove"></span>
+  </button>
   <span ng-if="organisms.length === 1">{{organisms[0].full_name}}</span>
 </div>

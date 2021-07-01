@@ -1,4 +1,4 @@
-<div>
+<div class="curs-term-confirm">
   <div class="modal-header">
     <h4 class="modal-title">
 Confirm term
@@ -22,6 +22,11 @@ Confirm term
           </div>
         </div>
         <term-definition-display term-details="data.termDetails"></term-definition-display>
+
+        <div class="curs-term-confirm-no-child-finish"
+             ng-if="data.termDetails.children.length == 0">
+          This term has no child terms / more specific terms
+        </div>
       </div>
       <div ng-if="data.state === 'children'" class="curs-box-body">
         <div ng-if="data.termDetails.children.length == 0" class="inline-help curs-box-title">
@@ -41,7 +46,10 @@ Confirm term
   <div class="modal-footer">
     <div ng-if="data.state == 'definition'">
       <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-      <button class="btn btn-primary" ng-click="next()">Next &rarr;</button>
+      <button ng-if="data.termDetails.children.length != 0"
+              class="btn btn-primary" ng-click="next()">Next &rarr;</button>
+      <button ng-if="data.termDetails.children.length == 0"
+              class="btn btn-primary" ng-click="finish()">Finish</button>
     </div>
     <div ng-if="data.state == 'children'">
       <button class="btn btn-warning" ng-click="back()">&larr; Back</button>

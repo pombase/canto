@@ -250,6 +250,19 @@ sub lookup
     croak "no search scope passed to lookup()";
   }
 
+  # remove isolated "*" characters
+  $search_string =~ s/(?![\w\d_])\*+/ /g;
+
+  # remove non word characters
+  $search_string =~ s/[^\w\d_\*]+/ /g;
+  $search_string =~ s/\s+/ /g;
+  $search_string =~ s/^\s+//;
+  $search_string =~ s/\s+$//;
+
+  if (length $search_string == 0) {
+    return ();
+  }
+
   my $searcher;
   my $parser;
 

@@ -65,7 +65,7 @@ sub check_new_annotations
   {
     my ($completed_count, $annotations_ref) =
       Canto::Curs::Utils::get_annotation_table($config, $curs_schema,
-                                                'genetic_interaction');
+                                                'genotype_interaction');
 
     my @annotations = @$annotations_ref;
 
@@ -464,7 +464,7 @@ check_new_annotations($dummy_alt_id);
                    expression => 'Knockdown',
                  },
                  {
-                   'long_display_name' => 'ssm4delta(deletion)',
+                   'long_display_name' => 'ssm4delta',
                    'primary_identifier' => 'SPAC27D7.13c:allele-1',
                    'name' => 'ssm4delta',
                    'description' => 'deletion',

@@ -436,7 +436,7 @@ sub _genotype_details_hash
     name => $genotype->name(),
     background => $genotype->background(),
     comment => $genotype->comment(),
-    allele_string => $genotype->allele_string(),
+    allele_string => $genotype->allele_string($config),
     display_name => $genotype->display_name($config),
     genotype_id => $genotype->genotype_id(),
     annotation_count => $genotype->annotations()->count(),
@@ -455,12 +455,23 @@ sub _genotype_details_hash
 
     my @alleles = ();
 
+    my %allele_count_per_locus = ();
+    my $locus_count = 0;
+
     while (defined (my $row = $allele_genotype_rs->next())) {
       my $allele = $row->allele();
       push @alleles, $allele;
       my $diploid = $row->diploid();
       if ($diploid) {
+        if (exists $allele_count_per_locus{$diploid->name()}) {
+          $allele_count_per_locus{$diploid->name()}++;
+        } else {
+          $allele_count_per_locus{$diploid->name()} = 1;
+          $locus_count++;
+        }
         push @{$diploid_names{$allele->allele_id()}}, $diploid->name();
+      } else {
+        $locus_count++;
       }
     }
 
@@ -488,6 +499,17 @@ sub _genotype_details_hash
     } @allele_hashes;
 
     $ret{alleles} = [@allele_hashes];
+
+    $ret{diploid_locus_count} = 0;
+
+    map {
+      my $diploid_name = $_;
+      if ($allele_count_per_locus{$diploid_name} > 1) {
+        $ret{diploid_locus_count}++;
+      }
+    } keys %allele_count_per_locus;
+
+    $ret{locus_count} = $locus_count;
   }
 
   return \%ret;

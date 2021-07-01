@@ -1,0 +1,50 @@
+{
+  "PMID:2120045": {
+    "comment": "test notes\nline 2",
+    "genes": {
+      "FBgn0016131": {
+        "secondary_identifiers": [ "FBgn0016131-sec-test" ]
+      },
+      "FBgn0004107": {
+      }
+    },
+    "alleles": {
+      "FBal0119310": {
+        "gene": "FBgn0004107",
+        "type": "accessory",
+        "name": "Dmel\\Cdk2-new-name",
+        "description": "description of FBal0119310",
+        "comment": "comment on FBal0119310",
+        "synonyms": ["UAS-Cdk2-myc", "UAS-Cdk2"]
+      },
+      "FBal0064432": {
+        "gene": "FBgn0016131",
+        "type": "other",
+        "name": "Dmel\\Cdk4_k06503",
+        "description": null,
+        "synonyms": ["l(2)k06503"],
+        "secondary_identifiers": [ "FBal0064432-sec-test" ]
+      },
+      "FBab0037918" : {
+        "description" : "Df(2L)Exel7046",
+        "name" : "Df(2L)Exel7046",
+        "type" : "aberration",
+        "taxon_id": 7227
+      }
+    },
+    "genotypes": {
+      "FB<something>": {
+        "genotype_name": "...",
+        "background": "...",
+        "alleles": [
+          {
+            "allele_uniquename": "FBal0119310"
+          },
+          {
+            "allele_uniquename": "FBal0064432"
+          }
+        ]
+      }
+    }
+  }
+}

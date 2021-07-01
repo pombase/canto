@@ -1,15 +1,20 @@
-<tr ng-class="{ 'curs-row-checked' : sessionState == 'APPROVAL_IN_PROGRESS' && checked == 'yes' }">
-  <td ng-if="multiOrganismMode && annotationType.feature_type !== 'metagenotype'">
+<tr ng-class="{ 'curs-row-checked' : sessionState == 'APPROVAL_IN_PROGRESS' && checked == 'yes' || showCheckboxes && checkboxChecked }"
+    ng-click="showCheckboxes && checkboxClick()">
+  <td class="curs-annotation-table-checkbox" ng-if="showCheckboxes">
+    <input type="checkbox" name="selectAnnotation"
+           ng-checked="checkboxChecked"/>
+  </td>
+  <td ng-if="showFeatures && multiOrganismMode && annotationType.feature_type !== 'metagenotype'">
     <span class="organism-name" ng-if="annotation.organism">{{annotation.organism.scientific_name | abbreviateGenus}}</span>
     <span class="organism-name" ng-if="!annotation.organism">{{annotation.taxonid | abbreviateGenus}}</span>
     <span class="curs-strain-name-inline" ng-if="showStrain"> ({{annotation.strain_name}})</span>
   </td>
-  <td ng-if="annotationType.feature_type == 'genotype'">
+  <td ng-if="showFeatures && annotationType.feature_type == 'genotype'">
     <div style="white-space: nowrap" ng-repeat="locus in displayLoci">
       {{locus.gene_display_name}}
     </div>
   </td>
-  <td ng-if="annotationType.feature_type == 'metagenotype'">
+  <td ng-if="showFeatures && annotationType.feature_type == 'metagenotype'">
     <a ng-href="{{featureLink('genotype', annotation.pathogen_genotype.genotype_id)}}"><span ng-bind-html="annotation.pathogen_genotype.genotype_display_name | encodeAlleleSymbols | toTrusted"></span></a>
     <div>
       <span class="organism-name">{{annotation.pathogen_genotype.organism.scientific_name | abbreviateGenus}}</span>
@@ -19,7 +24,7 @@
       <b>bkg:</b> <span ng-bind-html="annotation.pathogen_genotype.genotype_background | encodeAlleleSymbols | toTrusted"></span>
     </div>
   </td>
-  <td ng-if="annotationType.feature_type == 'metagenotype'">
+  <td ng-if="showFeatures && annotationType.feature_type == 'metagenotype'">
     <div ng-switch="hasWildTypeHost">
       <a ng-switch-when="false" ng-href="{{featureLink('genotype', annotation.host_genotype.genotype_id)}}">
         <span ng-bind-html="annotation.host_genotype.genotype_display_name | encodeAlleleSymbols | toTrusted"></span>
@@ -34,13 +39,13 @@
       <b>bkg:</b> <span ng-bind-html="annotation.host_genotype.genotype_background | encodeAlleleSymbols | toTrusted"></span>
     </div>
   </td>
-  <td ng-if="annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_background">
+  <td ng-if="showFeatures && annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_background">
     <span ng-bind-html="annotation.genotype_background | encodeAlleleSymbols | toTrusted"></span>
   </td>
-  <td ng-if="annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_name">
+  <td ng-if="showFeatures && annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_name">
     <span ng-bind-html="annotation.genotype_name | encodeAlleleSymbols | toTrusted"></span>
   </td>
-  <td ng-if="annotationType.feature_type === 'gene' && !featureIdFilter">
+  <td ng-if="showFeatures && annotationType.feature_type === 'gene' && !featureIdFilter">
     <a ng-if="annotation.status === 'new' && addLinks()"
        href="{{featureLink(annotationType.feature_type, annotation.feature_id)}}">
       {{annotation.gene_name_or_identifier}}
@@ -49,7 +54,7 @@
       {{annotation.gene_name_or_identifier}}
     </span>
   </td>
-  <td ng-if="annotationType.feature_type == 'genotype'">
+  <td ng-if="showFeatures && annotationType.feature_type == 'genotype'">
     <span ng-if="annotation.status === 'new'">
       <a ng-if="addLinks()"
          href="{{featureLink(annotationType.feature_type, annotation.feature_id)}}">

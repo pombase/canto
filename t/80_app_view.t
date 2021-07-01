@@ -43,7 +43,7 @@ test_psgi $app, sub {
     is $res->code, 200;
 
     like ($res->content(), qr/Details for publication: PMID:19351719/);
-    like ($res->content(), qr/Sequence feature or region/);
+    like ($res->content(), qr/Retracted/);
   }
 
   # test viewing a list
@@ -99,7 +99,7 @@ test_psgi $app, sub {
 
     like ($scrape_res->{title}, qr/List of all publications/);
     like ($scrape_res->{fields}->[0], qr/^\s*PMID:19351719\s*$/);
-    like ($scrape_res->{fields}->[1], qr/^\s*Sequence feature or region\s*$/);
+    like ($scrape_res->{fields}->[1], qr/^\s*Retracted\s*$/);
   }
 
   # test viewing a report

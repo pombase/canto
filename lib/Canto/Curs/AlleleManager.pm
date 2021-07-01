@@ -257,6 +257,7 @@ sub allele_from_json
   }
 
   if (!$gene_id && $allele_type !~ /^aberration/) {
+    use Data::Dumper;
     confess "internal error, no gene_id for: ", Dumper([$json_allele]);
   }
 

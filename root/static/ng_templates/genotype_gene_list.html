@@ -4,7 +4,7 @@
       <thead>
         <tr>
           <th>Gene</th>
-          <th colspan="{{showQuickDeletionButtons ? 2 : 1}}">Actions</th>
+          <th colspan="{{columnCount}}">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -20,12 +20,19 @@
                     title="{{deletionButtonTitle(gene.gene_id)}}"
                     ng-disabled="hasDeletionGenotype(gene.gene_id)"
                     ng-click="quickDeletion(gene.gene_id)">
-                Deletion</button>
+              Deletion
+            </button>
+          </td>
+          <td ng-if="showQuickWildTypeButtons">
+            <button class="btn btn-primary btn-xs"
+                    ng-click="quickWildType(gene.primary_name || gene.primary_identifier, gene.primary_identifier, gene.gene_id)">
+              Wild type
+            </button>
           </td>
           <td>
             <button class="btn btn-primary btn-xs"
                     ng-click="singleAlleleQuick(gene.primary_name || gene.primary_identifier, gene.primary_identifier, gene.gene_id)">
-{{showQuickDeletionButtons ? 'Other genotype' : 'New genotype'}}
+              {{showQuickDeletionButtons ? 'Other genotype' : 'New genotype'}}
             </button>
           </td>
         </tr>

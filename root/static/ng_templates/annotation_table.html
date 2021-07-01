@@ -28,14 +28,17 @@
         <table ng-switch-when="ontology" class="list">
           <thead>
             <tr>
-              <th ng-if="multiOrganismMode && annotationType.feature_type !== 'metagenotype'"> 
+              <th ng-if="showCheckboxes">
+                &nbsp;
+              </th>
+              <th ng-if="showFeatures && multiOrganismMode && annotationType.feature_type !== 'metagenotype'"> 
                 <a class="curs-sort-button" href=""
                    title="Click to sort" ng-click="setSortBy('organism_full_name')">
                   Species<span ng-if="strainsMode && annotationType.feature_type === 'genotype'"> (strain)</span> 
                   <img ng-src="{{app_static_path + (sortColumn == 'organism_full_name' ? '/images/sort_up.svg' : '/images/sort_both.svg')}}"/>
                 </a>
              </th>
-              <th ng-if="annotationType.feature_type == 'genotype'">
+              <th ng-if="showFeatures && annotationType.feature_type == 'genotype'">
                 <a class="curs-sort-button" href=""
                    title="{{sortColumn == 'feature_display_name' ? 'Reset sort order' : 'Sort ascending'}}"
                    ng-click="setSortBy('genotype_genes')">
@@ -43,8 +46,8 @@
                   <img ng-src="{{app_static_path + (sortColumn == 'genotype_genes' ? '/images/sort_up.svg' : '/images/sort_both.svg')}}"/>
                 </a>
               </th>
-              <th ng-if="annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_background">Background</th>
-              <th ng-if="annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_name">
+              <th ng-if="showFeatures && annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_background">Background</th>
+              <th ng-if="showFeatures && annotationType.feature_type == 'genotype' && !data.hideColumns.genotype_name">
                 <a class="curs-sort-button" href=""
                    title="{{sortColumn == 'feature_display_name' ? 'Reset sort order' : 'Sort ascending'}}"
                    ng-click="setSortBy('genotype_name')">
@@ -52,7 +55,7 @@
                   <img ng-src="{{app_static_path + (sortColumn == 'genotype_name' ? '/images/sort_up.svg' : '/images/sort_both.svg')}}"/>
                 </a>
               </th>
-              <th ng-if="annotationType.feature_type == 'genotype' || !featureIdFilter && annotationType.feature_type != 'metagenotype'">
+              <th ng-if="showFeatures && (annotationType.feature_type == 'genotype' || !featureIdFilter && annotationType.feature_type != 'metagenotype')">
                 <a class="curs-sort-button" href=""
                    title="{{sortColumn == 'feature_display_name' ? 'Reset sort order' : 'Sort ascending'}}"
                    ng-click="setSortBy('feature_display_name')">
@@ -61,8 +64,8 @@
                   <img ng-src="{{app_static_path + (sortColumn == 'feature_display_name' ? '/images/sort_up.svg' : '/images/sort_both.svg')}}"/>
                 </a>
               </th>
-              <th ng-if="annotationType.feature_type == 'metagenotype'">Pathogen genotype</th>
-              <th ng-if="annotationType.feature_type == 'metagenotype'">Host genotype</th>
+              <th ng-if="showFeatures && annotationType.feature_type == 'metagenotype'">Pathogen genotype</th>
+              <th ng-if="showFeatures && annotationType.feature_type == 'metagenotype'">Host genotype</th>
               <th ng-if="!data.hideColumns.term_ontid">
                 <a class="curs-sort-button" href=""
                    title="{{sortColumn == 'feature_display_name' ? 'Reset sort order' : 'Sort ascending'}}"
@@ -133,10 +136,18 @@
                 annotation-type-name="ontology"
                 feature-status-filter="{{featureStatusFilter}}"
                 show-metagenotype-link="{{showMetagenotypeLink}}"
+                show-checkboxes="{{showCheckboxes}}"
+                checkbox-changed="checkboxChanged(annotationId, checkboxChecked)"
+                select-all-model="selectAllModel"
+                show-menu="{{showMenu}}"
+                show-features="{{showFeatures}}"
                 ng-repeat="annotation in data.sortedAnnotations">
             </tr>
           </tbody>
         </table>
+        <div style="padding-top: 0.5em;" ng-show="showSelectAll">
+          <a href="#" ng-click="selectAll()">Select all</a>
+        </div>
         <table ng-switch-when="interaction" class="list">
           <thead>
             <tr>
@@ -211,6 +222,7 @@
           <tbody>
             <tr annotation-table-row annotation-type-name="interaction"
                 feature-status-filter="{{featureStatusFilter}}"
+                show-menu="showMenu"
                 ng-repeat="annotation in data.sortedAnnotations">
             </tr>
           </tbody>

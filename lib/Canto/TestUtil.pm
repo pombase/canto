@@ -108,7 +108,7 @@ our %shared_test_results = (
         expression => 'Knockdown',
       },
       {
-        'long_display_name' => 'ssm4delta(deletion)',
+        'long_display_name' => 'ssm4delta',
         'primary_identifier' => 'SPAC27D7.13c:allele-1',
         'name' => 'ssm4delta',
         'description' => 'deletion',
@@ -681,12 +681,12 @@ sub _add_pub_details
     $_->update();
   } @pubs;
 
-  my $feature_or_region_term =
-    $schema->resultset('Cvterm')->find({ name => 'Sequence feature or region' });
+  my $retracted_term =
+    $schema->resultset('Cvterm')->find({ name => 'Retracted' });
 
   my $pub_19351719 = $schema->resultset('Pub')->find({ uniquename => 'PMID:19351719' });
 
-  $pub_19351719->triage_status($feature_or_region_term);
+  $pub_19351719->triage_status($retracted_term);
   $pub_19351719->update();
 }
 

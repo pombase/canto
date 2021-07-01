@@ -217,7 +217,7 @@ test_config:
                  email: "some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org"
                  name: "Some Testperson"
                  community_curated: 0
-           - type: genetic_interaction
+           - type: genotype_interaction
              status: new
              metagenotypes(Metagenotype:identifier):
                - test-metagenotype-1
@@ -283,6 +283,19 @@ test_config:
                  email: "a.n.other.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org"
                  name: "Another Testperson"
                  community_curated: 1
+
+enabled_annotation_type_list:
+  - molecular_function
+  - biological_process
+  - cellular_component
+  - phenotype
+  - post_translational_modification
+  - wt_rna_expression
+  - wt_protein_expression
+  - genotype_interaction
+  - genetic_interaction
+  - physical_interaction
+
 implementation_classes:
   ontology_annotation_adaptor: 'Canto::Chado::OntologyAnnotationLookup'
   interaction_annotation_adaptor: 'Canto::Chado::InteractionAnnotationLookup'
@@ -314,3 +327,16 @@ extension_conf_files:
 
 email:
   from_address: DO_NOT_EMAIL
+
+enabled_annotation_type_list:
+  - disease_formation_phenotype
+  - molecular_function
+  - biological_process
+  - cellular_component
+  - phenotype
+  - post_translational_modification
+  - wt_rna_expression
+  - wt_protein_expression
+  - genotype_interaction
+  - genetic_interaction
+  - physical_interaction

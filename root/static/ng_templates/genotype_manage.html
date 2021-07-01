@@ -51,9 +51,9 @@
                            ng-if="data.selectedOrganism && data.genes.length === 0">
                           No genes have been added for this organism.
                         </p>
-                        <a ng-if="data.splitGenotypesByOrganism"
+                        <a ng-if="pathogen_host_mode"
                            href="edit_genes">Delete or edit genes and organisms</a>
-                        <a ng-if="!data.splitGenotypesByOrganism"
+                        <a ng-if="!pathogen_host_mode"
                            ng-click="openSingleGeneAddDialog()">Add another gene</a>
                         </div>
                     </div>
@@ -78,14 +78,15 @@
                                     selected-genotype-id="data.selectedGenotypeId"
                                 />
                             </div>
-                            <div class="curs-genotype-list-view-no-checkbox" ng-if="data.multiAlleleGenotypes.length != 0">
+                            <div class="curs-genotype-list-view-no-checkbox"
+                                 ng-if="data.multiAlleleGenotypes.length != 0 || data.multiLocusDiploids.length != 0">
                                 <div class="curs-genotype-list-instructions">
                                     <span>Multi-locus genotypes</span>
                                 </div>
 
                                 <genotype-list-view
                                     genotype-list="data.multiAlleleGenotypes"
-                                    diploid-list="[]"
+                                    diploid-list="data.multiLocusDiploids"
                                     navigate-on-click="false"
                                     show-check-box-actions="false"
                                     selected-genotype-id="data.selectedGenotypeId"

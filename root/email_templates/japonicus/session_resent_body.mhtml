@@ -1,0 +1,51 @@
+<%args>
+$config
+$publication_uniquename
+$publication_title
+$session_link
+$curator_name
+$curator_known_as
+$help_index
+$existing_annotation_count
+$logged_in_user
+</%args>
+Dear <% $curator_known_as // $curator_name %>,
+
+We recently invited you to contribute annotations based on your paper,
+<% wrap('  ', '  ', '"' . $publication_title . '" (' . $publication_uniquename . '), to JaponicusDB.') %>,
+
+We have noticed, however, that no action has been taken on the curation
+session. Please visit this page, where you can either start curating the
+paper, or reassign it to another author (e.g. the first author):
+
+  <% $session_link %>
+
+To reassign this session, use the "reassign" button, and enter the author's
+name and email address. To curate the publication yourself, click "start
+curating" and then follow the simple step-by-step instructions to capture the
+experimental data reported in your paper.
+
+If you begin curation, and are then unsure what to do next, or if you believe
+that this paper is not suitable for curation in Canto, please send a message
+to helpdesk@pombase.org for assistance or advice.
+
+We greatly appreciate your contribution -- all community annotations help keep
+JaponicusDB literature curation comprehensive, accurate, and up to date.
+
+Because JaponicusDB has no dedicated professional curators, community
+curation is critical to its success. If you need help, PomBase
+curators can add phenotype terms to FYPO, request new terms from GO,
+or provide advice about curation.
+
+
+<% $session_link %>
+
+Sincerely yours,
+<% $logged_in_user->name() %>
+
+
+<%init>
+use Text::Wrap;
+
+$Text::Wrap::columns = 72;
+</%init>

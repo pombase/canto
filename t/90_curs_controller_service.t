@@ -75,6 +75,8 @@ test_psgi $app, sub {
              {
                'allele_string' => 'SPCC63.05delta ssm4delta',
                'genotype_id' => 1,
+               'locus_count' => 2,
+               'diploid_locus_count' => 0,
                'metagenotype_count_by_type' => {
                  interaction => 1,
                },

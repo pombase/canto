@@ -470,7 +470,6 @@ table.curs-genotype-list tbody {
 .curs-genotype-list-row-actions {
   border: 2px solid #bbb;
   padding: 3px;
-  font-size: 90%;
   z-index: 100;
   position: absolute;
   overflow: visible;
@@ -507,7 +506,7 @@ table.list thead img.sort-direction-icon {
   padding-right: 5px;
 }
 
-.annotation-single-row td {
+.annotation-single-row-table td {
   padding: 5px !important;
   padding-right: 8px !important;
 }
@@ -568,7 +567,6 @@ td.table-row-actions div {
 }
 .curs-evidence-conditions .tagit {
   font-size: 80%;
-  max-width: 50em;
 }
 .curs-evidence-conditions-help {
   color: #111;
@@ -804,7 +802,7 @@ tr .curs-genotype-allele-gene {
 
 .curs-genotype-list .selected, .curs-genotype-details .selected {
   background-color: #eee !important;
-  border: 2.5px solid #888;
+  outline: 2.5px solid #888;
 }
 
 .feature-list-action {
@@ -1388,6 +1386,15 @@ form label.error {
   color: red;
 }
 
+.curs-allele-conditions {
+  float: left;
+  width: 500px;
+}
+
+.curs-used-conditions {
+  clear: left;
+}
+
 .curs-allele-condition-button span.ui-button-text {
   font-size: 80%;
 }
@@ -1518,6 +1525,14 @@ a.curs-editable-table-field img, a.curs-editable-table-long-field img
   overflow: hidden;
 }
 
+.curs-annotation-edit .curs-term-suggest-name {
+  margin-bottom: 0.5em;
+}
+
+.curs-annotation-edit .curs-term-suggest button {
+  margin-left: 0.3em;
+}
+
 .modal-dialog {
 /*  margin-top: 5%;*/
 }
@@ -1569,6 +1584,14 @@ a:not([href]) {
   color: grey;
 }
 
+.curs-cardinality-required {
+  color: #8C0000;
+}
+
+.curs-cardinality-available {
+  color: #4F4F4F;
+}
+
 .curs-extension-name-complete-hint {
   white-space: nowrap;
   padding-left: 1em;
@@ -1590,11 +1613,6 @@ a:not([href]) {
 
 .curs-genotype-no-gene-notice {
   margin-top: 10px;
-}
-
-.curs-metagenotype-manage-pathogen, .curs-metagenotype-manage-host {
-  width: 49%;
-  float: left;
 }
 
 .gene-button-delete-text-disabled {
@@ -1694,7 +1712,6 @@ a:not([href]) {
 .curs-summary-gene-column {
   margin-right: 10px;
   padding-right: 10px;
-  margin-top: 10px;
 }
 .curs-summary-organism-container {
   margin-bottom: 8px;
@@ -1723,6 +1740,26 @@ a:not([href]) {
   display: inline-block;
   font-weight: 700;
   margin-bottom: 10px;
+}
+.curs-metagenotype-picker-columns {
+  display: flex;
+  flex-wrap: wrap;
+}
+.curs-metagenotype-picker-column-pathogen {
+  flex-basis: 530px;
+  padding-right: 30px;
+}
+.curs-metagenotype-picker-column-host {
+  flex-shrink: 1;
+}
+
+.curs-wild-type-genotype-list {
+  font-size: 90%;
+  padding-left: 0;
+}
+.curs-wild-type-genotype-list > li > label {
+  font-weight: normal;
+  padding-left: 10px;
 }
 
 .curs-warning-container {
@@ -1783,6 +1820,7 @@ a:not([href]) {
 
 .curs-annotation-transfer-extension {
   margin-top: 1.5em;
+  user-select: none;
 }
 
 .curs-annotation-transfer-choose-interactor > div {
@@ -1860,4 +1898,51 @@ a:not([href]) {
 .curs-paused-message {
   padding: 1em 0.5em 0.5em 0.5em;
   font-size: 95%;
+}
+
+.curs-annotation-table-transfer-all {
+  float: right;
+  padding-right: 10em;
+}
+
+.curs-annotation-transfer-all .modal-body {
+  min-height: 20em;
+}
+
+.curs-annotation-transfer-all-single-row {
+  white-space: nowrap;
+}
+
+.curs-annotation-transfer-all-single-row * {
+  white-space: normal;
+}
+
+.curs-annotation-transfer-all-single-row > div {
+  display: inline-block;
+}
+
+.curs-annotation-transfer-all-single-row table {
+  display: inline-table;
+  max-width: 100%;
+}
+
+.curs-annotation-transfer-all-select-annotation {
+  margin-top: 0.5em;
+  margin-bottom: 1.5em;
+  max-height: 24em;
+  overflow-y: scroll;
+}
+
+.curs-annotation-transfer-all-select-annotation table {
+  display: inline-table;
+}
+
+.tagit-new {
+  width: 25em;
+}
+
+.curs-term-confirm-no-child-finish {
+  font-weight: bold;
+  margin-top: 2em;
+  font-size: 110%;
 }

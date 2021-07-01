@@ -52,7 +52,8 @@ sub end : Private
   if (scalar @{ $c->error }) {
     my @canto_errors =
       map {
-            warn 'internal error: ', $_;
+        use Data::Dumper;
+        warn 'internal error: ', Dumper($_);
             {
               title => 'Internal error',
               text => $_
@@ -285,7 +286,7 @@ sub login : Global {
 
   if ($c->authenticate({email_address => $email_address,
                         password => $password})) {
-    $c->flash->{message} = "Login successful";
+    push @{$c->flash->{message}}, "Login successful";
 
     if ($return_path =~ m/logout|login/) {
       $c->forward($c->config()->{instance_front_path});

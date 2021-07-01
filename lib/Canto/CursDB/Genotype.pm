@@ -276,13 +276,18 @@ sub all_annotations
   return $self->annotations();
 }
 
-sub allele_string
+sub alleles_in_config_order
 {
   my $self = shift;
   my $config = shift;
-  my $add_gene_primary_names = shift;
 
-  my %diploid_groups = ();
+  my %allele_type_order = ();
+
+  for (my $idx = 0; $idx < @{$config->{allele_type_list}}; $idx++) {
+    my $allele_config = $config->{allele_type_list}->[$idx];
+
+    $allele_type_order{$allele_config->{name}} = $idx;
+  }
 
   my $allele_genotype_rs = $self->allele_genotypes()
     ->search({},
@@ -290,35 +295,106 @@ sub allele_string
                prefetch => [qw[diploid allele]]
              });
 
-  my $haploid_count = 1;
+  my $_secondary_sort = sub {
+    my $a = shift;
+    my $b = shift;
 
-  while (defined (my $row = $allele_genotype_rs->next())) {
+    my $a_name = $a->name() // 'UNKNOWN';
+    my $a_description = $a->description() // 'UNKNOWN';
+    my $a_type = $a->type() // 'UNKNOWN';
+    my $a_expression = $a->expression() // 'UNKNOWN';
+
+    my $b_name = $b->name() // 'UNKNOWN';
+    my $b_description = $b->description() // 'UNKNOWN';
+    my $b_type = $b->type() // 'UNKNOWN';
+    my $b_expression = $b->expression() // 'UNKNOWN';
+
+    "$a_name-$a_description-$a_type-$a_expression"
+      cmp
+    "$b_name-$b_description-$b_type-$b_expression"
+  };
+
+  my $sorter = sub {
+    my $a = shift->allele();
+    my $b = shift->allele();
+
+    if (!defined $a->type() && !defined $b->type()) {
+      return $_secondary_sort($a, $b);
+    }
+
+    if (!defined $a->type()) {
+      return -1;
+    }
+
+    if (!defined $b->type()) {
+      return 1;
+    }
+
+    my $res =
+      ($allele_type_order{$a->type()} // 0)
+        <=>
+      ($allele_type_order{$b->type()} // 0);
+
+    if ($res == 0) {
+      $_secondary_sort->($a, $b)
+    } else {
+      $res;
+    }
+  };
+
+  return sort { $sorter->($a, $b) } $allele_genotype_rs->all();
+}
+
+sub allele_string
+{
+  my $self = shift;
+  my $config = shift;
+  my $add_gene_primary_identifer = shift;
+  my $include_type = shift;
+
+  my %diploid_groups = ();
+
+  my @alleles_in_config_order = $self->alleles_in_config_order($config);
+
+  my @haploids = ();
+
+  for my $row (@alleles_in_config_order) {
     my $allele = $row->allele();
     my $diploid = $row->diploid();
     if ($diploid) {
       push @{$diploid_groups{$diploid->name()}}, $allele;
     } else {
-      push @{$diploid_groups{"_haploid-" . $haploid_count++}}, $allele;
+      push @haploids, $row->allele();
     }
   }
 
   my @group_names = ();
 
+  my $_make_group_name = sub {
+    my $allele = shift;
+
+    my $long_id = $allele->long_identifier($config);
+    if ($include_type) {
+      my $type = '<' . $allele->type() . '>';
+      $long_id .= $type;
+    }
+    my $gene = $allele->gene();
+    if ($add_gene_primary_identifer && $gene) {
+      return $long_id . '-' . $gene->primary_identifier();
+    } else {
+      return $long_id;
+    }
+  };
+
   for my $group_name (sort keys %diploid_groups) {
     push @group_names, (join ' / ',
-                        sort
                         map {
-                          my $long_id = $_->long_identifier($config);
-                          my $gene = $_->gene();
-                          if ($add_gene_primary_names && $gene) {
-                            $gene->primary_identifier() . '-' . $long_id;
-                          } else {
-                            $long_id;
-                          }
+                          my $allele = $_;
+                          $_make_group_name->($allele);
                         } @{$diploid_groups{$group_name}});
   }
 
-  return join " ", sort @group_names;
+  return join " ", (@group_names, map { $_make_group_name->($_) } @haploids);
 }
 
 sub display_name
@@ -353,7 +429,8 @@ sub metagenotypes
   return $self->metagenotype_second_genotypes()->all();
 }
 
-# returns either the count of metagenotypes that this genotype is part of
+# returns a hash of counts of metagenotypes of this genotype by
+# metagenotype type
 sub metagenotype_count_by_type
 {
   my $self = shift;
@@ -411,6 +488,20 @@ sub genotype_type
     return $organism_details->{pathogen_or_host};
   }
 }
+
+=head2 is_wild_type
+
+ Usage   : if ($genotype->is_wild_type()) { ... }
+ Function: Return 1 iff is genotype has no alleles
+
+=cut
+
+sub is_wild_type {
+  my $self = shift;
+
+  return $self->allele_genotypes()->count() == 0;
+}
+
 
 sub delete
 {

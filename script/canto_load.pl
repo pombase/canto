@@ -307,13 +307,13 @@ if (@ontology_args) {
   if (!$dry_run) {
     $ontology_load->finalise();
     $index->finish_index();
-  }
 
-  my $term_update = Canto::Curs::TermUpdate->new(config => $config);
+    my $term_update = Canto::Curs::TermUpdate->new(config => $config);
 
-  my $iter = Canto::Track::curs_iterator($config, $schema);
-  while (my ($curs, $cursdb) = $iter->()) {
-    $term_update->update_curs_terms($cursdb);
+    my $iter = Canto::Track::curs_iterator($config, $schema);
+    while (my ($curs, $cursdb) = $iter->()) {
+      $term_update->update_curs_terms($cursdb);
+    }
   }
 }
 

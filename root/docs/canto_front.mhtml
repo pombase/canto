@@ -31,29 +31,37 @@ databases.
         Canto is currently deployed for:
         <ul class="canto-other-instances">
           <li>
-  <a href="http://curation.pombase.org/pombe" class="btn btn-primary visit">Visit...</a>
+  <a href="https://curation.pombase.org/pombe" class="btn btn-primary visit">Visit...</a>
   <span class="organism-name">Schizosaccharomyces pombe</span> (fission yeast)
   at PomBase.
   Curate GO, phenotypes, interactions, protein modifications for inclusion in
-  <a href="http://www.pombase.org">PomBase</a>.
+  <a href="http://www.pombase.org">PomBase</a>
           </li>
           <li>
   <a href="https://demo-canto.phi-base.org/" class="btn btn-primary visit">Visit ...</a>
   <span>In collaboration with Rothamsted Research, we are extending
   Canto to enable the curation of pathogen-host interaction
-  (multispecies) phenotypes and genotypes for <a href="http://www.phi-base.org">PHI-base</a></span>.
+  (multispecies) phenotypes and genotypes for <a href="http://www.phi-base.org">PHI-base</a></span>
           </li>
           <li>
-  We are currently developing a Canto instance to support FlyBase
-  phenotype and genetic interaction annotation.
+  <a href="https://www.flybase.org">FlyBase</a> uses a Canto instance extended and
+  configured to support <i>Drosophila</i> phenotype and genetic interaction annotation
           </li>
           <li>
-  <a href="http://curation.pombase.org/uniprot" class="btn btn-primary visit">Visit...</a>
+  We are currently configuring Canto instance to support community
+  curation of the emergibng model <i>Schizosaccharomyces japonicus</i>
+          </li>
+          <li>
+  <a href="https://seaphages.org/">SEA-PHAGES</a> use Canto as part of a
+  discovery-based undergraduate research course (Ivan Erril, UMBC)
+          </li>
+          <li>
+  <a href="https://curation.pombase.org/uniprot" class="btn btn-primary visit">Visit...</a>
   <span>Generic Gene Ontology Implementation: Curate GO annotations for proteins,
-  using UniProtKB identifiers.</span>
+  using UniProtKB identifiers</span>
           </li>
           <li>
-  <a href="http://curation.pombase.org/kpas" class="btn btn-primary visit">Visit...</a>
+  <a href="https://curation.pombase.org/kpas" class="btn btn-primary visit">Visit...</a>
   <span class="organism-name">Komagataella pastoris</span> (formerly known as Pichia pastoris)
           </li>
         </ul>
@@ -65,12 +73,12 @@ databases.
         <p>
 Instructions for using Canto are available from
 the <a href="<% $c->uri_for('/docs/index/') %>">documentation
-pages</a>, or via the "Help" link at the top right of every Canto instance.
+pages</a>, or via the "Help" link at the top right of every Canto instance
         <h3>Demo</h3>
           <a href="<% $demo_url %>" class="btn btn-primary visit">Demo...</a>
         <p>
 Try the <a href="<% $demo_url %>">demo</a>
-version of Canto: curate GO, phenotypes, interactions and protein modifications.
+version of Canto: curate GO, phenotypes, interactions and protein modifications
         </p>
 
       </div>
@@ -96,7 +104,7 @@ Canto is a free, open source application. The source code is
 available from Github.
         </p>
         <p>
-There is <a href="http://curation.pombase.org/docs/canto_admin">documentation</a>
+There is <a href="https://curation.pombase.org/docs/canto_admin">documentation</a>
 for local installation and administration.
         </p>
         <p>

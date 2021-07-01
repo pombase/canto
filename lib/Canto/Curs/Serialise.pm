@@ -129,7 +129,31 @@ sub _get_metadata
 
   if ($options->{export_curator_names}) {
     $ret{initial_curator_name} = $all_curators[0]->[1];
-    $ret{curator_name} = $current_submitter_name;
+
+    if (defined $current_submitter_name) {
+      $current_submitter_name =~ s/\s+$//;
+      $current_submitter_name =~ s/^\s+//;
+
+      $ret{curator_name} = $current_submitter_name;
+
+      if (@all_curators > 1) {
+        my %seen_prev_curator_name = ($current_submitter_name, 1);
+        $ret{previous_curators} =
+          [map {
+            my ($prev_email_address, $prev_curator_name) = @$_;
+            $prev_curator_name =~ s/\s+$//;
+            $prev_curator_name =~ s/^\s+//;
+            if ($seen_prev_curator_name{$prev_curator_name}) {
+              ();
+            } else {
+              $seen_prev_curator_name{$prev_curator_name} = 1;
+              {
+                curator_name => $prev_curator_name,
+              }
+            }
+          } @all_curators];
+      }
+    }
   }
 
   $ret{curator_role} = $community_curated ? 'community' : $config->{database_name};
@@ -213,16 +237,16 @@ sub _get_annotations
           $data{curator}->{community_curated} = JSON::false;
         }
       } else {
-        my $metadata = _get_metadata($track_schema, $schema, $options);
+        my $metadata = _get_metadata($config, $track_schema, $schema, $options);
         die "community_curated not set for annotation ",
           $annotation->annotation_id(), " in session ",
-          $metadata->{curs_key};
+          $metadata->{canto_session};
       }
     } else {
-      my $metadata = _get_metadata($track_schema, $schema, $options);
+      my $metadata = _get_metadata($config, $track_schema, $schema, $options);
       die "community_curated not set for annotation ",
         $annotation->annotation_id(), " in session ",
-        $metadata->{curs_key};
+        $metadata->{canto_session};
     }
 
     my $gene = _get_annotation_gene($organism_lookup, $schema, $annotation);

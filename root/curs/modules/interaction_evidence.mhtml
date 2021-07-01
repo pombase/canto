@@ -7,7 +7,7 @@ $current_component
 <div class="curs-box evidence-select">
   <div class="curs-box-title">
 Choose evidence for this <% $current_component_display_name %>
-    <& /curs/inline_help.mhtml, key => "${current_component}_evidence" &>
+    <help-text key="<% $current_component . '_evidence' %>"></help-text>
   </div>
   <div class="curs-box-body">
 Some experiments have an inherent directionality. For these experiments, the

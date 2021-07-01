@@ -133,20 +133,34 @@ sub get_cached_genotype_details
     while (defined (my $rel = $rel_rs->next())) {
       next unless $rel->subject()->type()->name() eq 'allele';
       my $allele = $rel->subject();
-      my $expression;
+      my $expression = undef;
+      my $genotype_locus = undef;
 
-      my $expression_prop = $rel
+      my $rel_props_rs = $rel
         ->feature_relationshipprops()
-        ->search({ 'type.name' => 'expression' }, { join => 'type' })->first();
+        ->search({}, { prefetch => 'type' });
 
-      if ($expression_prop) {
-        $expression = $expression_prop->value();
+      while (defined (my $rel_prop = $rel_props_rs->next())) {
+        my $type_cvterm = $rel_prop->type();
+        if ($type_cvterm->name () eq 'expression') {
+          $expression = $rel_prop->value();
+        } else {
+          if ($type_cvterm->name () eq 'genotype_locus') {
+            $genotype_locus = $rel_prop->value();
+          }
+        }
       }
 
-      push @alleles, {
+      my $allele_details = {
         %{$self->get_cached_allele_details($allele)},
         expression => $expression,
       };
+
+      if ($genotype_locus) {
+        $allele_details->{diploid_name} = $genotype_locus;
+      }
+
+      push @alleles, $allele_details;
     }
 
     @alleles = sort {

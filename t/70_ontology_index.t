@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 21;
+use Test::More tests => 28;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -91,6 +91,30 @@ is(@results, 4);
 is(@results, 4);
 
 @results = $ontology_index->lookup(['GO:0003674'], [], 'activity', 100);
+is(@results, 4);
+
+# try some pathological cases
+@results = $ontology_index->lookup('molecular_function', [], '', 10);
+is(@results, 0);
+
+# check that we remove isolated "*" characters
+@results = $ontology_index->lookup('molecular_function', [], ' * act* act *', 10);
+is(@results, 4);
+
+@results = $ontology_index->lookup('molecular_function', [], '@#$%^&', 10);
+is(@results, 0);
+
+@results = $ontology_index->lookup('molecular_function', [], ' @ # $ % ^ & ', 10);
+is(@results, 0);
+
+@results = $ontology_index->lookup('molecular_function', [], ' ( act', 10);
+is(@results, 4);
+
+@results = $ontology_index->lookup('molecular_function', [], ' (', 10);
+is(@results, 0);
+
+# look up "act"
+@results = $ontology_index->lookup('molecular_function', [], '***act%%%%%%****', 10);
 is(@results, 4);
 
 sub check_subset_results

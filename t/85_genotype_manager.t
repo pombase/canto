@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 35;
+use Test::More tests => 43;
 
 use Try::Tiny;
 
@@ -92,6 +92,8 @@ ok(!defined $found_genotype);
 
 $found_genotype = $genotype_manager->find_genotype($pombe_taxonid, undef, undef, [$ssm4_allele_details, $cdc11_allele_details]);
 ok(defined $found_genotype);
+
+my $ssm4_genotype = $found_genotype;
 
 is($found_genotype->name(), $genotype_name);
 
@@ -244,3 +246,70 @@ $found_cdc11_delta_diplod_genotype =
                                    $curs_schema, $curs_key);
 
 ok(!defined $found_cdc11_delta_diplod_genotype);
+
+
+# test creating and deleting metagenotypes
+
+my $genotype_rs = $curs_schema->resultset('Genotype');
+
+my $first_genotype = $genotype_rs->next();
+my $second_genotype = $genotype_rs->next();
+my $third_genotype = $genotype_rs->next();
+
+ok (defined $third_genotype);
+
+my $metagenotype_1 =
+  $genotype_manager->make_metagenotype(interactor_a => $first_genotype,
+                                       interactor_b => $second_genotype);
+
+ok (defined $metagenotype_1);
+
+is ($metagenotype_1->identifier(), 'aaaa0007-metagenotype-1');
+
+$genotype_manager->delete_metagenotype($metagenotype_1->metagenotype_id());
+
+# re-create the same metagenotype
+$metagenotype_1 =
+  $genotype_manager->make_metagenotype(interactor_a => $first_genotype,
+                                       interactor_b => $second_genotype);
+
+ok (defined $metagenotype_1);
+
+is ($metagenotype_1->identifier(), 'aaaa0007-metagenotype-1');
+
+my $metagenotype_2 =
+  $genotype_manager->make_metagenotype(interactor_a => $first_genotype,
+                                       interactor_b => $third_genotype);
+
+ok (defined $metagenotype_2);
+
+is ($metagenotype_2->identifier(), 'aaaa0007-metagenotype-2');
+
+
+my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $curs_schema,
+                                                   config => $config);
+
+my $res = $service_utils->create_annotation({
+  key => $curs_key,
+  feature_id => $metagenotype_1->metagenotype_id(),
+  feature_type => 'metagenotype',
+  annotation_type => 'disease_formation_phenotype',
+  term_ontid => 'FYPO:0002060',
+  evidence_code => 'Microscopy',
+  extension =>
+    [
+      [
+        {
+          'relation' => 'depends_on_metagenoype',
+          'rangeType' => 'Metagenotype',
+          'rangeValue' => $metagenotype_2->metagenotype_id(),
+        }
+      ]
+    ],
+});
+
+
+my $delete_result =
+  $genotype_manager->delete_metagenotype($metagenotype_2->metagenotype_id());
+
+ok ($delete_result =~ /delete failed/);

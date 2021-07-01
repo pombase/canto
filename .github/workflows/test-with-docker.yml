@@ -2,9 +2,11 @@ name: Canto tests
 
 on:
   push:
-    branches: [ master, pombase-release ]
+    branches:
+      - '**'
   pull_request:
-    branches: [ master ]
+    branches:
+      - '**'
 
 jobs:
 

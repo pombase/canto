@@ -23,9 +23,9 @@ instance_front_subtitle: Add your work
 header_image_url: '/'
 header_image: logos/curation_tool.png
 
-canto_url: http://curation.pombase.org/
+canto_url: https://curation.pombase.org/
 
-app_version: v1572
+app_version: v1644
 
 schema_version: 33
 
@@ -112,9 +112,15 @@ show_quick_deletion_buttons: 1
 # header for the external notes section on the front page
 external_notes_label: External notes
 
+# header for the message to curators section on the front page (if enabled)
+message_to_curators_label: Message to curators
+
 # if 1, show the external notes section on the front page even if there are
 # no notes - we show "[none]" in that case
 always_show_external_notes_section: 0
+
+# if 1, show the internal notes (from "Edit message to curators") on the front page
+show_message_for_curators_on_front_page: 0
 
 # from_address - used as the "from" field is all outgoing messages
 # admin_address - the contact address of the admin curators, used to
@@ -1347,6 +1353,7 @@ export:
       - DNA replication related
       - DNA recombination related
       - Mitochondrial sequence related
+      - Sequence feature or region
       - Other
 
 load:
@@ -1383,8 +1390,8 @@ ontology_index_dir: ontology_index
 relationship_ontology_path: etc/ro.obo
 
 external_sources:
-  pubmed_efetch_url: 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&retmax=99999&id='
-  pubmed_esearch_url: 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&remode=xml&retmax=99999&term='
+  pubmed_efetch_url: 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&retmode=xml&retmax=99999&id='
+  pubmed_esearch_url: 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&remode=xml&retmax=99999&term='
 
 implementation_classes:
   gene_adaptor: Canto::Track::GeneLookup
@@ -2056,8 +2063,8 @@ available_annotation_type_list:
   - name: wt_rna_expression
     category: ontology
     ontology_size: small
-    namespace: PomGeneEx
-    display_name: 'RNA level'
+    namespace: PomGeneExRNA
+    display_name: 'wild-type RNA level'
     feature_type: 'gene'
     broad_term_suggestions: ~
     specific_term_examples: ~
@@ -2066,6 +2073,7 @@ available_annotation_type_list:
     annotation_table_columns_to_hide: [term_ontid]
     evidence_codes:
       - Expression microarray
+      - In situ hybridization evidence used in manual assertion
       - Northern assay
       - Quantitative PCR
       - Reporter gene assay
@@ -2073,8 +2081,8 @@ available_annotation_type_list:
   - name: wt_protein_expression
     category: ontology
     ontology_size: small
-    namespace: PomGeneEx
-    display_name: 'Protein level'
+    namespace: PomGeneExProt
+    display_name: 'wild-type Protein level'
     feature_type: 'gene'
     broad_term_suggestions: ~
     specific_term_examples: ~
@@ -2082,13 +2090,15 @@ available_annotation_type_list:
     more_help_text: ~
     annotation_table_columns_to_hide: [term_ontid]
     evidence_codes:
+      - Microscopy
       - Reporter gene assay
       - Western blot
     detailed_help_path: /docs/gene_expression
-  - name: genetic_interaction
+  - name: genotype_interaction
     namespace: fission_yeast_phenotype
     can_have_conditions: 1
     category: interaction
+    term_suggestions_annotation_type: phenotype
     display_name: 'genetic interaction'
     feature_type: 'metagenotype'
     help_text: 'Examples: synthetic lethality, dosage suppression, phenotype enhancement.'
@@ -2099,7 +2109,21 @@ available_annotation_type_list:
       - Phenotypic Enhancement
       - Phenotypic Suppression
       - Synthetic Growth Defect
-      - Synthetic Haploinsufficiency
+      - Synthetic Lethality
+      - Synthetic Rescue
+    detailed_help_path: /docs/genetic_interaction_annotation
+  - name: genetic_interaction
+    category: interaction
+    display_name: 'genetic interaction'
+    feature_type: 'gene'
+    help_text: 'Examples: synthetic lethality, dosage suppression, phenotype enhancement.'
+    evidence_codes:
+      - Dosage Growth Defect
+      - Dosage Lethality
+      - Dosage Rescue
+      - Phenotypic Enhancement
+      - Phenotypic Suppression
+      - Synthetic Growth Defect
       - Synthetic Lethality
       - Synthetic Rescue
     detailed_help_path: /docs/genetic_interaction_annotation
@@ -2165,7 +2189,7 @@ help_text:
       These are the types of data you can annotate. Follow one of the links for more detailed instructions.
   gene_page_single_allele:
     inline: >
-      One or more mutations, or an expression change, in one copy of a gene at one locus.
+      Annotate phenotypes for single mutants (i.e. mutation(s) or expression change in one copy of a gene at one locus). Use "Genotype management" for multi-locus (e.g. double mutant) genotypes and their phenotypes.
     docs_path: "fypo_annotation#single-allele-phenotypes"
   gene_page_multi_allele:
     inline: >
@@ -2199,29 +2223,33 @@ help_text:
   physical_interaction_evidence:
     url: "http://wiki.thebiogrid.org/doku.php/experimental_systems#physical_interactions"
   biological_process_definition:
-    inline: Click for help on biological process
+    inline: Annotate a gene product's role in a process.
     docs_path: "go_annotation#process"
   cellular_component_definition:
-    inline: Click for help on cellular component
+    inline: Annotate the location in a cell where a gene product acts.
     docs_path: "go_annotation#component"
   molecular_function_definition:
-    inline: Click for help on molecular function
+    inline: Annotate a gene product's molecular activity.
     docs_path: "go_annotation#function"
   post_translational_modification_definition:
-    inline: Click for help on modification annotation
+    inline: Annotate the type, position, timing, etc. of covalent protein modifications.
     docs_path: "modification_annotation"
   wt_rna_expression_definition:
-    inline: Click for help on WT RNA expression
+    inline: Annotate qualitative descriptions for the normal level and timing of RNA expression from a gene.
     docs_path: "gene_expression"
   wt_protein_expression_definition:
-    inline: Click for help on WT protein expression
+    inline: Annotate qualitative descriptions for the normal level and timing of protein expression from a gene.
     docs_path: "gene_expression"
   physical_interaction_definition:
-    inline: Click for help on physical interaction annotation
+    inline: Annotate interacting gene products and supporting evidence.
     docs_path: "physical_interaction_annotation"
   genetic_interaction_definition:
-    inline: Click for help on genetic interaction annotation
+    inline: Annotate interaction type and interacting genes.
     docs_path: "genetic_interaction_annotation"
+  experimental_conditions_definition:
+    inline: >
+      Conditions are the aspects of the experimental setup that are independent
+      of what cells (strain, genotype, constructs, etc.) are used.
 
 contact_email:
   address: "set_me@localhost"
@@ -2360,6 +2388,12 @@ curs_config:
   follow_inverse_cv_names:
     - fission_yeast_phenotype
 
+  # Help text shown above the experimental conditions picker
+  experimental_conditions_help_text: ~
+
+  # A message for curators, shown at the top of the gene confirmation page.
+  # gene_page_top_message: SET_ME
+
   finish_form:
     # the "extra_text" is always shown on the finish form, the
     # extra_text_gene_information is only shown if the user added some genes to
@@ -2388,7 +2422,7 @@ curs_config:
   genotype_config:
     default_strain_name: 'h+'
 
-canto_demo_url: "http://curation.pombase.org/demo"
+canto_demo_url: "https://curation.pombase.org/demo"
 
 extra_sponsors: []
 

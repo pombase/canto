@@ -512,7 +512,11 @@ sub lookup_by_id
   my @terms = $dbxref->cvterms();
 
   if (@terms > 1) {
-    die "internal error: looked up $term_id and got more than one result";
+    warn "internal error: looked up $term_id and got more than one result:\n";
+    for my $term (@terms) {
+      warn '  ', $term->name(), ' (', $term->cv()->name(), ")\n";
+    }
+    die "\n";
   }
 
   my $cvterm;

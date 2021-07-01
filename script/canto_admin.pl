@@ -1,4 +1,4 @@
-#!/usr/bin/perl -CA
+#!/usr/bin/env perl
 
 use strict;
 use warnings;
@@ -117,19 +117,11 @@ if ($delete_unused_strains && @ARGV > 0) {
 my $config = Canto::Config::get_config();
 my $schema = Canto::TrackDB->new(config => $config);
 
-my $guard = $schema->txn_scope_guard;
-
 my $exit_flag = 1;
 
 my $util = Canto::Track::TrackUtil->new(config => $config, schema => $schema);
 
 my $proc = sub {
-  if (defined $refresh_gene_cache) {
-    Canto::Track::refresh_gene_cache($config, $schema);
-
-    $exit_flag = 0;
-  }
-
   if (defined $rename_strain) {
     my $taxonid = shift @ARGV;
     my $old_name = shift @ARGV;
@@ -179,8 +171,12 @@ my $proc = sub {
   }
 };
 
-$schema->txn_do($proc);
-
-$guard->commit unless $dry_run;
+if (defined $refresh_gene_cache) {
+  # don't run in a single transaction because it's slow
+  Canto::Track::refresh_gene_cache($config, $schema);
+  $exit_flag = 0;
+} else {
+  $schema->txn_do($proc);
+}
 
 exit $exit_flag;

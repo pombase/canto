@@ -214,7 +214,7 @@ sub display_name
 =head2 long_identifier
 
  Usage   : my $long_identifier = $allele->long_identifier();
- Function: Return a long display string for this allele that includes the expresion
+ Function: Return a long display string for this allele that includes the expression
            eg. "ssm4KE(G40A,K43E)[overexpression]"
 
 =cut
@@ -229,7 +229,7 @@ sub long_identifier
   my $expression = '';
 
   if ($self->expression()) {
-    $expression = '[' . ($self->expression() =~ s/^wild type product level.*/WT product/ir) . ']';
+    $expression = '[' . ($self->expression() =~ s/^wild type product level.*/WT level/ir) . ']';
   }
 
   $ret .= $expression;
