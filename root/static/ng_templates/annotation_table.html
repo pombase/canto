@@ -151,6 +151,9 @@
         <table ng-switch-when="interaction" class="list">
           <thead>
             <tr>
+              <th ng-if="showCheckboxes">
+                &nbsp;
+              </th>
               <th>
                 <a class="curs-sort-button" href=""
                    title="{{sortColumn == 'feature_display_name' ? 'Reset sort order' : 'Sort ascending'}}"

@@ -1,0 +1,48 @@
+<div class="curs-annotation-transfer-all">
+  <div class="modal-header">
+    <h4 class="modal-title">
+      Transfer {{data.annotationType.display_name}} annotation
+      from {{data.featureDisplayName}}
+    </h4>
+  </div>
+  <div class="modal-body">
+
+    <div ng-if="!data.otherFeatures">
+      Loading ...
+    </div>
+
+    <div ng-if="data.otherFeatures">
+      <div>
+        Choose a destination {{data.interactorType}}:
+        <feature-chooser feature-type="{{data.interactorType}}"
+                         features="data.otherFeatures"
+                         chosen-feature-id="data.chosenDestFeatureId"></feature-chooser>
+      </div>
+
+      <div ng-if="data.chosenDestFeatureId"
+           class="curs-annotation-transfer-all-select-annotation">
+        Select annotation(s) to create by changing
+        {{data.featureDisplayName}} to <span class="curs-highlight-feature">{{data.chosenDestFeature.display_name}}</span>:
+        <annotation-table annotation-type-name="{{data.annotationType.name}}"
+                          annotations="data.annotations"
+                          feature-status-filter="selecting"
+                          show-menu="false"
+                          show-features="false"
+                          show-checkboxes="true"
+                          show-select-all="true"
+                          highlight-feature-id="data.chosenDestFeatureId"
+                          checkboxes-changed="selectionChanged(annotationIds)"
+                          show-metagenotype-link="false">
+        </annotation-table>
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+      <button class="btn btn-primary" ng-click="ok()" ng-alt-enter="ok()"
+              title="{{ okButtonTitleMessage() }}"
+              ng-disabled="!canTransfer()">OK</button>
+    </div>
+  </div>
+</div>

@@ -1142,6 +1142,11 @@ fieldset.curs-genes span {
   background-color: #afa !important;
 }
 
+.curs-highlight-feature {
+  font-weight: bold;
+  color: #d00 !important;
+}
+
 .curs-matched-search-term {
   font-weight: bold;
 }
@@ -1927,7 +1932,7 @@ a:not([href]) {
 }
 
 .curs-annotation-transfer-all-select-annotation {
-  margin-top: 0.5em;
+  margin-top: 1em;
   margin-bottom: 1.5em;
   max-height: 24em;
   overflow-y: scroll;
