@@ -11,6 +11,9 @@ use Canto::Track;
 use Canto::Curs::ServiceUtils;
 use Canto::Track::OrganismLookup;
 
+use Clone::PP qw(clone);
+
+
 my $test_util = Canto::TestUtil->new();
 my $track_schema = $test_util->track_schema();
 
