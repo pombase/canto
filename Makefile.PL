@@ -41,6 +41,7 @@ requires 'Catalyst::View::JSON' => 0.36;
 requires 'Catalyst::View::Mason' => 0.19;
 requires 'CatalystX::RoleApplicator' => 0.005;
 requires 'Clone' => 0.38;
+requires 'Clone::PP' => 1.08;
 requires 'Exception::Class' => 1.40;
 requires 'Class::Container' => 0.12;
 requires 'Config::Any' => 0.27;

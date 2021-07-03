@@ -553,6 +553,92 @@ sub _get_genes
   } $gene_rs->all();
 }
 
+sub _sort_genotypes_by_allele_type
+{
+  my $self = shift;
+  my @genotype_hashes = @_;
+
+  my $config = $self->config();
+
+  my %allele_type_order = ();
+
+  for (my $idx = 0; $idx < @{$config->{allele_type_list}}; $idx++) {
+    my $allele_config = $config->{allele_type_list}->[$idx];
+
+    $allele_type_order{$allele_config->{name}} = $idx;
+  }
+
+  my $sorter = sub {
+    my $genotype_a = shift;
+    my $genotype_b = shift;
+
+    my $genotype_a_allele_count = 0;
+
+    if ($genotype_a->{alleles}) {
+      $genotype_a_allele_count = scalar(@{$genotype_a->{alleles}})
+    }
+
+    my $genotype_b_allele_count = 0;
+
+    if ($genotype_b->{alleles}) {
+      $genotype_b_allele_count = scalar(@{$genotype_b->{alleles}})
+    }
+
+    if ($genotype_a_allele_count == 0 && $genotype_b_allele_count == 0) {
+      return 0;
+    }
+
+    if ($genotype_a_allele_count == 0) {
+      return -1;
+    }
+
+    if ($genotype_b_allele_count == 0) {
+      return 1;
+    }
+
+    my $allele_a = $genotype_a->{alleles}->[0];
+    my $allele_b = $genotype_b->{alleles}->[0];
+
+    if (!defined $allele_a->{type} && !defined $allele_b->{type}) {
+      return 0;
+    }
+
+    if (!defined $allele_a->{type}) {
+      return -1;
+    }
+
+    if (!defined $allele_b->{type}) {
+      return 1;
+    }
+
+    my $res =
+      ($allele_type_order{$allele_a->{type}} // 0)
+        <=>
+      ($allele_type_order{$allele_b->{type}} // 0);
+
+    if ($res == 0) {
+      # fail back, just try a user-friendly ordering
+      my $allele_a_name = lc $allele_a->{name} // 'UNKNOWN';
+      my $allele_a_description = $allele_a->{description} // 'UNKNOWN';
+      my $allele_a_type = $allele_a->{type} // 'UNKNOWN';
+      my $allele_a_expression = $allele_a->{expression} // 'UNKNOWN';
+
+      my $allele_b_name = lc $allele_b->{name} // 'UNKNOWN';
+      my $allele_b_description = $allele_b->{description} // 'UNKNOWN';
+      my $allele_b_type = $allele_b->{type} // 'UNKNOWN';
+      my $allele_b_expression = $allele_b->{expression} // 'UNKNOWN';
+
+      "$allele_a_name-$allele_a_description-$allele_a_type-$allele_a_expression"
+        cmp
+      "$allele_b_name-$allele_b_description-$allele_b_type-$allele_b_expression"
+    } else {
+      $res;
+    }
+  };
+
+  return sort { $sorter->($a, $b) } @genotype_hashes;
+}
+
 sub _get_genotypes
 {
   my $self = shift;
@@ -632,6 +718,10 @@ sub _get_genotypes
           $self->_filter_lookup_genotypes($lookup_max);
       }
     }
+  }
+
+  if ($self->config()->{sort_genotype_management_page_by_allele_type}) {
+    @res = $self->_sort_genotypes_by_allele_type(@res);
   }
 
   return @res;
