@@ -543,6 +543,7 @@ sub _get_genes
       primary_name => $proxy->primary_name(),
       display_name => $proxy->display_name(),
       gene_id => $proxy->gene_id(),
+      feature_id => $proxy->gene_id(),
       organism => {
         full_name => $organism_details->{full_name},
         taxonid => $organism_details->{taxonid},
