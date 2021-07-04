@@ -1,8 +1,14 @@
-<tr ng-class="{ 'curs-row-checked' : sessionState == 'APPROVAL_IN_PROGRESS' && checked == 'yes' }">
+<tr ng-class="{ 'curs-row-checked' : sessionState == 'APPROVAL_IN_PROGRESS' && checked == 'yes' || showCheckboxes && checkboxChecked }"
+    ng-click="showCheckboxes && checkboxClick()">
+  <td class="curs-annotation-table-checkbox" ng-if="showCheckboxes">
+    <input type="checkbox" name="selectAnnotation"
+           ng-checked="checkboxChecked"/>
+  </td>
   <td>
     <a ng-if="annotation.status === 'new'"
        href="{{curs_root_uri + '/feature/' + interactionFeatureType + '/view/' + annotation.feature_a_id + (read_only_curs ? '/ro' : '')}}">
-      <span ng-bind-html="annotation.feature_a_display_name | breakAtSpaces | toTrusted"></span>
+      <span ng-class="{ 'curs-highlight-feature' : annotation.feature_a_id == highlightFeatureId }"
+            ng-bind-html="annotation.feature_a_display_name | breakAtSpaces | toTrusted"></span>
     </a>
     <span ng-if="annotation.status === 'existing'">
       <span ng-bind-html="annotation.feature_a_display_name | breakAtSpaces | toTrusted"></span>
@@ -20,7 +26,8 @@
   <td>
     <a ng-if="annotation.status === 'new'"
        href="{{curs_root_uri + '/feature/' + interactionFeatureType + '/view/' + annotation.feature_b_id + (read_only_curs ? '/ro' : '')}}">
-      <span ng-bind-html="annotation.feature_b_display_name | breakAtSpaces | toTrusted"></span>
+      <span ng-class="{ 'curs-highlight-feature' : annotation.feature_b_id == highlightFeatureId }"
+            ng-bind-html="annotation.feature_b_display_name | breakAtSpaces | toTrusted"></span>
     </a>
     <span ng-if="annotation.status === 'existing'">
       <span ng-bind-html="annotation.feature_b_display_name | breakAtSpaces | toTrusted"></span>
