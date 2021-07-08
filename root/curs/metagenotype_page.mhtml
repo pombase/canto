@@ -149,7 +149,7 @@ sub get_genotype_details {
   return {
     "organism" => $org_lookup->lookup_by_taxonid($taxon_id)->{scientific_name},
     "strain" => $strain->lookup_strain_name($strain_lookup),
-    "genotype" => $genotype->display_name()
+    "genotype" => $genotype->display_name($config)
   };
 }
 
