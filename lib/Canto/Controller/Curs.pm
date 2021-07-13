@@ -249,11 +249,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   if (defined $current_user && $current_user->is_admin()) {
     $st->{current_user_is_admin} = 1;
 
-    my $annotation_mode = $self->get_metadata($schema, 'annotation_mode');
-
-    if (!defined $annotation_mode) {
-      $self->set_metadata($schema, 'annotation_mode', 'advanced');
-    }
+    $self->set_metadata($schema, 'annotation_mode', 'advanced');
 
     if ($external_notes) {
       $st->{external_notes} = [split /\n+/, $external_notes];
