@@ -1,7 +1,7 @@
 # Instructions for running Canto as an init script
 
-This assumes you have an existing, initialised `canto-space` directory (at
-`/var/canto-space` by default). See the
+This assumes you have an existing, initialised `canto_space` directory (at
+`/var/canto_space` by default). See the
 [main Canto documentation](https://curation.pombase.org/docs/canto_admin/installation)
 for details.
 
@@ -115,7 +115,7 @@ The `canto.defaults` file allows the following variables to be configured:
   of your server.
 
 * `CANTO_SPACE`: the path to the base directory of the Canto application.
-  Defaults to `/var/canto-space`. Note that this is the path to the 
+  Defaults to `/var/canto_space`. Note that this is the path to the 
   containing directory for the `canto`, `data` and `import_export`
   directories; it is _not_ the path to the `canto` directory itself.
 
@@ -128,7 +128,7 @@ The `canto.defaults` file allows the following variables to be configured:
 ## Logging and troubleshooting
 
 The service file writes output from Canto to a log file at
-`/var/canto-space/canto.log`. If you are using systemd, you can also use
+`/var/canto_space/canto.log`. If you are using systemd, you can also use
 the following command to check the service status:
 
 ```sh

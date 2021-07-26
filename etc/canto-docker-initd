@@ -16,7 +16,7 @@ action=$1
 
 PORT=5000
 WORKERS=5
-CANTO_SPACE=/var/canto-space
+CANTO_SPACE=/var/canto_space
 PID_PATH=import_export/canto.pid
 
 if [ -f /etc/default/canto ]; then
