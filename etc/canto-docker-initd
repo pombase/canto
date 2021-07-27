@@ -27,8 +27,7 @@ fi
 case "$action" in
   start)
     echo "Starting Canto with $WORKERS workers"
-
-    (date; cd $CANTO_SPACE; canto/script/canto_docker --non-interactive --use-container-name start_server --pid-file=/$PID_PATH --port $port --signal-on-hup=QUIT --signal-on-term=QUIT -- script/canto_start --workers $WORKERS --keepalive-timeout 5 -s Starman) >> canto.log 2>&1 &
+    (date; cd $CANTO_SPACE; canto/script/canto_docker --non-interactive --use-container-name start_server --pid-file=/$PID_PATH --port $PORT --signal-on-hup=QUIT --signal-on-term=QUIT -- script/canto_start --workers $WORKERS --keepalive-timeout 5 -s Starman) >> canto.log 2>&1 &
     ;;
   stop)
     pid=`/bin/cat $CANTO_SPACE/$PID_PATH`
