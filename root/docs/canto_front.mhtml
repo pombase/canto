@@ -49,8 +49,9 @@ databases.
   configured to support <i>Drosophila</i> phenotype and genetic interaction annotation
           </li>
           <li>
-  We are currently configuring Canto instance to support community
-  curation of the emerging model <i>Schizosaccharomyces japonicus</i>
+  <a href="https://curation.pombase.org/japonicus" class="btn btn-primary visit">Visit...</a>
+  We have implemented Canto to support community curation of the emerging model
+  <i>Schizosaccharomyces japonicus</i>
           </li>
           <li>
   <a href="https://seaphages.org/">SEA-PHAGES</a> use Canto as part of a
