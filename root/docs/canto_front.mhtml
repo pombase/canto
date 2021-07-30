@@ -39,9 +39,10 @@ databases.
           </li>
           <li>
   <a href="https://demo-canto.phi-base.org/" class="btn btn-primary visit">Visit ...</a>
-  <span>In collaboration with Rothamsted Research, we are extending
-  Canto to enable the curation of pathogen-host interaction
-  (multispecies) phenotypes and genotypes for <a href="http://www.phi-base.org">PHI-base</a></span>
+  <span>In collaboration with Rothamsted Research (<a href="http://www.phi-base.org">PHI-base</a>), we have
+  extended Canto to enable the curation of multiple strains in a
+  single Canto instance, and to curate pathogen-host interaction
+  (multispecies) phenotypes and genotypes.</span>
           </li>
           <li>
   <a href="https://www.flybase.org">FlyBase</a> uses a Canto instance extended and
@@ -49,7 +50,7 @@ databases.
           </li>
           <li>
   We are currently configuring Canto instance to support community
-  curation of the emergibng model <i>Schizosaccharomyces japonicus</i>
+  curation of the emerging model <i>Schizosaccharomyces japonicus</i>
           </li>
           <li>
   <a href="https://seaphages.org/">SEA-PHAGES</a> use Canto as part of a
