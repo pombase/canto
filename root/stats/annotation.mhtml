@@ -494,15 +494,16 @@ use Data::JavaScript::Anon;
 my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 my $current_year = $year + 1900;
 
+my @zeros = (0,0,0,0,0,0,0,0);
+
 my @cumulative_annotation_types_by_year = ();
-my @cumulative_annotation_type_counts = (0,0,0,0,0,0,0,0);
+my @cumulative_annotation_type_counts = @zeros;
 
 for my $row (@annotation_types_by_year) {
   my $year = shift @$row;
   if (!defined $row->[0]) {
     # no data for that year
-    push @cumulative_annotation_types_by_year, [$year, 0];
-    next;
+    $row = [{}];
   }
   my %data = %{$row->[0]};
   my $go_count = ($data{molecular_function} // 0) +
