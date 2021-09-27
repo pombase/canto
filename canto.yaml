@@ -1445,7 +1445,7 @@ allele_type_list:
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: e.g. 858-MKGYP
+    placeholder: e.g. Q858-MKGYP
   - name: "amino acid substitution(s)"
     export_type: amino_acid_mutation
     show_description: true
