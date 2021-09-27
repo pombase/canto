@@ -66,8 +66,14 @@ sub export
 
   my $track_schema = Canto::TrackDB->new(config => $config);
 
-  return Canto::Track::Serialise::json($config, $track_schema,
-                                        $self->parsed_options());
+  my @serialise_result = Canto::Track::Serialise::json($config, $track_schema,
+                                                       $self->parsed_options());
+
+  my $exported_session_keys = $serialise_result[2];
+
+  @{$self->exported_session_keys()} = @$exported_session_keys;
+
+  return ($serialise_result[0], $serialise_result[1]);
 }
 
 1;

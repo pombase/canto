@@ -326,7 +326,14 @@ sub json
 
   my $curs_count = scalar(keys(%{$hash->{curation_sessions}}));
 
-  return ($curs_count, $encoder->encode($hash));
+  my @exported_session_keys = grep {
+    my $session_key = $_;
+    my $annotation_status =
+      $hash->{curation_sessions}->{$session_key}->{metadata}->{annotation_status};
+    $annotation_status eq 'APPROVED';
+  } keys(%{$hash->{curation_sessions}});
+
+  return ($curs_count, $encoder->encode($hash), \@exported_session_keys);
 }
 
 1;

@@ -70,6 +70,7 @@ has parsed_options => (is => 'rw', isa => 'HashRef', init_arg => undef);
 has state => (is => 'rw', isa => 'Canto::Curs::State', init_arg => undef);
 has track_schema => (is => 'rw', isa => 'Canto::TrackDB', init_arg => undef);
 has state_after_export => (is => 'rw', init_arg => undef);
+has exported_session_keys => (is => 'ro', init_arg => undef, default => sub { [] });
 
 requires 'config';
 
@@ -109,29 +110,16 @@ after 'export' => sub {
   my $self = shift;
 
   if (defined $self->state_after_export()) {
-    my $track_schema = $self->track_schema();
 
-    my $curs_rs = $track_schema->resultset('Curs');
-    $curs_rs->reset();
-
-    my @curs_to_update = ();
-
-    while (defined (my $curs = $curs_rs->next())) {
-      my $curs_key = $curs->curs_key();
-      push @curs_to_update, $curs_key;
-    }
-
-    for my $curs_key (@curs_to_update) {
+    for my $curs_key (@{$self->exported_session_keys()}) {
       my $curs_schema = Canto::Curs::get_schema_for_key($self->config(), $curs_key);
-      # this writes to the TrackDB, so we need to set the state after we finish
-      # iterating with $curs_rs
-      if (($self->state()->get_state($curs_schema))[0] eq 'APPROVED') {
-        $self->state()->set_state($curs_schema, $self->state_after_export());
-      }
+      $self->state()->set_state($curs_schema, $self->state_after_export());
 
       $curs_schema->disconnect();
     }
   }
+
+  @{$self->exported_session_keys()} = ();
 };
 
 1;

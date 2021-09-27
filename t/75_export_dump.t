@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 5;
+use Test::More tests => 8;
 
 use Clone qw(clone);
 use JSON;
@@ -19,14 +19,14 @@ $test_util->init_test('curs_annotations_2');
 
 my $config = $test_util->config();
 my $track_schema = Canto::TrackDB->new(config => $config);
-my $curs_schema = Canto::Curs::get_schema_for_key($config, 'aaaa0007');
+my $aaaa0007_curs_schema = Canto::Curs::get_schema_for_key($config, 'aaaa0007');
 
 my $admin_person = $test_util->get_a_person($track_schema, 'admin');
 my $user_person = $test_util->get_a_person($track_schema, 'user');
 
 my $state = Canto::Curs::State->new(config => $config);
 
-$state->set_state($curs_schema, APPROVAL_IN_PROGRESS,
+$state->set_state($aaaa0007_curs_schema, APPROVAL_IN_PROGRESS,
                   { force => CURATION_IN_PROGRESS,
                     current_user => $admin_person });
 
@@ -39,12 +39,13 @@ sub _get_data
     Canto::Export::CantoJSON->new(config => $config, options => $options);
 
   if (defined $prior_state) {
-    $dump_export->state()->set_state($curs_schema, $prior_state,
+    $dump_export->state()->set_state($aaaa0007_curs_schema, $prior_state,
                                      { current_user => $admin_person,
                                        force => APPROVAL_IN_PROGRESS, });
   }
 
   my $json = $dump_export->export();
+
   return decode_json(encode("utf8", $json));
 }
 
@@ -66,4 +67,25 @@ sub _get_data
   my $ref_genes = $ref->{curation_sessions}->{aaaa0007}->{genes};
 
   is ($ref_genes->{"Schizosaccharomyces pombe SPBC1826.01c"}->{uniquename}, "SPBC1826.01c");
+}
+
+
+# --export-approved
+{
+  my @options = qw(--export-approved);
+
+  $state->set_state($aaaa0007_curs_schema, APPROVED,
+                    { current_user => $admin_person });
+
+
+  my $ref = _get_data(undef, \@options);
+
+
+  my $aaaa0007 = $ref->{curation_sessions}->{aaaa0007};
+  is ($aaaa0007->{metadata}->{annotation_status}, "APPROVED");
+  is ($aaaa0007->{metadata}->{canto_session}, "aaaa0007");
+
+  my ($final_session_state) = $state->get_state($aaaa0007_curs_schema);
+
+  is ($final_session_state, 'EXPORTED');
 }
