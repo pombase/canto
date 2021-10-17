@@ -3925,7 +3925,7 @@ var alleleEditDialogCtrl =
 
     processSynonyms();
 
-    $scope.data.newSynonymsString = $scope.alleleData.newSynonyms.join(',');
+    $scope.data.newSynonymsString = $scope.alleleData.newSynonyms.join(' | ');
 
     $scope.strainData = {
       selectedStrain: null,
@@ -4043,7 +4043,7 @@ var alleleEditDialogCtrl =
                   edit_status: 'existing',
                 };
               });
-      $.map(newSynonymsString.split(','),
+      $.map(newSynonymsString.split('|'),
             function(newSynonym) {
               var trimmedSynonym = trim(newSynonym);
               if (trimmedSynonym.length > 0) {
