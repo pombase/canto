@@ -1453,7 +1453,7 @@ allele_type_list:
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: eg. K132A
+    placeholder: eg. K132A or F256A,F310A
   - name: amino acid insertion and substitution
     export_type: amino_acid_insertion_and_mutation
     show_description: true
