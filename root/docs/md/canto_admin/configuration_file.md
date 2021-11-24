@@ -9,7 +9,7 @@ with the `--initialise` option.
 The configuration files are [YAML format](http://en.wikipedia.org/wiki/YAML).
 
 ### name
-A one word name for the site. default: Canto
+A one word name for the application. default: Canto
 
 ### long_name
 A longer description of the site. e.g. The SlugBase community annotation tool
