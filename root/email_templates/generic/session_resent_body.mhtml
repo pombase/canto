@@ -16,9 +16,10 @@ We recently invited you to contribute annotations based on your paper,
 to <% $config->{database_name} %>.
 
 We have noticed, however, that no action has been taken on the curation
-session. Please visit this page, where you can either start curating the
-paper, or reassign it to another author (e.g. the first author).
+session. Please visit the page linked below, where you can either start
+curating the paper, or reassign it to another author (e.g. the first author).
 
+Your curation link is:
   <% $session_link %>
 
 To reassign this session, use the "reassign" button, and enter the author's
