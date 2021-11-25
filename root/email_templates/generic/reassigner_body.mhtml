@@ -5,6 +5,7 @@ $publication_title
 $session_link
 $curator_name
 $curator_email
+$curator_known_as
 $reassigner_name
 $reassigner_email
 $help_index
@@ -23,6 +24,7 @@ Subject: <& ./session_reassigned_subject.mhtml, config => $config,
   publication_title => $publication_title,
   session_link => $session_link,
   curator_name => $curator_name,
+  curator_known_as => $curator_known_as,
   curator_email => $curator_email,
   help_index => $help_index,
   reassigner_email => $reassigner_email,
@@ -35,6 +37,7 @@ Subject: <& ./session_reassigned_subject.mhtml, config => $config,
   publication_title => $publication_title,
   session_link => $session_link,
   curator_name => $curator_name,
+  curator_known_as => $curator_known_as,
   curator_email => $curator_email,
   help_index => $help_index,
   reassigner_email => $reassigner_email,

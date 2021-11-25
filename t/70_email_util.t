@@ -74,7 +74,7 @@ $args{reassigner_email} = 'test@example.com';
 
 like ($body, qr/Thank you for reassigning/);
 like ($body, qr/Below is a copy/);
-like ($body, qr/Dear Val Wood/);
+like ($body, qr/Dear $curator_known_as/);
 like ($body, qr/Test Name <test\@example.com> has invited/);
 
 is ($from, $default_test_from);
