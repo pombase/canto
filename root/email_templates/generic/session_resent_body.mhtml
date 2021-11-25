@@ -22,15 +22,14 @@ curating the paper, or reassign it to another author (e.g. the first author).
 Your curation link is:
   <% $session_link %>
 
+If you are unsure of how to curate this paper, or if you believe that this paper
+is not suitable for curation in <% $config->{name} %>, please send a message to
+<% $config->{contact_email}->{address} %> for assistance or advice.
+
 To reassign this session, use the "reassign" button, and enter the author's
 name and email address. To curate the publication yourself, click "start
 curating" and then follow the simple step-by-step instructions to capture the
 experimental data reported in your paper.
-
-If you begin curation, and are then unsure what to do next, or if you believe
-that this paper is not suitable for curation in <% $config->{name} %>, please
-send a message to <% $config->{contact_email}->{address} %> for assistance or
-advice.
 
 We greatly appreciate your contribution: all community annotations help keep
 <% $config->{database_name} %> literature curation comprehensive, accurate, and
