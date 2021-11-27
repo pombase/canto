@@ -15,10 +15,10 @@ my $schema = $test_util->track_schema();
 
 my $load_util = Canto::Track::LoadUtil->new(schema => $schema);
 
-my $dbxref = $load_util->find_dbxref("PECO:0000005");
+my $dbxref = $load_util->find_dbxref("FYECO:0000005");
 
 is($dbxref->accession(), "0000005");
-is($dbxref->db()->name(), "PECO");
+is($dbxref->db()->name(), "FYECO");
 
 throws_ok { $load_util->find_dbxref("no_such_id"); } qr/not in the form/;
 my $no_such_id = "db:no_such_id";

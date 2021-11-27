@@ -15,7 +15,7 @@ test_config:
   test_phenotype_obo_file: "t/data/phenotype_small.obo"
   test_phipo_obo_file: "t/data/phipo_small.obo"
   test_psi_mod_obo_file: "t/data/psi_mod_small.obo"
-  test_peco_obo_file: "t/data/peco_small.obo"
+  test_fyeco_obo_file: "t/data/fyeco_small.obo"
   test_so_obo_file: "t/data/so_simple_small.obo"
   test_extension_conf: 't/data/extension_config.tsv'
   test_pubmed_xml: 'entrez_pubmed.xml'
@@ -230,7 +230,7 @@ test_config:
                  community_curated: 0
                term_ontid: FYPO:0000114
                conditions:
-                 - 'PECO:0000137'
+                 - 'FYECO:0000137'
            - type: physical_interaction
              status: new
              genes(Gene:primary_identifier):
@@ -253,7 +253,7 @@ test_config:
                evidence_code: Epitope-tagged protein immunolocalization experiment data
                term_ontid: FYPO:0000013
                conditions:
-                 - 'PECO:0000137'
+                 - 'FYECO:0000137'
                  - 'rich medium'
                curator:
                  email: "some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org"

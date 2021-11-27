@@ -15,14 +15,14 @@ my $config = $test_util->config();
 
 my $lookup = Canto::Track::get_adaptor($config, 'ontology');
 
-my @conds = ('PECO:0000006', 'some free text');
+my @conds = ('FYECO:0000006', 'some free text');
 my @conds_with_names =
   Canto::Curs::ConditionUtil::get_conditions_with_names($lookup, \@conds);
 
 my @expected_conditions = (
   {
     'name' => 'low temperature',
-    'term_id' => 'PECO:0000006'
+    'term_id' => 'FYECO:0000006'
   },
   {
     'name' => 'some free text'

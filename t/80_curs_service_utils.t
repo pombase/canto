@@ -389,7 +389,7 @@ is ($res->{status}, 'success');
 $first_genotype_annotation = $first_genotype->annotations()->first();
 my @res_conditions = @{$first_genotype_annotation->data()->{conditions}};
 
-cmp_deeply(\@res_conditions, ['PECO:0000006', 'some free text cond']);
+cmp_deeply(\@res_conditions, ['FYECO:0000006', 'some free text cond']);
 
 
 # test illegal evidence_code
@@ -587,7 +587,7 @@ cmp_deeply ($res->{annotation},
               'extension' => [],
               'conditions' => [{
                                 'name' => 'glucose rich medium',
-                                'term_id' => 'PECO:0000137'
+                                'term_id' => 'FYECO:0000137'
                               }],
               'is_inferred_annotation' => 0,
               'evidence_code' => 'Synthetic Haploinsufficiency',
@@ -610,10 +610,10 @@ cmp_deeply($cond_res,
            [
              {
                'name' => 'glucose rich medium',
-               'term_id' => 'PECO:0000137'
+               'term_id' => 'FYECO:0000137'
              },
              {
-               'term_id' => 'PECO:0000006',
+               'term_id' => 'FYECO:0000006',
                'name' => 'low temperature'
              },
              {
@@ -885,7 +885,7 @@ cmp_deeply($annotation_res,
               'conditions' => [
                                 {
                                   'name' => 'low temperature',
-                                  'term_id' => 'PECO:0000006'
+                                  'term_id' => 'FYECO:0000006'
                                 },
                                 {
                                   'name' => 'some free text cond'
@@ -1032,7 +1032,7 @@ cmp_deeply($annotation_res,
               'term_ontid' => 'FYPO:0000114',
               'term_name' => 'cellular process phenotype',
               'extension' => [],
-              'conditions' => [{'name' => 'glucose rich medium', 'term_id' => 'PECO:0000137'}],
+              'conditions' => [{'name' => 'glucose rich medium', 'term_id' => 'FYECO:0000137'}],
               'evidence_code' => 'Synthetic Haploinsufficiency',
               'submitter_comment' => '',
               'figure' => '',

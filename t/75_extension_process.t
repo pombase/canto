@@ -94,7 +94,11 @@ my @expected_subset_props =
       'disease formation phenotype',
       'is_a(qc_do_not_annotate)'
     ],
-    [
+   [
+      'fission yeast phenotype condition',
+      'is_a(canto_root_subset)'
+    ],
+     [
       'glucose rich medium',
       'is_a(Grouping_terms)'
     ],
@@ -125,10 +129,6 @@ my @expected_subset_props =
     [
       'nucleocytoplasmic transporter activity',
       'is_a(GO:0005215)'
-    ],
-    [
-      'phenotype condition',
-      'is_a(canto_root_subset)'
     ],
     [
       'positive regulation of transmembrane transport',

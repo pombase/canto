@@ -246,7 +246,7 @@ my $full_expected_curation_session =
       {
         type => 'genotype_interaction',
         publication => 'PMID:19756689',
-        conditions => ['PECO:0000137'],
+        conditions => ['FYECO:0000137'],
         metagenotype => 'test-metagenotype-1',
         term => 'FYPO:0000114',
         curator => {
@@ -279,7 +279,7 @@ my $full_expected_curation_session =
         },
         type => 'phenotype',
         conditions => [
-          'PECO:0000137',
+          'FYECO:0000137',
           'rich medium',
         ],
         genotype => 'aaaa0007-genotype-test-1',
@@ -525,7 +525,7 @@ my $full_expected_curation_session_with_names =
       {
         type => 'genotype_interaction',
         publication => 'PMID:19756689',
-        conditions => ['PECO:0000137'],
+        conditions => ['FYECO:0000137'],
         metagenotype => 'test-metagenotype-1',
         term => 'FYPO:0000114',
         curator => {
@@ -561,7 +561,7 @@ my $full_expected_curation_session_with_names =
         },
         type => 'phenotype',
         conditions => [
-          'PECO:0000137',
+          'FYECO:0000137',
           'rich medium',
         ],
         genotype => 'aaaa0007-genotype-test-1',

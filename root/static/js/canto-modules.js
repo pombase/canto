@@ -1075,7 +1075,7 @@ canto.service('AnnotationProxy', ['Curs', '$q', '$http', annotationProxy]);
 
 function fetch_conditions(search, showChoices) {
   $.ajax({
-    url: make_ontology_complete_url('phenotype_condition'),
+    url: make_ontology_complete_url('fission_yeast_phenotype_condition'),
     data: {
       term: search.term,
       def: 1,

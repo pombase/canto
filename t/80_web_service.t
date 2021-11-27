@@ -58,11 +58,11 @@ test_psgi $app, sub {
     ok(grep { $_->{id} =~ /GO:0003674/ } @$obj);
   }
 
-  # test "phenotype_condition" which is an ontology but not an
+  # test "fission_yeast_phenotype_condition" which is an ontology but not an
   # annotation type
   {
     my $search_term = 'glu';
-    my $url = "http://localhost:5000/ws/lookup/ontology/phenotype_condition/?term=$search_term";
+    my $url = "http://localhost:5000/ws/lookup/ontology/fission_yeast_phenotype_condition/?term=$search_term";
     my $req = HTTP::Request->new(GET => $url);
     my $res = $cb->($req);
 
@@ -76,14 +76,14 @@ test_psgi $app, sub {
 
     is (@$obj, 1);
 
-    ok(grep { $_->{id} =~ /PECO:0000012/ } @$obj);
+    ok(grep { $_->{id} =~ /FYECO:0000012/ } @$obj);
     ok(grep { $_->{name} =~ /standard glucose rich medium/ } @$obj);
-    ok(grep { $_->{annotation_namespace} =~ /phenotype_condition/ } @$obj);
+    ok(grep { $_->{annotation_namespace} =~ /fission_yeast_phenotype_condition/ } @$obj);
   }
 
-  # test getting all "phenotype_condition" terms
+  # test getting all "fission_yeast_phenotype_condition" terms
   {
-    my $url = "http://localhost:5000/ws/lookup/ontology/phenotype_condition/?term=:ALL:";
+    my $url = "http://localhost:5000/ws/lookup/ontology/fission_yeast_phenotype_condition/?term=:ALL:";
     my $req = HTTP::Request->new(GET => $url);
     my $res = $cb->($req);
 
@@ -97,9 +97,9 @@ test_psgi $app, sub {
 
     is (@$obj, 6);
 
-    ok(grep { $_->{id} =~ /PECO:0000012/ } @$obj);
+    ok(grep { $_->{id} =~ /FYECO:0000012/ } @$obj);
     ok(grep { $_->{name} =~ /standard glucose rich medium/ } @$obj);
-    ok(grep { $_->{annotation_namespace} =~ /phenotype_condition/ } @$obj);
+    ok(grep { $_->{annotation_namespace} =~ /fission_yeast_phenotype_condition/ } @$obj);
   }
 
   # add the closure subsets: cvtermprops with type 'canto_subset'

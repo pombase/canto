@@ -82,14 +82,14 @@ sub _get_conditions
 
 my $conditions = _get_conditions($curs_schema);
 
-cmp_deeply($conditions, ['PECO:0000137', 'rich medium']);
+cmp_deeply($conditions, ['FYECO:0000137', 'rich medium']);
 
 my $term_update = Canto::Curs::TermUpdate->new(config => $config);
 $term_update->update_curs_terms($curs_schema);
 
 $conditions = _get_conditions($curs_schema);
 
-cmp_deeply($conditions, ['PECO:0000080', 'PECO:0000137']);
+cmp_deeply($conditions, ['FYECO:0000080', 'FYECO:0000137']);
 
 
 $annotation_rs = $curs_schema->resultset('Annotation');

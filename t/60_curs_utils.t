@@ -157,7 +157,7 @@ sub check_new_annotations
                  'strain_name' => undef,
                  'conditions' => [
                    {
-                     'term_id' => 'PECO:0000137',
+                     'term_id' => 'FYECO:0000137',
                      'name' => 'glucose rich medium'
                    },
                    {

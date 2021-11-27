@@ -36,7 +36,7 @@ curl -L http://purl.obolibrary.org/obo/go/snapshot/extensions/go-plus.owl > /tmp
   --ontology $SOURCES/pombase_fypo_git_for_canto/release/fypo-simple.obo \
   --ontology $SOURCES/go-plus-pombe-only.obo \
   --ontology $SOURCES/psi-mod-CV/PSI-MOD.obo \
-  --ontology $SOURCES/pombase_fypo_git_for_canto/peco.obo \
+  --ontology $SOURCES/pombase_fypo_git_for_canto/fyeco.obo \
   --ontology $SOURCES/pombe-embl/mini-ontologies/fypo_extension.obo \
   --ontology $SOURCES/SO-Ontologies-git/Ontology_Files/so-simple.obo \
   --ontology $SOURCES/pombe-embl/mini-ontologies/has_qualifier_range.obo \
