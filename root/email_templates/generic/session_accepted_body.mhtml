@@ -46,8 +46,11 @@ up to date.
 
 Sincerely yours,
 
+% if ($config->{email_signature}) {
+<% $config->{email_signature} %>
+% } else {
 The <% $config->{database_name} %> team
-
+% }
 
 <%init>
 use Text::Wrap;
