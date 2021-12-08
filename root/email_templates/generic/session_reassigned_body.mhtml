@@ -13,7 +13,7 @@ $reassigner_name
 Dear <% $curator_known_as // $curator_name %>,
 
 <% $reassigner_name %> <<% $reassigner_email %>> has invited you to contribute
-annotations to based on this paper:
+annotations to <% $config->{database_name} %> based on this paper:
   <% $publication_uniquename %>
 <% wrap('  ', '  ', '"' . $publication_title . '"') %>
 
@@ -39,8 +39,8 @@ cannot be altered. If you notice any problems with existing annotations,
 please let the curators know.
 
 % }
-Help is available on each page, and you can also read the Canto manual
-(<% $help_index %>) or contact the help desk
+Help is available on each page, and you can also read the <% $config->{name} %>
+manual (<% $help_index %>) or contact the help desk
 (<% $config->{contact_email}->{address} %>) for assistance at any time. You
 will also have an opportunity to provide any data that the tool does not
 capture so that curators can include it with your curation.
@@ -50,9 +50,15 @@ same URL as often as you want. When you have added all the annotations you
 can, you may either submit the annotations to the curators, or send
 the paper to another co-author for further curation.
 
-We greatly appreciate your contribution.
+We greatly appreciate your contribution: all community annotations help keep
+<% $config->{database_name} %> literature curation comprehensive, accurate, and
+up to date.
 
 <% $session_link %>
+
+Sincerely yours,
+
+The <% $config->{database_name} %> Team
 
 
 <%init>

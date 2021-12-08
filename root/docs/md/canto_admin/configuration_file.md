@@ -212,6 +212,11 @@ to the page specified by the `url`.
 This email address is shown anytime a contact address is needed. See the
 `contact.mhtml` template.
 
+### email_signature
+A custom signature line that is displayed at the end of the generic email
+templates. If not set, the signature will default to "The \[database_name\]
+team", where the database name is the value of the `database_name` setting.
+
 ### external_links
 Each external link configuration has three possible parameters:
 

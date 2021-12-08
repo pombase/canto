@@ -4,18 +4,19 @@ $publication_uniquename
 $publication_title
 $session_link
 $curator_name
+$curator_known_as
 $help_index
 $existing_annotation_count
+$logged_in_user
 </%args>
-Dear <% $curator_name %>,
+Dear <% $curator_known_as // $curator_name %>,
 
-Congratulations on the recent publication of your paper:
-  <% $publication_uniquename %>
-<% wrap('  ', '  ', '"' . $publication_title . '"') %>
-
-We invite you to contribute annotations based on this paper. We have
-identified the paper as suitable for curation in Canto, but if it
-reports data for a large number of genes, please let us know so we can
+We invite you to contribute annotations based on your recently
+published paper, <% $publication_uniquename %> -
+<% wrap('  ', '  ', '"' . $publication_title . '"') %>,
+to <% $config->{database_name} %>.  We have
+identified the paper as suitable for curation in <% $config->{name} %>, but if
+it reports data for a large number of genes, please let us know so we can
 collect the data by a different route.
 
 Your curation link is:
@@ -35,7 +36,7 @@ please let the curators know.
 % }
 
 Help is available on each page, and you can also read
-the Canto manual (<% $help_index %>) or contact
+the <% $config->{name} %> manual (<% $help_index %>) or contact
 the help desk (<% $config->{contact_email}->{address} %>)
 for assistance at any time. You will also have an opportunity to provide any
 data that the tool does not capture so that curators can include it with your
@@ -44,10 +45,19 @@ curation.
 The curation link will work indefinitely, so you can leave and return to the
 same URL as often as you want.
 
-We greatly appreciate your contribution.
-
+We greatly appreciate your contribution: all community annotations help keep
+<% $config->{database_name} %> literature curation comprehensive, accurate, and
+up to date.
 
 <% $session_link %>
+
+Sincerely yours,
+
+% if ($config->{email_signature}) {
+<% $config->{email_signature} %>
+% } else {
+The <% $config->{database_name} %> team
+% }
 
 
 <%init>
