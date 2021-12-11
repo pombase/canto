@@ -121,7 +121,7 @@ if (defined $merge_person) {
     my $lab_string = join ', ', map { $_->name() } @labs;
     die "Can't delete $person_to_remove_email who is lab head of: $lab_string
 Delete the lab first with:
-  $0 --lab '", $labs[0]->name(), "'\n";
+  canto_delete.pl --lab '", $labs[0]->name(), "'\n";
 
   } else {
 
