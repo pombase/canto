@@ -62,7 +62,7 @@ requires 'Email::Simple' => 2.210;
 requires 'File::Basename' => 2.85;
 requires 'File::Copy::Recursive' => 0.38;
 requires 'File::Touch' => 0.11;
-requires 'PomBase::Chobo';
+requires 'PomBase::Chobo' => 0.035;
 requires 'Getopt::Long' => 2.49;
 requires 'HTML::HTML5::Builder' => 0.004;
 requires 'HTML::Mason' => 1.56;
