@@ -1,16 +1,5 @@
 <div>
   <div ng-show="annotations.length > 0">
-    <span ng-if="featureStatusFilter === 'new'" class="curs-annotation-sub-heading">
-      <span ng-if="!alleleCountFilter">
-        New annotations from this session
-      </span>
-      <span ng-if="alleleCountFilter">
-        New {{alleleCountFilter}} allele annotations
-      </span>
-      <span ng-show="featureFilterDisplayName">
-        for {{featureFilterDisplayName}}
-      </span>
-    </span>
     <span ng-if="featureStatusFilter === 'existing' && annotations !== null && annotations.length > 0"
           class="curs-annotation-sub-heading">
       <span ng-if="!alleleCountFilter">
