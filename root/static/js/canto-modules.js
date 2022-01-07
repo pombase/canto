@@ -9104,6 +9104,12 @@ var termNameComplete =
         $scope.app_static_path = CantoGlobals.app_static_path;
         $scope.termCount = null;
         $scope.allTerms = [];
+        $scope.annotationType = null;
+
+        AnnotationTypeConfig.getByName($scope.annotationTypeName)
+          .then(function (annotationType) {
+            $scope.annotationType = annotationType;
+          });
 
         $scope.extensionLookup = ($scope.mode && $scope.mode == 'extension' ? 1 : 0);
 
@@ -9147,6 +9153,9 @@ var termNameComplete =
             }
             var warning = '';
             if (searchAnnotationTypeName.indexOf('[') != 0 &&
+                // if the namespace isn't set we're searching GO terms so this
+                // isn't a problem:
+                $scope.annotationType && !$scope.annotationType.namespace && 
                 typeof item.annotation_type_name !== 'undefined' &&
                 searchAnnotationTypeName !== item.annotation_type_name) {
               warning = '<br/><span class="autocomplete-warning">WARNING: this is the ID of a ' +

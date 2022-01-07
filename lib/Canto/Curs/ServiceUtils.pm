@@ -1244,7 +1244,13 @@ sub _ontology_change_keys
       my $res = $lookup->lookup_by_id( id => $term_ontid );
 
       if ($res->{annotation_type_name}) {
-        $annotation->type($res->{annotation_type_name});
+        my $annotation_config = $self->config()->{annotation_types}->{$annotation->type()};
+
+        if (!$annotation_config->{namespace}) {
+          # special handling for the case where a GO ID from the
+          # wrong aspect is pasted into the annotation edit dialog
+          $annotation->type($res->{annotation_type_name});
+        }
       }
 
       if (defined $res) {
@@ -1275,7 +1281,7 @@ sub _ontology_change_keys
       } else {
         if ($evidence_code) {
           die "configuration error: tried to store an evidence code for an " .
-            "annotation type with none configured";
+            "annotation type with no evidence codes configured";
         }
       }
     },
