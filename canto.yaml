@@ -2157,9 +2157,9 @@ available_annotation_type_list:
     category: ontology
     ontology_size: small
     namespace: '[SO:0001527]'
-    very_short_display_name: 'Protein sequence feature or motif'
-    short_display_name: 'Protein sequence feature or motif'
-    display_name: 'Protein sequence feature or motif'
+    very_short_display_name: 'protein sequence feature or motif'
+    short_display_name: 'protein sequence feature or motif'
+    display_name: 'protein sequence feature or motif'
     feature_type: 'gene'
     evidence_codes:
       - EXP
