@@ -1347,7 +1347,7 @@ sub make_allele_display_name
 
   $description ||= $type || 'unknown';
 
-  if ($name =~ /[^a-z\d]$description$/) {
+  if ($name =~ /[^a-z\d]\Q$description$/) {
     $description = '';
   }
 
