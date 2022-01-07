@@ -2153,6 +2153,23 @@ available_annotation_type_list:
       - Reconstituted Complex
       - Two-hybrid
     detailed_help_path: /docs/physical_interaction_annotation
+  - name: protein_sequence_feature_or_motif
+    category: ontology
+    ontology_size: small
+    namespace: '[SO:0001527]'
+    very_short_display_name: 'Protein sequence feature or motif'
+    short_display_name: 'Protein sequence feature or motif'
+    display_name: 'Protein sequence feature or motif'
+    feature_type: 'gene'
+    evidence_codes:
+      - EXP
+      - ISS
+    broad_term_suggestions: >
+      peptide_localization_signal
+    help_text: >
+      A Protein localization signal is a peptide sub-sequence used to target the protein to a specific organelle.
+    more_help_text: >
+      [more help here]
 
 # restrict the list of annotation types
 enabled_annotation_type_list:
@@ -2165,6 +2182,7 @@ enabled_annotation_type_list:
   - wt_protein_expression
   - genetic_interaction
   - physical_interaction
+  - protein_sequence_feature_or_motif
 
 default_curation_priority_name: low
 
