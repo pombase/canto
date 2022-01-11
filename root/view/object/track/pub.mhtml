@@ -61,7 +61,7 @@ $is_admin_user
     <input type="hidden" name="pub-view-path" value="<% $current_pathquery %>"/>
 
     <div id="curs-pub-reassign-session-help" class="ferret-help-text">
-      Choose a person to curate of this paper.
+      Choose a person to curate this paper.
     </div>
     <& /person_picker.mhtml, id_prefix => 'pub-reassign-session',
       default_person => $object->corresponding_author() &>
