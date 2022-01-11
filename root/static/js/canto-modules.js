@@ -6695,6 +6695,85 @@ canto.directive('termChildrenDisplay',
     termChildrenDisplayCtrl
   ]);
 
+/*
+
+function startSelectInteractionAnnotations($uibModal, phenotypeAnnotation,
+                                           annotationType) {
+  var selectInstance = $uibModal.open({
+    templateUrl: app_static_path + 'ng_templates/select_interaction_annotations.html',
+    controller: 'SelectInteractionAnnotationsCtrl',
+    title: 'Select interactors',
+    animate: false,
+    size: 'lg',
+    resolve: {
+      args: function () {
+        return {
+          phenotypeAnnotation: phenotypeAnnotation,
+          annotationType: annotationType,
+        };
+      }
+    },
+    backdrop: 'static',
+  });
+
+  return selectInstance.result;
+}
+
+*/
+
+
+var annotationInteractionEdit =
+    function($CantoConfig, CursGenotypeList) {
+    return {
+      scope: {
+        interactionType: '=',
+        phenotypeAnnotation: '=',
+        interactingAnnotations: '=',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/annotation_interaction_edit.html',
+      controller: function ($scope) {
+        $scope.data = {
+          interactionForward: null,
+          annotationSelectorVisible: false,
+          symmetricInteractionNote: false,
+          directionSelectorVisible: false,
+        };
+
+        var typeWatcher = function() {
+          $scope.data.symmetricInteractionNote = false;
+          $scope.data.annotationSelectorVisible = false;
+          $scope.data.directionSelectorVisible = false;
+
+          if ($scope.interactionType) {
+            if ($scope.interactionType === 'Synthetic Lethality') {
+              $scope.data.symmetricInteractionNote = true;
+            } else {
+              $scope.data.directionSelectorVisible = true;
+            }
+          }
+        };
+        $scope.$watch('interactionType', typeWatcher);
+
+        $scope.directionChanged = function() {
+          if ($scope.data.interactionForward !== null) {
+            $scope.data.annotationSelectorVisible = true;
+          }
+        };
+
+        $scope.selectAnnotations = function() {
+//          var promise = startSelectInteractionAnnotations();
+        };
+      },
+    };
+  };
+
+canto.directive('annotationInteractionEdit',
+                ['CantoConfig', 'CursGenotypeList',
+                 annotationInteractionEdit]);
+
+
 
 var annotationEditDialogCtrl =
   function ($scope, $uibModal, $q, $uibModalInstance, AnnotationProxy,
@@ -6762,12 +6841,22 @@ var annotationEditDialogCtrl =
     $scope.termSuggestions = [];
     $scope.isMetagenotypeAnnotation = null;
 
+    if ($scope.annotation.interaction_type === undefined) {
+      $scope.annotation.interaction_type = null;
+    }
+
     copyObject(args.annotation, $scope.annotation);
 
     $scope.filteredFeatures = null;
     $scope.filteredFeaturesB = null;
 
     $scope.hasFigure = $scope.annotation.figure;
+
+    $scope.annotationInteractionEditVisble = false;
+
+    $scope.showAnnotationInteractionEdit = function() {
+      $scope.annotationInteractionEditVisble = true;
+    }
 
     $scope.showStrainName = (
       CantoGlobals.strains_mode &&

@@ -1951,3 +1951,11 @@ a:not([href]) {
   margin-top: 2em;
   font-size: 110%;
 }
+
+button.curs-annotation-edit-suggest {
+  margin-left: 1em;
+}
+
+.curs-annotation-interaction-edit-type-select {
+  padding-bottom: 0.5em;
+}
