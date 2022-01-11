@@ -35,7 +35,7 @@ $test_util->load_test_ontologies($ontology_index, 1);
 
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 132);
+is(@loaded_cvterms, 131);
 
 my $cvprop_rs = $schema->resultset('Cvprop');
 
@@ -60,7 +60,7 @@ my %expected_cv_term_counts = (
 cmp_deeply(\%actual_cv_term_counts,
            \%expected_cv_term_counts);
 
-is(@loaded_cvterms, 132);
+is(@loaded_cvterms, 131);
 
 my @cvterm_relationships = $schema->resultset('CvtermRelationship')
   ->search({}, { join => { subject => 'cv', type => 'cv' } })->all();
@@ -178,7 +178,7 @@ $ontology_index = Canto::Track::OntologyIndex->new(config => $config, index_path
 $test_util->load_test_ontologies($ontology_index, 1, 1);
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 157);
+is(@loaded_cvterms, 156);
 
 ok((grep {
   $_->name() eq 'OBSOLETE FYPO:0002233 viable elongated vegetative cell population'
