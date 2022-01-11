@@ -2168,8 +2168,6 @@ available_annotation_type_list:
       peptide_localization_signal
     help_text: >
       A Protein localization signal is a peptide sub-sequence used to target the protein to a specific organelle.
-    more_help_text: >
-      [more help here]
 
 # restrict the list of annotation types
 enabled_annotation_type_list:
