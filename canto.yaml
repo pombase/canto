@@ -2009,6 +2009,7 @@ available_annotation_type_list:
     synonyms_to_display:
       - exact
     feature_type: 'genotype'
+    enable_interaction_annotation: 1
     can_have_conditions: 1
     evidence_codes:
       - Cell growth assay

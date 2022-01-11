@@ -1964,3 +1964,7 @@ button.curs-annotation-edit-suggest {
   max-height: 30em;
   overflow: auto;
 }
+
+.curs-annotation-interaction-edit label {
+  font-weight: normal;
+}

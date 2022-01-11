@@ -229,17 +229,26 @@
         </td>
       </tr>
 
-      <tr>
+      <tr ng-if="allowInteractionAnnotations">
         <td>&nbsp;</td>
         <td>&nbsp;</td>
       </tr>
 
-      <tr>
+      <tr ng-if="allowInteractionAnnotations">
         <td class="title">Interaction details</td>
         <td> 
+          <div>
           (Optional)
           <button class="btn btn-default btn-sm"
-                  ng-click="showAnnotationInteractionEdit()">Add ...</button>
+                  ng-click="editAnnotationInteractions()">Add ...</button>
+          </div>
+<!--
+          <div ng-if="annotation.interactionAnnotations.length != 0">
+            <genotype-interaction-annotation-table
+              interactions="annotation.interactionAnnotations">
+            </genotype-interaction-annotation-table>
+          </div>
+-->
         </td>
       </tr>
 
