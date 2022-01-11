@@ -285,6 +285,7 @@ test_config:
                  community_curated: 1
 
 enabled_annotation_type_list:
+  - disease_formation_phenotype
   - molecular_function
   - biological_process
   - cellular_component
@@ -295,6 +296,8 @@ enabled_annotation_type_list:
   - genotype_interaction
   - genetic_interaction
   - physical_interaction
+  - protein_sequence_feature_or_motif
+
 
 implementation_classes:
   ontology_annotation_adaptor: 'Canto::Chado::OntologyAnnotationLookup'
@@ -327,16 +330,3 @@ extension_conf_files:
 
 email:
   from_address: DO_NOT_EMAIL
-
-enabled_annotation_type_list:
-  - disease_formation_phenotype
-  - molecular_function
-  - biological_process
-  - cellular_component
-  - phenotype
-  - post_translational_modification
-  - wt_rna_expression
-  - wt_protein_expression
-  - genotype_interaction
-  - genetic_interaction
-  - physical_interaction
