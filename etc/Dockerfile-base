@@ -1,4 +1,4 @@
-# build with: docker build --squash -f etc/Dockerfile-base -t=pombase/canto-base:v14 .
+# build with: docker build --squash -f etc/Dockerfile-base -t=pombase/canto-base:v15 .
 
 FROM bitnami/minideb:stretch
 MAINTAINER Kim Rutherford <kim@pombase.org>

@@ -53,7 +53,7 @@ if [ "$1" == "--no-tty" ]; then
 fi
 
 
-CANTO_DOCKER_RUN_ARGS="$EXTRA_ARGS -i $TTY_OPT --rm $DEBUG --security-opt seccomp=unconfined --cap-add=SYS_PTRACE --mount type=bind,source=$(pwd)/logs,target=/logs  --mount type=bind,source=$(pwd)/data,target=/data --mount type=bind,source=$(pwd)/import_export,target=/import_export --mount type=bind,source=$(pwd)/canto,target=/canto -w=/canto pombase/canto-base:v14"
+CANTO_DOCKER_RUN_ARGS="$EXTRA_ARGS -i $TTY_OPT --rm $DEBUG --security-opt seccomp=unconfined --cap-add=SYS_PTRACE --mount type=bind,source=$(pwd)/logs,target=/logs  --mount type=bind,source=$(pwd)/data,target=/data --mount type=bind,source=$(pwd)/import_export,target=/import_export --mount type=bind,source=$(pwd)/canto,target=/canto -w=/canto pombase/canto-base:v15"
 
 cd canto
 

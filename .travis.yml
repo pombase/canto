@@ -4,7 +4,7 @@ services:
   - docker
 
 before_install:
-  - docker pull pombase/canto-base:v14
+  - docker pull pombase/canto-base:v15
 
 # this runs "make test" inside a Docker container
 script: ./etc/docker-run-tests.sh
