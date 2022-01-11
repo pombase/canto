@@ -40,6 +40,7 @@
 </div>
 </div>
 <p>Note that you must first have created a metagenotype; see <a href="genotypes">Creating alleles and genotypes</a> for instructions.</p>
+<p><strong>Please note</strong> that if you are curating a pathogen effector within a pathogen–host interaction, it is essential that you also make a GO Biological Process annotation on the pathogen gene involved in the interaction, using the GO term "effector-mediated modulation of host process by symbiont" (<a href="http://purl.obolibrary.org/obo/GO_0140418">GO:0140418</a>) or one of its child terms. This will allow the data to be displayed correctly in PHI-base. Where the molecular function of the effector is known, you will also need to annotate a GO Molecular Function on the pathogen gene and then add a 'part_of' annotation extension containing the GO:0140418 term or any of its child terms. See the instructions for <a href="go_annotation">Gene Ontology Annotation</a> for further guidance on making a GO Biological process annotation.</p>
 <h2 id="the_phenotype_curation_process">The phenotype curation process</h2>
 <h3 id="selecting_a_phipo_term">Selecting a PHIPO term</h3>
 <p>Next, to find a PHIPO term, type text into the search box. When suggestions from the autocomplete feature appear, choose one and proceed.</p>

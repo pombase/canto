@@ -1,1 +1,101 @@
-../docs/physical_interaction_annotation.mhtml
+<!-- PAGE_TITLE: @@name@@ Documentation -->
+<!-- FLAGS: use_bootstrap -->
+<h1 id="curating_physical_interactions">Curating Physical Interactions</h1>
+<p>If you have physical interactions to curate, please read the Directionality section carefully.</p>
+<p>We recommend that you only annotate interactions that you think are biologically meaningful. For example, do not include known or suspected contaminants from mass spectrometry results (e.g. ribosomal proteins, translation factors, 'sticky' proteins).</p>
+<p>When you choose 'Physical interaction', a popup appears with a dropdown menu for the organism(s) involved in the interaction. To curate an intraspecies (or intra-organism) interaction, you can select the same organism in both fields. After selecting the first organism, the rest of the form fields will appear, including a text field for optional comments.</p>
+<p>Choose the gene for the first organism in the 'Gene' field and the gene for the interacting organism in the 'Interacting gene' field. Choose an evidence type from the 'Interaction type' dropdown menu. Some evidence types have a brief description that indicates their directionality. Further information on evidence supporting physical interactions, including examples of experiment types in each category, is available on the BioGRID help wiki and in the Directionality section below.</p>
+<p>Click 'OK' to finish the annotation and close the popup. An example of a completed physical interaction annotation is shown below.</p>
+<div class="row-fluid">
+<div class="span6">
+<a href="<% $c->uri_for($image_path . "/physical_interaction.png") %>"/><img class="screenshot" src="<% $c->uri_for($image_path . "/physical_interaction.png") %>" alt=""/></a>
+</div>
+</div>
+<p>Note that only pairwise genetic interactions can be annotated in PHI-Canto.</p>
+<h2 id="directionality">Directionality</h2>
+<p>Some experiments that detect physical interactions have an inherent directionality. For example, in a typical two-hybrid experiment one protein (A) is fused to a DNA binding domain and a second (B) is fused to a transcription activation domain. The reciprocal experiment, with A fused to the activation domain and B fused to the DNA binding domain, may or may not have been done.</p>
+<p>For such asymmetric interactions, PHI-Canto allows you to curate in only one direction starting from the gene you select first, as indicated in the interaction type selector.</p>
+<p>If the evidence description looks the wrong way around, you will have to change genes and start again (you can finish and then delete an interaction annotation if you find that you have started with the wrong gene).</p>
+<table class="table table-striped table-bordered table-condensed">
+<thead>
+<tr>
+<th>Evidence</th>
+<th>Relationship (A → B)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Affinity Capture-Luminescence</td>
+<td>affinity captures</td>
+</tr>
+<tr>
+<td>Affinity Capture-MS</td>
+<td>affinity captures</td>
+</tr>
+<tr>
+<td>Affinity Capture-RNA</td>
+<td>affinity captures</td>
+</tr>
+<tr>
+<td>Affinity Capture-Western</td>
+<td>affinity captures</td>
+</tr>
+<tr>
+<td>Far Western</td>
+<td>captures</td>
+</tr>
+<tr>
+<td>FRET (fluorescence resonance energy transfer)</td>
+<td>fluorescence resonance energy donor to</td>
+</tr>
+<tr>
+<td>Protein-peptide</td>
+<td>binds to peptide</td>
+</tr>
+<tr>
+<td>Protein-RNA</td>
+<td>binds to RNA</td>
+</tr>
+<tr>
+<td>Two-hybrid</td>
+<td>binds activation domain construct with</td>
+</tr>
+</tbody>
+</table>
+<p>Use one of the Affinity Capture evidence types for co-immunoprecipitation. If you have done the experiment in both directions, you should curate two annotations to describe the interaction completely. Curate starting from one gene, then switch genes to annotate the reciprocal experiment. Other experiment types are symmetric and therefore only need to be entered once, and you can start from either of the interacting genes.</p>
+<table class="table table-striped table-bordered table-condensed">
+<thead>
+<tr>
+<th>Evidence</th>
+<th>Relationship (A → B)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Co-crystal Structure</td>
+<td>co-crystallizes with</td>
+</tr>
+<tr>
+<td>Co-fractionation</td>
+<td>co-fractionates with</td>
+</tr>
+<tr>
+<td>Co-purification</td>
+<td>co-purifies with</td>
+</tr>
+<tr>
+<td>Reconstituted Complex</td>
+<td>forms complex with</td>
+</tr>
+<tr>
+<td>PCA* (protein-fragment complementation assay)</td>
+<td>interacts with</td>
+</tr>
+</tbody>
+</table>
+<p>* Note that PCA is not exactly symmetric, since there will be one N-terminal and one C-terminal reporter fusion construct, but it is treated as symmetric in PHI-Canto.</p>
+<%init>
+my $config = $c->config();
+my $base_docs_path = $config->{base_docs_path};
+my $image_path = '/static/images/' . $base_docs_path;
+</%init>
