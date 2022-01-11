@@ -1650,7 +1650,7 @@ evidence_types:
       interactor_b: overexpression lethal to
   'Dosage Rescue':
     definition: "A genetic interaction is inferred when over expression or increased dosage of one gene rescues the lethality or growth defect of a strain that is mutated or deleted for another gene."
-    name: 'Dosage Rescue (rescued by overexpression of)'
+    name: 'Dosage Rescue (lethality or growth defect rescued by overexpression of)'
     is_symmetric: 0
     non_symmetric_interaction_labels:
       interactor_a: rescued by overexpression of
@@ -1676,6 +1676,7 @@ evidence_types:
     is_symmetric: 1
   'Phenotypic Enhancement':
     definition: "A genetic interaction is inferred when mutation or overexpression of one gene results in enhancement of any phenotype (other than lethality/growth defect) associated with mutation or over expression of another gene."
+    name: 'Phenotypic Enhancement (non-growth or non-viability phenotype enhanced by)'
     name: 'Phenotypic Enhancement (phenotype enhanced by)'
     is_symmetric: 0
     non_symmetric_interaction_labels:
@@ -1683,7 +1684,7 @@ evidence_types:
       interactor_b: enhances phenotype of
   'Phenotypic Suppression':
     definition: "A genetic interaction is inferred when mutation or over expression of one gene results in suppression of any phenotype (other than lethality/growth defect) associated with mutation or over expression of another gene."
-    name: 'Phenotypic Suppression (rescued by)'
+    name: 'Phenotypic Suppression (non-growth or non-viability phenotype suppressed by)'
     is_symmetric: 0
     non_symmetric_interaction_labels:
       interactor_a: rescued by
@@ -1716,7 +1717,7 @@ evidence_types:
     is_symmetric: 1
   'Synthetic Rescue':
     definition: "A genetic interaction is inferred when mutations or deletions of one gene rescues the lethality or growth defect of a strain mutated or deleted for another gene."
-    name: 'Synthetic Rescue (synthetically rescued by)'
+    name: 'Synthetic Rescue (lethality or growth defect synthetically rescued by)'
     is_symmetric: 0
     non_symmetric_interaction_labels:
       interactor_a: synthetically rescued by
