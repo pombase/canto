@@ -1246,7 +1246,9 @@ sub _ontology_change_keys
       if ($res->{annotation_type_name}) {
         my $annotation_config = $self->config()->{annotation_types}->{$annotation->type()};
 
-        if (!$annotation_config->{namespace}) {
+        if ($annotation_config->{name} eq 'biological_process' ||
+            $annotation_config->{name} eq 'molecular_function' ||
+            $annotation_config->{name} eq 'cellular_component') {
           # special handling for the case where a GO ID from the
           # wrong aspect is pasted into the annotation edit dialog
           $annotation->type($res->{annotation_type_name});
