@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 90;
+use Test::More tests => 86;
 use Test::Deep;
 use JSON;
 
@@ -893,7 +893,7 @@ cmp_deeply($annotation_res,
                               ],
               'publication_uniquename' => 'PMID:19756689',
               'feature_id' => 1,
-              'annotation_id' => 6,
+              'annotation_id' => 5,
               'extension' => [],
               'annotation_type' => 'phenotype',
               'status' => 'new',
@@ -982,7 +982,7 @@ cmp_deeply($annotation_res,
               'is_obsolete_term' => 0,
               'publication_uniquename' => 'PMID:19756689',
               'feature_id' => 2,
-              'annotation_id' => 7,
+              'annotation_id' => 6,
               'annotation_type' => 'phenotype',
               'extension' => [],
               'status' => 'new',
@@ -1083,7 +1083,7 @@ cmp_deeply($annotation_res,
               'gene_display_name' => 'SPCC63.05',
               'gene_id' => 4,
               'gene_identifier' => 'SPCC63.05',
-              'annotation_id' => 5,
+              'annotation_id' => 4,
               'feature_b_taxonid' => '4896',
               'interacting_gene_taxonid' => '4896',
               'feature_id' => 4,
