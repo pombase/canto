@@ -217,20 +217,6 @@ test_config:
                  email: "some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org"
                  name: "Some Testperson"
                  community_curated: 0
-           - type: genotype_interaction
-             status: new
-             metagenotypes(Metagenotype:identifier):
-               - test-metagenotype-1
-             pub(Pub:uniquename): PMID:19756689
-             data:
-               evidence_code: Synthetic Haploinsufficiency
-               curator:
-                 email: "some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org"
-                 name: "Some Testperson"
-                 community_curated: 0
-               term_ontid: FYPO:0000114
-               conditions:
-                 - 'FYECO:0000137'
            - type: physical_interaction
              status: new
              genes(Gene:primary_identifier):
@@ -290,10 +276,10 @@ enabled_annotation_type_list:
   - biological_process
   - cellular_component
   - phenotype
+  - genotype_interaction
   - post_translational_modification
   - wt_rna_expression
   - wt_protein_expression
-  - genotype_interaction
   - genetic_interaction
   - physical_interaction
   - protein_sequence_feature_or_motif

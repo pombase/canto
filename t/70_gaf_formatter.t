@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 21;
+use Test::More tests => 22;
 use MooseX::Test::Role;
 use IO::String;
 
@@ -100,5 +100,5 @@ my $mock_formatter = consumer_of('Canto::Role::GAFFormatter');
 
   is(keys %expected_filenames, 0);
 
-  is($member_count, 11);
+  is($member_count, 12);
 }
