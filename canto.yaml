@@ -1726,6 +1726,7 @@ evidence_types:
   'Competitive growth assay evidence': ~
   'Gel electrophoresis evidence': ~
   'Plasmid maintenance assay evidence': ~
+  RNA-sequencing evidence: ~
 
 # Configuration that applies to an ontology namespace.  An ontology can
 # be used by more than one annotation_type.  Some (like FYPO_EXT) are
@@ -2082,6 +2083,7 @@ available_annotation_type_list:
       - Northern assay
       - Quantitative PCR
       - Reporter gene assay
+      - RNA-sequencing evidence
     detailed_help_path: /docs/gene_expression
   - name: wt_protein_expression
     category: ontology
