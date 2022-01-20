@@ -1331,7 +1331,11 @@ sub get_existing_annotations
   if ($annotation_type_category eq 'ontology') {
     return get_existing_ontology_annotations($config, $curs_schema, $options);
   } else {
-    return get_existing_interaction_annotations($config, $curs_schema, $options);
+    if ($annotation_type_category eq 'genotype_interaction') {
+      return [];
+    } else {
+      return get_existing_interaction_annotations($config, $curs_schema, $options);
+    }
   }
 }
 
