@@ -61,7 +61,8 @@ sub _make_allelesynonym_hashes
   } $allele->allelesynonyms()->all();
 }
 
-sub _get_symmetric_interaction_annotations
+# given an Annotation, return the associated symmetrical interactions
+sub _get_sym_interaction_annotations_from_annotation
 {
   my $config = shift;
   my $annotation = shift;
@@ -103,7 +104,8 @@ sub _get_symmetric_interaction_annotations
   return (values %interactions);
 }
 
-sub _get_directional_interaction_annotations
+# given an Annotation, return the associated directional interactions
+sub _get_dir_interaction_annotations_from_annotation
 {
   my $config = shift;
   my $schema = shift;
@@ -543,15 +545,16 @@ sub make_ontology_annotation
     $ret->{symmetric_interaction_annotations} = [];
 
     my @symmetric_interaction_annotations =
-      _get_symmetric_interaction_annotations($config, $annotation);
+      _get_sym_interaction_annotations_from_annotation($config, $annotation);
 
     if (@symmetric_interaction_annotations) {
       $ret->{symmetric_interaction_annotations} = \@symmetric_interaction_annotations;
     }
 
     my @directional_interaction_annotations =
-      _get_directional_interaction_annotations($config, $schema, $annotation,
-                                               $ontology_lookup, $organism_lookup);
+      _get_dir_interaction_annotations_from_annotation($config,
+                                                       $schema, $annotation,
+                                                       $ontology_lookup, $organism_lookup);
 
     if (@directional_interaction_annotations) {
       $ret->{directional_interaction_annotations} = \@directional_interaction_annotations;
