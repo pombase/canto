@@ -1368,7 +1368,7 @@ sub get_existing_interaction_annotations
  Usage   :
    my ($all_annotations_count, $annotations) =
      Canto::Curs::Utils::get_existing_annotations($config, $curs_schema, $options);
- Function: Return a table of the existing interaction annotations from the
+ Function: Return a table of the existing annotations from the Chado
            database
  Args    : $config - the Canto::Config object
            $options->{pub_uniquename} - the publication ID (eg. PubMed ID)
@@ -1396,7 +1396,7 @@ sub get_existing_annotations
     return get_existing_ontology_annotations($config, $curs_schema, $options);
   } else {
     if ($annotation_type_category eq 'genotype_interaction') {
-      return [];
+      return (0, []);
     } else {
       return get_existing_interaction_annotations($config, $curs_schema, $options);
     }
