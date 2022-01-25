@@ -1746,6 +1746,11 @@ ontology_namespace_config:
     - "is_a(canto_root_subset)"
     - "is_a(qc_do_not_annotate)"
 
+# Namespace used for the phenotype condition ontology. If you
+# use an ontology other than FYECO for your phenotype conditions, then
+# change this to the default namespace of your ontology.
+phenotype_condition_namespace: fission_yeast_phenotype_condition
+
 namespace_term_evidence_codes: {}
 
 available_annotation_type_list:
@@ -2316,6 +2321,7 @@ config_service:
     max_term_name_select_count: 1
     show_quick_deletion_buttons: 1
     pathogen_host_mode: 1
+    phenotype_condition_namespace: 1
     multi_organism_mode: 1
     help_text: 1
     public_mode: 1
