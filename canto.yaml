@@ -2152,6 +2152,7 @@ available_annotation_type_list:
       - PCA
       - Protein-peptide
       - Protein-RNA
+      - Proximity Label-MS
       - Reconstituted Complex
       - Two-hybrid
     detailed_help_path: /docs/physical_interaction_annotation
