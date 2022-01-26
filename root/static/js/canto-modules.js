@@ -1073,32 +1073,34 @@ var annotationProxy =
 
 canto.service('AnnotationProxy', ['Curs', '$q', '$http', annotationProxy]);
 
-function fetch_conditions(search, showChoices) {
-  $.ajax({
-    url: make_ontology_complete_url('fission_yeast_phenotype_condition'),
-    data: {
-      term: search.term,
-      def: 1,
-    },
-    dataType: "json",
-    success: function (data) {
-      var choices = $.map(data, function (item) {
-        var label;
-        if (typeof (item.matching_synonym) === 'undefined') {
-          label = item.name;
-        } else {
-          label = item.matching_synonym + ' (synonym)';
-        }
-        return {
-          label: label,
-          value: item.name,
-          name: item.name,
-          definition: item.definition,
-        };
-      });
-      showChoices(choices);
-    },
-  });
+function fetch_conditions(conditionNamespace) {
+  return function (search, showChoices) {
+    $.ajax({
+      url: make_ontology_complete_url(conditionNamespace),
+      data: {
+        term: search.term,
+        def: 1,
+      },
+      dataType: "json",
+      success: function (data) {
+        var choices = $.map(data, function (item) {
+          var label;
+          if (typeof (item.matching_synonym) === 'undefined') {
+            label = item.name;
+          } else {
+            label = item.matching_synonym + ' (synonym)';
+          }
+          return {
+            label: label,
+            value: item.name,
+            name: item.name,
+            definition: item.definition,
+          };
+        });
+        showChoices(choices);
+      },
+    });
+  };
 }
 
 var cursStateService =
@@ -3695,7 +3697,7 @@ canto.directive('annotationEvidence',
                  annotationEvidence]);
 
 var conditionPicker =
-  function (CursConditionList, toaster) {
+  function (CursConditionList, toaster, CantoConfig) {
     var directive = {
       scope: {
         conditions: '=',
@@ -3733,29 +3735,37 @@ var conditionPicker =
               });
             };
 
-            $field.tagit({
-              minLength: 2,
-              fieldName: 'curs-allele-condition-names',
-              allowSpaces: true,
-              placeholderText: 'Start typing to add a condition',
-              tagSource: fetch_conditions,
-              autocomplete: {
-                focus: ferret_choose.show_autocomplete_def,
-                close: ferret_choose.hide_autocomplete_def,
-              },
-            });
-            $.map($scope.conditions,
-              function (cond) {
-                $field.tagit("createTag", cond.name);
+            var conditionsNamespacePromise = CantoConfig.get('phenotype_condition_namespace');
+
+            conditionsNamespacePromise.then(function (data) {
+              var conditionsNamespace = data.value;
+              $field.tagit({
+                minLength: 2,
+                fieldName: 'curs-allele-condition-names',
+                allowSpaces: true,
+                placeholderText: 'Start typing to add a condition',
+                tagSource: fetch_conditions(conditionsNamespace),
+                autocomplete: {
+                  focus: ferret_choose.show_autocomplete_def,
+                  close: ferret_choose.hide_autocomplete_def,
+                },
+              });
+              $.map($scope.conditions,
+                function (cond) {
+                  $field.tagit("createTag", cond.name);
+                });
+
+              // don't start updating until all initial tags are added
+              $field.tagit({
+                afterTagAdded: updateScopeConditions,
+                afterTagRemoved: updateScopeConditions,
               });
 
-            // don't start updating until all initial tags are added
-            $field.tagit({
-              afterTagAdded: updateScopeConditions,
-              afterTagRemoved: updateScopeConditions,
+              $scope.tagitList = $field;
+            }).catch(function () {
+              toaster.pop('error', "couldn't read the conditions ontology namespace from the server");
             });
 
-            $scope.tagitList = $field;
           }).catch(function () {
             toaster.pop('error', "couldn't read the condition list from the server");
           });
@@ -3766,7 +3776,7 @@ var conditionPicker =
     return directive;
   };
 
-canto.directive('conditionPicker', ['CursConditionList', 'toaster', conditionPicker]);
+canto.directive('conditionPicker', ['CursConditionList', 'toaster', 'CantoConfig', conditionPicker]);
 
 var alleleNameComplete =
   function (CursAlleleList, toaster) {
