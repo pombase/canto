@@ -114,38 +114,10 @@ sub _get_sym_interaction_annotations_from_annotation
   my %interactions = ();
 
   my $interaction_rs = $annotation->genotype_annotations()
-    ->search_related('symmetric_genotype_interactions', {},
-                     {
-                       prefetch => ['genotype_a', 'genotype_b'],
-                     });
+    ->search_related('symmetric_genotype_interactions');
 
-  while (defined (my $interaction_row = $interaction_rs->next())) {
-    my $key = $interaction_row->genotype_a()->genotype_id() . '-' .
-      $interaction_row->interaction_type() . '-' .
-      $interaction_row->genotype_b()->genotype_id();
-
-    my $interaction = undef;
-
-    if (!exists $interactions{$key}) {
-      my $genotype_a = $interaction_row->genotype_a();
-      my $genotype_b = $interaction_row->genotype_b();
-
-      $interaction = {
-        interaction_type => $interaction_row->interaction_type(),
-        genotype_a => {
-          genotype_id => $genotype_a->genotype_id(),
-          display_name => $genotype_a->display_name($config),
-        },
-        genotype_b => {
-          genotype_id => $genotype_b->genotype_id(),
-          display_name => $genotype_b->display_name($config),
-        },
-      };
-      $interactions{$key} = $interaction;
-    }
-  }
-
-  return (values %interactions);
+  return _get_sym_interaction_annotations($config,
+                                          $interaction_rs)
 }
 
 # return a table of directional interaction annotations from a
@@ -770,171 +742,42 @@ sub make_gene_interaction_annotation
 };
 
 
-=head2 make_interaction_annotation
+=head2 make_interaction_annotations
 
- Usage   : my $hash = Canto::Curs::Utils::make_interaction_annotation(...);
- Function: Retrieve the details of an interaction annotation from the CursDB as
-           a hash
+ Usage   : my $hash = Canto::Curs::Utils::make_interaction_annotations(...);
+ Function: Retrieve the details of any interaction annotations from the
+           phenotype Annotation argument
  Args    : $config - a Config object
            $schema - the CursDB schema
            $annotation - the Annotation to dump as a hash
+           $ontology_lookup
+           $organism_lookup
 
 =cut
 
-sub make_interaction_annotation
+sub make_interaction_annotations
 {
   my $config = shift;
   my $schema = shift;
   my $annotation = shift;
+  my $ontology_lookup = shift;
+  my $organism_lookup = shift;
 
   my $annotation_type = $annotation->type();
 
   my $annotation_config = $config->{annotation_types}->{$annotation_type};
 
-  if ($annotation_config->{feature_type} eq 'gene') {
-    return make_gene_interaction_annotation($config, $schema, $annotation);
-  }
+  my @sym_genotype_interactions =
+    _get_sym_interaction_annotations_from_annotation($config, $annotation);
 
-  my $ontology_lookup = shift //
-    Canto::Track::get_adaptor($config, 'ontology');
-  my $organism_lookup = shift //
-    Canto::Track::get_adaptor($config, 'organism');
-
-
-  my @metagenotype_annotations = $annotation->metagenotype_annotations()
-    ->search({ },
-             { prefetch => {
-               metagenotype => {
-                 first_genotype => 'organism',
-                 second_genotype => 'organism'
-               }
-             } });
-
-  if (@metagenotype_annotations > 1) {
-    die "internal error, more than one metagenotype for annotation: ",
-      $annotation->annotation_id();
-  }
-
-  my $metagenotype = $metagenotype_annotations[0]->metagenotype();
-
-  my $genotype_a = $metagenotype->first_genotype();
-  my $genotype_b = $metagenotype->second_genotype();
-
-  my %genotype_a_details = _make_genotype_details($schema, $genotype_a, $config,
-                                                  $ontology_lookup, $organism_lookup);
-  my %genotype_b_details = _make_genotype_details($schema, $genotype_b, $config,
-                                                  $ontology_lookup, $organism_lookup);
-
-  my $organism_a = $genotype_a->organism();
-  my $organism_b = $genotype_b->organism();
-
-  my @genotype_a_gene_ids =
-    map {
-      my $gene = $_;
-      $gene->gene_id();
-    }
-    grep {
-      my $gene = $_;
-      defined $gene;
-    } map {
-      my $allele = $_;
-      $allele->gene();
-    } $genotype_a->alleles();
-
-  my @genotype_b_gene_ids =
-    map {
-      my $gene = $_;
-      $gene->gene_id();
-    }
-    grep {
-      my $gene = $_;
-      defined $gene;
-    } map {
-      my $allele = $_;
-      $allele->gene();
-    } $genotype_b->alleles();
+  my @dir_genotype_interactions =
+    _get_dir_interaction_annotations_from_annotation($config,
+                                                     $schema, $annotation,
+                                                     $ontology_lookup, $organism_lookup);
 
 
-  my $is_inferred_annotation = 0;
 
-  my $data = $annotation->data();
-  my $evidence_code = $data->{evidence_code};
-
-  my $term_name = '';
-
-  my $term_ontid = $data->{term_ontid};
-  my $is_obsolete_term = undef;
-
-  if ($term_ontid) {
-    my $term_lookup_result = $ontology_lookup->lookup_by_id(id => $term_ontid);
-
-    if (! defined $term_lookup_result) {
-      warn qq(internal error: cannot find details for "$term_ontid" in "$annotation_type");
-      $term_lookup_result = {
-        name => "[UNKNOWN TERM]",
-        is_obsolete => 1,
-      };
-    }
-
-    $term_name = $term_lookup_result->{name};
-    $is_obsolete_term = $term_lookup_result->{is_obsolete};
-  }
-
-  my %annotation_types_config = %{$config->{annotation_types}};
-  my $annotation_type_config = $annotation_types_config{$annotation_type};
-  my $annotation_type_display_name = $annotation_type_config->{display_name};
-
-  my $pub_uniquename = $annotation->pub()->uniquename();
-  my $curator = undef;
-  if (defined $data->{curator}) {
-    $curator = $data->{curator}->{name} . ' <' . $data->{curator}->{email} . '>';
-  }
-
-  my $organism_hash = clone $organism_lookup->lookup_by_taxonid($organism_a->taxonid());
-
-  delete $organism_hash->{genes};
-
-  my $entry =
-    {
-      organism => $organism_hash,
-      annotation_type => $annotation_type,
-      annotation_type_display_name => $annotation_type_display_name,
-      genotype_a_display_name => $genotype_a_details{genotype_display_name},
-      genotype_a_id => $genotype_a->genotype_id(),
-      genotype_a_taxonid => $organism_a->taxonid(),
-      feature_a_display_name => $genotype_a_details{genotype_display_name},
-      feature_a_id => $genotype_a->genotype_id(),
-      feature_a_taxonid => $organism_a->taxonid(),
-      genotype_a_gene_ids => \@genotype_a_gene_ids,
-      publication_uniquename => $pub_uniquename,
-      evidence_code => $evidence_code,
-      genotype_b_display_name => $genotype_b_details{genotype_display_name},
-      genotype_b_id => $genotype_b->genotype_id(),
-      genotype_b_taxonid => $organism_b->taxonid(),
-      feature_b_display_name => $genotype_b_details{genotype_display_name},
-      feature_b_id => $genotype_b->genotype_id(),
-      feature_b_taxonid => $organism_b->taxonid(),
-      genotype_b_gene_ids => \@genotype_b_gene_ids,
-      score => '',  # for biogrid format output
-      submitter_comment => $data->{submitter_comment} // '',
-      figure => $data->{figure} // '',
-      term_ontid => $term_ontid,
-      term_name => $term_name,
-      is_obsolete_term => $is_obsolete_term,
-      extension => $data->{extension} || [],
-      completed => 1,
-      annotation_id => $annotation->annotation_id(),
-      annotation_type => $annotation_type,
-      status => $annotation->status(),
-      curator => $curator,
-      is_inferred_annotation => $is_inferred_annotation,
-      checked => $data->{checked} || 'no',
-    };
-
-  $entry->{conditions} =
-    [Canto::Curs::ConditionUtil::get_conditions_with_names($ontology_lookup, $data->{conditions})];
-
-  return $entry;
+  return (@sym_genotype_interactions, @dir_genotype_interactions);
 };
 
 =head2 get_annotation_table
@@ -1006,9 +849,17 @@ sub get_annotation_table
 
   my $completed_count = 0;
 
-  my %constraints = (
-    type => $annotation_type_name,
-  );
+  my %constraints = ();
+
+  if ($annotation_type_category eq 'genotype_interaction') {
+    $constraints{type} = $annotation_type_config->{associated_phenotype_annotation_type};
+    if (!$constraints{type}) {
+      warn "no associated_phenotype_annotation_type configured for annotation type: ",
+        $annotation_type_config->{name}, "\n";
+    }
+  } else {
+    $constraints{type} = $annotation_type_name;
+  }
 
   if ($constrain_annotations) {
     if (ref $constrain_annotations eq 'ARRAY') {
@@ -1033,13 +884,20 @@ sub get_annotation_table
                                           $ontology_lookup, $organism_lookup, 1, 1);
     } else {
       if ($annotation_type_category eq 'interaction') {
-
-        @entries = make_interaction_annotation($config, $schema, $annotation,
-                                               $ontology_lookup, $organism_lookup);
+        @entries = make_gene_interaction_annotation($config, $schema,
+                                                    $annotation);
       } else {
-        die "unknown annotation type category: $annotation_type_category\n";
+        if ($annotation_type_category eq 'genotype_interaction') {
+          @entries = make_interaction_annotations($config, $schema,
+                                                  $annotation,
+                                                  $ontology_lookup,
+                                                  $organism_lookup);
+        } else {
+          die "unknown annotation type category: $annotation_type_category\n";
+        }
       }
     }
+
     push @annotations, @entries;
     map { $completed_count++ if $_->{completed} } @entries;
   }

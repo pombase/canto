@@ -2125,7 +2125,7 @@ available_annotation_type_list:
     detailed_help_path: /docs/gene_expression
   - name: genotype_interaction
     category: genotype_interaction
-    feature_type: none
+    feature_type: genotype
     creation_disabled: 1
     display_name: genetic interaction
     associated_phenotype_annotation_type: phenotype
