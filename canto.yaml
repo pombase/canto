@@ -1728,6 +1728,9 @@ evidence_types:
   'Plasmid maintenance assay evidence': ~
   RNA-sequencing evidence: ~
   Differential hybridization evidence: ~
+  Expression microarray: ~
+  In situ hybridization evidence used in manual assertion: ~
+  Northern assay: ~
 
 # Configuration that applies to an ontology namespace.  An ontology can
 # be used by more than one annotation_type.  Some (like FYPO_EXT) are
