@@ -1727,6 +1727,7 @@ evidence_types:
   'Gel electrophoresis evidence': ~
   'Plasmid maintenance assay evidence': ~
   RNA-sequencing evidence: ~
+  Differential hybridization evidence: ~
 
 # Configuration that applies to an ontology namespace.  An ontology can
 # be used by more than one annotation_type.  Some (like FYPO_EXT) are
@@ -2083,6 +2084,7 @@ available_annotation_type_list:
     more_help_text: ~
     annotation_table_columns_to_hide: [term_ontid]
     evidence_codes:
+      - Differential hybridization evidence
       - Expression microarray
       - In situ hybridization evidence used in manual assertion
       - Northern assay
