@@ -8795,6 +8795,9 @@ var annotationTableCtrl =
           sortedAnnotations: null,
           hideColumns: {},
           publicationUniquename: null,
+          symmetricInteractionAnnotations: [],
+          directionalInteractionAnnotations: [],
+          interactionPhenotypeType: null,
         };
 
         $scope.checkboxChanged = function(annotationId, checkboxChecked) {
@@ -8827,6 +8830,16 @@ var annotationTableCtrl =
           AnnotationTypeConfig.getByName($scope.annotationTypeName)
           .then(function(annotationType) {
             $scope.annotationType = annotationType;
+
+            var interactionPhenotypeTypeName =
+                $scope.annotationType.associated_phenotype_annotation_type;
+            if (interactionPhenotypeTypeName) {
+              AnnotationTypeConfig.getByName(interactionPhenotypeTypeName)
+                .then(function(annotationType) {
+                  $scope.data.interactionPhenotypeType = annotationType;
+                });
+            }
+
             return annotationType;
           });
 
@@ -8921,6 +8934,25 @@ var annotationTableCtrl =
 
         $scope.sortAnnotations();
 
+        $scope.processGenotypeInteractions =
+          function(annotationType) {
+            if (annotationType.category !== 'genotype_interaction') {
+              return;
+            }
+
+            $scope.$watch('annotations',
+                          function() {
+                            $.map($scope.annotations,
+                                  function(annotation) {
+                                    if (annotation.genotype_b_phenotype_annotations) {
+                                      $scope.data.directionalInteractionAnnotations.push(annotation);
+                                    } else {
+                                      $scope.data.symmetricInteractionAnnotations.push(annotation);
+                                    }
+                                  });
+                          });
+          };
+
         $scope.setSortBy = function(col) {
           if ($scope.sortColumn === col) {
             $scope.setDefaultSort();
@@ -8941,15 +8973,12 @@ var annotationTableCtrl =
             if ($scope.annotations) {
               $scope.updateColumns();
               $scope.sortAnnotations();
+              $scope.annotationTypeConfigPromise.then(function (annotationType) {
+                $scope.processGenotypeInteractions(annotationType);
+              });
             }
           },
           true);
-
-        $scope.data = {
-          annotations: null,
-          hideColumns: {},
-          publicationUniquename: null,
-        };
 
         CursSessionDetails.get()
           .then(function (sessionDetails) {
@@ -9068,7 +9097,8 @@ var annotationTableList =
 
                 $scope.byTypeSplit[annotationType.name] = {};
 
-                if (annotationType.feature_type == 'genotype') {
+                if (annotationType.feature_type == 'genotype' &&
+                    annotationType.category != 'genotype_interaction') {
                   doFilter(annotations, 'new', 'single');
                   doFilter(annotations, 'new', 'multi');
                   doFilter(annotations, 'existing', 'single');

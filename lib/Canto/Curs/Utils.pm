@@ -97,6 +97,7 @@ sub _get_sym_interaction_annotations
           genotype_id => $genotype_b->genotype_id(),
           display_name => $genotype_b->display_name($config),
         },
+        status => 'new',
       };
       $interactions{$key} = $interaction;
     }
@@ -167,6 +168,7 @@ sub _get_dir_interaction_annotations
           genotype_id => $genotype_b->genotype_id(),
           display_name => $genotype_b->display_name($config),
         },
+        status => 'new',
       };
       $interactions{$key} = $interaction;
     }

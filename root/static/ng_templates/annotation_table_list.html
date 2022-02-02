@@ -27,7 +27,7 @@ Annotation loading...
           </div>
         </div>
         <div class="curs-box-body">
-          <div ng-if="annotationType.feature_type != 'genotype'">
+          <div ng-if="annotationType.feature_type != 'genotype' || annotationType.category == 'genotype_interaction'">
             <annotation-table annotation-type-name="{{annotationType.name}}"
                               annotations="byTypeSplit[annotationType.name].new"
                               show-features="true"
@@ -47,7 +47,7 @@ Annotation loading...
                               show-metagenotype-link="showMetagenotypeLink">
             </annotation-table>
           </div>
-          <div ng-if="annotationType.feature_type == 'genotype'">
+          <div ng-if="annotationType.feature_type == 'genotype' && annotationType.category != 'genotype_interaction'">
             <annotation-table annotation-type-name="{{annotationType.name}}"
                               annotations="byTypeSplit[annotationType.name].new.single"
                               show-features="true"
