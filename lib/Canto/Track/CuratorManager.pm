@@ -212,39 +212,63 @@ sub set_curator
   my $schema = $self->schema();
 
   my $curator_rs = $schema->resultset('Person');
+
   my $curs_curator_email_rs =
     $curator_rs->search({ 'lower(email_address)' => lc $curs_curator_email });
 
   my $curator;
 
-  if ($curs_curator_email_rs->count() > 0) {
-    $curator = $curs_curator_email_rs->first();
+  if ($curs_curator_orcid) {
+    my $existing_by_orcid = $curator_rs->search({ orcid => $curs_curator_orcid })->first();
 
-    if (defined $curs_curator_name && length $curs_curator_name > 0 &&
-      (!defined $curator->name() || $curator->name() ne $curs_curator_name)) {
+    if (defined $existing_by_orcid) {
+      $existing_by_orcid->name($curs_curator_name);
 
-      $curator->name($curs_curator_name);
+      my $existing_by_email = $curs_curator_email_rs->first();
+
+      if (defined $existing_by_email &&
+          $existing_by_email->person_id() != $existing_by_orcid->person_id()) {
+        # Hopefully this won't be a common case: there's an existing
+        # Person with the same email, different ORCID so we change the
+        # existing email to avoid a unique constraint error
+        $existing_by_email->email_address("merge_with_$curs_curator_orcid-$curs_curator_email");
+        $existing_by_email->update();
+      }
+
+      $existing_by_orcid->email_address($curs_curator_email);
+      $existing_by_orcid->update();
+
+      $curator = $existing_by_orcid;
+    }
+  }
+
+  if (!defined $curator) {
+    if ($curs_curator_email_rs->count() > 0) {
+      $curator = $curs_curator_email_rs->first();
+
+      if (defined $curs_curator_name && length $curs_curator_name > 0) {
+        $curator->name($curs_curator_name);
+      }
+
+      if (defined $curs_curator_orcid && length $curs_curator_orcid > 0 &&
+          _orcid_is_valid($curs_curator_orcid)) {
+        $curator->orcid($curs_curator_orcid);
+      }
       $curator->update();
-    }
+    } else {
+      my $user_role_id =
+        $schema->find_with_type('Cvterm', { name => 'user' })->cvterm_id();
+      my %args = (
+        name => $curs_curator_name,
+        email_address => $curs_curator_email,
+        role => $user_role_id,
+      );
+      if ($curs_curator_orcid) {
+        $args{orcid} = $curs_curator_orcid;
+      }
 
-    if (defined $curs_curator_orcid && length $curs_curator_orcid > 0 &&
-        !$curator->orcid() && _orcid_is_valid($curs_curator_orcid)) {
-      $curator->orcid($curs_curator_orcid);
-      $curator->update();
+      $curator = $curator_rs->create(\%args);
     }
-  } else {
-    my $user_role_id =
-      $schema->find_with_type('Cvterm', { name => 'user' })->cvterm_id();
-    my %args = (
-      name => $curs_curator_name,
-      email_address => $curs_curator_email,
-      role => $user_role_id,
-    );
-    if ($curs_curator_orcid) {
-      $args{orcid} = $curs_curator_orcid;
-    }
-
-    $curator = $curator_rs->create(\%args);
   }
 
   my $curs_rs = $schema->resultset('Curs')->search({ curs_key => $curs_key });
