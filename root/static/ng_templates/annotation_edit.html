@@ -237,7 +237,7 @@
       <tr ng-if="allowInteractionAnnotations">
         <td class="title"><div>Interaction details</div><div>(Optional)</div></td>
         <td>
-          <div>
+          <div ng-if="genotypeInteractionInitialData">
           <button class="btn btn-default btn-sm"
                   ng-click="editAnnotationInteractions()">Add ...</button>
           </div>
