@@ -6876,7 +6876,7 @@ var AnnotationInteractionsEditDialogCtrl =
     $scope.data = {
       interactionForward: null,
       annotationSelectorVisible: false,
-      symmetricInteractionNote: false,
+      isSymmetricInteraction: false,
       directionSelectorVisible: false,
       genotypeA: args.initialData.genotypeA,
       genotypeB: args.initialData.genotypeB,
@@ -6895,13 +6895,13 @@ var AnnotationInteractionsEditDialogCtrl =
     $scope.evidenceCodes = Object.keys($scope.data.evidenceConfig);
 
     var typeWatcher = function() {
-      $scope.data.symmetricInteractionNote = false;
+      $scope.data.isSymmetricInteraction = false;
       $scope.data.annotationSelectorVisible = false;
       $scope.data.directionSelectorVisible = false;
 
       if ($scope.interactionType) {
        if ($scope.data.evidenceConfig[$scope.interactionType].is_symmetric) {
-          $scope.data.symmetricInteractionNote = true;
+          $scope.data.isSymmetricInteraction  = true;
         } else {
           $scope.data.directionSelectorVisible = true;
         }
