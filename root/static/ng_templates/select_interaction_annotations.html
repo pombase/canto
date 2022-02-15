@@ -15,6 +15,12 @@
                       checkboxes-changed="selectionChanged(annotationIds)"
                       show-metagenotype-link="false">
     </annotation-table>
+
+    <div>
+      Add a new phenotype annotation for {{data.objectGenotype.display_name}}:
+      <button ng-click="addPhenotypeAnnotation()"
+              class="btn btn-default btn-sm">Add ...</button>
+    </div>
   </div>
 
   <div class="modal-footer">

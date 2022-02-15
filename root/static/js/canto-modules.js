@@ -6785,7 +6785,7 @@ function startViewInteractionPhenotypes($uibModal, genotype,
 
 
 var selectInteractionAnnotationsDialogCtrl =
-  function ($scope, $uibModalInstance,
+  function ($scope, $uibModal, $uibModalInstance,
             CantoGlobals, Curs, toaster, args) {
     $scope.data = {};
 
@@ -6814,6 +6814,22 @@ var selectInteractionAnnotationsDialogCtrl =
       return "Select";
     };
 
+    $scope.addPhenotypeAnnotation = function() {
+      var addPromise =
+          addAnnotation($uibModal, $scope.data.annotationType.name,
+                        'genotype',
+                        $scope.data.objectGenotype.feature_id,
+                        $scope.data.objectGenotype.display_name,
+                        $scope.data.objectGenotype.organism.taxonid);
+
+
+      addPromise.then(function (newAnnotation) {
+        $uibModalInstance.close({
+          selectedAnnotations: [newAnnotation],
+        });
+      });
+    };
+
     $scope.ok = function () {
       var selectedAnnotations =
           $.map($scope.data.selectedAnnotationIds,
@@ -6832,7 +6848,7 @@ var selectInteractionAnnotationsDialogCtrl =
   };
 
 canto.controller('SelectInteractionAnnotationsDialogCtrl',
-  ['$scope', '$uibModalInstance',
+  ['$scope', '$uibModal', '$uibModalInstance',
    'CantoGlobals', 'Curs', 'toaster', 'args',
     selectInteractionAnnotationsDialogCtrl
   ]);
@@ -8583,8 +8599,8 @@ function addAnnotation($uibModal, annotationTypeName, featureType, featureId,
 
   var featureEditable = !featureId;
   var newAnnotation = makeNewAnnotation(template);
-  startEditing($uibModal, annotationTypeName, newAnnotation,
-               featureDisplayName, true, featureEditable);
+  return startEditing($uibModal, annotationTypeName, newAnnotation,
+                      featureDisplayName, true, featureEditable);
 }
 
 var annotationQuickAdd =

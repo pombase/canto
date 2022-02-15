@@ -62,9 +62,10 @@
 
         <div style="padding-top: 1em">
           <div ng-if="data.interactingAnnotations.length == 0">
-            Select rescued phenotypes:
+            Select annotation phenotypes for
+            <span ng-if="data.interactionForward">{{data.genotypeB.display_name}}</span><span ng-if="!data.interactionForward">{{data.genotypeA.display_name}}</span>:
             <button ng-click="selectAnnotations()"
-                    class="btn btn-default btn-sm">Select ...</button>
+                    class="btn btn-default btn-sm">Select/Add ...</button>
           </div>
 
           <div ng-if="data.interactingAnnotations.length != 0">
