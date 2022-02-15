@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 21;
+use Test::More tests => 20;
 use Test::Deep;
 use JSON;
 
@@ -101,8 +101,6 @@ is ($res->[0]->{full_name}, "Schizosaccharomyces pombe");
 
 @res_genes = @{$res->[0]->{genes}};
 is (scalar(@res_genes), 4);
-
-is ($res_genes[0]->{annotation_count}, 1);
 
 is ($res_genes[1]->{genotype_count}, 2);
 

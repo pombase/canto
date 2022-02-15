@@ -216,8 +216,6 @@ sub _get_organisms
         };
 
         if ($include_counts) {
-          $gene_details->{annotation_count} = $gene_proxy->cursdb_gene()
-            ->all_annotations(include_with=>1)->count();
           $gene_details->{genotype_count} = $gene_proxy->cursdb_gene()->genotypes()->count();
         }
 
