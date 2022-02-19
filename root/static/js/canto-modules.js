@@ -6904,6 +6904,7 @@ var AnnotationInteractionsEditDialogCtrl =
     };
 
     $scope.interactionType = null;
+    $scope.interactionTypeDisplayLabel = null;
 
     // for now we always show all types
     $scope.hideAsymmetricTypes = false;
@@ -6916,10 +6917,14 @@ var AnnotationInteractionsEditDialogCtrl =
       $scope.data.directionSelectorVisible = false;
 
       if ($scope.interactionType) {
-       if ($scope.data.evidenceConfig[$scope.interactionType].is_symmetric) {
+        var evidenceConfig = $scope.data.evidenceConfig[$scope.interactionType];
+       if (evidenceConfig.is_symmetric) {
           $scope.data.isSymmetricInteraction  = true;
+          $scope.interactionTypeDisplayLabel = $scope.interactionType;
         } else {
           $scope.data.directionSelectorVisible = true;
+          $scope.interactionTypeDisplayLabel =
+            evidenceConfig.non_symmetric_interaction_labels.interactor_a;
         }
       }
     };

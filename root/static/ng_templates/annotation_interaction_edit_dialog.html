@@ -28,7 +28,7 @@
                  id="annotation-interaction-direction-1"/>
           <label for="annotation-interaction-direction-1">
             {{data.genotypeA.display_name}}
-            <span style="font-weight: bold">{{interactionType}}</span>
+            <span style="font-weight: bold">{{interactionTypeDisplayLabel}}</span>
             {{data.genotypeB.display_name}}
           </label>
         </div>
@@ -40,7 +40,7 @@
                  id="annotation-interaction-direction-2"/>
           <label for="annotation-interaction-direction-2">
             {{data.genotypeB.display_name}}
-            <span style="font-weight: bold">{{interactionType}}</span>
+            <span style="font-weight: bold">{{interactionTypeDisplayLabel}}</span>
             {{data.genotypeA.display_name}}
           </label>
         </div>
@@ -50,13 +50,13 @@
       <div ng-if="data.annotationSelectorVisible">
         <div ng-if="data.interactionForward">
           {{data.genotypeA.display_name}}
-          <span style="font-weight: bold">{{interactionType}}</span>
+          <span style="font-weight: bold">{{interactionTypeDisplayLabel}}</span>
           {{data.genotypeB.display_name}}
         </div>
 
         <div ng-if="!data.interactionForward">
           {{data.genotypeB.display_name}}
-          <span style="font-weight: bold">{{interactionType}}</span>
+          <span style="font-weight: bold">{{interactionTypeDisplayLabel}}</span>
           {{data.genotypeA.display_name}}
         </div>
 
