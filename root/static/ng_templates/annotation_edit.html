@@ -226,13 +226,19 @@
                  ng-model="annotation.figure"/>
         </td>
       </tr>
+    </table>
+    </div>
+  </div>
 
-      <tr ng-if="allowInteractionAnnotations">
-        <td>&nbsp;</td>
-        <td>&nbsp;</td>
-      </tr>
+  <div ng-if="allowInteractionAnnotations" class="modal-header">
+    <h4 class="modal-title">
+      Add/edit genetic interaction type for genotype {{annotation.feature_display_name}}
+    </h4>
+  </div>
 
-      <tr ng-if="allowInteractionAnnotations">
+  <div ng-if="allowInteractionAnnotations" class="modal-body">
+    <table class="curs-definition-table">
+      <tr>
         <td class="title"><div>Genetic interaction type</div><div>(Optional)</div></td>
         <td>
           <div ng-if="genotypeInteractionInitialData">
