@@ -35,12 +35,10 @@
           {{displayAnnotationFeatureType}}
         </td>
         <td colspan="2">
-          <div ng-if="!featureEditable">
-            {{currentFeatureDisplayName}}
-          </div>
-          <div ng-if="featureEditable && filteredFeatures">
+          <div ng-if="filteredFeatures">
             <feature-chooser feature-type="{{chooseFeatureType}}"
                              features="filteredFeatures"
+                             feature-editable="featureEditable"
                              chosen-feature-id="annotation.feature_id"></feature-chooser>
             <span ng-show="filteredFeatures.length != 0 && !annotation.feature_id"
                   class="help-block">Please select a {{chooseFeatureType}}</span>

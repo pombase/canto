@@ -1819,6 +1819,7 @@ var featureChooser =
       scope: {
         features: '=',
         featureType: '@',
+        featureEditable: '=',
         chosenFeatureId: '=',
         chosenFeatureUniquename: '=',
         chosenFeatureDisplayName: '=',
@@ -8594,7 +8595,7 @@ function addAnnotation($uibModal, annotationTypeName, featureType, featureId,
     feature_type: featureType,
   };
   if (featureId) {
-    template.feature_id = featureId;
+    template.feature_id = Number(featureId);
   }
   if (featureTaxonId) {
     template.organism = {
