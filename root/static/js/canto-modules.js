@@ -1751,14 +1751,12 @@ function openSingleGeneAddDialog($uibModal) {
 
 function featureChooserControlHelper($scope, $uibModal, CursGeneList,
                                      CursGenotypeList, Curs, toaster) {
-  if ($scope.chosenFeatureUniquename !== undefined ||
-    $scope.chosenFeatureDisplayName !== undefined) {
     $scope.$watch('chosenFeatureId',
       function (newFeatureId) {
         if (newFeatureId && $scope.features) {
           $.map($scope.features,
             function (feature) {
-              if (feature.feature_id === newFeatureId) {
+              if (feature.feature_id == newFeatureId) {
                 if ($scope.chosenFeatureUniquename !== undefined) {
                   $scope.chosenFeatureUniquename = feature.primary_identifier;
                 }
@@ -1769,7 +1767,6 @@ function featureChooserControlHelper($scope, $uibModal, CursGeneList,
             });
         }
       });
-  }
 }
 
 
