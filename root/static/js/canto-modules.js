@@ -7190,6 +7190,22 @@ var annotationEditDialogCtrl =
 
     $scope.hasFigure = $scope.annotation.figure;
 
+    // See: https://github.com/pombase/canto/issues/2540
+    $scope.maybeDisableFeatureEdit = function() {
+      if ($scope.annotation.symmetric_interaction_annotations &&
+          $scope.annotation.symmetric_interaction_annotations.length > 0 ||
+          $scope.annotation.directional_interaction_annotations &&
+          $scope.annotation.directional_interaction_annotations.length > 0) {
+        $scope.featureEditable = false;
+      } else {
+        $scope.featureEditable = args.featureEditable;
+      }
+    };
+    $scope.$watchCollection('annotation.symmetric_interaction_annotations',
+                            $scope.maybeDisableFeatureEdit);
+    $scope.$watchCollection('annotation.directional_interaction_annotations',
+                            $scope.maybeDisableFeatureEdit);
+
     $scope.editAnnotationInteractions = function() {
       var newInteractionsPromise =
           startInteractionAnnotationsEdit($uibModal, $scope.annotationType,
