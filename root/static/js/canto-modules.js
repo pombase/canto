@@ -6789,6 +6789,7 @@ var selectInteractionAnnotationsDialogCtrl =
 
     $scope.data.objectGenotype = args.objectGenotype;
     $scope.data.annotationType = args.annotationType;
+    $scope.data.interactionTypeConfig = args.interactionTypeConfig;
     $scope.data.filteredAnnotations = args.filteredAnnotations;
 
     $scope.data.selectedAnnotationIds = [];
@@ -6853,7 +6854,8 @@ canto.controller('SelectInteractionAnnotationsDialogCtrl',
 
 
 function startSelectInteractionAnnotations($uibModal, objectGenotype,
-                                           annotationType, filteredAnnotations) {
+                                           annotationType, interactionTypeConfig,
+                                           filteredAnnotations) {
   var selectInstance = $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/select_interaction_annotations.html',
     controller: 'SelectInteractionAnnotationsDialogCtrl',
@@ -6865,6 +6867,7 @@ function startSelectInteractionAnnotations($uibModal, objectGenotype,
         return {
           objectGenotype: objectGenotype,
           annotationType: annotationType,
+          interactionTypeConfig: interactionTypeConfig,
           filteredAnnotations: filteredAnnotations,
         };
       }
@@ -6899,6 +6902,7 @@ var AnnotationInteractionsEditDialogCtrl =
       genotypeAnnotationsA: args.initialData.genotypeAnnotationsA,
       genotypeAnnotationsB: args.initialData.genotypeAnnotationsB,
       interactingAnnotations: [],
+      interactionTypeConfig: null,
     };
 
     $scope.interactionType = null;
@@ -6913,9 +6917,11 @@ var AnnotationInteractionsEditDialogCtrl =
       $scope.data.isSymmetricInteraction = false;
       $scope.data.annotationSelectorVisible = false;
       $scope.data.directionSelectorVisible = false;
+      $scope.data.interactionTypeConfig = null;
 
       if ($scope.interactionType) {
         var evidenceConfig = $scope.data.evidenceConfig[$scope.interactionType];
+        $scope.data.interactionTypeConfig = evidenceConfig;
        if (evidenceConfig.is_symmetric) {
           $scope.data.isSymmetricInteraction  = true;
           $scope.interactionTypeDisplayLabel = $scope.interactionType;
@@ -6954,6 +6960,7 @@ var AnnotationInteractionsEditDialogCtrl =
       var promise =
           startSelectInteractionAnnotations($uibModal, objectGenotype,
                                             $scope.data.annotationType,
+                                            $scope.data.interactionTypeConfig,
                                             objectAnnotations);
 
       promise.then(function(result) {

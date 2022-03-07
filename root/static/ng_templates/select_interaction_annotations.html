@@ -1,6 +1,9 @@
 <div class="curs-select-interaction-annotations">
   <div class="modal-header">
-    <h4 class="modal-title">
+    <h4 ng-if="data.interactionTypeConfig && data.interactionTypeConfig.interaction_dialog_type_label" class="modal-title">
+      Select {{data.interactionTypeConfig.interaction_dialog_type_label}} {{data.objectGenotype.display_name}}
+    </h4>
+    <h4 ng-if="!data.interactionTypeConfig || !data.interactionTypeConfig.interaction_dialog_type_label" class="modal-title">
       Select affected phenotypes of {{data.objectGenotype.display_name}}
     </h4>
   </div>
