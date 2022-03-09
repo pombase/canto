@@ -520,4 +520,35 @@ sub add_missing_fields
                      'admin_load');
 }
 
+
+=head2 update_field
+
+ Usage   : my $count = Canto::Track::PubmedUtil::update_field($config, $schema,
+                                                              "publication_date");
+ Function: Set the field with the given name to undef/null in the database, then
+           re-initialise it from the PubMed data
+ Args    : $config - the config object
+           $schema - the TrackDB object
+           $field_name - the field to re-initialise
+ Returns : the number of publications updated, dies on error
+
+=cut
+
+sub update_field
+{
+  my $config = shift;
+  my $schema = shift;
+  my $field_name = shift;
+
+  if ($field_name eq 'uniquename') {
+    die "can't update uniquename field\n";
+  }
+
+  my $pub_rs = $schema->resultset('Pub');
+
+  $pub_rs->update({ $field_name => undef });
+
+  return add_missing_fields($config, $schema);
+}
+
 1;
