@@ -1970,4 +1970,5 @@ button.curs-annotation-edit-suggest {
 
 .curs-annotation-table-view-edit-interactions {
   padding-left: 1em;
+  white-space: nowrap;
 }
