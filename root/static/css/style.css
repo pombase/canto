@@ -1967,3 +1967,7 @@ button.curs-annotation-edit-suggest {
 .curs-annotation-interaction-edit label {
   font-weight: normal;
 }
+
+.curs-annotation-table-view-edit-interactions {
+  padding-left: 1em;
+}

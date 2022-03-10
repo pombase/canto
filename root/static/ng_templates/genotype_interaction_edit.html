@@ -1,0 +1,25 @@
+<div>
+  <div style="padding-bottom: 0.8em">
+    <button class="btn btn-primary btn-sm"
+            ng-click="editAnnotationInteractions()">Add interaction ...</button>
+  </div>
+
+  <div ng-if="annotation.symmetric_interaction_annotations.length != 0">
+    <genotype-interaction-annotation-table
+      interactions="annotation.symmetric_interaction_annotations"
+      phenotype-annotation-type="annotationType"
+      show-phenotypes-link="false" allow-deletion="true">
+    </genotype-interaction-annotation-table>
+  </div>
+  <div ng-if="annotation.directional_interaction_annotations.length != 0">
+    <genotype-interaction-annotation-table
+      interactions="annotation.directional_interaction_annotations"
+      phenotype-annotation-type="annotationType"
+      show-phenotypes-link="true" allow-deletion="true">
+    </genotype-interaction-annotation-table>
+  </div>
+
+  <div ng-if="annotation.symmetric_interaction_annotations.length == 0 && annotation.directional_interaction_annotations.length == 0">
+    There are currently no interactions for this phenotype
+  </div>
+</div>

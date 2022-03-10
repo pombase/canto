@@ -83,6 +83,20 @@
                                link-label="..."></initially-hidden-text>
       </div>
     </span>
+
+    <div class="curs-annotation-table-view-edit-interactions"
+         ng-if="genotypeInteractionInitialData">
+      <div ng-if="genotypeInteractionCount() == 0">
+        No associated interactions -
+        <a ng-click="viewEditInteractions()">add interaction ...</a>
+      </div>
+      <div ng-if="genotypeInteractionCount() != 0">
+        {{genotypeInteractionCount()}} associated
+        interaction<span ng-if="genotypeInteractionCount() != 1">s</span> -
+        <a ng-click="viewEditInteractions()">view or add ...</a>
+      </div>
+    </div>
+
   </td>
   <td ng-if="!data.hideColumns.term_ontid" ng-class="{ 'term-warning': annotation.is_obsolete_term }">
     {{annotation.term_ontid}}

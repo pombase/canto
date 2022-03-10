@@ -242,23 +242,11 @@
         <td class="title"><div>Genetic interaction</div><div>(Optional)</div></td>
         <td>
           <div ng-if="genotypeInteractionInitialData">
-          <button class="btn btn-default btn-sm"
-                  ng-click="editAnnotationInteractions()">Add ...</button>
-          </div>
-
-          <div ng-if="annotation.symmetric_interaction_annotations.length != 0">
-            <genotype-interaction-annotation-table
-              interactions="annotation.symmetric_interaction_annotations"
-              phenotype-annotation-type="annotationType"
-              show-phenotypes-link="false" allow-deletion="true">
-            </genotype-interaction-annotation-table>
-          </div>
-          <div ng-if="annotation.directional_interaction_annotations.length != 0">
-            <genotype-interaction-annotation-table
-              interactions="annotation.directional_interaction_annotations"
-              phenotype-annotation-type="annotationType"
-              show-phenotypes-link="true" allow-deletion="true">
-            </genotype-interaction-annotation-table>
+            <genotype-interaction-edit
+              annotation="annotation"
+              annotation-type="annotationType"
+              genotype-interaction-initial-data="genotypeInteractionInitialData">
+            </genotype-interaction-edit>
           </div>
         </td>
 
