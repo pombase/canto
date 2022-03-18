@@ -142,6 +142,10 @@ my $org_details = $organism_lookup->lookup_by_taxonid($genotype->organism()->tax
 my @types_to_show = grep {
   my $annotation_type = $_;
 
+  if ($annotation_type->{direct_editing_disabled}) {
+    0;
+  } else {
+
   if ($annotation_type->{feature_type} eq 'genotype') {
     if ($pathogen_host_mode && $annotation_type->{feature_subtype}) {
       $annotation_type->{feature_subtype} eq $org_details->{pathogen_or_host};
@@ -150,6 +154,8 @@ my @types_to_show = grep {
     }
   } else {
     0;
+  }
+
   }
 } @annotation_type_list;
 

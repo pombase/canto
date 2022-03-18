@@ -2132,9 +2132,9 @@ available_annotation_type_list:
   - name: genotype_interaction
     category: genotype_interaction
     feature_type: genotype
-    creation_disabled: 1
     display_name: genetic interaction
     associated_phenotype_annotation_type: phenotype
+    direct_editing_disabled: 1
     evidence_codes:
       - Dosage Growth Defect
       - Dosage Lethality

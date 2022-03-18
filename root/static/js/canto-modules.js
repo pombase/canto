@@ -5685,6 +5685,10 @@ var genotypeListRowLinksCtrl =
                   return false;
                 }
 
+                if (annotationType.direct_editing_disabled) {
+                  return false;
+                }
+
                 if ($scope.pathogen_host_mode &&
                   genotypePathogenOrHost !== annotationType.feature_subtype) {
                   return false;
