@@ -19,9 +19,17 @@
   </thead>
   <tbody>
     <tr ng-repeat="interaction in interactions">
-      <td>{{interaction.genotype_a.display_name}}</td>
+      <td>
+        <a href="{{curs_root_uri + '/feature/genotype/view/' + interaction.genotype_a.genotype_id + (read_only_curs ? '/ro' : '')}}">
+          <span ng-bind-html="interaction.genotype_a.display_name | breakAtSpaces | toTrusted"></span>
+        </a>
+      </td>
       <td>{{interaction.interaction_type}}</td>
-      <td>{{interaction.genotype_b.display_name}}</td>
+      <td>
+        <a href="{{curs_root_uri + '/feature/genotype/view/' + interaction.genotype_b.genotype_id + (read_only_curs ? '/ro' : '')}}">
+          <span ng-bind-html="interaction.genotype_b.display_name | breakAtSpaces | toTrusted"></span>
+        </a>
+      </td>
       <td ng-show="showPhenotypesLink">
         <a ng-click="viewPhenotypes(interaction)">View ...</a>
       </td>

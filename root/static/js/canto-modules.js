@@ -6701,7 +6701,7 @@ canto.directive('termChildrenDisplay',
 
 
 var GenotypeInteractionAnnotationTableCtrl =
-  function ($uibModal, CantoConfig) {
+  function ($uibModal, CantoConfig, CantoGlobals) {
     return {
       scope: {
         interactions: '=',
@@ -6715,6 +6715,9 @@ var GenotypeInteractionAnnotationTableCtrl =
       controller: function ($scope) {
         $scope.ready = false;
         $scope.evidenceTypes = {};
+
+        $scope.curs_root_uri = CantoGlobals.curs_root_uri;
+        $scope.read_only_curs = CantoGlobals.read_only_curs;
 
         CantoConfig.get('evidence_types').
           then(function(result) {
@@ -6738,7 +6741,8 @@ var GenotypeInteractionAnnotationTableCtrl =
   };
 
 canto.directive('genotypeInteractionAnnotationTable',
-                ['$uibModal', 'CantoConfig', GenotypeInteractionAnnotationTableCtrl]);
+                ['$uibModal', 'CantoConfig', 'CantoGlobals',
+                 GenotypeInteractionAnnotationTableCtrl]);
 
 
 var viewInteractionPhenotypesDialogCtrl =
