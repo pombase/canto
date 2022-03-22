@@ -2135,15 +2135,28 @@ available_annotation_type_list:
     display_name: genetic interaction
     associated_phenotype_annotation_type: phenotype
     direct_editing_disabled: 1
-    evidence_codes:
-      - Dosage Growth Defect
-      - Dosage Lethality
-      - Dosage Rescue
-      - Phenotypic Enhancement
-      - Phenotypic Suppression
-      - Synthetic Growth Defect
-      - Synthetic Lethality
-      - Synthetic Rescue
+    evidence_code_groups:
+      double_mutant_population_phenotype:
+        parent_constraint: 'is_a(FYPO:0000003)'
+        evidence_codes:
+          - Dosage Growth Defect
+          - Dosage Lethality
+          - Dosage Rescue
+          - Synthetic Growth Defect
+          - Synthetic Lethality
+          - Synthetic Rescue
+        not_evidence_codes:
+          - Phenotypic Enhancement
+          - Phenotypic Suppression
+      both_alleles_deletions:
+        - Phenotypic Suppression
+        - Synthetic Growth Defect
+        - Synthetic Lethality
+        - Synthetic Rescue
+      one_allele_overexpressed:
+        - Dosage Growth Defect
+        - Dosage Lethality
+        - Dosage Rescue
   - name: genetic_interaction
     category: interaction
     display_name: 'legacy genetic interaction'

@@ -212,6 +212,10 @@ sub setup
 
   $self->{extension_configuration} = \@ext_conf;
 
+  if (!defined $self->{ontology_namespace_config}) {
+    $self->{ontology_namespace_config} = {}
+  }
+
   # make the field_infos available as a hash in the config and make
   # the config inheritable using "extends"
   for my $model (keys %{$self->{class_info}}) {

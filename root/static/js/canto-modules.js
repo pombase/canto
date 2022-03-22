@@ -7046,6 +7046,55 @@ function startInteractionAnnotationsEdit($uibModal, annotationType, initialData)
 }
 
 
+function interactionEvCodesFromPhenotype(phenotypeAnnotationType, phenotypeTermDetails,
+                                         genotype) {
+  var interactionAnnotationType =
+      phenotypeAnnotationType.associated_interaction_annotation_type;
+
+  var evidenceCodeGroups = interactionAnnotationType.evidence_code_groups;
+
+  if (!evidenceCodeGroups || genotype.alleles.length != 2) {
+    return phenotypeAnnotationType.associated_interaction_annotation_type.evidence_codes;
+  } else {
+    var popPhenotypeEvCodeConfig = evidenceCodeGroups.double_mutant_population_phenotype;
+
+    var phenotypeEvidenceCodes = [];
+
+    if (phenotypeTermDetails.subset_ids.includes(popPhenotypeEvCodeConfig.parent_constraint)) {
+      phenotypeEvidenceCodes = popPhenotypeEvCodeConfig.evidence_codes;
+    } else {
+      phenotypeEvidenceCodes = popPhenotypeEvCodeConfig.not_evidence_codes;
+    }
+
+    var returnEvidenceCodes = [];
+
+    var filterEvCodes = function(evCodes) {
+      $.map(phenotypeEvidenceCodes,
+            function(phenotypeCode) {
+              if (evCodes.includes(phenotypeCode)) {
+                returnEvidenceCodes.push(phenotypeCode);
+              }
+            });
+    };
+
+    var allele0 = genotype.alleles[0];
+    var allele1 = genotype.alleles[1];
+
+    if (allele0.type == 'deletion' && allele1.type == 'deletion') {
+      filterEvCodes(evidenceCodeGroups.both_alleles_deletions);
+    } else {
+      if (allele0.expression && allele0.expression == 'Overexpression' ||
+          allele1.expression && allele1.expression == 'Overexpression') {
+        filterEvCodes(evidenceCodeGroups.one_allele_overexpressed);
+      } else {
+        returnEvidenceCodes = phenotypeEvidenceCodes;
+      }
+    }
+
+    return returnEvidenceCodes;
+  }
+}
+
 // if it's possible to make a genotype interaction annotation attached to
 // the phenotype, return:
 // {
@@ -7058,18 +7107,21 @@ function startInteractionAnnotationsEdit($uibModal, annotationType, initialData)
 //
 // returns null if no interactions are possible 
 function getInteractionInitialData($q, CantoConfig, AnnotationProxy,
-                                   phenotypeAnnotationType, genotypeId, allGenotypes) {
+                                   CantoService,
+                                   phenotypeAnnotationType, phenotypeTermId,
+                                   genotypeId, allGenotypes) {
   var evidencePromise = CantoConfig.get('evidence_types');
   var annotationsPromise =
       AnnotationProxy.getAnnotation(phenotypeAnnotationType.name);
+  var termPromise = CantoService.lookup('ontology', [phenotypeTermId], {
+    subset_ids: 1,
+  });
 
-  return $q.all([evidencePromise, annotationsPromise])
+  return $q.all([evidencePromise, annotationsPromise, termPromise])
     .then(function(result) {
       var evidenceTypes = result[0];
       var annotations = result[1];
-
-      var genotypeInteractionEvidenceCodes =
-          phenotypeAnnotationType.associated_interaction_annotation_type.evidence_codes;
+      var phenotypeTermDetails = result[2];
 
       var findGenotypeById =
           function(searchGenotypeId) {
@@ -7102,6 +7154,10 @@ function getInteractionInitialData($q, CantoConfig, AnnotationProxy,
       if (!alleleGenotypeA || !alleleGenotypeB) {
         return null;
       }
+
+      var genotypeInteractionEvidenceCodes =
+          interactionEvCodesFromPhenotype(phenotypeAnnotationType, phenotypeTermDetails,
+                                          genotype);
 
       var evidenceConfig = {};
 
@@ -7795,7 +7851,9 @@ var annotationEditDialogCtrl =
 
               var interactionInitialDataPromise =
                   getInteractionInitialData($q, CantoConfig, AnnotationProxy,
-                                            annotationType, featureId, $scope.allFeatures);
+                                            CantoService,
+                                            annotationType, $scope.annotation.term_ontid,
+                                            featureId, $scope.allFeatures);
 
               interactionInitialDataPromise.then(function(initialData) {
                 if (initialData !== null) {
@@ -9317,7 +9375,7 @@ canto.directive('annotationTableList',
 
 
 var annotationTableRow =
-    function ($uibModal, $q, CursSessionDetails, CursAnnotationDataService, AnnotationProxy, AnnotationTypeConfig, CantoGlobals, CantoConfig, toaster) {
+    function ($uibModal, $q, CursSessionDetails, CursAnnotationDataService, AnnotationProxy, AnnotationTypeConfig, CantoGlobals, CantoConfig, CantoService, toaster) {
     return {
       restrict: 'A',
       replace: true,
@@ -9515,8 +9573,9 @@ var annotationTableRow =
             if (annotationType.associated_interaction_annotation_type) {
               var interactionInitialDataPromise =
                   getInteractionInitialData($q, CantoConfig, AnnotationProxy,
-                                            annotationType, $scope.annotation.feature_id,
-                                            genotypes);
+                                            CantoService,
+                                            annotationType, $scope.annotation.term_ontid,
+                                            $scope.annotation.feature_id, genotypes);
 
               interactionInitialDataPromise.then(function(initialData) {
                 if (initialData !== null) {
@@ -9600,7 +9659,7 @@ var annotationTableRow =
 canto.directive('annotationTableRow',
    ['$uibModal', '$q', 'CursSessionDetails', 'CursAnnotationDataService',
     'AnnotationProxy', 'AnnotationTypeConfig',
-    'CantoGlobals', 'CantoConfig', 'toaster',
+    'CantoGlobals', 'CantoConfig', 'CantoService', 'toaster',
     annotationTableRow
   ]);
 

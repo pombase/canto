@@ -199,6 +199,9 @@ eg. "is_a(GO:0055085)"];
 
   my @owltools_results = $self->get_owltools_results(@obo_file_names);
 
+  my @interesting_parent_ids =
+    @{$config->{ontology_namespace_config}->{interesting_parent_ids} // []};
+
   for my $result (@owltools_results) {
     my ($subject, $rel_type, $depth, $object) = @$result;
 
@@ -224,6 +227,14 @@ eg. "is_a(GO:0055085)"];
     if ($extra_subsets_to_store{$object}) {
       $subsets{$subject}{$object}{$rel_type} = 1;
     }
+
+    map {
+      my $interesting_parent_id = $_;
+
+      if ($object eq $interesting_parent_id) {
+        $subsets{$subject}{$object}{$rel_type} = 1;
+      }
+    } @interesting_parent_ids;
   }
 
   return \%subsets;
