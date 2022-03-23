@@ -166,7 +166,7 @@ sub update_curs_terms
       # replace term names with the ID if we know it otherwise assume that the
       # user has made up a condition
       map { my $name = $_;
-            my $res = $self->_cached_lookup_by_name('fission_yeast_phenotype_condition', $name);
+            my $res = $self->_cached_lookup_by_name($config->{phenotype_condition_namespace}, $name);
             if (defined $res) {
               $_ = $res->{id};
               $changed = 1;

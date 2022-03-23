@@ -38,6 +38,8 @@ under the same terms as Perl itself.
 use strict;
 use warnings;
 
+use Canto::Config;
+
 =head2 get_conditions_with_names
 
  Usage   : my @cond_data = get_conditions_with_names($ontology_lookup, [@conditions]);
@@ -123,7 +125,9 @@ sub _get_id_from_name
   my $ontology_lookup = shift;
   my $name = shift;
 
-  my $result = $ontology_lookup->lookup_by_name(ontology_name => 'fission_yeast_phenotype_condition',
+  my $config = Canto::Config::get_config();
+
+  my $result = $ontology_lookup->lookup_by_name(ontology_name => $config->{phenotype_condition_namespace},
                                                 term_name => $name);
   if (defined $result) {
     return $result->{id};

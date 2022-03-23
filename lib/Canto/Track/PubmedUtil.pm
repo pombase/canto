@@ -94,6 +94,7 @@ sub _get_url
  Returns : The XML from pubmed
 
 =cut
+
 sub get_pubmed_xml_by_ids
 {
   my $config = shift;
@@ -117,6 +118,7 @@ sub get_pubmed_xml_by_ids
  Returns : XML containing the matching IDs
 
 =cut
+
 sub get_pubmed_ids_by_query
 {
   my $config = shift;
@@ -138,6 +140,21 @@ sub _remove_tag {
   $text =~ s/<[^>]+>/ /g;
   return $text;
 }
+
+my %month_map =
+  ("Jan" => "01",
+   "Feb" => "02",
+   "Mar" => "03",
+   "Apr" => "04",
+   "May" => "05",
+   "Jun" => "06",
+   "Jul" => "07",
+   "Aug" => "08",
+   "Sep" => "09",
+   "Oct" => "10",
+   "Nov" => "11",
+   "Dec" => "12",
+   );
 
 =head2 load_pubmed_xml
 
@@ -306,7 +323,11 @@ sub load_pubmed_xml
             my $cite_date = join (' ', @date_bits);
             $citation .= ' ' . $cite_date;
 
-            $publication_date = join (' ', reverse @date_bits);
+            if ($date_bits[1] && $month_map{$date_bits[1]}) {
+              $date_bits[1] = $month_map{$date_bits[1]};
+            }
+
+            $publication_date = join (' ', @date_bits);
           }
           $citation .= ';';
           if (defined $journal_issue->{Volume}) {
@@ -376,6 +397,7 @@ sub _process_batch
  Returns : a count of the number of publications found and loaded
 
 =cut
+
 sub load_by_ids
 {
   my $config = shift;
@@ -409,6 +431,7 @@ sub load_by_ids
  Returns : a count of the number of publications found and loaded
 
 =cut
+
 sub load_by_query
 {
   my $config = shift;
@@ -460,6 +483,7 @@ sub load_by_query
 }
 
 
+
 =head2
 
  Usage   : my $count = Canto::Track::PubmedUtil::add_missing_fields();
@@ -467,9 +491,10 @@ sub load_by_query
            for the missing information and then set the titles
  Args    : $config - the config object
            $schema - the TrackDB object
- Return  : the number of titles added, dies on error
+ Returns : the number of publications updated, dies on error
 
 =cut
+
 sub add_missing_fields
 {
   my $config = shift;
@@ -493,6 +518,37 @@ sub add_missing_fields
   return load_by_ids($config, $schema,
                      [map { $_->uniquename() } $rs->all()],
                      'admin_load');
+}
+
+
+=head2 update_field
+
+ Usage   : my $count = Canto::Track::PubmedUtil::update_field($config, $schema,
+                                                              "publication_date");
+ Function: Set the field with the given name to undef/null in the database, then
+           re-initialise it from the PubMed data
+ Args    : $config - the config object
+           $schema - the TrackDB object
+           $field_name - the field to re-initialise
+ Returns : the number of publications updated, dies on error
+
+=cut
+
+sub update_field
+{
+  my $config = shift;
+  my $schema = shift;
+  my $field_name = shift;
+
+  if ($field_name eq 'uniquename') {
+    die "can't update uniquename field\n";
+  }
+
+  my $pub_rs = $schema->resultset('Pub');
+
+  $pub_rs->update({ $field_name => undef });
+
+  return add_missing_fields($config, $schema);
 }
 
 1;

@@ -25,7 +25,7 @@ header_image: logos/curation_tool.png
 
 canto_url: https://curation.pombase.org/
 
-app_version: v1668
+app_version: v1674
 
 schema_version: 34
 
@@ -1756,6 +1756,11 @@ evidence_types:
   'Competitive growth assay evidence': ~
   'Gel electrophoresis evidence': ~
   'Plasmid maintenance assay evidence': ~
+  RNA-sequencing evidence: ~
+  Differential hybridization evidence: ~
+  Expression microarray: ~
+  In situ hybridization evidence used in manual assertion: ~
+  Northern assay: ~
 
 # Configuration that applies to an ontology namespace.  An ontology can
 # be used by more than one annotation_type.  Some (like FYPO_EXT) are
@@ -1774,6 +1779,11 @@ ontology_namespace_config:
   do_not_annotate_subsets:
     - "is_a(canto_root_subset)"
     - "is_a(qc_do_not_annotate)"
+
+# Namespace used for the phenotype condition ontology. If you
+# use an ontology other than FYECO for your phenotype conditions, then
+# change this to the default namespace of your ontology.
+phenotype_condition_namespace: fission_yeast_phenotype_condition
 
 namespace_term_evidence_codes: {}
 
@@ -2107,11 +2117,13 @@ available_annotation_type_list:
     more_help_text: ~
     annotation_table_columns_to_hide: [term_ontid]
     evidence_codes:
+      - Differential hybridization evidence
       - Expression microarray
       - In situ hybridization evidence used in manual assertion
       - Northern assay
       - Quantitative PCR
       - Reporter gene assay
+      - RNA-sequencing evidence
     detailed_help_path: /docs/gene_expression
   - name: wt_protein_expression
     category: ontology
@@ -2192,6 +2204,7 @@ available_annotation_type_list:
       - PCA
       - Protein-peptide
       - Protein-RNA
+      - Proximity Label-MS
       - Reconstituted Complex
       - Two-hybrid
     detailed_help_path: /docs/physical_interaction_annotation
@@ -2356,6 +2369,7 @@ config_service:
     max_term_name_select_count: 1
     show_quick_deletion_buttons: 1
     pathogen_host_mode: 1
+    phenotype_condition_namespace: 1
     multi_organism_mode: 1
     help_text: 1
     public_mode: 1
