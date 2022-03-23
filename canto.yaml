@@ -2157,6 +2157,8 @@ available_annotation_type_list:
         - Dosage Growth Defect
         - Dosage Lethality
         - Dosage Rescue
+        - Phenotypic Enhancement
+        - Phenotypic Suppression
   - name: genetic_interaction
     category: interaction
     display_name: 'legacy genetic interaction'
