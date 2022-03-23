@@ -2161,6 +2161,7 @@ available_annotation_type_list:
           - Phenotypic Enhancement
           - Phenotypic Suppression
       both_alleles_deletions:
+        - Phenotypic Enhancement
         - Phenotypic Suppression
         - Synthetic Growth Defect
         - Synthetic Lethality
