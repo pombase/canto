@@ -7403,6 +7403,11 @@ var annotationEditDialogCtrl =
     $scope.filteredFeatures = null;
     $scope.filteredFeaturesB = null;
 
+    if ($scope.newlyAdded) {
+      $scope.annotation.symmetric_interaction_annotations = [];
+      $scope.annotation.directional_interaction_annotations = [];
+    }
+
     $scope.hasFigure = $scope.annotation.figure;
 
     // See: https://github.com/pombase/canto/issues/2540
