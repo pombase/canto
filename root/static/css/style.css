@@ -1969,6 +1969,7 @@ button.curs-annotation-edit-suggest {
 }
 
 .curs-annotation-table-view-edit-interactions {
-  padding-left: 1em;
+  padding: 0.2em 0 0 1em;
+  font-size: 90%;
   white-space: nowrap;
 }
