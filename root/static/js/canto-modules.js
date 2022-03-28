@@ -2947,7 +2947,7 @@ var extensionRelationEdit =
         $scope.organisms = null;
 
         $scope.getGenesFromServer = function() {
-          CursGeneList.geneList().then(function (results) {
+          return CursGeneList.geneList().then(function (results) {
             $scope.genes = results;
           }).catch(function () {
             toaster.pop('note', "couldn't read the gene list from the server");
@@ -2987,8 +2987,19 @@ var extensionRelationEdit =
 
         $scope.openSingleGeneAddDialog = function () {
           var modal = openSingleGeneAddDialog($uibModal);
-          modal.result.then(function () {
-            $scope.getGenesFromServer();
+          modal.result.then(function (results) {
+            var newGeneId = results.new_gene_id;
+            $scope.getGenesFromServer()
+              .then(function() {
+                $.map($scope.genes,
+                      function(gene) {
+                        if (gene.feature_id == newGeneId) {
+                          $scope.extensionRelation.rangeValue = gene.primary_identifier;
+                          $scope.extensionRelation.rangeDisplayName = gene.display_name;
+                          $scope.rangeGeneId = gene.feature_id;
+                        }
+                      });
+              });
           });
         };
 
