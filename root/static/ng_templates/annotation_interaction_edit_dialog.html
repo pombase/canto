@@ -64,7 +64,12 @@
           <div ng-if="data.interactingAnnotations.length == 0">
             <span ng-if="data.interactionTypeConfig &&
                          data.interactionTypeConfig.interaction_dialog_type_label">
-              Select {{data.interactionTypeConfig.interaction_dialog_type_label}}
+              Select 
+              <span ng-if="data.overexpressedAllele != null">
+                <span ng-if="data.interactionForward">{{data.genotypeA.display_name}}</span>
+                <span ng-if="!data.interactionForward">{{data.genotypeB.display_name}}</span>
+              </span>
+              {{data.interactionTypeConfig.interaction_dialog_type_label}}
             </span>
             <span ng-if="!data.interactionTypeConfig ||
                          !data.interactionTypeConfig.interaction_dialog_type_label">

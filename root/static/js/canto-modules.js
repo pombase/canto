@@ -6921,6 +6921,7 @@ var AnnotationInteractionsEditDialogCtrl =
       genotypeAnnotationsB: args.initialData.genotypeAnnotationsB,
       interactingAnnotations: [],
       interactionTypeConfig: null,
+      overexpressedAllele: null,
     };
 
     $scope.interactionType = null;
@@ -6936,6 +6937,7 @@ var AnnotationInteractionsEditDialogCtrl =
       $scope.data.annotationSelectorVisible = false;
       $scope.data.directionSelectorVisible = false;
       $scope.data.interactionTypeConfig = null;
+      $scope.data.overexpressedAllele = null;
 
       if ($scope.interactionType) {
         var evidenceConfig = $scope.data.evidenceConfig[$scope.interactionType];
@@ -6944,10 +6946,10 @@ var AnnotationInteractionsEditDialogCtrl =
           $scope.data.isSymmetricInteraction  = true;
           $scope.interactionTypeDisplayLabel = $scope.interactionType;
         } else {
-          var overexpressedAllele = args.initialData.overexpressedAllele;
+          $scope.data.overexpressedAllele = args.initialData.overexpressedAllele;
 
-          if (overexpressedAllele != null) {
-            if (overexpressedAllele == 1) {
+          if ($scope.data.overexpressedAllele != null) {
+            if ($scope.data.overexpressedAllele == 1) {
               $scope.data.interactionForward = true;
             } else {
               $scope.data.interactionForward = false;

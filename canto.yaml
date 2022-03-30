@@ -1657,7 +1657,7 @@ evidence_types:
     non_symmetric_interaction_labels:
       interactor_a: rescued by overexpression of
       interactor_b: overexpression rescues
-    interaction_dialog_type_label: phenotype rescued by
+    interaction_dialog_type_label: "phenotype(s) rescued by"
   'FRET':
     definition: "An interaction is inferred when close proximity of interaction partners is detected by fluorescence resonance energy transfer between pairs of fluorophore-labeled molecules, such as occurs between CFP (donor) and YFP (acceptor) fusion proteins."
     name: 'FRET (fluorescence resonance energy donor to)'
@@ -1685,7 +1685,7 @@ evidence_types:
     non_symmetric_interaction_labels:
       interactor_a: phenotype enhanced by
       interactor_b: enhances phenotype of
-    interaction_dialog_type_label: phenotype enhanced by
+    interaction_dialog_type_label: "phenotype(s) enhanced by"
   'Phenotypic Suppression':
     definition: "A genetic interaction is inferred when mutation or over expression of one gene results in suppression of any phenotype (other than lethality/growth defect) associated with mutation or over expression of another gene."
     name: 'Phenotypic Suppression (non-growth or non-viability phenotype suppressed by)'
@@ -1693,7 +1693,7 @@ evidence_types:
     non_symmetric_interaction_labels:
       interactor_a: rescued by
       interactor_b: rescues
-    interaction_dialog_type_label: phenotype suppressed by
+    interaction_dialog_type_label: "phenotype(s) suppressed by"
   'Protein-RNA':
     definition: "An interaction is detected between and protein and an RNA in vitro."
     name: 'Protein-RNA (binds to RNA)'
