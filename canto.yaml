@@ -1691,8 +1691,8 @@ evidence_types:
     name: 'Phenotypic Suppression (non-growth or non-viability phenotype suppressed by)'
     is_symmetric: 0
     non_symmetric_interaction_labels:
-      interactor_a: rescued by
-      interactor_b: rescues
+      interactor_a: suppressed by
+      interactor_b: suppresses
     interaction_dialog_type_label: "phenotype(s) suppressed by"
   'Protein-RNA':
     definition: "An interaction is detected between and protein and an RNA in vitro."
@@ -1727,7 +1727,7 @@ evidence_types:
     non_symmetric_interaction_labels:
       interactor_a: synthetically rescued by
       interactor_b: synthetically rescues
-    interaction_dialog_type_label: phenotype rescued by
+    interaction_dialog_type_label: rescued by
   'Two-hybrid':
     definition: "Bait protein expressed as a DNA binding domain (DBD) fusion and prey expressed as a transcriptional activation domain (TAD) fusion and interaction measured by reporter gene activation."
     name: 'Two-hybrid (binds activation domain construct with)'

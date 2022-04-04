@@ -6805,6 +6805,7 @@ var selectInteractionAnnotationsDialogCtrl =
             CantoGlobals, Curs, toaster, args) {
     $scope.data = {};
 
+    $scope.data.subjectGenotype = args.subjectGenotype;
     $scope.data.objectGenotype = args.objectGenotype;
     $scope.data.annotationType = args.annotationType;
     $scope.data.interactionTypeConfig = args.interactionTypeConfig;
@@ -6835,9 +6836,9 @@ var selectInteractionAnnotationsDialogCtrl =
       var addPromise =
           addAnnotation($uibModal, $scope.data.annotationType.name,
                         'genotype',
-                        $scope.data.objectGenotype.feature_id,
-                        $scope.data.objectGenotype.display_name,
-                        $scope.data.objectGenotype.organism.taxonid);
+                        $scope.data.subjectGenotype.feature_id,
+                        $scope.data.subjectGenotype.display_name,
+                        $scope.data.subjectGenotype.organism.taxonid);
 
 
       addPromise.then(function (newAnnotation) {
@@ -6871,7 +6872,7 @@ canto.controller('SelectInteractionAnnotationsDialogCtrl',
   ]);
 
 
-function startSelectInteractionAnnotations($uibModal, objectGenotype,
+function startSelectInteractionAnnotations($uibModal, subjectGenotype, objectGenotype,
                                            annotationType, interactionTypeConfig,
                                            filteredAnnotations) {
   var selectInstance = $uibModal.open({
@@ -6883,6 +6884,7 @@ function startSelectInteractionAnnotations($uibModal, objectGenotype,
     resolve: {
       args: function () {
         return {
+          subjectGenotype: subjectGenotype,
           objectGenotype: objectGenotype,
           annotationType: annotationType,
           interactionTypeConfig: interactionTypeConfig,
@@ -6978,22 +6980,26 @@ var AnnotationInteractionsEditDialogCtrl =
 
       $scope.data.interactingAnnotations = [];
 
+      var subjectGenotype;
       var objectGenotype;
-      var objectAnnotations;
+      var subjectAnnotations;
 
       if ($scope.data.interactionForward) {
+        subjectGenotype = $scope.data.genotypeA;
         objectGenotype = $scope.data.genotypeB;
-        objectAnnotations = $scope.data.genotypeAnnotationsB;
+        subjectAnnotations = $scope.data.genotypeAnnotationsA;
       } else {
+        subjectGenotype = $scope.data.genotypeB;
         objectGenotype = $scope.data.genotypeA;
-        objectAnnotations = $scope.data.genotypeAnnotationsA;
+        subjectAnnotations = $scope.data.genotypeAnnotationsB;
       }
 
       var promise =
-          startSelectInteractionAnnotations($uibModal, objectGenotype,
+          startSelectInteractionAnnotations($uibModal, subjectGenotype,
+                                            objectGenotype,
                                             $scope.data.annotationType,
                                             $scope.data.interactionTypeConfig,
-                                            objectAnnotations);
+                                            subjectAnnotations);
 
       promise.then(function(result) {
         $scope.data.interactingAnnotations = result.selectedAnnotations;

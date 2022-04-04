@@ -46,36 +46,28 @@
         </div>
       </div>
 
-
       <div ng-if="data.annotationSelectorVisible">
-        <div ng-if="data.interactionForward">
-          {{data.genotypeA.display_name}}
-          <span style="font-weight: bold">{{interactionTypeDisplayLabel}}</span>
+        <div>
+        Select
+        <span ng-if="data.interactionForward">
+          <span style="font-weight: bold">
+            {{data.genotypeA.display_name}}
+            phenotype(s) {{interactionTypeDisplayLabel}}
+          </span>
           {{data.genotypeB.display_name}}
-        </div>
+        </span>
 
-        <div ng-if="!data.interactionForward">
-          {{data.genotypeB.display_name}}
-          <span style="font-weight: bold">{{interactionTypeDisplayLabel}}</span>
+        <span ng-if="!data.interactionForward">
+          <span style="font-weight: bold">
+            {{data.genotypeB.display_name}}
+            phenotype(s) {{interactionTypeDisplayLabel}}
+          </span>
           {{data.genotypeA.display_name}}
+        </span>
         </div>
 
         <div style="padding-top: 1em">
           <div ng-if="data.interactingAnnotations.length == 0">
-            <span ng-if="data.interactionTypeConfig &&
-                         data.interactionTypeConfig.interaction_dialog_type_label">
-              Select 
-              <span ng-if="data.overexpressedAllele != null">
-                <span ng-if="data.interactionForward">{{data.genotypeA.display_name}}</span>
-                <span ng-if="!data.interactionForward">{{data.genotypeB.display_name}}</span>
-              </span>
-              {{data.interactionTypeConfig.interaction_dialog_type_label}}
-            </span>
-            <span ng-if="!data.interactionTypeConfig ||
-                         !data.interactionTypeConfig.interaction_dialog_type_label">
-              Select affected phenotypes for
-            </span>
-            <span ng-if="data.interactionForward">{{data.genotypeB.display_name}}</span><span ng-if="!data.interactionForward">{{data.genotypeA.display_name}}</span>:
             <button ng-click="selectAnnotations()"
                     class="btn btn-primary">Select/Add ...</button>
           </div>
