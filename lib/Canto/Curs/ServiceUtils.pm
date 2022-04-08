@@ -1320,7 +1320,23 @@ sub _ontology_change_keys
     },
     submitter_comment => 1,
     figure => 1,
-    extension => 1,
+    extension => sub {
+      my $extension = shift // [];
+
+      for my $and_group (@$extension) {
+        for my $ext_part (@$and_group) {
+          if ($ext_part->{rangeType} &&
+              $ext_part->{rangeType} eq 'Metagenotype') {
+            # the display name will be created as needed since it can change
+            # over time if the genotype details change
+            delete $ext_part->{rangeDisplayName};
+          }
+        }
+      }
+
+      # set the extension as usual
+      return 0;
+    },
     organism => 1,
     with_gene_id => sub {
       my $gene_id = shift;
