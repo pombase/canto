@@ -1641,7 +1641,7 @@ evidence_types:
     non_symmetric_interaction_labels:
       interactor_a: growth defect in presence of overexpressed
       interactor_b: overexpression causes growth defect to
-    interaction_dialog_type_label: causes/exacerbates growth defect of
+    interaction_does_not_need_phenotype: 1
   'Dosage Lethality':
     definition: "A genetic interaction is inferred when over expression or increased dosage of one gene causes lethality in a strain that is mutated or deleted for another gene."
     name: 'Dosage Lethality (inviable in presence of overexpressed)'
@@ -1649,7 +1649,7 @@ evidence_types:
     non_symmetric_interaction_labels:
       interactor_a: inviable in presence of overexpressed
       interactor_b: overexpression lethal to
-    interaction_dialog_type_label: 
+    interaction_does_not_need_phenotype: 1
   'Dosage Rescue':
     definition: "A genetic interaction is inferred when over expression or increased dosage of one gene rescues the lethality or growth defect of a strain that is mutated or deleted for another gene."
     name: 'Dosage Rescue (lethality or growth defect rescued by overexpression of)'

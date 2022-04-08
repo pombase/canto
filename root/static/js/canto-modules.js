@@ -6913,7 +6913,7 @@ var AnnotationInteractionsEditDialogCtrl =
     $scope.data = {
       interactionForward: null,
       annotationSelectorVisible: false,
-      isSymmetricInteraction: false,
+      interactionPhenotypeNotNeeded: false,
       directionSelectorVisible: false,
       genotypeA: args.initialData.genotypeA,
       genotypeB: args.initialData.genotypeB,
@@ -6935,7 +6935,7 @@ var AnnotationInteractionsEditDialogCtrl =
     $scope.evidenceCodes = Object.keys($scope.data.evidenceConfig);
 
     var typeWatcher = function() {
-      $scope.data.isSymmetricInteraction = false;
+      $scope.data.interactionPhenotypeNotNeeded = false;
       $scope.data.annotationSelectorVisible = false;
       $scope.data.directionSelectorVisible = false;
       $scope.data.interactionTypeConfig = null;
@@ -6945,9 +6945,13 @@ var AnnotationInteractionsEditDialogCtrl =
         var evidenceConfig = $scope.data.evidenceConfig[$scope.interactionType];
         $scope.data.interactionTypeConfig = evidenceConfig;
        if (evidenceConfig.is_symmetric) {
-          $scope.data.isSymmetricInteraction  = true;
+          $scope.data.interactionPhenotypeNotNeeded  = true;
           $scope.interactionTypeDisplayLabel = $scope.interactionType;
         } else {
+          if (evidenceConfig.interaction_does_not_need_phenotype) {
+          $scope.data.interactionPhenotypeNotNeeded  = true;
+          $scope.interactionTypeDisplayLabel = $scope.interactionType;
+          } else {
           $scope.data.overexpressedAllele = args.initialData.overexpressedAllele;
 
           if ($scope.data.overexpressedAllele != null) {
@@ -6963,6 +6967,7 @@ var AnnotationInteractionsEditDialogCtrl =
           }
           $scope.interactionTypeDisplayLabel =
             evidenceConfig.non_symmetric_interaction_labels.interactor_a;
+          }
         }
       }
     };
@@ -7014,7 +7019,7 @@ var AnnotationInteractionsEditDialogCtrl =
       if ($scope.interactionType) {
         var conf = $scope.data.evidenceConfig[$scope.interactionType];
 
-        if (conf.is_symmetric) {
+        if (conf.is_symmetric || conf.interaction_does_not_need_phenotype) {
           return true;
         }
       }
