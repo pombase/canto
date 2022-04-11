@@ -312,7 +312,11 @@ sub _get_annotations
               my $metagenotype =
                 _get_metagenotype_by_id($schema, $extension_bit->{rangeValue});
 
-              $extension_bit->{rangeValue} = $metagenotype->identifier();
+              if ($metagenotype) {
+                $extension_bit->{rangeValue} = $metagenotype->identifier();
+              } else {
+                $extension_bit->{rangeValue} = "MISSING_METAGENOTYPE";
+              }
             }
           }
         } @$extension_part;
