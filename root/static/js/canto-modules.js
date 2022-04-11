@@ -7264,6 +7264,36 @@ canto.directive('genotypeInteractionEdit',
 
 
 
+function storeAnnotationToaster(AnnotationProxy, originalAnnotation,
+                                editedAnnotation, toaster) {
+  var q = AnnotationProxy.storeChanges(originalAnnotation,
+                                       editedAnnotation, false);
+  loadingStart();
+  var storePop = toaster.pop({
+    type: 'info',
+    title: 'Storing annotation...',
+    timeout: 0, // last until the finally()
+    showCloseButton: false
+  });
+  q.then(function (annotation) {
+    toaster.pop({
+      type: 'success',
+      title: 'Interaction stored successfully.',
+      timeout: 5000,
+      showCloseButton: true
+    });
+  })
+    .catch(function (message) {
+      toaster.pop('error', message);
+    })
+    .finally(function () {
+      loadingEnd();
+      toaster.clear(storePop);
+    });
+
+  return q;
+}
+
 var EditGenotypeInteractionDialogCtl =
   function ($scope, $uibModal, $uibModalInstance, toaster, AnnotationProxy, args) {
     $scope.annotationType = args.annotationType;
@@ -7274,31 +7304,12 @@ var EditGenotypeInteractionDialogCtl =
     copyObject(args.annotation, $scope.editedAnnotation);
 
     $scope.ok = function() {
-      var q = AnnotationProxy.storeChanges(args.annotation,
-                                           $scope.editedAnnotation, false);
-      loadingStart();
-      var storePop = toaster.pop({
-        type: 'info',
-        title: 'Storing annotation...',
-        timeout: 0, // last until the finally()
-        showCloseButton: false
+      var q = storeAnnotationToaster(AnnotationProxy, args.AnnotationProxy,
+                                     $scope.editedAnnotation, toaster);
+
+      q.then(function() {
+        $uibModalInstance.close($scope.editedAnnotation);
       });
-      q.then(function (annotation) {
-        $uibModalInstance.close(annotation);
-        toaster.pop({
-          type: 'success',
-          title: 'Interaction stored successfully.',
-          timeout: 5000,
-          showCloseButton: true
-        });
-      })
-        .catch(function (message) {
-          toaster.pop('error', message);
-        })
-        .finally(function () {
-          loadingEnd();
-          toaster.clear(storePop);
-        });
     };
 
     $scope.cancel = function () {
@@ -9664,12 +9675,33 @@ var annotationTableRow =
 
         $scope.viewEditInteractions = function() {
           annotationTypePromise.then(function(annotationType) {
-            var resultPromise =
-                editGenotypeInteractions($uibModal, $scope.annotation,
-                                         annotationType,
-                                         $scope.genotypeInteractionInitialData);
+            if ($scope.genotypeInteractionCount() == 0) {
+              var editedAnnotation = {};
 
+              copyObject($scope.annotation, editedAnnotation);
 
+              var newInteractionsPromise =
+                  startInteractionAnnotationsEdit($uibModal, annotationType,
+                                                  $scope.genotypeInteractionInitialData);
+
+              newInteractionsPromise.then(function(result) {
+                if (result.genotype_b_phenotype_annotations.length == 0) {
+                  editedAnnotation.symmetric_interaction_annotations.push(result);
+                } else {
+                  editedAnnotation.directional_interaction_annotations.push(result);
+                }
+
+                storeAnnotationToaster(AnnotationProxy, $scope.annotation,
+                                       editedAnnotation, toaster)
+                  .then(function() {
+                    copyObject(editedAnnotation, $scope.annotation);
+                  });
+              });
+            } else {
+              editGenotypeInteractions($uibModal, $scope.annotation,
+                                       annotationType,
+                                       $scope.genotypeInteractionInitialData);
+            }
           });
         };
 
