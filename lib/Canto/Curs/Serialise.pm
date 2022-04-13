@@ -40,6 +40,7 @@ the Free Software Foundation, either version 3 of the License, or
 use strict;
 use warnings;
 use Carp;
+use feature 'state';
 
 use JSON;
 use Clone qw(clone);
@@ -180,7 +181,8 @@ sub _get_annotations
 
   die "no schema" unless $schema;
 
-  my $organism_lookup = Canto::Track::get_adaptor($config, 'organism');
+  state $ontology_lookup = Canto::Track::get_adaptor($config, 'ontology');
+  state $organism_lookup = Canto::Track::get_adaptor($config, 'organism');
 
   my $rs = $schema->resultset('Annotation');
 
@@ -313,6 +315,15 @@ sub _get_annotations
                 _get_metagenotype_by_id($schema, $extension_bit->{rangeValue});
 
               $extension_bit->{rangeValue} = $metagenotype->identifier();
+
+              my %metagenotype_details =
+                Canto::Curs::Utils::make_metagenotype_details($schema, $metagenotype,
+                                                              $config,
+                                                              $ontology_lookup,
+                                                              $organism_lookup);
+
+              $extension_bit->{rangeDisplayName} =
+                $metagenotype_details{metagenotype_display_name};
             }
           }
         } @$extension_part;
