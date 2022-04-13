@@ -44,6 +44,8 @@ use Moose;
 use Clone qw(clone);
 use JSON;
 
+use Scalar::Util qw(looks_like_number);
+
 use Canto::Curs::GeneProxy;
 use Canto::Curs::ConditionUtil;
 use Canto::Curs::MetadataStorer;
@@ -202,7 +204,30 @@ sub _make_genotype_details
   );
 }
 
-sub _make_metagenotype_details
+=head2 make_metagenotype_details
+
+ Usage   : my %details = Utils::make_metagenotype_details($curs_schema
+                            $metagenotype, $config, $ontology_lookup, $organism_lookup);
+ Function: make a hash of metagenotype details
+ Args    : $schema - a Canto::CursDB object
+           $metagenotype - the Metagenotype object
+           $config - the Canto::Config object
+           $ontology_lookup - An OntologyLookup object
+           $organism_lookup - An OrganismLookup object
+ Returns : A hash like:
+           (
+             pathogen_genotype => {...},
+             host_genotype => {...}
+             metagenotype_display_name => "<metagenotype_display_name>",
+             metagenotype_id => <metagenotype_db_id>,
+             feature_type => 'metagenotype',
+             feature_display_name => (same as metagenotype_display_name)
+             feature_id => (same as metagenotype_id)
+           )
+
+=cut
+
+sub make_metagenotype_details
 {
   my $curs_schema = shift;
   my $metagenotype = shift;
@@ -221,10 +246,12 @@ sub _make_metagenotype_details
                            $ontology_lookup, $organism_lookup);
 
   my $metagenotype_display_name =
-    $pathogen_genotype_details{organism}->{full_name} . ' ' .
-    $pathogen_genotype_details{genotype_display_name} . ' / ' .
-    $host_genotype_details{organism}->{full_name} . ' ' .
-    $host_genotype_details{genotype_display_name};
+    $pathogen_genotype_details{genotype_display_name} . ' ' .
+    $pathogen_genotype_details{organism}->{full_name} . ' (' .
+    $pathogen_genotype_details{strain_name} . ') / ' .
+    $host_genotype_details{genotype_display_name} . ' ' .
+    $host_genotype_details{organism}->{full_name} . ' (' .
+    $host_genotype_details{strain_name} . ')';
 
   return (
     pathogen_genotype => \%pathogen_genotype_details,
@@ -235,6 +262,39 @@ sub _make_metagenotype_details
     feature_display_name => $metagenotype_display_name,
     feature_id => $metagenotype->metagenotype_id(),
   );
+}
+
+sub _make_extension
+{
+  my $config = shift;
+  my $schema = shift;
+  my $ontology_lookup = shift;
+  my $organism_lookup = shift;
+  my $extension = shift // [];
+
+  for my $and_group (@$extension) {
+    for my $ext_part (@$and_group) {
+      if ($ext_part->{rangeType} &&
+          $ext_part->{rangeType} eq 'Metagenotype') {
+        my $metagenotype_id = $ext_part->{rangeValue};
+        if (looks_like_number($metagenotype_id)) {
+          my $rs = $schema->resultset('Metagenotype')
+            ->search({ metagenotype_id => $metagenotype_id });
+          my $metagenotype = $rs->first();
+          if ($metagenotype) {
+            my %metagenotype_details =
+              make_metagenotype_details($schema, $metagenotype, $config,
+                                         $ontology_lookup, $organism_lookup);
+            $ext_part->{rangeDisplayName} = $metagenotype_details{metagenotype_display_name};
+            next;
+          }
+        }
+        $ext_part->{rangeDisplayName} = 'Unknown Metagenotype';
+      }
+    }
+  }
+
+  return $extension;
 }
 
 =head2 make_ontology_annotation
@@ -314,7 +374,7 @@ sub make_ontology_annotation
 
     my $metagenotype = $annotation_metagenotypes[0];
 
-    %metagenotype_details = _make_metagenotype_details($schema, $metagenotype, $config,
+    %metagenotype_details = make_metagenotype_details($schema, $metagenotype, $config,
                                                        $ontology_lookup, $organism_lookup);
   }
 
@@ -400,6 +460,10 @@ sub make_ontology_annotation
   my $completed = defined $evidence_code &&
     (!$needs_with || defined $with_gene_identifier);
 
+  my $extension = _make_extension($config, $schema,
+                                  $ontology_lookup, $organism_lookup,
+                                  $data->{extension});
+
   my $ret = {
     %gene_details,
     %genotype_details,
@@ -426,7 +490,7 @@ sub make_ontology_annotation
     with_gene_id => $with_gene_id,
     taxonid => $taxonid,
     completed => $completed,
-    extension => $data->{extension} || [],
+    extension => $extension,
     is_obsolete_term => $is_obsolete_term,
     curator => $curator,
     status => $annotation->status(),
