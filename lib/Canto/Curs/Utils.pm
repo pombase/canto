@@ -204,7 +204,30 @@ sub _make_genotype_details
   );
 }
 
-sub _make_metagenotype_details
+=head2 make_metagenotype_details
+
+ Usage   : my %details = Utils::make_metagenotype_details($curs_schema
+                            $metagenotype, $config, $ontology_lookup, $organism_lookup);
+ Function: make a hash of metagenotype details
+ Args    : $schema - a Canto::CursDB object
+           $metagenotype - the Metagenotype object
+           $config - the Canto::Config object
+           $ontology_lookup - An OntologyLookup object
+           $organism_lookup - An OrganismLookup object
+ Returns : A hash like:
+           (
+             pathogen_genotype => {...},
+             host_genotype => {...}
+             metagenotype_display_name => "<metagenotype_display_name>",
+             metagenotype_id => <metagenotype_db_id>,
+             feature_type => 'metagenotype',
+             feature_display_name => (same as metagenotype_display_name)
+             feature_id => (same as metagenotype_id)
+           )
+
+=cut
+
+sub make_metagenotype_details
 {
   my $curs_schema = shift;
   my $metagenotype = shift;
@@ -260,7 +283,7 @@ sub _make_extension
           my $metagenotype = $rs->first();
           if ($metagenotype) {
             my %metagenotype_details =
-              _make_metagenotype_details($schema, $metagenotype, $config,
+              make_metagenotype_details($schema, $metagenotype, $config,
                                          $ontology_lookup, $organism_lookup);
             $ext_part->{rangeDisplayName} = $metagenotype_details{metagenotype_display_name};
             next;
@@ -351,7 +374,7 @@ sub make_ontology_annotation
 
     my $metagenotype = $annotation_metagenotypes[0];
 
-    %metagenotype_details = _make_metagenotype_details($schema, $metagenotype, $config,
+    %metagenotype_details = make_metagenotype_details($schema, $metagenotype, $config,
                                                        $ontology_lookup, $organism_lookup);
   }
 
