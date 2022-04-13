@@ -89,40 +89,6 @@ __PACKAGE__->belongs_to(
   },
 );
 
-=head2 directional_genotype_interaction_primary_genotype_annotations
-
-Type: has_many
-
-Related object: L<Canto::CursDB::DirectionalGenotypeInteraction>
-
-=cut
-
-__PACKAGE__->has_many(
-  "directional_genotype_interaction_primary_genotype_annotations",
-  "Canto::CursDB::DirectionalGenotypeInteraction",
-  {
-    "foreign.primary_genotype_annotation_id" => "self.genotype_annotation_id",
-  },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-=head2 directional_genotype_interactions
-
-Type: has_many
-
-Related object: L<Canto::CursDB::DirectionalGenotypeInteraction>
-
-=cut
-
-__PACKAGE__->has_many(
-  "directional_genotype_interactions",
-  "Canto::CursDB::DirectionalGenotypeInteraction",
-  {
-    "foreign.genotype_annotation_b_id" => "self.genotype_annotation_id",
-  },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
 =head2 genotype
 
 Type: belongs_to
@@ -143,17 +109,51 @@ __PACKAGE__->belongs_to(
   },
 );
 
-=head2 symmetric_genotype_interactions
+=head2 genotype_interactions
 
 Type: has_many
 
-Related object: L<Canto::CursDB::SymmetricGenotypeInteraction>
+Related object: L<Canto::CursDB::GenotypeInteraction>
 
 =cut
 
 __PACKAGE__->has_many(
-  "symmetric_genotype_interactions",
-  "Canto::CursDB::SymmetricGenotypeInteraction",
+  "genotype_interactions",
+  "Canto::CursDB::GenotypeInteraction",
+  {
+    "foreign.primary_genotype_annotation_id" => "self.genotype_annotation_id",
+  },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 genotype_interactions_with_phenotype_genotype_annotation_a
+
+Type: has_many
+
+Related object: L<Canto::CursDB::GenotypeInteractionWithPhenotype>
+
+=cut
+
+__PACKAGE__->has_many(
+  "genotype_interactions_with_phenotype_genotype_annotation_a",
+  "Canto::CursDB::GenotypeInteractionWithPhenotype",
+  {
+    "foreign.genotype_annotation_a_id" => "self.genotype_annotation_id",
+  },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 genotype_interactions_with_phenotype_primary_genotype_annotation
+
+Type: has_many
+
+Related object: L<Canto::CursDB::GenotypeInteractionWithPhenotype>
+
+=cut
+
+__PACKAGE__->has_many(
+  "genotype_interactions_with_phenotype_primary_genotype_annotation",
+  "Canto::CursDB::GenotypeInteractionWithPhenotype",
   {
     "foreign.primary_genotype_annotation_id" => "self.genotype_annotation_id",
   },
@@ -161,8 +161,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-04-14 10:46:20
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pmoAqfVn0FOub7eSpgLXLQ
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2022-04-12 16:57:14
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:o+PTBmw2jIhZ7M/LZLUWDQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

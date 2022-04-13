@@ -189,8 +189,8 @@ sub check_new_annotations
                    }
                  ],
                  checked => 'no',
-                 directional_interaction_annotations => [],
-                 symmetric_interaction_annotations => [],
+                 interaction_annotations_with_phenotypes => [],
+                 interaction_annotations => [],
                },
                {
                  'publication_uniquename' => 'PMID:19756689',
@@ -252,8 +252,8 @@ sub check_new_annotations
                    }
                  ],
                  checked => 'no',
-                 directional_interaction_annotations => [],
-                 symmetric_interaction_annotations => [],
+                 interaction_annotations_with_phenotypes => [],
+                 interaction_annotations => [],
                }
              ]);
   }

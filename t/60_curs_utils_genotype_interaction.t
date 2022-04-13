@@ -116,7 +116,7 @@ my $ssm4delta_genotype_annotation =
     annotation => $deletion_phenotype_annotation,
   });
 
-$curs_schema->resultset('SymmetricGenotypeInteraction')->create({
+$curs_schema->resultset('GenotypeInteraction')->create({
   interaction_type => 'Synthetic Lethality',
   primary_genotype_annotation_id =>
     $existing_genotype_annotation->genotype_annotation_id(),
@@ -124,13 +124,13 @@ $curs_schema->resultset('SymmetricGenotypeInteraction')->create({
   genotype_b_id => $other_genotype->genotype_id(),
 });
 
-$curs_schema->resultset('DirectionalGenotypeInteraction')->create({
+$curs_schema->resultset('GenotypeInteractionWithPhenotype')->create({
   interaction_type => 'Synthetic Lethality',
   primary_genotype_annotation_id =>
     $existing_genotype_annotation->genotype_annotation_id(),
-  genotype_a_id => $other_genotype->genotype_id(),
-  genotype_annotation_b_id =>
+  genotype_annotation_a_id =>
     $ssm4delta_genotype_annotation->genotype_annotation_id(),
+  genotype_b_id => $other_genotype->genotype_id(),
 });
 
 my ($completed_count, $annotations_ref) =
@@ -143,14 +143,14 @@ is ($annotations_ref->[0]->{genotype_a}->{display_name}, 'ssm4delta test genotyp
 is ($annotations_ref->[0]->{genotype_b}->{display_name}, 'other allele test genotype');
 is ($annotations_ref->[0]->{interaction_type}, 'Synthetic Lethality');
 
-is ($annotations_ref->[1]->{genotype_a}->{display_name}, 'other allele test genotype');
-is ($annotations_ref->[1]->{genotype_b}->{display_name}, 'ssm4delta test genotype');
+is ($annotations_ref->[1]->{genotype_a}->{display_name}, 'ssm4delta test genotype');
+is ($annotations_ref->[1]->{genotype_b}->{display_name}, 'other allele test genotype');
 is ($annotations_ref->[1]->{interaction_type}, 'Synthetic Lethality');
 
-my @genotype_b_phenotype_annotations =
-  @{$annotations_ref->[1]->{genotype_b_phenotype_annotations}};
+my @genotype_a_phenotype_annotations =
+  @{$annotations_ref->[1]->{genotype_a_phenotype_annotations}};
 
-is (@genotype_b_phenotype_annotations, 1);
+is (@genotype_a_phenotype_annotations, 1);
 
-is ($genotype_b_phenotype_annotations[0]->{term_name}, 'T-shaped cells');
-is ($genotype_b_phenotype_annotations[0]->{conditions}->[0]->{name}, 'green medium');
+is ($genotype_a_phenotype_annotations[0]->{term_name}, 'T-shaped cells');
+is ($genotype_a_phenotype_annotations[0]->{conditions}->[0]->{name}, 'green medium');

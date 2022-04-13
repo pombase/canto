@@ -232,9 +232,9 @@
               show-phenotypes-link="false" allow-deletion="false">
             </genotype-interaction-annotation-table>
           </div>
-          <div ng-if="data.directionalInteractionAnnotations.length != 0 && data.interactionPhenotypeType">
+          <div ng-if="data.interactionAnnotationsWithPhenotypes.length != 0 && data.interactionPhenotypeType">
             <genotype-interaction-annotation-table
-              interactions="data.directionalInteractionAnnotations"
+              interactions="data.interactionAnnotationsWithPhenotypes"
               phenotype-annotation-type="data.interactionPhenotypeType"
               show-phenotypes-link="true" allow-deletion="false">
             </genotype-interaction-annotation-table>

@@ -62,8 +62,8 @@ sub _make_allelesynonym_hashes
 }
 
 # return a table of symmetrical interaction annotations from a
-# SymmetricGenotypeInteraction ResultSet
-sub _get_sym_interaction_annotations
+# GenotypeInteraction ResultSet
+sub _get_interaction_annotations
 {
   my $config = shift;
   my $rs = shift;
@@ -107,7 +107,7 @@ sub _get_sym_interaction_annotations
 }
 
 # given an Annotation, return the associated symmetrical interactions
-sub _get_sym_interaction_annotations_from_annotation
+sub _get_interaction_annotations_from_annotation
 {
   my $config = shift;
   my $annotation = shift;
@@ -115,15 +115,14 @@ sub _get_sym_interaction_annotations_from_annotation
   my %interactions = ();
 
   my $interaction_rs = $annotation->genotype_annotations()
-    ->search_related('symmetric_genotype_interactions');
+    ->search_related('genotype_interactions');
 
-  return _get_sym_interaction_annotations($config,
-                                          $interaction_rs)
+  return _get_interaction_annotations($config, $interaction_rs)
 }
 
 # return a table of directional interaction annotations from a
-# DirectionalGenotypeInteraction ResultSet
-sub _get_dir_interaction_annotations
+# GenotypeInteractionWithPhenotype ResultSet
+sub _get_interaction_annotations_with_phenotypes
 {
   my $config = shift;
   my $schema = shift;
@@ -136,27 +135,28 @@ sub _get_dir_interaction_annotations
   my $interaction_rs =
     $rs->search({},
                 {
-                  prefetch => ['genotype_a',
-                               {
-                                 genotype_annotation_b => [
-                                   ['genotype', 'annotation'],
-                                 ]
-                               }],
+                  prefetch => [
+                    {
+                      genotype_annotation_a => [
+                        ['genotype', 'annotation'],
+                      ]
+                    },
+                    'genotype_b',],
                 });
 
   while (defined (my $interaction_row = $interaction_rs->next())) {
-    my $genotype_annotation_b = $interaction_row->genotype_annotation_b();
-    my $key = $interaction_row->genotype_a()->genotype_id() . '-' .
+    my $genotype_annotation_a = $interaction_row->genotype_annotation_a();
+    my $key = $genotype_annotation_a->genotype()->genotype_id() . '-' .
       $interaction_row->interaction_type() . '-' .
-      $genotype_annotation_b->genotype()->genotype_id();
+      $interaction_row->genotype_b()->genotype_id();
 
     my $interaction = undef;
 
     if (exists $interactions{$key}) {
       $interaction = $interactions{$key};
     } else {
-      my $genotype_a = $interaction_row->genotype_a();
-      my $genotype_b = $genotype_annotation_b->genotype();
+      my $genotype_a = $genotype_annotation_a->genotype();
+      my $genotype_b = $interaction_row->genotype_b();
 
       $interaction = {
         interaction_type => $interaction_row->interaction_type(),
@@ -173,8 +173,8 @@ sub _get_dir_interaction_annotations
       $interactions{$key} = $interaction;
     }
 
-    push @{$interaction->{genotype_b_phenotype_annotations}},
-      make_ontology_annotation($config, $schema, $genotype_annotation_b->annotation(),
+    push @{$interaction->{genotype_a_phenotype_annotations}},
+      make_ontology_annotation($config, $schema, $genotype_annotation_a->annotation(),
                                $ontology_lookup, $organism_lookup, 0, 0);
   }
 
@@ -183,7 +183,7 @@ sub _get_dir_interaction_annotations
 
 
 # given an Annotation, return the associated directional interactions
-sub _get_dir_interaction_annotations_from_annotation
+sub _get_interaction_annotations_with_phenotypes_from_annotation
 {
   my $config = shift;
   my $schema = shift;
@@ -194,10 +194,10 @@ sub _get_dir_interaction_annotations_from_annotation
   my %interactions = ();
 
   my $interaction_rs = $annotation->genotype_annotations()
-    ->search_related('directional_genotype_interaction_primary_genotype_annotations');
+    ->search_related('genotype_interactions_with_phenotype_primary_genotype_annotation');
 
-  return _get_dir_interaction_annotations($config, $schema, $interaction_rs,
-                                          $ontology_lookup, $organism_lookup);
+  return _get_interaction_annotations_with_phenotypes($config, $schema, $interaction_rs,
+                                                      $ontology_lookup, $organism_lookup);
 }
 
 sub _make_genotype_details
@@ -579,23 +579,24 @@ sub make_ontology_annotation
 
   if ($include_associated_interaction_details &&
       defined $annotation_type_config->{associated_interaction_annotation_type}) {
-    $ret->{directional_interaction_annotations} = [];
-    $ret->{symmetric_interaction_annotations} = [];
+    $ret->{interaction_annotations_with_phenotypes} = [];
+    $ret->{interaction_annotations} = [];
 
-    my @symmetric_interaction_annotations =
-      _get_sym_interaction_annotations_from_annotation($config, $annotation);
+    my @interaction_annotations =
+      _get_interaction_annotations_from_annotation($config, $annotation);
 
-    if (@symmetric_interaction_annotations) {
-      $ret->{symmetric_interaction_annotations} = \@symmetric_interaction_annotations;
+    if (@interaction_annotations) {
+      $ret->{interaction_annotations} = \@interaction_annotations;
     }
 
-    my @directional_interaction_annotations =
-      _get_dir_interaction_annotations_from_annotation($config,
+    my @interaction_annotations_with_phenotypes =
+      _get_interaction_annotations_with_phenotypes_from_annotation($config,
                                                        $schema, $annotation,
                                                        $ontology_lookup, $organism_lookup);
 
-    if (@directional_interaction_annotations) {
-      $ret->{directional_interaction_annotations} = \@directional_interaction_annotations;
+    if (@interaction_annotations_with_phenotypes) {
+      $ret->{interaction_annotations_with_phenotypes} =
+        \@interaction_annotations_with_phenotypes;
     }
   }
 
@@ -770,10 +771,10 @@ sub make_interaction_annotations
   my $annotation_config = $config->{annotation_types}->{$annotation_type};
 
   my @sym_genotype_interactions =
-    _get_sym_interaction_annotations_from_annotation($config, $annotation);
+    _get_interaction_annotations_from_annotation($config, $annotation);
 
   my @dir_genotype_interactions =
-    _get_dir_interaction_annotations_from_annotation($config,
+    _get_interaction_annotations_with_phenotypes_from_annotation($config,
                                                      $schema, $annotation,
                                                      $ontology_lookup, $organism_lookup);
 

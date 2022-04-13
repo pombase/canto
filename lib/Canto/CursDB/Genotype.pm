@@ -138,21 +138,6 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 directional_genotype_interactions
-
-Type: has_many
-
-Related object: L<Canto::CursDB::DirectionalGenotypeInteraction>
-
-=cut
-
-__PACKAGE__->has_many(
-  "directional_genotype_interactions",
-  "Canto::CursDB::DirectionalGenotypeInteraction",
-  { "foreign.genotype_a_id" => "self.genotype_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
 =head2 genotype_annotations
 
 Type: has_many
@@ -165,6 +150,51 @@ __PACKAGE__->has_many(
   "genotype_annotations",
   "Canto::CursDB::GenotypeAnnotation",
   { "foreign.genotype" => "self.genotype_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 genotype_interaction_genotype_bs
+
+Type: has_many
+
+Related object: L<Canto::CursDB::GenotypeInteraction>
+
+=cut
+
+__PACKAGE__->has_many(
+  "genotype_interaction_genotype_bs",
+  "Canto::CursDB::GenotypeInteraction",
+  { "foreign.genotype_b_id" => "self.genotype_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 genotype_interaction_genotypes_a
+
+Type: has_many
+
+Related object: L<Canto::CursDB::GenotypeInteraction>
+
+=cut
+
+__PACKAGE__->has_many(
+  "genotype_interaction_genotypes_a",
+  "Canto::CursDB::GenotypeInteraction",
+  { "foreign.genotype_a_id" => "self.genotype_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 genotype_interactions_with_phenotype
+
+Type: has_many
+
+Related object: L<Canto::CursDB::GenotypeInteractionWithPhenotype>
+
+=cut
+
+__PACKAGE__->has_many(
+  "genotype_interactions_with_phenotype",
+  "Canto::CursDB::GenotypeInteractionWithPhenotype",
+  { "foreign.genotype_b_id" => "self.genotype_id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
@@ -238,39 +268,9 @@ __PACKAGE__->belongs_to(
   },
 );
 
-=head2 symmetric_genotype_interaction_genotype_bs
 
-Type: has_many
-
-Related object: L<Canto::CursDB::SymmetricGenotypeInteraction>
-
-=cut
-
-__PACKAGE__->has_many(
-  "symmetric_genotype_interaction_genotype_bs",
-  "Canto::CursDB::SymmetricGenotypeInteraction",
-  { "foreign.genotype_b_id" => "self.genotype_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-=head2 symmetric_genotype_interaction_genotypes_a
-
-Type: has_many
-
-Related object: L<Canto::CursDB::SymmetricGenotypeInteraction>
-
-=cut
-
-__PACKAGE__->has_many(
-  "symmetric_genotype_interaction_genotypes_a",
-  "Canto::CursDB::SymmetricGenotypeInteraction",
-  { "foreign.genotype_a_id" => "self.genotype_id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-04-09 14:18:39
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lp7PW60LHxXBB3qcZeaEZw
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2022-04-12 16:57:14
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JV2TN7kBZ8gpMVUAKMXdVw
 
 =head2 annotations
 

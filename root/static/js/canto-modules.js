@@ -948,8 +948,8 @@ var keysForServer = {
   second_feature_id: true,
   second_feature_type: true,
   interacting_gene_id: true,
-  symmetric_interaction_annotations: true,
-  directional_interaction_annotations: true,
+  interaction_annotations: true,
+  interaction_annotation_with_phenotypes: true,
 };
 
 var annotationProxy =
@@ -6736,9 +6736,9 @@ var GenotypeInteractionAnnotationTableCtrl =
           });
 
         $scope.viewPhenotypes = function(interaction) {
-          startViewInteractionPhenotypes($uibModal, interaction.genotype_b,
+          startViewInteractionPhenotypes($uibModal, interaction.genotype_a,
                                          $scope.phenotypeAnnotationType,
-                                         interaction.genotype_b_phenotype_annotations);
+                                         interaction.genotype_a_phenotype_annotations);
         };
 
         $scope.deleteInteraction = function(interaction) {
@@ -7043,7 +7043,7 @@ var AnnotationInteractionsEditDialogCtrl =
         genotype_a: genotypeA,
         genotype_b: genotypeB,
         interaction_type: $scope.interactionType,
-        genotype_b_phenotype_annotations: $scope.data.interactingAnnotations,
+        genotype_a_phenotype_annotations: $scope.data.interactingAnnotations,
       });
     };
 
@@ -7247,10 +7247,10 @@ var genotypeInteractionEditCtrl = function ($uibModal) {
                                             $scope.genotypeInteractionInitialData);
 
         newInteractionsPromise.then(function(result) {
-          if (result.genotype_b_phenotype_annotations.length == 0) {
-            $scope.annotation.symmetric_interaction_annotations.push(result);
+          if (result.genotype_a_phenotype_annotations.length == 0) {
+            $scope.annotation.interaction_annotations.push(result);
           } else {
-            $scope.annotation.directional_interaction_annotations.push(result);
+            $scope.annotation.interaction_annotation_with_phenotypes.push(result);
           }
         });
       };
@@ -7428,26 +7428,26 @@ var annotationEditDialogCtrl =
     $scope.filteredFeaturesB = null;
 
     if ($scope.newlyAdded) {
-      $scope.annotation.symmetric_interaction_annotations = [];
-      $scope.annotation.directional_interaction_annotations = [];
+      $scope.annotation.interaction_annotations = [];
+      $scope.annotation.interaction_annotation_with_phenotypes = [];
     }
 
     $scope.hasFigure = $scope.annotation.figure;
 
     // See: https://github.com/pombase/canto/issues/2540
     $scope.maybeDisableFeatureEdit = function() {
-      if ($scope.annotation.symmetric_interaction_annotations &&
-          $scope.annotation.symmetric_interaction_annotations.length > 0 ||
-          $scope.annotation.directional_interaction_annotations &&
-          $scope.annotation.directional_interaction_annotations.length > 0) {
+      if ($scope.annotation.interaction_annotations &&
+          $scope.annotation.interaction_annotations.length > 0 ||
+          $scope.annotation.interaction_annotation_with_phenotypes &&
+          $scope.annotation.interaction_annotation_with_phenotypes.length > 0) {
         $scope.featureEditable = false;
       } else {
         $scope.featureEditable = args.featureEditable;
       }
     };
-    $scope.$watchCollection('annotation.symmetric_interaction_annotations',
+    $scope.$watchCollection('annotation.interaction_annotations',
                             $scope.maybeDisableFeatureEdit);
-    $scope.$watchCollection('annotation.directional_interaction_annotations',
+    $scope.$watchCollection('annotation.interaction_annotation_with_phenotypes',
                             $scope.maybeDisableFeatureEdit);
 
     $scope.showStrainName = (
@@ -7910,11 +7910,11 @@ var annotationEditDialogCtrl =
       interactionInitialDataPromise.then(function(initialData) {
         if (initialData !== null) {
           $scope.allowInteractionAnnotations = true;
-          if (!$scope.annotation.symmetric_interaction_annotations) {
-            $scope.annotation.symmetric_interaction_annotations = [];
+          if (!$scope.annotation.interaction_annotations) {
+            $scope.annotation.interaction_annotations = [];
           }
-          if (!$scope.annotation.directional_interaction_annotations) {
-            $scope.annotation.directional_interaction_annotations = [];
+          if (!$scope.annotation.interaction_annotation_with_phenotypes) {
+            $scope.annotation.interaction_annotation_with_phenotypes = [];
           }
 
           $scope.genotypeInteractionInitialData = initialData;
@@ -9054,7 +9054,7 @@ var annotationTableCtrl =
           hideColumns: {},
           publicationUniquename: null,
           symmetricInteractionAnnotations: [],
-          directionalInteractionAnnotations: [],
+          interactionAnnotationsWithPhenotypes: [],
           interactionPhenotypeType: null,
         };
 
@@ -9202,10 +9202,10 @@ var annotationTableCtrl =
                           function() {
                             $.map($scope.annotations,
                                   function(annotation) {
-                                    if (annotation.genotype_b_phenotype_annotations) {
-                                      $scope.data.directionalInteractionAnnotations.push(annotation);
+                                    if (annotation.genotype_a_phenotype_annotations) {
+                                      $scope.data.interactionAnnotationsWithPhenotypes.push(annotation);
                                     } else {
-                                      $scope.data.symmetricInteractionAnnotations.push(annotation);
+                                      $scope.data.interactionAnnotations.push(annotation);
                                     }
                                   });
                           });
@@ -9660,11 +9660,11 @@ var annotationTableRow =
 
               interactionInitialDataPromise.then(function(initialData) {
                 if (initialData !== null) {
-                  if (!$scope.annotation.symmetric_interaction_annotations) {
-                    $scope.annotation.symmetric_interaction_annotations = [];
+                  if (!$scope.annotation.interaction_annotations) {
+                    $scope.annotation.interaction_annotations = [];
                   }
-                  if (!$scope.annotation.directional_interaction_annotations) {
-                    $scope.annotation.directional_interaction_annotations = [];
+                  if (!$scope.annotation.interaction_annotation_with_phenotypes) {
+                    $scope.annotation.interaction_annotation_with_phenotypes = [];
                   }
 
                   $scope.genotypeInteractionInitialData = initialData;
@@ -9685,10 +9685,10 @@ var annotationTableRow =
                                                   $scope.genotypeInteractionInitialData);
 
               newInteractionsPromise.then(function(result) {
-                if (result.genotype_b_phenotype_annotations.length == 0) {
-                  editedAnnotation.symmetric_interaction_annotations.push(result);
+                if (result.genotype_a_phenotype_annotations.length == 0) {
+                  editedAnnotation.interaction_annotations.push(result);
                 } else {
-                  editedAnnotation.directional_interaction_annotations.push(result);
+                  editedAnnotation.interaction_annotation_with_phenotypes.push(result);
                 }
 
                 storeAnnotationToaster(AnnotationProxy, $scope.annotation,
@@ -9708,11 +9708,11 @@ var annotationTableRow =
         $scope.genotypeInteractionCount = function() {
           var count = 0;
           var annotation = $scope.annotation;
-          if (annotation.symmetric_interaction_annotations) {
-            count += annotation.symmetric_interaction_annotations.length;
+          if (annotation.interaction_annotations) {
+            count += annotation.interaction_annotations.length;
           }
-          if (annotation.directional_interaction_annotations) {
-            count += annotation.directional_interaction_annotations.length;
+          if (annotation.interaction_annotation_with_phenotypes) {
+            count += annotation.interaction_annotation_with_phenotypes.length;
           }
 
           return count;

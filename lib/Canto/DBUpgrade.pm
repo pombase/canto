@@ -741,8 +741,8 @@ CREATE TABLE strainsynonym (
       my $curs_dbh = $curs_schema->storage()->dbh();
 
       $curs_dbh->do("
-CREATE TABLE symmetric_genotype_interaction (
-       symmetric_genotype_interaction_id integer PRIMARY KEY,
+CREATE TABLE genotype_interaction (
+       genotype_interaction_id integer PRIMARY KEY,
        interaction_type TEXT NOT NULL,
        primary_genotype_annotation_id integer NOT NULL REFERENCES genotype_annotation(genotype_annotation_id),   -- phenotype annotation for the combined genotype
        genotype_a_id integer NOT NULL REFERENCES genotype(genotype_id),                                    -- genotype A of the interaction
@@ -751,12 +751,12 @@ CREATE TABLE symmetric_genotype_interaction (
 ");
 
       $curs_dbh->do("
-CREATE TABLE directional_genotype_interaction (
-       directional_genotype_interaction_id integer PRIMARY KEY,
+CREATE TABLE genotype_interaction_with_phenotype (
+       genotype_interaction_with_phenotype_id integer PRIMARY KEY,
        interaction_type TEXT NOT NULL,
        primary_genotype_annotation_id integer NOT NULL REFERENCES genotype_annotation(genotype_annotation_id),   -- phenotype annotation for the combined genotype
-       genotype_a_id integer NOT NULL REFERENCES genotype(genotype_id),                                    -- genotype A of the interaction
-       genotype_annotation_b_id integer NOT NULL REFERENCES genotype_annotation(genotype_annotation_id)    -- genotype B and the phenotype rescued, suppressed, etc.
+       genotype_annotation_a_id integer NOT NULL REFERENCES genotype_annotation(genotype_annotation_id),    -- genotype A and the phenotype rescued, suppressed, etc.
+       genotype_b_id integer NOT NULL REFERENCES genotype(genotype_id)                                    -- genotype B of the interaction
 );
 ");
     };
