@@ -225,7 +225,7 @@
         </table>
 
         <div ng-switch-when="genotype_interaction">
-          <div ng-if="data.symmetricInteractionAnnotations.length != 0 && data.interactionPhenotypeType">
+          <div ng-if="data.interactionAnnotations.length != 0 && data.interactionPhenotypeType">
             <genotype-interaction-annotation-table
               interactions="data.interactionAnnotations"
               phenotype-annotation-type="data.interactionPhenotypeType"
