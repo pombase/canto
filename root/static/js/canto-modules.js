@@ -9053,8 +9053,6 @@ var annotationTableCtrl =
 
         $scope.selectAllModel = false;
 
-        $scope.data = {};
-
         // default is no sorting
         $scope.sortColumn = null;
         $scope.prevSortColumn = null;
@@ -9063,7 +9061,7 @@ var annotationTableCtrl =
           sortedAnnotations: null,
           hideColumns: {},
           publicationUniquename: null,
-          symmetricInteractionAnnotations: [],
+          interactionAnnotations: [],
           interactionAnnotationsWithPhenotypes: [],
           interactionPhenotypeType: null,
         };
