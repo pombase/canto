@@ -6735,6 +6735,16 @@ var GenotypeInteractionAnnotationTableCtrl =
             $scope.ready = true;
           });
 
+        $scope.getDisplayEvidence = function(interaction) {
+          var interactionType = interaction.interaction_type;
+          if ($scope.evidenceTypes[interactionType] &&
+             $scope.evidenceTypes[interactionType].name) {
+            return $scope.evidenceTypes[interactionType].name;
+          } else {
+            return interactionType;
+          }
+        };
+
         $scope.viewPhenotypes = function(interaction) {
           startViewInteractionPhenotypes($uibModal, interaction.genotype_a,
                                          $scope.phenotypeAnnotationType,

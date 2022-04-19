@@ -24,7 +24,7 @@
           <span ng-bind-html="interaction.genotype_a.display_name | breakAtSpaces | toTrusted"></span>
         </a>
       </td>
-      <td>{{interaction.interaction_type}}</td>
+      <td>{{getDisplayEvidence(interaction)}}</td>
       <td>
         <a href="{{curs_root_uri + '/feature/genotype/view/' + interaction.genotype_b.genotype_id + (read_only_curs ? '/ro' : '')}}">
           <span ng-bind-html="interaction.genotype_b.display_name | breakAtSpaces | toTrusted"></span>
