@@ -1779,6 +1779,10 @@ ontology_namespace_config:
   do_not_annotate_subsets:
     - "is_a(canto_root_subset)"
     - "is_a(qc_do_not_annotate)"
+  interesting_parent_ids:
+    - "FYPO:0000003"
+    - "FYPO:0002058"
+    - "FYPO:0002057"
 
 # Namespace used for the phenotype condition ontology. If you
 # use an ontology other than FYECO for your phenotype conditions, then
