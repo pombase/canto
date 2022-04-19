@@ -1679,7 +1679,6 @@ evidence_types:
     is_symmetric: 1
   'Phenotypic Enhancement':
     definition: "A genetic interaction is inferred when mutation or overexpression of one gene results in enhancement of any phenotype (other than lethality/growth defect) associated with mutation or over expression of another gene."
-    name: 'Phenotypic Enhancement (non-growth or non-viability phenotype enhanced by)'
     name: 'Phenotypic Enhancement (phenotype enhanced by)'
     is_symmetric: 0
     non_symmetric_interaction_labels:
