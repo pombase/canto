@@ -1572,9 +1572,9 @@ sub _store_change_hash
       " has no gene or genotype\n";
   }
 
-  if ($changes->{interaction_annotation_with_phenotypes}) {
-    my $interaction_annotation_with_phenotypes =
-      $changes->{interaction_annotation_with_phenotypes};
+  if ($changes->{interaction_annotations_with_phenotypes}) {
+    my $interaction_annotations_with_phenotypes =
+      $changes->{interaction_annotations_with_phenotypes};
 
     my $primary_genotype_annotation =
       $annotation->genotype_annotations()->first();
@@ -1582,7 +1582,7 @@ sub _store_change_hash
       $primary_genotype_annotation->genotype_annotation_id();
 
     $primary_genotype_annotation
-      ->genotype_interaction_with_phenotype_primary_genotype_annotations()
+      ->genotype_interactions_with_phenotype_primary_genotype_annotation()
       ->delete();
 
     map {
@@ -1602,7 +1602,7 @@ sub _store_change_hash
                                                   $genotype_b_id);
 
       } @{$dir_annotation->{genotype_a_phenotype_annotations}};
-    } @$interaction_annotation_with_phenotypes;
+    } @$interaction_annotations_with_phenotypes;
   }
 
   if ($changes->{interaction_annotations}) {

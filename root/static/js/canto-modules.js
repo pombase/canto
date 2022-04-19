@@ -949,7 +949,7 @@ var keysForServer = {
   second_feature_type: true,
   interacting_gene_id: true,
   interaction_annotations: true,
-  interaction_annotation_with_phenotypes: true,
+  interaction_annotations_with_phenotypes: true,
 };
 
 var annotationProxy =
@@ -7250,7 +7250,7 @@ var genotypeInteractionEditCtrl = function ($uibModal) {
           if (result.genotype_a_phenotype_annotations.length == 0) {
             $scope.annotation.interaction_annotations.push(result);
           } else {
-            $scope.annotation.interaction_annotation_with_phenotypes.push(result);
+            $scope.annotation.interaction_annotations_with_phenotypes.push(result);
           }
         });
       };
@@ -7429,7 +7429,7 @@ var annotationEditDialogCtrl =
 
     if ($scope.newlyAdded) {
       $scope.annotation.interaction_annotations = [];
-      $scope.annotation.interaction_annotation_with_phenotypes = [];
+      $scope.annotation.interaction_annotations_with_phenotypes = [];
     }
 
     $scope.hasFigure = $scope.annotation.figure;
@@ -7438,8 +7438,8 @@ var annotationEditDialogCtrl =
     $scope.maybeDisableFeatureEdit = function() {
       if ($scope.annotation.interaction_annotations &&
           $scope.annotation.interaction_annotations.length > 0 ||
-          $scope.annotation.interaction_annotation_with_phenotypes &&
-          $scope.annotation.interaction_annotation_with_phenotypes.length > 0) {
+          $scope.annotation.interaction_annotations_with_phenotypes &&
+          $scope.annotation.interaction_annotations_with_phenotypes.length > 0) {
         $scope.featureEditable = false;
       } else {
         $scope.featureEditable = args.featureEditable;
@@ -7447,7 +7447,7 @@ var annotationEditDialogCtrl =
     };
     $scope.$watchCollection('annotation.interaction_annotations',
                             $scope.maybeDisableFeatureEdit);
-    $scope.$watchCollection('annotation.interaction_annotation_with_phenotypes',
+    $scope.$watchCollection('annotation.interaction_annotations_with_phenotypes',
                             $scope.maybeDisableFeatureEdit);
 
     $scope.showStrainName = (
@@ -7913,8 +7913,8 @@ var annotationEditDialogCtrl =
           if (!$scope.annotation.interaction_annotations) {
             $scope.annotation.interaction_annotations = [];
           }
-          if (!$scope.annotation.interaction_annotation_with_phenotypes) {
-            $scope.annotation.interaction_annotation_with_phenotypes = [];
+          if (!$scope.annotation.interaction_annotations_with_phenotypes) {
+            $scope.annotation.interaction_annotations_with_phenotypes = [];
           }
 
           $scope.genotypeInteractionInitialData = initialData;
@@ -9663,8 +9663,8 @@ var annotationTableRow =
                   if (!$scope.annotation.interaction_annotations) {
                     $scope.annotation.interaction_annotations = [];
                   }
-                  if (!$scope.annotation.interaction_annotation_with_phenotypes) {
-                    $scope.annotation.interaction_annotation_with_phenotypes = [];
+                  if (!$scope.annotation.interaction_annotations_with_phenotypes) {
+                    $scope.annotation.interaction_annotations_with_phenotypes = [];
                   }
 
                   $scope.genotypeInteractionInitialData = initialData;
@@ -9688,7 +9688,7 @@ var annotationTableRow =
                 if (result.genotype_a_phenotype_annotations.length == 0) {
                   editedAnnotation.interaction_annotations.push(result);
                 } else {
-                  editedAnnotation.interaction_annotation_with_phenotypes.push(result);
+                  editedAnnotation.interaction_annotations_with_phenotypes.push(result);
                 }
 
                 storeAnnotationToaster(AnnotationProxy, $scope.annotation,
@@ -9711,8 +9711,8 @@ var annotationTableRow =
           if (annotation.interaction_annotations) {
             count += annotation.interaction_annotations.length;
           }
-          if (annotation.interaction_annotation_with_phenotypes) {
-            count += annotation.interaction_annotation_with_phenotypes.length;
+          if (annotation.interaction_annotations_with_phenotypes) {
+            count += annotation.interaction_annotations_with_phenotypes.length;
           }
 
           return count;
