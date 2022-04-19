@@ -9305,7 +9305,7 @@ var annotationTableCtrl =
         $scope.genotypesPromise = 
           $scope.annotationTypeConfigPromise.then(function (annotationType) {
             if (typeof(annotationType.associated_interaction_annotation_type) !== 'undefined'  &&
-                $scope.alleleCountFilter == 'multi' && $scope.annotations) {
+                $scope.alleleCountFilter == 'multi') {
               return CursGenotypeList.cursGenotypeList({
                 include_allele: 1
               });
