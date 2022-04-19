@@ -7304,7 +7304,7 @@ var EditGenotypeInteractionDialogCtl =
     copyObject(args.annotation, $scope.editedAnnotation);
 
     $scope.ok = function() {
-      var q = storeAnnotationToaster(AnnotationProxy, args.AnnotationProxy,
+      var q = storeAnnotationToaster(AnnotationProxy, args.annotation,
                                      $scope.editedAnnotation, toaster);
 
       q.then(function() {
