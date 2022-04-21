@@ -1158,6 +1158,7 @@ sub _process_interaction
     gene_display_name => $gene->{name} // $gene->{identifier},
     gene_taxonid => $gene->{taxonid},
     gene_id => $gene_id,
+    feature_a_display_name => $gene->{name} // $gene->{identifier},
     publication_uniquename => $publication->{uniquename},
     evidence_code => $row->{evidence_code},
     interacting_gene_identifier => $interacting_gene->{identifier},
@@ -1165,6 +1166,7 @@ sub _process_interaction
       $interacting_gene->{name} // $interacting_gene->{identifier},
     interacting_gene_taxonid => $interacting_gene->{taxonid},
     interacting_gene_id => $interacting_gene_id,
+    feature_b_display_name => $interacting_gene->{name} // $interacting_gene->{identifier},
     status => 'existing',
   };
 }
