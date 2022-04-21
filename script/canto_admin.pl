@@ -9,6 +9,7 @@ use Try::Tiny;
 
 use File::Basename;
 use Getopt::Long;
+use Encode qw(decode);
 
 BEGIN {
   my $script_name = basename $0;
@@ -124,8 +125,8 @@ my $util = Canto::Track::TrackUtil->new(config => $config, schema => $schema);
 my $proc = sub {
   if (defined $rename_strain) {
     my $taxonid = shift @ARGV;
-    my $old_name = shift @ARGV;
-    my $new_name = shift @ARGV;
+    my $old_name = decode("utf-8", shift @ARGV);
+    my $new_name = decode("utf-8", shift @ARGV);
 
     try {
       $util->rename_strain($taxonid, $old_name, $new_name);
@@ -137,8 +138,8 @@ my $proc = sub {
 
   if (defined $merge_strains) {
     my $taxonid = shift @ARGV;
-    my $old_name = shift @ARGV;
-    my $new_name = shift @ARGV;
+    my $old_name = decode("utf-8", shift @ARGV);
+    my $new_name = decode("utf-8", shift @ARGV);
 
     try {
       $util->merge_strains($taxonid, $old_name, $new_name);
