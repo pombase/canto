@@ -1781,7 +1781,6 @@ ontology_namespace_config:
   interesting_parent_ids:
     - "FYPO:0000003"
     - "FYPO:0002058"
-    - "FYPO:0002057"
 
 # Namespace used for the phenotype condition ontology. If you
 # use an ontology other than FYECO for your phenotype conditions, then
