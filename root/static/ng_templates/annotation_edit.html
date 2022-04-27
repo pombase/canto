@@ -79,9 +79,31 @@
             </term-name-complete>
             <span ng-show="!isValidTerm()"
                   class="help-block">Start typing to choose a term</span>
+            <a href="#" ng-show="isValidTerm() && suggestionFieldsPossible() && !termSuggestionVisible"
+               class="curs-annotation-edit-suggest-new-term-button"
+               ng-click="setTermSuggestionVisible(true)"
+               title="Suggest a more specific term, if you cannot find a related term use any term as a placeholder for your suggestion">
+              Suggest a new term
+            </a>
           </div>
           <div>
             <term-children-query term-id="annotation.term_ontid" term-name="annotation.term_name"></term-children-query>
+          </div>
+        </td>
+      </tr>
+
+      <tr ng-show="termSuggestionVisible">
+        <td class="title">
+          <div>Term suggestion</div>
+        </td>
+        <td class="curs-term-suggest" colspan="2">
+          <div>
+            <input class="curs-term-suggest-name form-control curs-edit-wide-field"
+                   type="text" placeholder="Name" size="60"
+                   ng-model="annotation.term_suggestion_name"/>
+            <textarea class="form-control curs-edit-wide-field"
+                      placeholder="Definition" cols="60"
+                      ng-model="annotation.term_suggestion_definition"/>
           </div>
         </td>
       </tr>
@@ -183,28 +205,6 @@
           <div ng-if="filteredFeatures && filteredFeatures.length != 0">
             <span ng-if="conditionsHelpText">{{conditionsHelpText}}</span>
             <condition-picker conditions="annotation.conditions"></condition-picker>
-          </div>
-        </td>
-      </tr>
-
-      <tr ng-if="suggestionFieldsPossible()">
-        <td class="title">
-          <div>Term suggestion</div>
-        </td>
-        <td class="curs-term-suggest" colspan="2">
-          <div ng-if="!termSuggestionVisible">
-            If the term above is too general:
-            <button ng-click="setTermSuggestionVisible(true)"
-                    class="btn btn-default btn-xs">Suggest</button>
-          </div>
-
-          <div ng-if="termSuggestionVisible">
-            <input class="curs-term-suggest-name form-control curs-edit-wide-field"
-                   type="text" placeholder="Name" size="60"
-                   ng-model="annotation.term_suggestion_name"/>
-            <textarea class="form-control curs-edit-wide-field"
-                      placeholder="Definition" cols="60"
-                      ng-model="annotation.term_suggestion_definition"/>
           </div>
         </td>
       </tr>
