@@ -7151,7 +7151,10 @@ var annotationEditDialogCtrl =
         $scope.annotation.term_ontid;
     };
 
-    $scope.showSuggestionFields = function() {
+    // returns true if it's possible to show a suggestion field for this
+    // annotation - although the field isn't shown until the user clicks
+    // the "Suggest a term" link/button
+    $scope.suggestionFieldsPossible = function() {
       return $scope.isValidTerm() && $scope.annotationType.category == 'ontology' &&
         $scope.annotationType.ontology_size !== 'small' &&
         $scope.filteredFeatures && $scope.filteredFeatures.length != 0;
