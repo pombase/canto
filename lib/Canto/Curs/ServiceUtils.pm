@@ -1617,11 +1617,11 @@ sub _store_change_hash
     $primary_genotype_annotation->genotype_interactions()->delete();
 
     map {
-      my $dir_annotation = $_;
+      my $interaction_annotation = $_;
 
-      my $interaction_type = $dir_annotation->{interaction_type};
-      my $genotype_a_id = $dir_annotation->{genotype_a}->{genotype_id};
-      my $genotype_b_id = $dir_annotation->{genotype_b}->{genotype_id};
+      my $interaction_type = $interaction_annotation->{interaction_type};
+      my $genotype_a_id = $interaction_annotation->{genotype_a}->{genotype_id};
+      my $genotype_b_id = $interaction_annotation->{genotype_b}->{genotype_id};
 
       _store_interaction_annotation($self->curs_schema(),
                                     $interaction_type,
