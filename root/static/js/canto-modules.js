@@ -6811,8 +6811,8 @@ function startViewInteractionPhenotypes($uibModal, genotype,
 
 
 var selectInteractionAnnotationsDialogCtrl =
-  function ($scope, $uibModal, $uibModalInstance,
-            CantoGlobals, Curs, toaster, args) {
+  function ($scope, $uibModal, $uibModalInstance, $http,
+            CantoGlobals, CursGenotypeList, Curs, toaster, args) {
     $scope.data = {};
 
     $scope.data.subjectAllele = args.subjectAllele;
@@ -6846,19 +6846,24 @@ var selectInteractionAnnotationsDialogCtrl =
       // need to store subjectAllele as a new genotype and use it as
       // subjectGenotype
 
-      var subjectGenotype = error;
+      var storePromise =
+          CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined,
+                                         [$scope.data.subjectAllele],
+                                         undefined, undefined, undefined);
 
-      var addPromise =
-          addAnnotation($uibModal, $scope.data.annotationType.name,
-                        'genotype',
-                        subjectGenotype.feature_id,
-                        subjectGenotype.display_name,
-                        subjectGenotype.organism.taxonid);
+      storePromise.then(function(storeResult) {
 
+        var addPromise =
+            addAnnotation($uibModal, $scope.data.annotationType.name,
+                          'genotype',
+                          storeResult.genotype_id,
+                          storeResult.genotype_display_name,
+                          storeResult.taxonid);
 
-      addPromise.then(function (newAnnotation) {
-        $uibModalInstance.close({
-          selectedAnnotations: [newAnnotation],
+        addPromise.then(function (newAnnotation) {
+          $uibModalInstance.close({
+            selectedAnnotations: [newAnnotation],
+          });
         });
       });
     };
@@ -6881,10 +6886,10 @@ var selectInteractionAnnotationsDialogCtrl =
   };
 
 canto.controller('SelectInteractionAnnotationsDialogCtrl',
-  ['$scope', '$uibModal', '$uibModalInstance',
-   'CantoGlobals', 'Curs', 'toaster', 'args',
-    selectInteractionAnnotationsDialogCtrl
-  ]);
+                 ['$scope', '$uibModal', '$uibModalInstance', '$http',
+                  'CantoGlobals', 'CursGenotypeList', 'Curs', 'toaster', 'args',
+                  selectInteractionAnnotationsDialogCtrl
+                 ]);
 
 
 function startSelectInteractionAnnotations($uibModal, subjectAllele, objectAllele,
@@ -7016,7 +7021,7 @@ var AnnotationInteractionsEditDialogCtrl =
 
       var promise =
           startSelectInteractionAnnotations($uibModal, subjectAllele,
-                                            objectAllelle,
+                                            objectAllele,
                                             $scope.data.annotationType,
                                             $scope.data.interactionTypeConfig,
                                             subjectAnnotations);
