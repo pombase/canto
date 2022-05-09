@@ -435,6 +435,11 @@ db_initial_data:
               accession: retracted
               db:
                 name: Canto
+          - name: Duplicated in PubMed
+            dbxref:
+              accession: duplicated_in_pubmed
+              db:
+                name: Canto
           - name: Modelling
             dbxref:
               accession: modelling
