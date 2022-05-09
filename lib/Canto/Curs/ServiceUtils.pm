@@ -1616,18 +1616,47 @@ sub _store_change_hash
 
     $primary_genotype_annotation->genotype_interactions()->delete();
 
+    my $genotype_manager =
+      Canto::Curs::GenotypeManager->new(config => $self->config(),
+                                        curs_schema => $self->curs_schema());
+
     map {
       my $interaction_annotation = $_;
 
       my $interaction_type = $interaction_annotation->{interaction_type};
-      my $genotype_a_id = $interaction_annotation->{genotype_a}->{genotype_id};
-      my $genotype_b_id = $interaction_annotation->{genotype_b}->{genotype_id};
+      my $allele_a = $interaction_annotation->{allele_a};
+      my $allele_b = $interaction_annotation->{allele_b};
+
+      my $primary_genotype = $primary_genotype_annotation->genotype();
+
+      my $taxonid = undef;
+
+      if ($primary_genotype->organism()) {
+        $taxonid = $primary_genotype->organism()->taxonid();
+      }
+
+      my $strain_name = undef;
+
+      if ($primary_genotype->strain()) {
+        $strain_name = $primary_genotype->strain_name();
+      }
+
+      my $genotype_a =
+        $genotype_manager->find_or_make_genotype($taxonid,
+                                                 $primary_genotype->background(),
+                                                 $strain_name,
+                                                 [$allele_a]);
+      my $genotype_b =
+        $genotype_manager->find_or_make_genotype($taxonid,
+                                                 $primary_genotype->background(),
+                                                 $strain_name,
+                                                 [$allele_b]);
 
       _store_interaction_annotation($self->curs_schema(),
                                     $interaction_type,
                                     $primary_genotype_annotation_id,
-                                    $genotype_a_id,
-                                    $genotype_b_id);
+                                    $genotype_a->genotype_id(),
+                                    $genotype_b->genotype_id());
 
     } @$interaction_annotations;
   }

@@ -27,9 +27,9 @@
                  ng-change="directionChanged()"
                  id="annotation-interaction-direction-1"/>
           <label for="annotation-interaction-direction-1">
-            {{data.genotypeA.display_name}}
+            {{data.alleleA.display_name}}
             <span style="font-weight: bold">{{interactionTypeDisplayLabel}}</span>
-            {{data.genotypeB.display_name}}
+            {{data.alleleB.display_name}}
           </label>
         </div>
 
@@ -39,9 +39,9 @@
                  ng-change="directionChanged()"
                  id="annotation-interaction-direction-2"/>
           <label for="annotation-interaction-direction-2">
-            {{data.genotypeB.display_name}}
+            {{data.alleleB.display_name}}
             <span style="font-weight: bold">{{interactionTypeDisplayLabel}}</span>
-            {{data.genotypeA.display_name}}
+            {{data.alleleA.display_name}}
           </label>
         </div>
       </div>
@@ -51,18 +51,18 @@
         Select
         <span ng-if="data.interactionForward">
           <span style="font-weight: bold">
-            {{data.genotypeA.display_name}}
+            {{data.alleleA.display_name}}
             phenotype(s) {{interactionTypeDisplayLabel}}
           </span>
-          {{data.genotypeB.display_name}}
+          {{data.alleleB.display_name}}
         </span>
 
         <span ng-if="!data.interactionForward">
           <span style="font-weight: bold">
-            {{data.genotypeB.display_name}}
+            {{data.alleleB.display_name}}
             phenotype(s) {{interactionTypeDisplayLabel}}
           </span>
-          {{data.genotypeA.display_name}}
+          {{data.alleleA.display_name}}
         </span>
         </div>
 
@@ -88,9 +88,9 @@
 
     <div ng-if="data.interactionPhenotypeNotNeeded">
       Confirm:&nbsp;&nbsp;
-      {{data.genotypeA.display_name}}
+      {{data.alleleA.display_name}}
       <span style="font-weight: bold">displays {{interactionType}} with</span>
-      {{data.genotypeB.display_name}}
+      {{data.alleleB.display_name}}
     </div>
 
   </div>

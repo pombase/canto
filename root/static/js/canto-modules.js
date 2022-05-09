@@ -6815,8 +6815,8 @@ var selectInteractionAnnotationsDialogCtrl =
             CantoGlobals, Curs, toaster, args) {
     $scope.data = {};
 
-    $scope.data.subjectGenotype = args.subjectGenotype;
-    $scope.data.objectGenotype = args.objectGenotype;
+    $scope.data.subjectAllele = args.subjectAllele;
+    $scope.data.objectAllele = args.objectAllele;
     $scope.data.annotationType = args.annotationType;
     $scope.data.interactionTypeConfig = args.interactionTypeConfig;
     $scope.data.filteredAnnotations = args.filteredAnnotations;
@@ -6843,12 +6843,17 @@ var selectInteractionAnnotationsDialogCtrl =
     };
 
     $scope.addPhenotypeAnnotation = function() {
+      // need to store subjectAllele as a new genotype and use it as
+      // subjectGenotype
+
+      var subjectGenotype = error;
+
       var addPromise =
           addAnnotation($uibModal, $scope.data.annotationType.name,
                         'genotype',
-                        $scope.data.subjectGenotype.feature_id,
-                        $scope.data.subjectGenotype.display_name,
-                        $scope.data.subjectGenotype.organism.taxonid);
+                        subjectGenotype.feature_id,
+                        subjectGenotype.display_name,
+                        subjectGenotype.organism.taxonid);
 
 
       addPromise.then(function (newAnnotation) {
@@ -6882,7 +6887,7 @@ canto.controller('SelectInteractionAnnotationsDialogCtrl',
   ]);
 
 
-function startSelectInteractionAnnotations($uibModal, subjectGenotype, objectGenotype,
+function startSelectInteractionAnnotations($uibModal, subjectAllele, objectAllele,
                                            annotationType, interactionTypeConfig,
                                            filteredAnnotations) {
   var selectInstance = $uibModal.open({
@@ -6894,8 +6899,8 @@ function startSelectInteractionAnnotations($uibModal, subjectGenotype, objectGen
     resolve: {
       args: function () {
         return {
-          subjectGenotype: subjectGenotype,
-          objectGenotype: objectGenotype,
+          subjectAllele: subjectAllele,
+          objectAllele: objectAllele,
           annotationType: annotationType,
           interactionTypeConfig: interactionTypeConfig,
           filteredAnnotations: filteredAnnotations,
@@ -6925,8 +6930,8 @@ var AnnotationInteractionsEditDialogCtrl =
       annotationSelectorVisible: false,
       interactionPhenotypeNotNeeded: false,
       directionSelectorVisible: false,
-      genotypeA: args.initialData.genotypeA,
-      genotypeB: args.initialData.genotypeB,
+      alleleA: args.initialData.alleleA,
+      alleleB: args.initialData.alleleB,
       annotationType: args.annotationType,
       evidenceConfig: args.initialData.evidenceConfig,
       genotypeAnnotationsA: args.initialData.genotypeAnnotationsA,
@@ -6995,23 +7000,23 @@ var AnnotationInteractionsEditDialogCtrl =
 
       $scope.data.interactingAnnotations = [];
 
-      var subjectGenotype;
-      var objectGenotype;
+      var subjectAllele;
+      var objectAllele;
       var subjectAnnotations;
 
       if ($scope.data.interactionForward) {
-        subjectGenotype = $scope.data.genotypeA;
-        objectGenotype = $scope.data.genotypeB;
+        subjectAllele = $scope.data.alleleA;
+        objectAllele = $scope.data.alleleB;
         subjectAnnotations = $scope.data.genotypeAnnotationsA;
       } else {
-        subjectGenotype = $scope.data.genotypeB;
-        objectGenotype = $scope.data.genotypeA;
+        subjectAllele = $scope.data.alleleB;
+        objectAllele = $scope.data.alleleA;
         subjectAnnotations = $scope.data.genotypeAnnotationsB;
       }
 
       var promise =
-          startSelectInteractionAnnotations($uibModal, subjectGenotype,
-                                            objectGenotype,
+          startSelectInteractionAnnotations($uibModal, subjectAllele,
+                                            objectAllelle,
                                             $scope.data.annotationType,
                                             $scope.data.interactionTypeConfig,
                                             subjectAnnotations);
@@ -7038,20 +7043,20 @@ var AnnotationInteractionsEditDialogCtrl =
     };
 
     $scope.ok = function () {
-      var genotypeA;
-      var genotypeB;
+      var alleleA;
+      var alleleB;
 
       if ($scope.data.interactionForward) {
-        genotypeA = $scope.data.genotypeA;
-        genotypeB = $scope.data.genotypeB;
+        alleleA = $scope.data.alleleA;
+        alleleB = $scope.data.alleleB;
       } else {
-        genotypeA = $scope.data.genotypeB;
-        genotypeB = $scope.data.genotypeA;
+        alleleA = $scope.data.alleleB;
+        alleleB = $scope.data.alleleA;
       }
 
       $uibModalInstance.close({
-        genotype_a: genotypeA,
-        genotype_b: genotypeB,
+        allele_a: alleleA,
+        allele_b: alleleB,
         interaction_type: $scope.interactionType,
         genotype_a_phenotype_annotations: $scope.data.interactingAnnotations,
       });
@@ -7149,14 +7154,44 @@ function interactionEvCodesFromPhenotype(phenotypeAnnotationType, phenotypeTermD
   }
 }
 
+
+function findGenotypeInArray(genotypes, searchGenotypeId) {
+  for (var i = 0; i < genotypes.length; i++) {
+    var testGenotype = genotypes[i];
+
+    if (testGenotype.genotype_id == searchGenotypeId) {
+      return testGenotype;
+    }
+  }
+
+  return undefined;
+}
+
+// find single allele gneotypes by allele ID
+function findGenotypeInArrayByAlleleId(genotypes, searchAlleleId) {
+  for (var i = 0; i < genotypes.length; i++) {
+    var testGenotype = genotypes[i];
+
+    if (testGenotype.alleles.length != 1) {
+      continue;
+    }
+    if (testGenotype.alleles[0].allele_id === searchAlleleId) {
+      return testGenotype;
+    }
+  }
+
+  return undefined;
+}
+
+
 // if it's possible to make a genotype interaction annotation attached to
 // the phenotype, return:
 // {
-//   genotypeA: ...,
-//   genotypeB: ...,
+//   alleleA: ...,
+//   alleleB: ...,
 //   evidenceConfig: ...        // the possible interaction types,
-//   genotypeAnnotationsA: ...  // the annotations for genotypeA
-//   genotypeAnnotationsB: ...  // the annotations for genotypeB
+//   genotypeAnnotationsA: ...  // the annotations for alleleA
+//   genotypeAnnotationsB: ...  // the annotations for alleleB
 // }
 //
 // returns null if no interactions are possible 
@@ -7174,37 +7209,18 @@ function getInteractionInitialData($q, CantoConfig, AnnotationProxy,
       var annotations = result[1];
       var phenotypeTermDetails = result[2];
 
-      var findGenotypeById =
-          function(searchGenotypeId) {
-            return ($.grep(allGenotypes,
-                           function(testGenotype) {
-                             return testGenotype.genotype_id == searchGenotypeId;
-                           }))[0];
-          };
+      var genotype = findGenotypeInArray(allGenotypes, genotypeId);
 
-      var genotype = findGenotypeById(genotypeId);
-
-      if (!genotype || !genotype.alleles || genotype.alleles.length != 2) {
+      if (!genotype) {
         return null;
       }
 
-      var findGenotypeByAlleleId =
-          function(searchAlleleId) {
-            return ($.grep(allGenotypes,
-                           function(testGenotype) {
-                             if (testGenotype.alleles.length != 1) {
-                               return false;
-                             }
-                             return testGenotype.alleles[0].allele_id === searchAlleleId;
-                           }))[0];
-          };
-
-      var alleleGenotypeA = findGenotypeByAlleleId(genotype.alleles[0].allele_id);
-      var alleleGenotypeB = findGenotypeByAlleleId(genotype.alleles[1].allele_id);
-
-      if (!alleleGenotypeA || !alleleGenotypeB) {
+      if (genotype.alleles.length != 2) {
         return null;
       }
+
+      var alleleA = genotype.alleles[0];
+      var alleleB = genotype.alleles[1];
 
       var codeFromPhenotypeResult = 
           interactionEvCodesFromPhenotype(phenotypeAnnotationType, phenotypeTermDetails,
@@ -7220,14 +7236,24 @@ function getInteractionInitialData($q, CantoConfig, AnnotationProxy,
               evidenceConfig[code] = evidenceTypes[code];
             });
 
-      var genotypeAnnotationsA =
-          filterAnnotationsByFeature(annotations, alleleGenotypeA);
-      var genotypeAnnotationsB =
-          filterAnnotationsByFeature(annotations, alleleGenotypeB);
+      var alleleGenotypeA = findGenotypeInArrayByAlleleId(allGenotypes, alleleA.allele_id);
+      var alleleGenotypeB = findGenotypeInArrayByAlleleId(allGenotypes, alleleB.allele_id);
+
+      var genotypeAnnotationsA = [];
+
+      if (alleleGenotypeA) {
+        genotypeAnnotationsA = filterAnnotationsByFeature(annotations, alleleGenotypeA);
+      }
+
+      var genotypeAnnotationsB = [];
+
+      if (alleleGenotypeB) {
+        genotypeAnnotationsB = filterAnnotationsByFeature(annotations, alleleGenotypeB);
+      }
 
       return {
-        genotypeA: alleleGenotypeA,
-        genotypeB: alleleGenotypeB,
+        alleleA: alleleA,
+        alleleB: alleleB,
         evidenceConfig: evidenceConfig,
         genotypeAnnotationsA: genotypeAnnotationsA,
         genotypeAnnotationsB: genotypeAnnotationsB,
@@ -9302,7 +9328,7 @@ var annotationTableCtrl =
 
         // used by annotationTableRow code, create here so we don't re-fetch the
         // genotypes in every row
-        $scope.genotypesPromise = 
+        $scope.genotypesPromiseForInteractions = 
           $scope.annotationTypeConfigPromise.then(function (annotationType) {
             if (typeof(annotationType.associated_interaction_annotation_type) !== 'undefined'  &&
                 $scope.alleleCountFilter == 'multi') {
@@ -9648,7 +9674,7 @@ var annotationTableRow =
           });
         };
 
-        $q.all([annotationTypePromise, $scope.genotypesPromise])
+        $q.all([annotationTypePromise, $scope.genotypesPromiseForInteractions])
           .then(function(results) {
             var annotationType = results[0];
             var genotypes = results[1];
