@@ -6937,6 +6937,8 @@ var AnnotationInteractionsEditDialogCtrl =
       directionSelectorVisible: false,
       alleleA: args.initialData.alleleA,
       alleleB: args.initialData.alleleB,
+      alleleGenotypeA: args.initialData.alleleGenotypeA,
+      alleleGenotypeB: args.initialData.alleleGenotypeB,
       annotationType: args.annotationType,
       evidenceConfig: args.initialData.evidenceConfig,
       genotypeAnnotationsA: args.initialData.genotypeAnnotationsA,
@@ -7049,19 +7051,27 @@ var AnnotationInteractionsEditDialogCtrl =
 
     $scope.ok = function () {
       var alleleA;
+      var genotypeA;
       var alleleB;
+      var genotypeB;
 
       if ($scope.data.interactionForward) {
         alleleA = $scope.data.alleleA;
+        genotypeA = $scope.data.alleleGenotypeA;
         alleleB = $scope.data.alleleB;
+        genotypeB = $scope.data.alleleGenotypeB;
       } else {
         alleleA = $scope.data.alleleB;
+        genotypeA = $scope.data.alleleGenotypeB;
         alleleB = $scope.data.alleleA;
+        genotypeB = $scope.data.alleleGenotypeA;
       }
 
       $uibModalInstance.close({
         allele_a: alleleA,
+        genotype_a: genotypeA,
         allele_b: alleleB,
+        genotype_b: genotypeB,
         interaction_type: $scope.interactionType,
         genotype_a_phenotype_annotations: $scope.data.interactingAnnotations,
       });
@@ -7200,19 +7210,16 @@ function findGenotypeInArrayByAlleleId(genotypes, searchAlleleId) {
 // }
 //
 // returns null if no interactions are possible 
-function getInteractionInitialData($q, CantoConfig, AnnotationProxy,
+function getInteractionInitialData($q, CantoConfig,
                                    termDetailsPromise,
                                    phenotypeAnnotationType, phenotypeTermId,
                                    genotypeId, allGenotypes) {
   var evidencePromise = CantoConfig.get('evidence_types');
-  var annotationsPromise =
-      AnnotationProxy.getAnnotation(phenotypeAnnotationType.name);
 
-  return $q.all([evidencePromise, annotationsPromise, termDetailsPromise])
+  return $q.all([evidencePromise, termDetailsPromise])
     .then(function(result) {
       var evidenceTypes = result[0];
-      var annotations = result[1];
-      var phenotypeTermDetails = result[2];
+      var phenotypeTermDetails = result[1];
 
       var genotype = findGenotypeInArray(allGenotypes, genotypeId);
 
@@ -7241,32 +7248,93 @@ function getInteractionInitialData($q, CantoConfig, AnnotationProxy,
               evidenceConfig[code] = evidenceTypes[code];
             });
 
-      var alleleGenotypeA = findGenotypeInArrayByAlleleId(allGenotypes, alleleA.allele_id);
-      var alleleGenotypeB = findGenotypeInArrayByAlleleId(allGenotypes, alleleB.allele_id);
-
-      var genotypeAnnotationsA = [];
-
-      if (alleleGenotypeA) {
-        genotypeAnnotationsA = filterAnnotationsByFeature(annotations, alleleGenotypeA);
-      }
-
-      var genotypeAnnotationsB = [];
-
-      if (alleleGenotypeB) {
-        genotypeAnnotationsB = filterAnnotationsByFeature(annotations, alleleGenotypeB);
-      }
-
       return {
         alleleA: alleleA,
         alleleB: alleleB,
         evidenceConfig: evidenceConfig,
-        genotypeAnnotationsA: genotypeAnnotationsA,
-        genotypeAnnotationsB: genotypeAnnotationsB,
         overexpressedAllele: overexpressedAllele,
       };
     });
 }
 
+
+function findGenotypesOfAlleles(data, $q, AnnotationProxy,
+                                phenotypeAnnotationType, allGenotypes) {
+
+  if (data == null) {
+    return $q.when(null);
+  }
+
+  var annotationsPromise =
+      AnnotationProxy.getAnnotation(phenotypeAnnotationType.name);
+
+  return annotationsPromise.then(function(annotations) {
+
+    var alleleA = data.alleleA;
+    var alleleB = data.alleleB;
+
+    var alleleGenotypeA = findGenotypeInArrayByAlleleId(allGenotypes, alleleA.allele_id);
+    var alleleGenotypeB = findGenotypeInArrayByAlleleId(allGenotypes, alleleB.allele_id);
+
+    var genotypeAnnotationsA = [];
+
+    if (alleleGenotypeA) {
+      genotypeAnnotationsA = filterAnnotationsByFeature(annotations, alleleGenotypeA);
+    }
+
+    var genotypeAnnotationsB = [];
+
+    if (alleleGenotypeB) {
+      genotypeAnnotationsB = filterAnnotationsByFeature(annotations, alleleGenotypeB);
+    }
+
+    data.alleleGenotypeA = alleleGenotypeA;
+    data.alleleGenotypeB = alleleGenotypeB;
+    data.genotypeAnnotationsA = genotypeAnnotationsA;
+    data.genotypeAnnotationsB = genotypeAnnotationsB;
+
+    return data;
+  });
+
+}
+
+function createMissingGenotypesOfAlleles(data, $q, $http, toaster, CursGenotypeList) {
+  if (data == null) {
+    return $q.when(null);
+  }
+
+  var genotypeAPromise = null;
+  var genotypeBPromise = null;
+
+  if (data.alleleGenotypeA) {
+    genotypeAPromise = $q.when(data.alleleGenotypeA);
+  } else {
+    genotypeAPromise =
+      CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined,
+                                     [data.alleleA],
+                                     undefined, undefined, undefined);
+  }
+
+  if (data.alleleGenotypeB) {
+    genotypeBPromise = $q.when(data.alleleGenotypeB);
+  } else {
+    genotypeBPromise =
+      CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined,
+                                     [data.alleleB],
+                                     undefined, undefined, undefined);
+  }
+
+  return $q.all([genotypeAPromise, genotypeBPromise])
+    .then(function(result) {
+      var alleleGenotypeA = result[0];
+      var alleleGenotypeB = result[1];
+
+      data.alleleGenotypeA = alleleGenotypeA;
+      data.alleleGenotypeB = alleleGenotypeB;
+
+      return data;
+    });
+}
 
 var genotypeInteractionEditCtrl = function ($uibModal) {
   return {
@@ -7391,7 +7459,7 @@ function editGenotypeInteractions($uibModal, annotation, annotationType, genotyp
 
 
 var annotationEditDialogCtrl =
-  function ($scope, $uibModal, $q, $uibModalInstance, AnnotationProxy,
+  function ($scope, $uibModal, $q, $uibModalInstance, $http, AnnotationProxy,
             AnnotationTypeConfig, CantoConfig, CursGenotypeList, CursGeneList,
             CursSessionDetails, CantoService, CantoGlobals, Curs, toaster, args) {
     $scope.currentUserIsAdmin = CantoGlobals.current_user_is_admin;
@@ -7943,12 +8011,22 @@ var annotationEditDialogCtrl =
       $scope.genotypeInteractionInitialData = null;
 
       var interactionInitialDataPromise =
-          getInteractionInitialData($q, CantoConfig, AnnotationProxy,
+          getInteractionInitialData($q, CantoConfig,
                                     $scope.termDetailsPromise,
                                     annotationType, $scope.annotation.term_ontid,
                                     featureId, $scope.allFeatures);
 
-      interactionInitialDataPromise.then(function(initialData) {
+      interactionInitialDataPromise
+        .then(function(data) {
+          return findGenotypesOfAlleles(data, $q, AnnotationProxy,
+                                        annotationType,
+                                        $scope.allFeatures);
+        })
+        .then(function(data) {
+          return createMissingGenotypesOfAlleles(data, $q, $http, toaster,
+                                                   CursGenotypeList);
+        })
+        .then(function(initialData) {
         if (initialData !== null) {
           $scope.allowInteractionAnnotations = true;
           if (!$scope.annotation.interaction_annotations) {
@@ -8216,7 +8294,7 @@ var annotationEditDialogCtrl =
   };
 
 canto.controller('AnnotationEditDialogCtrl',
-  ['$scope', '$uibModal', '$q', '$uibModalInstance', 'AnnotationProxy',
+  ['$scope', '$uibModal', '$q', '$uibModalInstance', '$http', 'AnnotationProxy',
    'AnnotationTypeConfig', 'CantoConfig', 'CursGenotypeList', 'CursGeneList',
     'CursSessionDetails', 'CantoService',
     'CantoGlobals', 'Curs', 'toaster', 'args',
@@ -9489,7 +9567,10 @@ canto.directive('annotationTableList',
 
 
 var annotationTableRow =
-    function ($uibModal, $q, CursSessionDetails, CursAnnotationDataService, AnnotationProxy, AnnotationTypeConfig, CantoGlobals, CantoConfig, CantoService, toaster) {
+    function ($uibModal, $q, $http, CursGenotypeList,
+              CursSessionDetails, CursAnnotationDataService,
+              AnnotationProxy, AnnotationTypeConfig, CantoGlobals,
+              CantoConfig, CantoService, toaster) {
     return {
       restrict: 'A',
       replace: true,
@@ -9692,12 +9773,22 @@ var annotationTableRow =
                                       });
 
               var interactionInitialDataPromise =
-                  getInteractionInitialData($q, CantoConfig, AnnotationProxy,
+                  getInteractionInitialData($q, CantoConfig,
                                             termDetailsPromise,
                                             annotationType, $scope.annotation.term_ontid,
                                             $scope.annotation.feature_id, genotypes);
 
-              interactionInitialDataPromise.then(function(initialData) {
+              interactionInitialDataPromise
+                .then(function(data) {
+                  return findGenotypesOfAlleles(data, $q, AnnotationProxy,
+                                                annotationType,
+                                                genotypes);
+                })
+                .then(function(data) {
+                  return createMissingGenotypesOfAlleles(data, $q, $http, toaster,
+                                                         CursGenotypeList);
+                })
+                .then(function(initialData) {
                 if (initialData !== null) {
                   if (!$scope.annotation.interaction_annotations) {
                     $scope.annotation.interaction_annotations = [];
@@ -9798,7 +9889,8 @@ var annotationTableRow =
   };
 
 canto.directive('annotationTableRow',
-   ['$uibModal', '$q', 'CursSessionDetails', 'CursAnnotationDataService',
+   ['$uibModal', '$q', '$http', 'CursGenotypeList',
+    'CursSessionDetails', 'CursAnnotationDataService',
     'AnnotationProxy', 'AnnotationTypeConfig',
     'CantoGlobals', 'CantoConfig', 'CantoService', 'toaster',
     annotationTableRow
