@@ -1572,7 +1572,7 @@ sub _store_change_hash
       " has no gene or genotype\n";
   }
 
-  if ($changes->{interaction_annotations_with_phenotypes}) {
+  if (scalar @{$changes->{interaction_annotations_with_phenotypes} // []}) {
     my $interaction_annotations_with_phenotypes =
       $changes->{interaction_annotations_with_phenotypes};
 
@@ -1605,7 +1605,7 @@ sub _store_change_hash
     } @$interaction_annotations_with_phenotypes;
   }
 
-  if ($changes->{interaction_annotations}) {
+  if (scalar @{$changes->{interaction_annotations} // []}) {
     my $interaction_annotations =
       $changes->{interaction_annotations};
 
