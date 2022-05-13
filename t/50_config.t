@@ -208,12 +208,12 @@ cmp_deeply(
       'allowed_relation' => 'has_penetrance',
       'range' => [
         {
+          'type' => '%'
+        },
+        {
           'scope' => ['FYPO_EXT:1000000'],
           'type' => 'Ontology'
         },
-        {
-          'type' => '%'
-        }
       ],
       'display_text' => 'penetrance',
       'help_text' => '',
