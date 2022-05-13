@@ -7126,10 +7126,21 @@ function interactionEvCodesFromPhenotype(phenotypeAnnotationType, phenotypeTermD
 
     var phenotypeEvidenceCodes = [];
 
-    if (phenotypeTermDetails.subset_ids.includes(popPhenotypeEvCodeConfig.parent_constraint)) {
-      phenotypeEvidenceCodes = popPhenotypeEvCodeConfig.evidence_codes;
+    if (phenotypeTermDetails.subset_ids.includes(popPhenotypeEvCodeConfig.parent_constraint) ||
+        'is_a(' + phenotypeTermDetails.id + ')' == popPhenotypeEvCodeConfig.parent_constraint) {
+      // is a population term
+      phenotypeEvidenceCodes = [...popPhenotypeEvCodeConfig.evidence_codes];
+      if (phenotypeTermDetails.subset_ids.includes(popPhenotypeEvCodeConfig.inviable_parent_constraint) ||
+          'is_a(' + phenotypeTermDetails.id + ')' == popPhenotypeEvCodeConfig.inviable_parent_constraint) {
+        // add extra ev codes only valid for inviable population terms:
+        $.map(popPhenotypeEvCodeConfig.inviable_only_evidence_codes || [],
+              inviableEvCode => {
+                phenotypeEvidenceCodes.push(inviableEvCode);
+              });
+      }
     } else {
-      phenotypeEvidenceCodes = popPhenotypeEvCodeConfig.not_evidence_codes;
+      // isn't a population term
+      phenotypeEvidenceCodes = popPhenotypeEvCodeConfig.not_population_evidence_codes;
     }
 
     var returnEvidenceCodes = [];

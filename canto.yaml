@@ -1780,6 +1780,7 @@ ontology_namespace_config:
     - "is_a(qc_do_not_annotate)"
   interesting_parent_ids:
     - "FYPO:0000003"
+    - "FYPO:0002059"
     - "FYPO:0002058"
 
 # Namespace used for the phenotype condition ontology. If you
@@ -2157,9 +2158,11 @@ available_annotation_type_list:
           - Dosage Lethality
           - Dosage Rescue
           - Synthetic Growth Defect
-          - Synthetic Lethality
           - Synthetic Rescue
-        not_evidence_codes:
+        inviable_parent_constraint: 'is_a(FYPO:0002059)'
+        inviable_only_evidence_codes:
+          - Synthetic Lethality
+        not_population_evidence_codes:
           - Phenotypic Enhancement
           - Phenotypic Suppression
       both_alleles_deletions:
