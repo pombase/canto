@@ -2162,6 +2162,7 @@ available_annotation_type_list:
         inviable_parent_constraint: 'is_a(FYPO:0002059)'
         inviable_only_evidence_codes:
           - Synthetic Lethality
+          - Dosage Rescue
         not_population_evidence_codes:
           - Phenotypic Enhancement
           - Phenotypic Suppression
