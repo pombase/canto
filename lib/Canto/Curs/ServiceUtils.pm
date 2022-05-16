@@ -1859,13 +1859,27 @@ sub delete_annotation
   my $details = shift;
 
   my $curs_schema = $self->curs_schema();
+
+  my $annotation_id = $details->{annotation_id};
+  my $annotation = $curs_schema->find_with_type('Annotation', $annotation_id);
+
+  for my $genotype_annotation ($annotation->genotype_annotations()) {
+    my $interaction_with_phenotype =
+      $genotype_annotation->genotype_interactions_with_phenotype_genotype_annotation_a()->first();
+    if ($interaction_with_phenotype) {
+      return {
+        message => 'this annotation is used by a ' .
+        $interaction_with_phenotype->interaction_type() .
+        ' interaction',
+        status => 'error',
+      };
+    }
+  }
+
   $curs_schema->txn_begin();
 
   try {
     $self->_check_curs_key($details);
-
-    my $annotation_id = $details->{annotation_id};
-    my $annotation = $curs_schema->find_with_type('Annotation', $annotation_id);
 
     my @metagenotype_annotations = $annotation->metagenotype_annotations()
       ->search({}, { prefetch => 'metagenotype' })
