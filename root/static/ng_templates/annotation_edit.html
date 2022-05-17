@@ -73,7 +73,7 @@
           <div ng-if="filteredFeatures && filteredFeatures.length != 0">
             <term-name-complete current-term-name="{{annotation.term_name}}"
                                 found-callback="termFoundCallback(termId, termName, searchString, matchingSynonym)"
-                                annotation-type-name="{{annotationType.name}}">
+                                annotation-type-name="{{termNameConstraint}}">
             </term-name-complete>
             <span ng-show="!isValidTerm()"
                   class="help-block">Start typing to choose a term</span>

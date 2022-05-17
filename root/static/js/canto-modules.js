@@ -6821,6 +6821,9 @@ var selectInteractionAnnotationsDialogCtrl =
     $scope.data.interactionTypeConfig = args.interactionTypeConfig;
     $scope.data.filteredAnnotations = args.filteredAnnotations;
 
+    $scope.data.interactionAnnotationType =
+      args.annotationType.associated_interaction_annotation_type;
+
     $scope.data.selectedAnnotationIds = [];
 
     $scope.data.annotationsById = {};
@@ -6853,12 +6856,20 @@ var selectInteractionAnnotationsDialogCtrl =
 
       storePromise.then(function(storeResult) {
 
+        var termConstraint;
+
+        if ($scope.data.interactionAnnotationType) {
+          var termConstraints =
+              $scope.data.interactionAnnotationType.interaction_single_allele_phenotype_constraints;
+          termConstraint = termConstraints['Synthetic Rescue'];
+        }
+
         var addPromise =
             addAnnotation($uibModal, $scope.data.annotationType.name,
                           'genotype',
                           storeResult.genotype_id,
                           storeResult.genotype_display_name,
-                          storeResult.taxonid);
+                          storeResult.taxonid, termConstraint);
 
         addPromise.then(function (newAnnotation) {
           $uibModalInstance.close({
@@ -7510,6 +7521,8 @@ var annotationEditDialogCtrl =
     $scope.initialSelectedOrganismId = null;
     $scope.initialSelectedOrganismBId = null;
 
+    $scope.termNameConstraint = undefined;
+
     if (args.annotation.feature_a_taxonid) {
       $scope.initialSelectedOrganismId = args.annotation.feature_a_taxonid;
     }
@@ -7576,6 +7589,12 @@ var annotationEditDialogCtrl =
     );
 
     $scope.annotationTypePromise = AnnotationTypeConfig.getByName($scope.annotationTypeName);
+
+    $scope.annotationTypePromise
+      .then(function(annotationType) {
+        $scope.termNameConstraint = args.termConstraint || annotationType.name;
+      });
+
     $scope.alleleTypesPromise = CantoConfig.get('allele_types');
     $scope.organismPromise = Curs.list('organism', [{ include_counts: 1 }]);
     $scope.instanceOrganismPromise = CantoConfig.get('instance_organism');
@@ -8885,8 +8904,12 @@ angular.module('cantoApp')
   });
 
 
+// if termConstraint is undefined, allow all terms from the CV
+// of annotationTypeName
+// termConstraint should be on the form '[FYPO:0000003]'
 function startEditing($uibModal, annotationTypeName, annotation,
-  currentFeatureDisplayName, newlyAdded, featureEditable) {
+                      currentFeatureDisplayName, newlyAdded, featureEditable,
+                      termConstraint) {
   var editInstance = $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/annotation_edit.html',
     controller: 'AnnotationEditDialogCtrl',
@@ -8901,6 +8924,7 @@ function startEditing($uibModal, annotationTypeName, annotation,
           currentFeatureDisplayName: currentFeatureDisplayName,
           newlyAdded: newlyAdded,
           featureEditable: featureEditable,
+          termConstraint: termConstraint,
         };
       }
     },
@@ -8978,7 +9002,7 @@ function makeNewAnnotation(template) {
 
 
 function addAnnotation($uibModal, annotationTypeName, featureType, featureId,
-                       featureDisplayName, featureTaxonId) {
+                       featureDisplayName, featureTaxonId, termConstraint) {
   var template = {
     annotation_type: annotationTypeName,
     feature_type: featureType,
@@ -8995,7 +9019,7 @@ function addAnnotation($uibModal, annotationTypeName, featureType, featureId,
   var featureEditable = !featureId;
   var newAnnotation = makeNewAnnotation(template);
   return startEditing($uibModal, annotationTypeName, newAnnotation,
-                      featureDisplayName, true, featureEditable);
+                      featureDisplayName, true, featureEditable, termConstraint);
 }
 
 var annotationQuickAdd =
@@ -9044,7 +9068,8 @@ var annotationQuickAdd =
           }
 
           addAnnotation($uibModal, $scope.annotationTypeName, $scope.featureType,
-                        $scope.featureId, $scope.featureDisplayName, $scope.featureTaxonId);
+                        $scope.featureId, $scope.featureDisplayName, $scope.featureTaxonId,
+                        undefined);
         };
       },
     };

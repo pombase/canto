@@ -2150,6 +2150,8 @@ available_annotation_type_list:
     display_name: genetic interaction
     associated_phenotype_annotation_type: phenotype
     direct_editing_disabled: 1
+    interaction_single_allele_phenotype_constraints:
+      Synthetic Rescue: "[FYPO:0000003]"
     evidence_code_groups:
       double_mutant_population_phenotype:
         parent_constraint: 'is_a(FYPO:0000003)'
