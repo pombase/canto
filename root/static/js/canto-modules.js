@@ -8154,7 +8154,7 @@ var annotationEditDialogCtrl =
           });
 
         $scope.annotationTypePromise.then(function(annotationType) {
-          setGenotypeInteractionData($scope.annotation.featureId,
+          setGenotypeInteractionData($scope.annotation.feature_id,
                                      annotationType);
         });
 
