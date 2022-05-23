@@ -8034,7 +8034,7 @@ var annotationEditDialogCtrl =
     function setGenotypeInteractionData(featureId, annotationType) {
       if (!featureId ||
           !annotationType.associated_interaction_annotation_type ||
-          !$scope.annotation.term_ontid) {
+          !$scope.annotation.term_ontid || !$scope.allFeatures) {
         return;
       }
 
