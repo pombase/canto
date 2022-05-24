@@ -7560,11 +7560,6 @@ var annotationEditDialogCtrl =
     $scope.filteredFeatures = null;
     $scope.filteredFeaturesB = null;
 
-    if ($scope.newlyAdded) {
-      $scope.annotation.interaction_annotations = [];
-      $scope.annotation.interaction_annotations_with_phenotypes = [];
-    }
-
     $scope.hasFigure = $scope.annotation.figure;
 
     // See: https://github.com/pombase/canto/issues/2540
@@ -7589,6 +7584,18 @@ var annotationEditDialogCtrl =
     );
 
     $scope.annotationTypePromise = AnnotationTypeConfig.getByName($scope.annotationTypeName);
+
+    $scope.annotationTypePromise
+      .then(annotationType => {
+        if (annotationType.associated_interaction_annotation_type) {
+          if (!$scope.annotation.interaction_annotations) {
+            $scope.annotation.interaction_annotations = [];
+          }
+          if (!$scope.annotation.interaction_annotations_with_phenotypes) {
+            $scope.annotation.interaction_annotations_with_phenotypes = [];
+          }
+        }
+      });
 
     $scope.annotationTypePromise
       .then(function(annotationType) {
