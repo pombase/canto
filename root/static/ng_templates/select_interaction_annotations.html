@@ -1,15 +1,7 @@
 <div class="curs-select-interaction-annotations">
-  <div class="modal-header">
-    <h4 ng-if="data.interactionTypeConfig && data.interactionTypeConfig.interaction_dialog_type_label" class="modal-title">
-      Select {{data.subjectGenotype.display_name}} {{data.interactionTypeConfig.interaction_dialog_type_label}} {{data.objectGenotype.display_name}}
-    </h4>
-    <h4 ng-if="!data.interactionTypeConfig || !data.interactionTypeConfig.interaction_dialog_type_label" class="modal-title">
-    </h4>
-  </div>
-
   <div class="modal-body curs-annotation-select-dialog">
-    <annotation-table annotation-type-name="{{data.annotationType.name}}"
-                      annotations="data.filteredAnnotations"
+    <annotation-table annotation-type-name="{{annotationType.name}}"
+                      annotations="subjectAnnotations"
                       feature-status-filter="selecting"
                       show-menu="false"
                       show-checkboxes="true"
@@ -22,12 +14,5 @@
       <button ng-click="addPhenotypeAnnotation()"
               class="btn btn-primary">Add phenotype ...</button>
     </div>
-  </div>
-
-  <div class="modal-footer">
-    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-    <button class="btn btn-primary" ng-click="ok()" ng-alt-enter="ok()"
-            title="{{ okButtonTitleMessage() }}"
-            ng-disabled="!canSelect()">OK</button>
   </div>
 </div>

@@ -6810,124 +6810,104 @@ function startViewInteractionPhenotypes($uibModal, genotype,
 }
 
 
-var selectInteractionAnnotationsDialogCtrl =
-  function ($scope, $uibModal, $uibModalInstance, $http,
-            CantoGlobals, CursGenotypeList, Curs, toaster, args) {
-    $scope.data = {};
+var selectInteractionAnnotationsCtrl =
+  function ($http, $uibModal,
+            CantoGlobals, CursGenotypeList, Curs, toaster)
+{
+   return {
+     scope: {
+       subjectAllele: '<',
+       subjectGenotype: '<',
+       objectAllele: '<',
+       annotationType: '<',
+       interactionTypeConfig: '<',
+       subjectAnnotations: '<',
+       interactingAnnotations: '=',
+     },
+     restrict: 'E',
+     replace: true,
+     templateUrl: app_static_path + 'ng_templates/select_interaction_annotations.html',
+     controller: function ($scope) {
+     },
+     link: function ($scope) {
+       $scope.data = {};
 
-    $scope.data.subjectAllele = args.subjectAllele;
-    $scope.data.objectAllele = args.objectAllele;
-    $scope.data.annotationType = args.annotationType;
-    $scope.data.interactionTypeConfig = args.interactionTypeConfig;
-    $scope.data.filteredAnnotations = args.filteredAnnotations;
+       $scope.data.selectedAnnotationIds = [];
 
-    $scope.data.interactionAnnotationType =
-      args.annotationType.associated_interaction_annotation_type;
+       $scope.data.annotationsById = {};
 
-    $scope.data.selectedAnnotationIds = [];
+       $.map($scope.subjectAnnotations,
+             function(annotation) {
+               $scope.data.annotationsById[annotation.annotation_id] = annotation;
+             });
 
-    $scope.data.annotationsById = {};
+       $scope.selectionChanged = function(annotationIds) {
+         $scope.data.selectedAnnotationIds = annotationIds;
 
-    $.map($scope.data.filteredAnnotations,
-          function(annotation) {
-            $scope.data.annotationsById[annotation.annotation_id] = annotation;
-          });
+         $scope.interactingAnnotations.length = 0;
 
-    $scope.selectionChanged = function(annotationIds) {
-      $scope.data.selectedAnnotationIds = annotationIds;
-    };
-
-    $scope.canSelect = function() {
-      return $scope.data.selectedAnnotationIds.length > 0;
-    };
-
-    $scope.okButtonTitleMessage = function() {
-      return "Select";
-    };
-
-    $scope.addPhenotypeAnnotation = function() {
-      // need to store subjectAllele as a new genotype and use it as
-      // subjectGenotype
-
-      var storePromise =
-          CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined,
-                                         [$scope.data.subjectAllele],
-                                         undefined, undefined, undefined);
-
-      storePromise.then(function(storeResult) {
-
-        var termConstraint;
-
-        if ($scope.data.interactionAnnotationType) {
-          var termConstraints =
-              $scope.data.interactionAnnotationType.interaction_single_allele_phenotype_constraints;
-          termConstraint = termConstraints['Synthetic Rescue'];
-        }
-
-        var addPromise =
-            addAnnotation($uibModal, $scope.data.annotationType.name,
-                          'genotype',
-                          storeResult.genotype_id,
-                          storeResult.genotype_display_name,
-                          storeResult.taxonid, termConstraint);
-
-        addPromise.then(function (newAnnotation) {
-          $uibModalInstance.close({
-            selectedAnnotations: [newAnnotation],
-          });
-        });
-      });
-    };
-
-    $scope.ok = function () {
-      var selectedAnnotations =
-          $.map($scope.data.selectedAnnotationIds,
+         $.map($scope.data.selectedAnnotationIds,
                 function(annotationId) {
-                  return $scope.data.annotationsById[annotationId];
+                  const annotation = $scope.data.annotationsById[annotationId];
+                  $scope.interactingAnnotations.push(annotation);
                 });
+       };
 
-      $uibModalInstance.close({
-        selectedAnnotations: selectedAnnotations,
-      });
-    };
+       $scope.canSelect = function() {
+         return $scope.data.selectedAnnotationIds.length > 0;
+       };
 
-    $scope.cancel = function () {
-      $uibModalInstance.dismiss('cancel');
-    };
-  };
+       $scope.okButtonTitleMessage = function() {
+         return "Select";
+       };
 
-canto.controller('SelectInteractionAnnotationsDialogCtrl',
-                 ['$scope', '$uibModal', '$uibModalInstance', '$http',
-                  'CantoGlobals', 'CursGenotypeList', 'Curs', 'toaster', 'args',
-                  selectInteractionAnnotationsDialogCtrl
+       function popupAnnotationEdit(genotype) {
+         var termConstraint;
+
+         if ($scope.annotationType.associated_interaction_annotation_type) {
+           var termConstraints =
+               $scope.annotationType.associated_interaction_annotation_type.interaction_single_allele_phenotype_constraints;
+           termConstraint = termConstraints['Synthetic Rescue'];
+         }
+
+         var addPromise =
+             addAnnotation($uibModal, $scope.annotationType.name,
+                           'genotype',
+                           genotype.genotype_id,
+                           genotype.genotype_display_name,
+                           genotype.taxonid, termConstraint);
+
+         addPromise.then(function (newAnnotation) {
+           $scope.interactingAnnotations.push(newAnnotation);
+         });
+       }
+
+       $scope.addPhenotypeAnnotation = function() {
+         // need to store subjectAllele as a new genotype and use it as
+         // subjectGenotype
+
+         if ($scope.subjectGenotype) {
+           popupAnnotationEdit($scope.subjectGenotype);
+         } else {
+           var storePromise =
+               CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined,
+                                              [$scope.subjectAllele],
+                                              undefined, undefined, undefined);
+
+           storePromise.then(function(storedGenotype) {
+             popupAnnotationEdit(storedGenotype);
+           });
+         }
+       };
+     }
+   };
+};
+
+canto.directive('selectInteractionAnnotations',
+                ['$http', '$uibModal',
+                  'CantoGlobals', 'CursGenotypeList', 'Curs', 'toaster',
+                  selectInteractionAnnotationsCtrl
                  ]);
-
-
-function startSelectInteractionAnnotations($uibModal, subjectAllele, objectAllele,
-                                           annotationType, interactionTypeConfig,
-                                           filteredAnnotations) {
-  var selectInstance = $uibModal.open({
-    templateUrl: app_static_path + 'ng_templates/select_interaction_annotations.html',
-    controller: 'SelectInteractionAnnotationsDialogCtrl',
-    title: 'Select interactors',
-    animate: false,
-    size: 'lg',
-    resolve: {
-      args: function () {
-        return {
-          subjectAllele: subjectAllele,
-          objectAllele: objectAllele,
-          annotationType: annotationType,
-          interactionTypeConfig: interactionTypeConfig,
-          filteredAnnotations: filteredAnnotations,
-        };
-      }
-    },
-    backdrop: 'static',
-  });
-
-  return selectInstance.result;
-}
 
 
 function filterAnnotationsByFeature(annotations, feature) {
@@ -6939,7 +6919,7 @@ function filterAnnotationsByFeature(annotations, feature) {
 
 var AnnotationInteractionsEditDialogCtrl =
   function ($scope, $uibModalInstance, $uibModal,
-            CantoGlobals, Curs, toaster, args) {
+            CantoGlobals, Curs, CursGenotypeList, toaster, args) {
 
     $scope.data = {
       interactionForward: null,
@@ -6955,6 +6935,10 @@ var AnnotationInteractionsEditDialogCtrl =
       genotypeAnnotationsA: args.initialData.genotypeAnnotationsA,
       genotypeAnnotationsB: args.initialData.genotypeAnnotationsB,
       interactingAnnotations: [],
+      subjectAnnotations: [],
+      subjectAllele: null,
+      subjectGenotype: null,
+      objectAllele: null,
       interactionTypeConfig: null,
       overexpressedAllele: null,
     };
@@ -7012,36 +6996,25 @@ var AnnotationInteractionsEditDialogCtrl =
       }
 
       $scope.data.directionSelectorVisible = false;
-    };
-
-    $scope.selectAnnotations = function() {
 
       $scope.data.interactingAnnotations = [];
 
-      var subjectAllele;
-      var objectAllele;
-      var subjectAnnotations;
-
       if ($scope.data.interactionForward) {
-        subjectAllele = $scope.data.alleleA;
-        objectAllele = $scope.data.alleleB;
-        subjectAnnotations = $scope.data.genotypeAnnotationsA;
+        $scope.data.subjectAllele = $scope.data.alleleA;
+        $scope.data.subjectGenotype = $scope.data.alleleGenotypeA;
+        $scope.data.objectAllele = $scope.data.alleleB;
+        $scope.data.subjectAnnotations = $scope.data.genotypeAnnotationsA;
       } else {
-        subjectAllele = $scope.data.alleleB;
-        objectAllele = $scope.data.alleleA;
-        subjectAnnotations = $scope.data.genotypeAnnotationsB;
+        $scope.data.subjectAllele = $scope.data.alleleB;
+        $scope.data.subjectGenotype = $scope.data.alleleGenotypeB;
+        $scope.data.objectAllele = $scope.data.alleleA;
+        $scope.data.subjectAnnotations = $scope.data.genotypeAnnotationsB;
       }
 
-      var promise =
-          startSelectInteractionAnnotations($uibModal, subjectAllele,
-                                            objectAllele,
-                                            $scope.data.annotationType,
-                                            $scope.data.interactionTypeConfig,
-                                            subjectAnnotations);
+      $scope.data.interactionAnnotationType =
+        $scope.data.annotationType.associated_interaction_annotation_type;
 
-      promise.then(function(result) {
-        $scope.data.interactingAnnotations = result.selectedAnnotations;
-      });
+      $scope.data.selectedAnnotationIds = [];
     };
 
     $scope.canFinish = function() {
@@ -7095,7 +7068,7 @@ var AnnotationInteractionsEditDialogCtrl =
 
 canto.controller('AnnotationInteractionsEditDialogCtrl',
                  ['$scope', '$uibModalInstance', '$uibModal',
-                  'CantoGlobals', 'Curs', 'toaster', 'args',
+                  'CantoGlobals', 'Curs', 'CursGenotypeList', 'toaster', 'args',
                   AnnotationInteractionsEditDialogCtrl
                  ]);
 

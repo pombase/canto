@@ -48,7 +48,9 @@
 
       <div ng-if="data.annotationSelectorVisible">
         <div>
-        Select
+          <span ng-if="data.interactingAnnotations.length == 0">
+            Select the
+          </span>
         <span ng-if="data.interactionForward">
           {{data.alleleA.long_display_name}}
           <span style="font-weight: bold">
@@ -68,14 +70,21 @@
 
         <div style="padding-top: 1em">
           <div ng-if="data.interactingAnnotations.length == 0">
-            <button ng-click="selectAnnotations()"
-                    class="btn btn-primary">Select/Add ...</button>
+          <select-interaction-annotations
+            subject-allele="data.subjectAllele"
+            subject-genotype="data.subjectGenotype"
+            object-allele="data.objectAllele"
+            annotation-type="data.annotationType"
+            interaction-type-config="data.interactionTypeConfig"
+            subject-annotations="data.subjectAnnotations"
+            interacting-annotations="data.interactingAnnotations">
+          </select-interaction-annotations>
           </div>
 
           <div ng-if="data.interactingAnnotations.length != 0">
-            Rescued phenotypes:
             <annotation-table annotation-type-name="{{data.annotationType.name}}"
                               annotations="data.interactingAnnotations"
+                              feature-status-filter="selecting"
                               show-menu="false"
                               show-checkboxes="false"
                               show-features="false"
