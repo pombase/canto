@@ -6920,8 +6920,11 @@ function filterAnnotationsByFeature(annotations, feature) {
 var AnnotationInteractionsEditDialogCtrl =
   function ($scope, $uibModalInstance, $uibModal,
             CantoGlobals, Curs, CursGenotypeList, toaster, args) {
+    const defaultTitle = 'Add interaction';
+    const titleForAddingPhenotype = 'Select phenotype for interaction';
 
     $scope.data = {
+      modalTitle: defaultTitle,
       interactionForward: null,
       annotationSelectorVisible: false,
       interactionPhenotypeNotNeeded: false,
@@ -7015,6 +7018,8 @@ var AnnotationInteractionsEditDialogCtrl =
         $scope.data.annotationType.associated_interaction_annotation_type;
 
       $scope.data.selectedAnnotationIds = [];
+
+      $scope.data.modalTitle = titleForAddingPhenotype;
     };
 
     $scope.canFinish = function() {
