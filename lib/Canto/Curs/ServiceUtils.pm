@@ -1862,12 +1862,15 @@ sub delete_annotation
   my $annotation = $curs_schema->find_with_type('Annotation', $annotation_id);
 
   for my $genotype_annotation ($annotation->genotype_annotations()) {
-    my $interaction_with_phenotype =
-      $genotype_annotation->genotype_interactions_with_phenotype_genotype_annotation_a()->first();
-    if ($interaction_with_phenotype) {
+    my $interaction =
+      $genotype_annotation->genotype_interactions_with_phenotype_primary_genotype_annotation()->first()
+      //
+      $genotype_annotation->genotype_interactions()->first();
+
+    if ($interaction) {
       return {
         message => 'this annotation is used by a ' .
-        $interaction_with_phenotype->interaction_type() .
+        $interaction->interaction_type() .
         ' interaction',
         status => 'error',
       };
