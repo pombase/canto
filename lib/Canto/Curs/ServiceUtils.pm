@@ -1572,14 +1572,17 @@ sub _store_change_hash
       " has no gene or genotype\n";
   }
 
-  if (scalar @{$changes->{interaction_annotations_with_phenotypes} // []}) {
-    my $interaction_annotations_with_phenotypes =
-      $changes->{interaction_annotations_with_phenotypes};
+  if ($annotation->genotype_annotations()->count() > 0) {
+    # only try this for phenotype annotations
 
     my $primary_genotype_annotation =
       $annotation->genotype_annotations()->first();
     my $primary_genotype_annotation_id =
       $primary_genotype_annotation->genotype_annotation_id();
+
+    # remove, then re-add interactions with phenotype
+    my $interaction_annotations_with_phenotypes =
+      $changes->{interaction_annotations_with_phenotypes} // [];
 
     $primary_genotype_annotation
       ->genotype_interactions_with_phenotype_primary_genotype_annotation()
@@ -1603,16 +1606,11 @@ sub _store_change_hash
 
       } @{$dir_annotation->{genotype_a_phenotype_annotations}};
     } @$interaction_annotations_with_phenotypes;
-  }
 
-  if (scalar @{$changes->{interaction_annotations} // []}) {
+
+    # remove, then re-add interactions without phenotypes
     my $interaction_annotations =
-      $changes->{interaction_annotations};
-
-    my $primary_genotype_annotation =
-      $annotation->genotype_annotations()->first();
-    my $primary_genotype_annotation_id =
-      $primary_genotype_annotation->genotype_annotation_id();
+      $changes->{interaction_annotations} // [];
 
     $primary_genotype_annotation->genotype_interactions()->delete();
 
