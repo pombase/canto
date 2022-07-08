@@ -694,9 +694,11 @@ sub _get_curators_from_annotations
       if ($curator->{community_curated} == JSON::true) {
         $has_community_annotation = JSON::true;
       }
-      $annotation_curators{$curator->{name}}->{annotation_count}++;
-      $annotation_curators{$curator->{name}}->{community_curator} =
-        $curator->{community_curated};
+      if (defined $curator->{name}) {
+        $annotation_curators{$curator->{name}}->{annotation_count}++;
+        $annotation_curators{$curator->{name}}->{community_curator} =
+          $curator->{community_curated};
+      }
     }
   } @annotations;
 
@@ -711,7 +713,7 @@ sub _get_curators_from_annotations
         annotation_count => $count,
         community_curator => $community,
       };
-    } keys %annotation_curators;
+    } sort keys %annotation_curators;
 
   return ($has_community_annotation, \@annotation_curators);
 }
@@ -790,7 +792,10 @@ sub perl
       _get_curators_from_annotations($ret{annotations});
 
     $ret{metadata}{has_community_curation} = $has_community_annotation;
-    $ret{metadata}{annotation_curators} = $annotation_curators;
+
+    if ($options->{export_curator_names}) {
+      $ret{metadata}{annotation_curators} = $annotation_curators;
+    }
 
     $ret{organisms} = _get_organisms($config, $curs_schema, $options);
 
