@@ -83,7 +83,7 @@ sub _get_metadata
   } grep {
     my $key = $_->key();
     $key !~ /email$/ &&
-      ($options->{export_curator_name} ||
+      ($options->{export_curator_names} ||
        $key !~ /$curator_name_re/)
   } @results;
 
