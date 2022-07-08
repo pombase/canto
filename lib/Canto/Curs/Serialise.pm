@@ -678,6 +678,45 @@ sub _get_pubs
   return \%ret;
 }
 
+sub _get_curators_from_annotations
+{
+  my $annotations_ref = shift;
+  my @annotations = @$annotations_ref;
+
+  my $has_community_annotation = JSON::false;
+
+  my %annotation_curators = ();
+
+  map {
+    my $curator = $_->{curator};
+
+    if (defined $curator) {
+      if ($curator->{community_curated} == JSON::true) {
+        $has_community_annotation = JSON::true;
+      }
+      $annotation_curators{$curator->{name}}->{annotation_count}++;
+      $annotation_curators{$curator->{name}}->{community_curator} =
+        $curator->{community_curated};
+    }
+  } @annotations;
+
+  my @annotation_curators =
+    map {
+      my $name = $_;
+      my $count = $annotation_curators{$name}->{annotation_count};
+      my $community = $annotation_curators{$name}->{community_curator};
+
+      {
+        name => $name,
+        annotation_count => $count,
+        community_curator => $community,
+      };
+    } keys %annotation_curators;
+
+  return ($has_community_annotation, \@annotation_curators);
+}
+
+
 =head2 json
 
  Usage   : my $ser = Canto::Curs::Serialise::json($config, $track_schema,
@@ -746,6 +785,13 @@ sub perl
     # everything
 
     $ret{annotations} = _get_annotations($config, $track_schema, $curs_schema, $options);
+
+    my ($has_community_annotation, $annotation_curators) =
+      _get_curators_from_annotations($ret{annotations});
+
+    $ret{metadata}{has_community_curation} = $has_community_annotation;
+    $ret{metadata}{annotation_curators} = $annotation_curators;
+
     $ret{organisms} = _get_organisms($config, $curs_schema, $options);
 
     my $organism_lookup = Canto::Track::get_adaptor($config, 'organism');
