@@ -45,29 +45,35 @@ use JSON;
 
 use Canto::Curs::Serialise;
 
+my %cursprops_cache = ();
+
 sub _get_cursprops
 {
+  my $track_schema = shift;
   my $curs = shift;
   my $options = shift;
 
-  my $rs = $curs->cursprops();
-  my @ret = ();
+  if (keys %cursprops_cache == 0) {
+    my $rs = $track_schema->resultset('Cursprop')
+      ->search({}, { prefetch => ['type', 'curs'] });
 
-  while (defined (my $prop = $rs->next())) {
-    my $prop_type_name = $prop->type()->name();
+    while (defined (my $prop = $rs->next())) {
+      my $prop_type_name = $prop->type()->name();
 
-    if (!$options->{export_curator_names} &&
+      if (!$options->{export_curator_names} &&
           $prop_type_name eq 'approver_name') {
-      next;
-    }
+        next;
+      }
 
-    push @ret, {
-      type => $prop_type_name,
-      value => $prop->value(),
-    };
+      push @{$cursprops_cache{$prop->curs()->curs_key()}},
+        {
+          type => $prop_type_name,
+          value => $prop->value(),
+        };
+    }
   }
 
-  return \@ret;
+  return $cursprops_cache{$curs->curs_key} // [];
 }
 
 sub _get_curation_sessions
@@ -84,7 +90,7 @@ sub _get_curation_sessions
   while (defined (my $curs = $curs_rs->next())) {
     my $curs_key = $curs->curs_key();
 
-    my $props = _get_cursprops($curs, $options);
+    my $props = _get_cursprops($schema, $curs, $options);
 
     my $curs_status = undef;
 
@@ -149,21 +155,27 @@ sub _get_name
   }
 }
 
+my %pubprops_cache = ();
+
 sub _get_pubprops
 {
+  my $track_schema = shift;
   my $pub = shift;
 
-  my $rs = $pub->pubprops();
-  my @ret = ();
+  if (keys %pubprops_cache == 0) {
 
-  while (defined (my $prop = $rs->next())) {
-    push @ret, {
-      type => $prop->type()->name(),
-      value => $prop->value(),
-    };
+    my $rs = $track_schema->resultset('Pubprop')
+      ->search({}, { prefetch => ['type', 'pub' ] });
+
+    while (defined (my $prop = $rs->next())) {
+      push @{$pubprops_cache{$prop->pub()->uniquename()}}, {
+        type => $prop->type()->name(),
+        value => $prop->value(),
+      };
+    }
   }
 
-  return \@ret;
+  return $pubprops_cache{$pub->uniquename()} // [];
 }
 
 sub _get_pub_curation_statuses
@@ -193,13 +205,13 @@ sub _get_pubs
   my %ret = ();
 
   while (defined (my $pub = $rs->next())) {
-    my $pubprops = _get_pubprops($pub);
+    my $pubprops = _get_pubprops($schema, $pub);
 
     my $curs_status = undef;
 
   CURS:
     for my $curs ($pub->curs()->all()) {
-      my $props = _get_cursprops($curs);
+      my $props = _get_cursprops($schema, $curs);
 
       for my $prop (@$props) {
         if ($prop->{type} eq 'annotation_status') {
