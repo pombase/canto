@@ -500,8 +500,18 @@ sub _get_alleles
     if (defined $allele->description()) {
       $allele_data{description} = $allele->description();
     }
-    if (defined $allele->name()) {
-      $allele_data{name} = $allele->name();
+    if ($allele->type() eq 'deletion') {
+      my $gene_proxy = Canto::Curs::GeneProxy->new(config => $config,
+                                                   cursdb_gene => $gene);
+
+      my $gene_name = $gene_proxy->primary_name();
+
+      $allele_data{name} =
+        ($gene_name // $gene->primary_identifier()) . 'delta';
+    } else {
+      if (defined $allele->name()) {
+        $allele_data{name} = $allele->name();
+      }
     }
 
     my $note_types = $config->{allele_note_types};
