@@ -59,7 +59,12 @@
         <td ng-if="annotationType.category == 'interaction'" class="title">
           Phenotype <span ng-hide="annotationType.interaction_term_required">(optional)</span>
         </td>
-        <td colspan="2">
+        <td ng-if="!termEditable()" colspan="2">
+          <span title="Term can't be edited while there are interactions for this annotation">
+            {{annotation.term_name}}
+          </span>
+        </td>
+        <td ng-if="termEditable()" colspan="2">
           <div ng-if="annotationType.term_suggestions_annotation_type && termSuggestions.length">
             Suggested terms:
             <select class="form-control" ng-model="models.chosenSuggestedTerm"

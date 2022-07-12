@@ -7556,6 +7556,17 @@ var annotationEditDialogCtrl =
     $scope.$watchCollection('annotation.interaction_annotations_with_phenotypes',
                             $scope.maybeDisableFeatureEdit);
 
+    $scope.hasInteractions = function() {
+      return $scope.annotation.interaction_annotations &&
+        $scope.annotation.interaction_annotations.length > 0 ||
+        $scope.annotation.interaction_annotations_with_phenotypes &&
+        $scope.annotation.interaction_annotations_with_phenotypes.length > 0;
+    };
+
+    $scope.termEditable = function() {
+      return !$scope.annotation.term_ontid || !$scope.hasInteractions();
+    };
+
     $scope.showStrainName = (
       CantoGlobals.strains_mode &&
       $scope.annotation.strain_name
