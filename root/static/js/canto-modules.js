@@ -6745,6 +6745,13 @@ var GenotypeInteractionAnnotationTableCtrl =
           }
         };
 
+        $scope.phentoypeANames = function(interaction) {
+          return $.map(interaction.genotype_a_phenotype_annotations,
+                       function(aAnnotation) {
+                         return aAnnotation.term_name;
+                       });
+        };
+
         $scope.viewPhenotypes = function(interaction) {
           startViewInteractionPhenotypes($uibModal, interaction.genotype_a,
                                          $scope.phenotypeAnnotationType,

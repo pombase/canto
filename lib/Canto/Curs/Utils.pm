@@ -778,9 +778,30 @@ sub make_interaction_annotations
                                                      $schema, $annotation,
                                                      $ontology_lookup, $organism_lookup);
 
+  return
+    map {
+      my $entry = $_;
 
+      my $data = $annotation->data();
+      my $term_ontid = $data->{term_ontid};
 
-  return (@sym_genotype_interactions, @dir_genotype_interactions);
+      $entry->{term_ontid} = $term_ontid;
+
+      my $term_lookup_result = $ontology_lookup->lookup_by_id(id => $term_ontid);
+
+      my $term_name = undef;
+
+      if (defined $term_lookup_result) {
+        $term_name = $term_lookup_result->{name};
+      } else {
+        warn qq(internal error: cannot find details for "$term_ontid" in "$annotation_type");
+        $term_name = "[UNKNOWN TERM]";
+      }
+
+      $entry->{term_name} = $term_name;
+
+      $entry;
+    } (@sym_genotype_interactions, @dir_genotype_interactions);
 };
 
 =head2 get_annotation_table

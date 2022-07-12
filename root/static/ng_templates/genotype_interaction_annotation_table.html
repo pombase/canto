@@ -2,6 +2,9 @@
   <thead>
     <tr>
       <th>
+        Double mutant phenotype
+      </th>
+      <th>
         Genotype
       </th>
       <th>
@@ -11,7 +14,7 @@
         Genotype
       </th>
       <th ng-if="showPhenotypesLink">
-        Phenotypes
+        Rescued phenotype
       </th>
       <th ng-if="allowDeletion" style="border: 0; background-color: white;">
       </th>
@@ -19,6 +22,9 @@
   </thead>
   <tbody>
     <tr ng-repeat="interaction in interactions">
+      <td>
+        {{interaction.term_name}}
+      </td>
       <td>
         <a href="{{curs_root_uri + '/feature/genotype/view/' + interaction.genotype_a.genotype_id + (read_only_curs ? '/ro' : '')}}">
           <span ng-bind-html="interaction.genotype_a.display_name | breakAtSpaces | toTrusted"></span>
@@ -31,7 +37,9 @@
         </a>
       </td>
       <td ng-show="showPhenotypesLink">
-        <a ng-click="viewPhenotypes(interaction)">View ...</a>
+        <div ng-repeat="phenotypeAName in phentoypeANames(interaction)">
+          {{phenotypeAName}}
+        </div>
       </td>
       <td ng-if="allowDeletion" style="border: 0; background-color: white;">
         <a title="delete" ng-click="deleteInteraction(interaction)"
