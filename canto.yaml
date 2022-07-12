@@ -1687,7 +1687,7 @@ evidence_types:
     interaction_dialog_type_label: "phenotype(s) enhanced by"
   'Phenotypic Suppression':
     definition: "A genetic interaction is inferred when mutation or over expression of one gene results in suppression of any phenotype (other than lethality/growth defect) associated with mutation or over expression of another gene."
-    name: 'Phenotypic Suppression (non-growth or non-viability phenotype suppressed by)'
+    name: 'Phenotypic Suppression (phenotype other than growth defect or lethality rescued by)'
     is_symmetric: 0
     non_symmetric_interaction_labels:
       interactor_a: suppressed by
