@@ -7122,8 +7122,13 @@ function interactionEvCodesFromPhenotype(phenotypeAnnotationType, phenotypeTermD
 
     var phenotypeEvidenceCodes = [];
 
+    var parentConstraintParts = popPhenotypeEvCodeConfig.parent_constraint.split('|');
+
     if (phenotypeTermDetails.subset_ids.includes(popPhenotypeEvCodeConfig.parent_constraint) ||
-        'is_a(' + phenotypeTermDetails.id + ')' == popPhenotypeEvCodeConfig.parent_constraint) {
+        $.grep(parentConstraintParts,
+               function(constraintPart) {
+                 return constraintPart == 'is_a(' + phenotypeTermDetails.id + ')';
+               })) {
       // is a population term
       phenotypeEvidenceCodes = [...popPhenotypeEvCodeConfig.evidence_codes];
       if (phenotypeTermDetails.subset_ids.includes(popPhenotypeEvCodeConfig.inviable_parent_constraint) ||
