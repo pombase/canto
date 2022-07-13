@@ -36,7 +36,7 @@
           <span ng-bind-html="interaction.genotype_b.display_name | breakAtSpaces | toTrusted"></span>
         </a>
       </td>
-      <td ng-show="showPhenotypesLink">
+      <td ng-if="showPhenotypesLink">
         <div ng-repeat="phenotypeAName in phentoypeANames(interaction)">
           {{phenotypeAName}}
         </div>
