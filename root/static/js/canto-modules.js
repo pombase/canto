@@ -7434,6 +7434,11 @@ var EditGenotypeInteractionDialogCtl =
 
       q.then(function() {
         $uibModalInstance.close($scope.editedAnnotation);
+
+        setTimeout(function () {
+          // hopefully temporary:
+          window.location.reload();
+        }, 600);
       });
     };
 
