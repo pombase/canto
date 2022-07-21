@@ -7491,6 +7491,7 @@ var annotationEditDialogCtrl =
     $scope.termSuggestionVisible = false;
     $scope.featureSubtype = null;
     $scope.allowInteractionAnnotations = false;
+    $scope.interactionsChanged = false;
 
     $scope.genotypeInteractionInitialData = null;
 
@@ -7557,7 +7558,10 @@ var annotationEditDialogCtrl =
     $scope.hasFigure = $scope.annotation.figure;
 
     // See: https://github.com/pombase/canto/issues/2540
-    $scope.interactionAnnotationsChange = function() {
+    $scope.interactionAnnotationsChange = function(newCollection, oldCollection) {
+      if (newCollection.length != oldCollection.length) {
+        $scope.interactionsChanged = true;
+      }
       if ($scope.annotation.interaction_annotations &&
           $scope.annotation.interaction_annotations.length > 0 ||
           $scope.annotation.interaction_annotations_with_phenotypes &&
@@ -8317,6 +8321,13 @@ var annotationEditDialogCtrl =
         .finally(function () {
           loadingEnd();
           toaster.clear(storePop);
+
+          if ($scope.interactionsChanged) {
+            setTimeout(function () {
+              // hopefully temporary:
+              window.location.reload();
+            }, 1000);
+          }
         });
     };
 
