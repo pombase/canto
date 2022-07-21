@@ -37,9 +37,11 @@
         </a>
       </td>
       <td ng-if="showPhenotypesLink">
-        <div ng-repeat="phenotypeAName in phentoypeANames(interaction)">
-          {{phenotypeAName}}
-        </div>
+        <ul style="padding-left: 1.45em; margin-bottom: 0;">
+          <li style="list-style-type: disc" ng-repeat="phenotypeAName in phentoypeANames(interaction)">
+            {{phenotypeAName}}
+          </li>
+        </ul>
       </td>
       <td ng-if="allowDeletion" style="border: 0; background-color: white;">
         <a title="delete" ng-click="deleteInteraction(interaction)"
