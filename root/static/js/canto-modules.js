@@ -7557,7 +7557,7 @@ var annotationEditDialogCtrl =
     $scope.hasFigure = $scope.annotation.figure;
 
     // See: https://github.com/pombase/canto/issues/2540
-    $scope.maybeDisableFeatureEdit = function() {
+    $scope.interactionAnnotationsChange = function() {
       if ($scope.annotation.interaction_annotations &&
           $scope.annotation.interaction_annotations.length > 0 ||
           $scope.annotation.interaction_annotations_with_phenotypes &&
@@ -7568,9 +7568,9 @@ var annotationEditDialogCtrl =
       }
     };
     $scope.$watchCollection('annotation.interaction_annotations',
-                            $scope.maybeDisableFeatureEdit);
+                            $scope.interactionAnnotationsChange);
     $scope.$watchCollection('annotation.interaction_annotations_with_phenotypes',
-                            $scope.maybeDisableFeatureEdit);
+                            $scope.interactionAnnotationsChange);
 
     $scope.hasInteractions = function() {
       return $scope.annotation.interaction_annotations &&
