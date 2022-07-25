@@ -247,11 +247,14 @@ sub make_metagenotype_details
 
   my $metagenotype_display_name =
     $pathogen_genotype_details{genotype_display_name} . ' ' .
-    $pathogen_genotype_details{organism}->{full_name} . ' (' .
-    $pathogen_genotype_details{strain_name} . ') / ' .
+    $pathogen_genotype_details{organism}->{full_name} .
+    (defined $pathogen_genotype_details{strain_name} ? ' (' .
+     $pathogen_genotype_details{strain_name} . ')' : '') .
+    ' / ' .
     $host_genotype_details{genotype_display_name} . ' ' .
-    $host_genotype_details{organism}->{full_name} . ' (' .
-    $host_genotype_details{strain_name} . ')';
+    $host_genotype_details{organism}->{full_name} .
+    (defined $host_genotype_details{strain_name} ? ' (' .
+     $host_genotype_details{strain_name} . ')' : '');
 
   return (
     pathogen_genotype => \%pathogen_genotype_details,
