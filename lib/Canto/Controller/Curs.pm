@@ -3109,7 +3109,6 @@ sub ws_change_annotation : Chained('ws_annotation') PathPart('change')
   my $schema = $st->{schema};
 
   my $annotation_id = $st->{annotation_id};
-  my $status = $st->{annotation_status};
 
   my $service_utils = Canto::Curs::ServiceUtils->new(curs_schema => $schema,
                                                      config => $c->config());
@@ -3117,7 +3116,7 @@ sub ws_change_annotation : Chained('ws_annotation') PathPart('change')
   my $json_data = $c->req()->body_data();
 
   $c->stash->{json_data} =
-    $service_utils->change_annotation($annotation_id, $status, $json_data);
+    $service_utils->change_annotation($annotation_id, $json_data);
 
   $c->forward('View::JSON');
 }

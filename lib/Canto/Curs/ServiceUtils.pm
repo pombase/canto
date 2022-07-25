@@ -1582,10 +1582,6 @@ sub _make_error
                                              $changes);
  Function: Change an annotation in the Curs database based on the $changes hash.
  Args    : $annotation_id
-           $status - 'new' if the annotation ID refers to a user created
-                      annotation
-                     'existing' if the ID refers to a existing Chado/external
-                     ID, probably a feature_id
            $changes - a hash that specifies which parts of the annotation are
                       to change, with these possible keys:
                       comment - set the comment
@@ -1597,7 +1593,6 @@ sub change_annotation
 {
   my $self = shift;
   my $annotation_id = shift;
-  my $annotation_status = shift;
 
   my $curs_schema = $self->curs_schema();
 
@@ -1609,13 +1604,7 @@ sub change_annotation
     my $pub_id = $self->get_metadata($curs_schema, 'curation_pub_id');
     my $pub = $curs_schema->resultset('Pub')->find($pub_id);
 
-    my $annotation = undef;
-
-    if ($annotation_status eq 'new') {
-      $annotation = $curs_schema->resultset('Annotation')->find($annotation_id);
-    } else {
-      die "annotation status unsupported: $annotation_status\n";
-    }
+    my $annotation = $curs_schema->resultset('Annotation')->find($annotation_id);
 
     my $orig_metagenotype = undef;
 

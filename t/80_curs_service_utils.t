@@ -328,7 +328,7 @@ my $changes = {
 };
 
 $res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
-                                         'new', $changes);
+                                         $changes);
 
 is ($res->{status}, 'success');
 is ($res->{annotation}->{term_ontid}, 'FYPO:0000013');
@@ -343,7 +343,6 @@ is ($first_genotype_annotation->data()->{submitter_comment}, $new_comment);
 
 # test change a term
 $res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
-                                         'new',
                                          {
                                            key => $curs_key,
                                            term_ontid => 'FYPO:0000133'
@@ -358,7 +357,6 @@ is ($res->{annotation}->{term_name}, 'elongated multinucleate cell');
 
 # test setting evidence_code
 $res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
-                                         'new',
                                          {
                                            key => $curs_key,
                                            evidence_code => "Cell growth assay",
@@ -379,7 +377,6 @@ my $new_conditions = [
   }
 ];
 $res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
-                                         'new',
                                          {
                                            key => $curs_key,
                                            conditions => $new_conditions,
@@ -395,7 +392,6 @@ cmp_deeply(\@res_conditions, ['FYECO:0000006', 'some free text cond']);
 # test illegal evidence_code
 my $stderr = capture_stderr {
   $res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
-                                           'new',
                                            {
                                              key => $curs_key,
                                              evidence_code => "illegal",
@@ -409,7 +405,6 @@ is ($res->{message}, $illegal_ev_code_message);
 # test illegal curs_key
 $stderr = capture_stderr {
   $res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
-                                           'new',
                                            {
                                              key => 'illegal',
                                              evidence_code => "Cell growth assay",
@@ -422,7 +417,6 @@ is ($res->{message}, 'incorrect key');
 # test illegal field type
 $stderr = capture_stderr {
   $res = $service_utils->change_annotation($first_genotype_annotation->annotation_id(),
-                                           'new',
                                            {
                                              key => $curs_key,
                                              illegal => "something",
@@ -435,7 +429,6 @@ is ($res->{message}, $illegal_field_message);
 
 # test setting with_gene/with_or_from_identifier for a gene
 $res = $service_utils->change_annotation($first_gene_annotation->annotation_id(),
-                                         'new',
                                          {
                                            key => $curs_key,
                                            submitter_comment => 'a short comment',
@@ -455,7 +448,6 @@ is ($first_gene_annotation->data()->{submitter_comment}, 'a short comment');
 # test setting to a term from a different ontology
 # biological_process -> molecular_function
 $res = $service_utils->change_annotation($first_gene_annotation->annotation_id(),
-                                         'new',
                                          {
                                            key => $curs_key,
                                            term_ontid => 'GO:0004156',
@@ -530,7 +522,6 @@ my $genotype_interaction_annotation =
 # test illegal field type
 $stderr = capture_stderr {
   $res = $service_utils->change_annotation($genotype_interaction_annotation->annotation_id(),
-                                           'new',
                                            {
                                              key => $curs_key,
                                              illegal => "something",
@@ -547,7 +538,6 @@ my $test_metagenotype = $metagenotype_rs->first();
 
 # test editing
 $res = $service_utils->change_annotation($genotype_interaction_annotation->annotation_id(),
-                                         'new',
                                          {
                                            key => $curs_key,
                                            feature_id => $test_metagenotype->metagenotype_id(),
