@@ -1830,6 +1830,11 @@ sub find_existing_annotation
   while (defined (my $row = $rs->next())) {
     my $existing_annotation = $row->annotation();
 
+    if (defined $details->{annotation_id} &&
+        $existing_annotation->annotation_id() == $details->{annotation_id}) {
+      next;
+    }
+
     my $existing_data = $existing_annotation->data();
 
     if ($existing_data->{term_ontid} ne $term_ontid) {
