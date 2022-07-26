@@ -160,7 +160,8 @@ sub parse {
       } @range_bits;
 
       if (@new_ontology_range_scope) {
-        unshift @new_range_bits,
+        # put term completion last, see: https://github.com/pombase/canto/issues/2569
+        push @new_range_bits,
           {
             type => 'Ontology',
             scope => \@new_ontology_range_scope,

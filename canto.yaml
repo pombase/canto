@@ -25,7 +25,7 @@ header_image: logos/curation_tool.png
 
 canto_url: https://curation.pombase.org/
 
-app_version: v1674
+app_version: v1686
 
 schema_version: 34
 
@@ -433,6 +433,11 @@ db_initial_data:
           - name: Retracted
             dbxref:
               accession: retracted
+              db:
+                name: Canto
+          - name: Duplicated in PubMed
+            dbxref:
+              accession: duplicated_in_pubmed
               db:
                 name: Canto
           - name: Modelling
@@ -1047,6 +1052,10 @@ class_info:
       class_display_name: Loaded in error
       extends: pub
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Loaded in error')"
+    triage_duplicated_in_pubmed_publications:
+      class_display_name: Duplicated in PubMed
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Duplicated in PubMed')"
     curatable_publications_with_sessions:
       extends: pub
       constraint: "pub_id in (select pub from curs) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"
@@ -1313,6 +1322,7 @@ reports:
                 - report: triage_biotech_publications
                 - report: triage_database_publications
                 - report: triage_loaded_in_error_publications
+                - report: triage_duplicated_in_pubmed_publications
                 - report: triage_other_publications
             - report: curated_publications
               children:

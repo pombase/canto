@@ -27,7 +27,7 @@ our $VERSION = '0.01';
 
 __PACKAGE__->config(name => 'Canto',
                     'Plugin::Session' => {
-                      expires   => 86400,
+                      expires   => 620000,
                       dbi_dbh   => 'TrackModel',
                       dbi_table => 'sessions',
                       dbi_id_field => 'id',

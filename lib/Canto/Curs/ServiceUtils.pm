@@ -1361,7 +1361,23 @@ sub _ontology_change_keys
     },
     submitter_comment => 1,
     figure => 1,
-    extension => 1,
+    extension => sub {
+      my $extension = shift // [];
+
+      for my $and_group (@$extension) {
+        for my $ext_part (@$and_group) {
+          if ($ext_part->{rangeType} &&
+              $ext_part->{rangeType} eq 'Metagenotype') {
+            # the display name will be created as needed since it can change
+            # over time if the genotype details change
+            delete $ext_part->{rangeDisplayName};
+          }
+        }
+      }
+
+      # set the extension as usual
+      return 0;
+    },
     organism => 1,
     with_gene_id => sub {
       my $gene_id = shift;
@@ -1671,10 +1687,6 @@ sub _make_error
                                              $changes);
  Function: Change an annotation in the Curs database based on the $changes hash.
  Args    : $annotation_id
-           $status - 'new' if the annotation ID refers to a user created
-                      annotation
-                     'existing' if the ID refers to a existing Chado/external
-                     ID, probably a feature_id
            $changes - a hash that specifies which parts of the annotation are
                       to change, with these possible keys:
                       comment - set the comment
@@ -1686,7 +1698,6 @@ sub change_annotation
 {
   my $self = shift;
   my $annotation_id = shift;
-  my $annotation_status = shift;
 
   my $curs_schema = $self->curs_schema();
 
@@ -1698,13 +1709,7 @@ sub change_annotation
     my $pub_id = $self->get_metadata($curs_schema, 'curation_pub_id');
     my $pub = $curs_schema->resultset('Pub')->find($pub_id);
 
-    my $annotation = undef;
-
-    if ($annotation_status eq 'new') {
-      $annotation = $curs_schema->resultset('Annotation')->find($annotation_id);
-    } else {
-      die "annotation status unsupported: $annotation_status\n";
-    }
+    my $annotation = $curs_schema->resultset('Annotation')->find($annotation_id);
 
     my $orig_metagenotype = undef;
 

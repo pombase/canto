@@ -310,6 +310,7 @@ my $full_expected_curation_session =
       curation_in_progress_timestamp => '2012-02-15 13:45:00',
       session_created_timestamp => '2012-02-15 13:45:00',
       curator_role => 'community',
+      has_community_curation => JSON::XS::true,
       curation_accepted_date => '2012-02-15 13:45:00',
       %extra_curs_statuses,
     },
@@ -581,6 +582,19 @@ my $full_expected_curation_session_with_names =
       session_created_timestamp => '2012-02-15 13:45:00',
       curator_name => 'Some Testperson',
       initial_curator_name => 'Some Testperson',
+      has_community_curation => JSON::XS::true,
+      annotation_curators => [
+        {
+          'annotation_count' => 1,
+          'community_curator' => JSON::XS::true,
+          'name' => 'Another Testperson'
+        },
+        {
+          'annotation_count' => 8,
+          'name' => 'Some Testperson',
+          'community_curator' => JSON::XS::false,
+        }
+      ],
       curator_role => 'community',
       curation_accepted_date => '2012-02-15 13:45:00',
       %extra_curs_statuses,

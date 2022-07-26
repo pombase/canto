@@ -2,8 +2,9 @@
 <!-- FLAGS: use_bootstrap -->
 <h1 id="curating_phenotypes">Curating phenotypes</h1>
 <h2 id="introduction">Introduction</h2>
-<p>A phenotype is any observable characteristic or trait of an organism that results from the interactions between its genotype and the environment. PHI-Canto supports annotation of single- and multi-allele phenotypes on pathogen genotypes, host genotypes and metagenotypes (pathogen and host genotype), using PHIPO terms and additional useful details such as evidence and experimental conditions.</p>
+<p>A phenotype is any observable characteristic or trait of an organism that results from the interactions between its genotype and the environment. PHI-Canto supports annotation of single- and multi-allele phenotypes on pathogen genotypes, host genotypes and metagenotypes (pathogen and host genotype), using terms from PHIPO (the Pathogen-Host Interaction Phenotype Ontology) and additional useful details such as evidence and experimental conditions.</p>
 <p>When using PHIPO terms – or terms from any ontology – always pay careful attention to the term definitions. They are usually more detailed, and often more informative, than the term names alone. For each annotation, ensure that the definition of the selected term accurately describes the experiment you are trying to capture, and that the results shown in the paper fit all parts of the term definition.</p>
+<p>If you want to browse terms in PHIPO, you can use any of the term browsers linked to from PHIPO's page on the <a href="https://obofoundry.org/ontology/phipo">OBO Foundry</a> (for example, OntoBee or OLS). The OBO Foundry also provides downloads of PHIPO in OWL and OBO formats.</p>
 <h2 id="starting_a_phenotype_annotation">Starting a phenotype annotation</h2>
 <h3 id="single_species_phenotypes">Single-species phenotypes</h3>
 <h4>Genotype Management workflow</h4>
@@ -15,20 +16,20 @@
 <p>You can begin a phenotype annotation after creating a genotype (following the instructions in <a href="genotypes">Creating alleles and genotypes</a>). After the genotype is created, you should see a menu appear with a list of actions. Select ‘Start a pathogen/host phenotype annotation’, then continue by following the steps in ‘The phenotype curation process’ section (see below).</p>
 <div class="row-fluid">
 <div class="span6">
-<a href="<% $c->uri_for($image_path . "/genotype_annotation_link.png") %>"/><img class="screenshot" src="<% $c->uri_for($image_path . "/genotype_annotation_link.png") %>" alt=""/></a>
+<a href="<% $c->uri_for($image_path . '/genotype_annotation_link.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/genotype_annotation_link.png') %>" alt=""/></a>
 </div>
 </div>
 <h4>Single allele workflow</h4>
 <p>If you only need to annotate the phenotype of a single allele, you can select a gene from the list of genes on the curation summary page, then select ‘Single allele phenotype’ from the list of curation types:</p>
 <div class="row-fluid">
 <div class="span6">
-<a href="<% $c->uri_for($image_path . "/single_phenotype_link.png") %>"/><img class="screenshot" src="<% $c->uri_for($image_path . "/single_phenotype_link.png") %>" alt=""/></a>
+<a href="<% $c->uri_for($image_path . '/single_phenotype_link.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/single_phenotype_link.png') %>" alt=""/></a>
 </div>
 </div>
 <p>After selecting the option, a pop-up will appear where you can enter allele details:</p>
 <div class="row-fluid">
 <div class="span6">
-<a href="<% $c->uri_for($image_path . "/single_allele_creation.png") %>"/><img class="screenshot" src="<% $c->uri_for($image_path . "/single_allele_creation.png") %>" alt=""/></a>
+<a href="<% $c->uri_for($image_path . '/single_allele_creation.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/single_allele_creation.png') %>" alt=""/></a>
 </div>
 </div>
 <p>After selecting ‘OK’, you will begin the phenotype curation process for the allele you have created (see ‘The phenotype curation process’ below).</p>
@@ -36,36 +37,39 @@
 <p>To annotate a phenotype on a pathogen-host interaction (a metagenotype), go to the Metagenotype Management page and select either ‘Annotate pathogen-host interaction phenotype’ or ‘Annotate gene-for-gene phenotype’ from the list of actions next to the relevant metagenotype.</p>
 <div class="row-fluid">
 <div class="span6">
-<a href="<% $c->uri_for($image_path . "/mg_annotation_link.png") %>"/><img class="screenshot" src="<% $c->uri_for($image_path . "/mg_annotation_link.png") %>" alt=""/></a>
+<a href="<% $c->uri_for($image_path . '/mg_annotation_link.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/mg_annotation_link.png') %>" alt=""/></a>
 </div>
 </div>
 <p>Note that you must first have created a metagenotype; see <a href="genotypes">Creating alleles and genotypes</a> for instructions.</p>
-<p><strong>Please note</strong> that if you are curating a pathogen effector within a pathogen–host interaction, it is essential that you also make a GO Biological Process annotation on the pathogen gene involved in the interaction, using the GO term "effector-mediated modulation of host process by symbiont" (<a href="http://purl.obolibrary.org/obo/GO_0140418">GO:0140418</a>) or one of its child terms. This will allow the data to be displayed correctly in PHI-base. Where the molecular function of the effector is known, you will also need to annotate a GO Molecular Function on the pathogen gene and then add a 'part_of' annotation extension containing the GO:0140418 term or any of its child terms. See the instructions for <a href="go_annotation">Gene Ontology Annotation</a> for further guidance on making a GO Biological process annotation.</p>
+<h4>Curating pathogen effectors</h4>
+<p>If you are curating a pathogen effector within a pathogen–host interaction, it is essential that you also make a GO Biological Process annotation on the pathogen gene involved in the interaction, using the GO term "effector-mediated modulation of host process by symbiont" (<a href="http://purl.obolibrary.org/obo/GO_0140418">GO:0140418</a>) or one of its child terms. This will allow the data to be displayed correctly in PHI-base.</p>
+<p>Where the molecular function of the effector is known, you will also need to annotate a GO Molecular Function on the pathogen gene. This molecular function annotation must have a 'part_of' annotation extension that links to GO:0140418 or any of its child terms. See the instructions for Gene Ontology Annotation for further guidance on making GO annotations.</p>
 <h2 id="the_phenotype_curation_process">The phenotype curation process</h2>
 <h3 id="selecting_a_phipo_term">Selecting a PHIPO term</h3>
-<p>Next, to find a PHIPO term, type text into the search box. When suggestions from the autocomplete feature appear, choose one and proceed.</p>
+<p>PHIPO consists of two branches: a single-species branch, which includes phenotypes associated with either pathogen or host species in isolation; and a pathogen-host interaction branch, which includes phenotypes associated with the outcomes of pathogen-host interactions. Pathogen genotypes can be annotated with single-species phenotype terms, such as 'sexual spores absent' and 'decreased hyphal growth', as well as chemistry phenotypes, such as 'resistance to voriconazole', 'sensitive to voriconazole', and 'normal growth on voriconazole'. Host genotypes can also be annotated with single-species terms, such as 'presence of effector-independent host hypersensitive response'. Metagenotypes can be annotated with pathogen-host interaction phenotype terms, such as 'absence of pathogen growth on host surface' and 'stunted host growth during pathogen colonization'. Note that some terms in the pathogen-host branch describe changes in the pathogen, while other terms describe changes in the host.</p>
+<p>To find a PHIPO term, type text into the search box. When suggestions from the autocomplete feature appear, choose one and proceed.</p>
 <div class="row-fluid">
 <div class="span6">
-<a href="<% $c->uri_for($image_path . "/phenotype_search.png") %>"/><img class="screenshot" src="<% $c->uri_for($image_path . "/phenotype_search.png") %>" alt=""/></a>
+<a href="<% $c->uri_for($image_path . '/phenotype_search.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/phenotype_search.png') %>" alt=""/></a>
 </div>
 </div>
 <p>If your initial search does not find any suitable terms, try again with a broader term (e.g. ‘reproductive phenotype’). Selecting a term takes you to a page where you can read the definition to confirm that it is applicable. More specific ‘child’ terms will be shown (where available), and you can select one of these more specific terms in an iterative process.</p>
 <div class="row-fluid">
 <div class="span6">
-<a href="<% $c->uri_for($image_path . "/child_term_suggest.png") %>"/><img class="screenshot" src="<% $c->uri_for($image_path . "/child_term_suggest.png") %>" alt=""/></a>
+<a href="<% $c->uri_for($image_path . '/child_term_suggest.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/child_term_suggest.png') %>" alt=""/></a>
 </div>
 </div>
 <p>PHIPO terms are organized in a hierarchical structure, and annotations with PHIPO should be as specific as possible to describe the data from your experiment. You can request a new term if the most specific term available does not adequately describe your disease. Select the ‘Suggest a new child term’ link and fill in the form that is shown:</p>
 <div class="row-fluid">
 <div class="span6">
-<a href="<% $c->uri_for($image_path . "/new_term_suggest.png") %>"/><img class="screenshot" src="<% $c->uri_for($image_path . "/new_term_suggest.png") %>" alt=""/></a>
+<a href="<% $c->uri_for($image_path . '/new_term_suggest.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/new_term_suggest.png') %>" alt=""/></a>
 </div>
 </div>
 <h3 id="experimental_evidence">Experimental evidence</h3>
 <p>After you choose a term, you will be prompted to select an experimental evidence code from a pulldown menu:</p>
 <div class="row-fluid">
 <div class="span6">
-<a href="<% $c->uri_for($image_path . "/evidence_picker.png") %>"/><img class="screenshot" src="<% $c->uri_for($image_path . "/evidence_picker.png") %>" alt=""/></a>
+<a href="<% $c->uri_for($image_path . '/evidence_picker.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/evidence_picker.png') %>" alt=""/></a>
 </div>
 </div>
 <h3 id="experimental_conditions">Experimental conditions</h3>
@@ -74,6 +78,7 @@
 <ul>
 <li>Minimal medium vs. rich medium</li>
 <li>Agar plates vs. liquid medium</li>
+<li>Delivery mechanism (e.g. agrobacterium, heterologous organism, pathogen inoculation)</li>
 <li>Addition of certain chemicals; for instance, in a salt stress experiment it may be of interest to note what salts were added. (Note that in cases where the PHIPO term already describes sensitivity or resistance to a certain chemical, it is not necessary to specify that same chemical in the experimental conditions.)</li>
 <li>Temperature (high, standard or low).</li>
 <li>Exclusion of some chemicals that one might normally expect to be present.</li>
@@ -81,19 +86,19 @@
 <p>To add conditions, type text and select from the autocomplete options. Several conditions can be added for one experiment.</p>
 <div class="row-fluid">
 <div class="span6">
-<a href="<% $c->uri_for($image_path . "/conditions_picker.png") %>"/><img class="screenshot" src="<% $c->uri_for($image_path . "/conditions_picker.png") %>" alt=""/></a>
+<a href="<% $c->uri_for($image_path . '/conditions_picker.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/conditions_picker.png') %>" alt=""/></a>
 </div>
 </div>
 <p>Condition terms previously used in the session appear below the text box and can be reused by selecting them:</p>
 <div class="row-fluid">
 <div class="span6">
-<a href="<% $c->uri_for($image_path . "/previous_conditions.png") %>"/><img class="screenshot" src="<% $c->uri_for($image_path . "/previous_conditions.png") %>" alt=""/></a>
+<a href="<% $c->uri_for($image_path . '/previous_conditions.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/previous_conditions.png') %>" alt=""/></a>
 </div>
 </div>
 <p>It is also possible to add experimental conditions that do not appear in the autocomplete list. To do this, type your experimental condition, then either click inside the text box, or hit Enter or Tab on your keyboard. The condition should change to a tag:</p>
 <div class="row-fluid">
 <div class="span6">
-<a href="<% $c->uri_for($image_path . "/custom_condition.png") %>"/><img class="screenshot" src="<% $c->uri_for($image_path . "/custom_condition.png") %>" alt=""/></a>
+<a href="<% $c->uri_for($image_path . '/custom_condition.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/custom_condition.png') %>" alt=""/></a>
 </div>
 </div>
 <p>PHI-Canto will display custom experimental conditions in red text, pending their review by an expert curator before they are added to the main list of experimental conditions.</p>
@@ -101,13 +106,13 @@
 <p>Once you have entered all the data for your annotation, you will see a confirmation page that shows a preview of your annotation before it is created. For single-species phenotypes, the annotation preview will look like this:</p>
 <div class="row-fluid">
 <div class="span6">
-<a href="<% $c->uri_for($image_path . "/single_species_annotation.png") %>"/><img class="screenshot" src="<% $c->uri_for($image_path . "/single_species_annotation.png") %>" alt=""/></a>
+<a href="<% $c->uri_for($image_path . '/single_species_annotation.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/single_species_annotation.png') %>" alt=""/></a>
 </div>
 </div>
 <p>For pathogen-host interaction phenotypes and gene-for-gene phenotypes, the preview will look like this:</p>
 <div class="row-fluid">
 <div class="span6">
-<a href="<% $c->uri_for($image_path . "/phi_annotation.png") %>"/><img class="screenshot" src="<% $c->uri_for($image_path . "/phi_annotation.png") %>" alt=""/></a>
+<a href="<% $c->uri_for($image_path . '/phi_annotation.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/phi_annotation.png') %>" alt=""/></a>
 </div>
 </div>
 <h3 id="figure_and_table_numbers">Figure and table numbers</h3>
@@ -121,7 +126,7 @@
 <p>Select an extension type to show a pop-up where you can specify the required details for the extension. For example, an annotation to ‘abolished pathogen penetration into host’ can have any of these extensions:</p>
 <div class="row-fluid">
 <div class="span6">
-<a href="<% $c->uri_for($image_path . "/annotation_extensions.png") %>"/><img class="screenshot" src="<% $c->uri_for($image_path . "/annotation_extensions.png") %>" alt=""/></a>
+<a href="<% $c->uri_for($image_path . '/annotation_extensions.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/annotation_extensions.png') %>" alt=""/></a>
 </div>
 </div>
 <p>You can add multiple extension types to one annotation, but be aware that this has the effect of saying that <em>all</em> the extensions apply to the annotation at once (usually meaning all extensions were present together at some point in time).</p>
@@ -130,13 +135,13 @@
 <p>When you edit or duplicate an annotation, you can also add more extensions, or remove existing extensions. Use the ‘Edit…’ button in the annotation editing pop-up to do this:</p>
 <div class="row-fluid">
 <div class="span6">
-<a href="<% $c->uri_for($image_path . "/edit_annotation_extension.png") %>"/><img class="screenshot" src="<% $c->uri_for($image_path . "/edit_annotation_extension.png") %>" alt=""/></a>
+<a href="<% $c->uri_for($image_path . '/edit_annotation_extension.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/edit_annotation_extension.png') %>" alt=""/></a>
 </div>
 </div>
 <p>It is not possible to edit an existing extension; instead, you must delete the existing extension (by clicking the red cross next to the extension name), then add a new extension.</p>
 <div class="row-fluid">
 <div class="span6">
-<a href="<% $c->uri_for($image_path . "/delete_annotation_extension.png") %>"/><img class="screenshot" src="<% $c->uri_for($image_path . "/delete_annotation_extension.png") %>" alt=""/></a>
+<a href="<% $c->uri_for($image_path . '/delete_annotation_extension.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/delete_annotation_extension.png') %>" alt=""/></a>
 </div>
 </div>
 <p>PHI-Canto supports the following extensions for phenotype annotations:</p>
@@ -164,20 +169,20 @@
 <p><strong>Edit:</strong> If you want to make changes to an annotation you have made, use the ‘Edit’ link next to the annotation in the table. In the pop-up edit the appropriate fields, then select ‘OK’.</p>
 <div class="row-fluid">
 <div class="span6">
-<a href="<% $c->uri_for($image_path . "/edit_annotation.png") %>"/><img class="screenshot" src="<% $c->uri_for($image_path . "/edit_annotation.png") %>" alt=""/></a>
+<a href="<% $c->uri_for($image_path . '/edit_annotation.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/edit_annotation.png') %>" alt=""/></a>
 </div>
 </div>
 <p><strong>Transfer:</strong> this link allows you to copy the phenotype annotation to one or more genotypes or metagenotypes in the session. Single species phenotypes can be transferred to other genotypes, and pathogen-host interaction phenotypes can be transferred to other metagenotypes. You can choose to include or exclude the annotation extensions of the original annotation on the new annotations.</p>
 <div class="row-fluid">
 <div class="span6">
-<a href="<% $c->uri_for($image_path . "/transfer_annotation.png") %>"/><img class="screenshot" src="<% $c->uri_for($image_path . "/transfer_annotation.png") %>" alt=""/></a>
+<a href="<% $c->uri_for($image_path . '/transfer_annotation.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/transfer_annotation.png') %>" alt=""/></a>
 </div>
 </div>
 <p><strong>Copy and edit:</strong> this link allows you to copy an annotation to another genotype or metagenotype, or to create a new annotation with minor edits on the same genotype or metagenotype. For example, you may want to indicate that you have observed a phenotype under more than one set of conditions, e.g. at both standard and high temperatures. The interface works the same way as editing an annotation, except that a new annotation is created, and the old annotation is retained without changes.</p>
 <p>The ‘Copy and edit’ action differs from the ‘Transfer’ action in that you can edit the annotation before copying it.</p>
 <div class="row-fluid">
 <div class="span6">
-<a href="<% $c->uri_for($image_path . "/change_annotation_genotype.png") %>"/><img class="screenshot" src="<% $c->uri_for($image_path . "/change_annotation_genotype.png") %>" alt=""/></a>
+<a href="<% $c->uri_for($image_path . '/change_annotation_genotype.png') %>"/><img class="screenshot" src="<% $c->uri_for($image_path . '/change_annotation_genotype.png') %>" alt=""/></a>
 </div>
 </div>
 <p><strong>Delete:</strong> The ‘Delete’ link deletes the annotation.</p>

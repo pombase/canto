@@ -1973,3 +1973,7 @@ button.curs-annotation-edit-suggest {
   font-size: 90%;
   white-space: nowrap;
 }
+
+.curs-annotation-edit-suggest-new-term-button {
+  padding-left: 1em;
+}

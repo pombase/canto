@@ -135,10 +135,23 @@ sub get_pubmed_ids_by_query
 
 our $PUBMED_PREFIX = "PMID";
 
-sub _remove_tag {
+sub _remove_tags {
+  my $attrs = shift;
   my $text = shift;
+
+  my $label = undef;
+
+  if ($attrs && $attrs =~ /label="([^"]+)/i) {
+    $label = $1;
+  }
+
   $text =~ s/<[^>]+>/ /g;
-  return $text;
+
+  if ($label) {
+    return "$label: $text";
+  } else {
+    return $text;
+  }
 }
 
 my %month_map =
@@ -183,7 +196,7 @@ sub load_pubmed_xml
   # This prevents parsing problems, see:
   # https://github.com/pombase/pombase-chado/issues/663
   for my $tag_name ('ArticleTitle', 'AbstractText') {
-    $content =~ s|<$tag_name>(.+?)</$tag_name>|"<$tag_name>" . _remove_tag($1) . "</$tag_name>"|egs;
+    $content =~ s|<$tag_name(?:\s+([^>]+"))?>(.+?)</$tag_name>|"<$tag_name>" . _remove_tags($1, $2) . "</$tag_name>"|iegs;
   }
 
   my $load_util = Canto::Track::LoadUtil->new(schema => $schema);

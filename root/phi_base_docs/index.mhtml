@@ -18,10 +18,12 @@
 <li>Annotating genotypes<ul>
 <li><a href="phipo_annotation#single_species_phenotypes">Pathogen phenotype</a></li>
 <li><a href="phipo_annotation#single_species_phenotypes">Host phenotype</a></li>
+<li><a href="phipo_annotation#the_phenotype_curation_process">The phenotype curation process</a></li>
 </ul>
 </li>
 <li>Annotating metagenotypes<ul>
 <li><a href="phipo_annotation#pathogen_host_interaction_phenotypes">Pathogen-host interaction phenotype</a></li>
+<li><a href="phipo_annotation#the_phenotype_curation_process">The phenotype curation process</a></li>
 <li><a href="phipo_annotation#pathogen_host_interaction_phenotypes">Gene-for-gene phenotype</a></li>
 <li><a href="disease_annotation">Disease name</a></li>
 </ul>

@@ -40,6 +40,7 @@ the Free Software Foundation, either version 3 of the License, or
 use strict;
 use warnings;
 use Carp;
+use feature 'state';
 
 use JSON;
 use Clone qw(clone);
@@ -82,7 +83,7 @@ sub _get_metadata
   } grep {
     my $key = $_->key();
     $key !~ /email$/ &&
-      ($options->{export_curator_name} ||
+      ($options->{export_curator_names} ||
        $key !~ /$curator_name_re/)
   } @results;
 
@@ -180,7 +181,8 @@ sub _get_annotations
 
   die "no schema" unless $schema;
 
-  my $organism_lookup = Canto::Track::get_adaptor($config, 'organism');
+  state $ontology_lookup = Canto::Track::get_adaptor($config, 'ontology');
+  state $organism_lookup = Canto::Track::get_adaptor($config, 'organism');
 
   my $rs = $schema->resultset('Annotation');
 
@@ -312,7 +314,20 @@ sub _get_annotations
               my $metagenotype =
                 _get_metagenotype_by_id($schema, $extension_bit->{rangeValue});
 
-              $extension_bit->{rangeValue} = $metagenotype->identifier();
+              if ($metagenotype) {
+                $extension_bit->{rangeValue} = $metagenotype->identifier();
+              } else {
+                $extension_bit->{rangeValue} = "MISSING_METAGENOTYPE";
+              }
+
+              my %metagenotype_details =
+                Canto::Curs::Utils::make_metagenotype_details($schema, $metagenotype,
+                                                              $config,
+                                                              $ontology_lookup,
+                                                              $organism_lookup);
+
+              $extension_bit->{rangeDisplayName} =
+                $metagenotype_details{metagenotype_display_name};
             }
           }
         } @$extension_part;
@@ -485,8 +500,18 @@ sub _get_alleles
     if (defined $allele->description()) {
       $allele_data{description} = $allele->description();
     }
-    if (defined $allele->name()) {
-      $allele_data{name} = $allele->name();
+    if ($allele->type() eq 'deletion') {
+      my $gene_proxy = Canto::Curs::GeneProxy->new(config => $config,
+                                                   cursdb_gene => $gene);
+
+      my $gene_name = $gene_proxy->primary_name();
+
+      $allele_data{name} =
+        ($gene_name // $gene->primary_identifier()) . 'delta';
+    } else {
+      if (defined $allele->name()) {
+        $allele_data{name} = $allele->name();
+      }
     }
 
     my $note_types = $config->{allele_note_types};
@@ -663,6 +688,47 @@ sub _get_pubs
   return \%ret;
 }
 
+sub _get_curators_from_annotations
+{
+  my $annotations_ref = shift;
+  my @annotations = @$annotations_ref;
+
+  my $has_community_annotation = JSON::false;
+
+  my %annotation_curators = ();
+
+  map {
+    my $curator = $_->{curator};
+
+    if (defined $curator) {
+      if ($curator->{community_curated} == JSON::true) {
+        $has_community_annotation = JSON::true;
+      }
+      if (defined $curator->{name}) {
+        $annotation_curators{$curator->{name}}->{annotation_count}++;
+        $annotation_curators{$curator->{name}}->{community_curator} =
+          $curator->{community_curated};
+      }
+    }
+  } @annotations;
+
+  my @annotation_curators =
+    map {
+      my $name = $_;
+      my $count = $annotation_curators{$name}->{annotation_count};
+      my $community = $annotation_curators{$name}->{community_curator};
+
+      {
+        name => $name,
+        annotation_count => $count,
+        community_curator => $community,
+      };
+    } sort keys %annotation_curators;
+
+  return ($has_community_annotation, \@annotation_curators);
+}
+
+
 =head2 json
 
  Usage   : my $ser = Canto::Curs::Serialise::json($config, $track_schema,
@@ -731,6 +797,16 @@ sub perl
     # everything
 
     $ret{annotations} = _get_annotations($config, $track_schema, $curs_schema, $options);
+
+    my ($has_community_annotation, $annotation_curators) =
+      _get_curators_from_annotations($ret{annotations});
+
+    $ret{metadata}{has_community_curation} = $has_community_annotation;
+
+    if ($options->{export_curator_names}) {
+      $ret{metadata}{annotation_curators} = $annotation_curators;
+    }
+
     $ret{organisms} = _get_organisms($config, $curs_schema, $options);
 
     my $organism_lookup = Canto::Track::get_adaptor($config, 'organism');
