@@ -1598,36 +1598,36 @@ sub change_annotation
 
   my $curs_schema = $self->curs_schema();
 
+  my $pub_id = $self->get_metadata($curs_schema, 'curation_pub_id');
+  my $pub = $curs_schema->resultset('Pub')->find($pub_id);
+
+  my $annotation = $curs_schema->resultset('Annotation')->find($annotation_id);
+  my $annotation_type_name = $annotation->type();
+  my $category = $self->_category_from_type($annotation_type_name);
+
+  if ($category eq 'ontology') {
+    my $details =
+      Canto::Curs::Utils::make_ontology_annotation($self->config(),
+                                                   $curs_schema, $annotation);
+
+    my %details_for_find = (%$details, %$changes);
+
+    my $existing_annotation = $self->find_existing_annotation(\%details_for_find);
+
+    if (defined $existing_annotation) {
+      my $existing_annotation_hash =
+        Canto::Curs::Utils::make_ontology_annotation($self->config(),
+                                                     $curs_schema,
+                                                     $existing_annotation);
+
+      return { status => 'existing',
+               annotation => $existing_annotation_hash };
+    }
+  }
+
   $curs_schema->txn_begin();
 
   try {
-    my $pub_id = $self->get_metadata($curs_schema, 'curation_pub_id');
-    my $pub = $curs_schema->resultset('Pub')->find($pub_id);
-
-    my $annotation = $curs_schema->resultset('Annotation')->find($annotation_id);
-    my $annotation_type_name = $annotation->type();
-    my $category = $self->_category_from_type($annotation_type_name);
-
-    if ($category eq 'ontology') {
-      my $details =
-        Canto::Curs::Utils::make_ontology_annotation($self->config(),
-                                                     $curs_schema, $annotation);
-
-      my %details_for_find = (%$details, %$changes);
-
-      my $existing_annotation = $self->find_existing_annotation(\%details_for_find);
-
-      if (defined $existing_annotation) {
-        my $existing_annotation_hash =
-          Canto::Curs::Utils::make_ontology_annotation($self->config(),
-                                                       $curs_schema,
-                                                       $existing_annotation);
-
-        return { status => 'existing',
-                 annotation => $existing_annotation_hash };
-      }
-    }
-
     my $orig_metagenotype = undef;
 
     my $annotation_config = $self->config()->{annotation_types}->{$annotation_type_name};
@@ -1847,7 +1847,7 @@ sub find_existing_annotation
       next;
     }
     if (!extension_equal($existing_data->{extension}, $details->{extension})) {
-      next
+      next;
     }
     if (!$self->conditions_equal($existing_data->{conditions}, $details->{conditions})) {
       next;
