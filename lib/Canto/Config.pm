@@ -742,4 +742,23 @@ sub get_species_taxon_of_strain_taxon
     $self->{_reference_strain_taxon_map}->{$strain_taxon_id};
 }
 
+
+=head2 get_annotation_type_by_name
+
+ Usage   : my $annotation_type_config =
+              $config->get_annotation_type_by_name("molecular_function");
+ Function: Get the configuration for a type
+ Returns : a hash of annotation type details
+
+=cut
+
+sub get_annotation_type_by_name
+{
+  my $self = shift;
+
+  my $annotation_type_name = shift;
+
+  return $self->{annotation_types}->{$annotation_type_name};
+}
+
 1;
