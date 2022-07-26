@@ -22,7 +22,7 @@ cmp_deeply($pub_detail,
           {
             'authors' => "Helmlinger D, Marguerat S, Vill\x{e9}n J, Gygi SP, B\x{e4}hler J, Winston F",
             'uniquename' => 'PMID:19056896',
-            'publication_date' => '15 Nov 2008',
+            'publication_date' => '2008 11 15',
             'title' => 'The S. pombe SAGA complex controls the switch from proliferation to sexual differentiation through the opposing roles of its subunits Gcn5 and Spt8.',
             'citation' => 'Genes Dev. 2008 Nov 15;22(22):3184-95'
           });
