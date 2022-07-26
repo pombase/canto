@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 90;
+use Test::More tests => 92;
 use Test::Deep;
 use JSON;
 
@@ -490,6 +490,25 @@ my $new_annotation_id = $res->{annotation}->{annotation_id};
 my $new_annotation = $curs_schema->find_with_type('Annotation', $new_annotation_id);
 is ($new_annotation->data()->{term_ontid}, 'GO:0022857');
 
+
+my $before_dup_annotation_count = $curs_schema->resultset('Annotation')->count();
+
+# create a duplicate
+$res = $service_utils->create_annotation({
+                                           key => $curs_key,
+                                           feature_id => $c2d7_gene->gene_id(),
+                                           feature_type => 'gene',
+                                           annotation_type => 'molecular_function',
+                                           term_ontid => 'GO:0022857',
+                                           evidence_code => 'IDA',
+                                         });
+
+
+is ($res->{status}, 'existing');
+
+my $after_dup_annotation_count = $curs_schema->resultset('Annotation')->count();
+
+is ($before_dup_annotation_count, $after_dup_annotation_count);
 
 # test lack of information
 $stderr = capture_stderr {
