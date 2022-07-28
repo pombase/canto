@@ -590,7 +590,7 @@ my $full_expected_curation_session_with_names =
           'name' => 'Another Testperson'
         },
         {
-          'annotation_count' => 8,
+          'annotation_count' => 7,
           'name' => 'Some Testperson',
           'community_curator' => JSON::XS::false,
         }

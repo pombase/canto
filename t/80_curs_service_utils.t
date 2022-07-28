@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 86;
+use Test::More tests => 91;
 use Test::Deep;
 use JSON;
 
@@ -316,6 +316,9 @@ my $first_genotype =
   $curs_schema->resultset('Genotype')->find({ identifier => $genotype_identifier });
 
 my $first_gene_annotation = $first_gene->direct_annotations()->first();
+my $first_gene_annotation_rs = $first_gene->direct_annotations()->search();
+$first_gene_annotation_rs->next();
+my $first_gene_second_annotation = $first_gene_annotation_rs->next();
 my $first_genotype_annotation = $first_genotype->annotations()->first();
 
 my $c2d7_identifier = 'SPAC27D7.13c';
@@ -489,6 +492,43 @@ my $new_annotation_id = $res->{annotation}->{annotation_id};
 
 my $new_annotation = $curs_schema->find_with_type('Annotation', $new_annotation_id);
 is ($new_annotation->data()->{term_ontid}, 'GO:0022857');
+
+
+my $before_dup_annotation_count = $curs_schema->resultset('Annotation')->count();
+
+# create a duplicate
+$res = $service_utils->create_annotation({
+                                           key => $curs_key,
+                                           feature_id => $c2d7_gene->gene_id(),
+                                           feature_type => 'gene',
+                                           annotation_type => 'molecular_function',
+                                           term_ontid => 'GO:0022857',
+                                           evidence_code => 'IDA',
+                                         });
+
+
+is ($res->{status}, 'existing');
+
+my $after_dup_annotation_count = $curs_schema->resultset('Annotation')->count();
+
+is ($before_dup_annotation_count, $after_dup_annotation_count);
+
+
+# test making a change that causes a duplicate
+$res = $service_utils->change_annotation($first_gene_second_annotation->annotation_id(),
+                                         {
+                                           key => $curs_key,
+                                           feature_id => $c2d7_gene->gene_id(),
+                                           feature_type => 'gene',
+                                           annotation_type => 'molecular_function',
+                                           term_ontid => 'GO:0022857',
+                                           evidence_code => 'IDA',
+                                         });
+
+is ($res->{status}, 'existing');
+is ($res->{annotation}->{feature_id}, $c2d7_gene->gene_id());
+is ($res->{annotation}->{annotation_id},
+    $new_annotation->annotation_id());
 
 
 # test lack of information
