@@ -288,7 +288,7 @@ sub login : Global {
                         password => $password})) {
     push @{$c->flash->{message}}, "Login successful";
 
-    #    $c->delete_expired_sessions();
+    $c->delete_expired_sessions();
 
     if ($return_path =~ m/logout|login/) {
       $c->forward($c->config()->{instance_front_path});
