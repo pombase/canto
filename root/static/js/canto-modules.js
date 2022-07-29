@@ -1057,7 +1057,11 @@ var annotationProxy =
           }
           q.resolve(annotation);
         } else {
-          q.reject(data.message);
+          if (data.status === 'existing') {
+            q.resolve('EXISTING');
+          } else {
+            q.reject(data.message);
+          }
         }
       }).catch(function () {
         q.reject();
@@ -7434,6 +7438,14 @@ var annotationEditDialogCtrl =
         showCloseButton: false
       });
       q.then(function (annotation) {
+        if (annotation === 'EXISTING') {
+          toaster.pop({
+            type: 'info',
+            title: 'Not storing: an identical annotation exists.',
+            timeout: 10000,
+            showCloseButton: true
+          });
+        } else {
           $uibModalInstance.close(annotation);
           toaster.pop({
             type: 'success',
@@ -7441,6 +7453,7 @@ var annotationEditDialogCtrl =
             timeout: 5000,
             showCloseButton: true
           });
+        }
         })
         .catch(function (message) {
           if ($scope.annotationType.category === 'interaction') {

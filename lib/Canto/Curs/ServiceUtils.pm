@@ -1594,21 +1594,43 @@ sub change_annotation
   my $self = shift;
   my $annotation_id = shift;
 
+  my $changes = shift;
+
   my $curs_schema = $self->curs_schema();
+
+  my $pub_id = $self->get_metadata($curs_schema, 'curation_pub_id');
+  my $pub = $curs_schema->resultset('Pub')->find($pub_id);
+
+  my $annotation = $curs_schema->resultset('Annotation')->find($annotation_id);
+  my $annotation_type_name = $annotation->type();
+  my $category = $self->_category_from_type($annotation_type_name);
+
+  if ($category eq 'ontology') {
+    my $details =
+      Canto::Curs::Utils::make_ontology_annotation($self->config(),
+                                                   $curs_schema, $annotation);
+
+    my %details_for_find = (%$details, %$changes);
+
+    my $existing_annotation = $self->find_existing_annotation(\%details_for_find);
+
+    if (defined $existing_annotation) {
+      my $existing_annotation_hash =
+        Canto::Curs::Utils::make_ontology_annotation($self->config(),
+                                                     $curs_schema,
+                                                     $existing_annotation);
+
+      return { status => 'existing',
+               annotation => $existing_annotation_hash };
+    }
+  }
 
   $curs_schema->txn_begin();
 
-  my $changes = shift;
-
   try {
-    my $pub_id = $self->get_metadata($curs_schema, 'curation_pub_id');
-    my $pub = $curs_schema->resultset('Pub')->find($pub_id);
-
-    my $annotation = $curs_schema->resultset('Annotation')->find($annotation_id);
-
     my $orig_metagenotype = undef;
 
-    my $annotation_config = $self->config()->{annotation_types}->{$annotation->type()};
+    my $annotation_config = $self->config()->{annotation_types}->{$annotation_type_name};
 
     if ($annotation_config->{category} eq 'interaction' &&
       $annotation_config->{feature_type} eq 'metagenotype') {
@@ -1667,6 +1689,177 @@ sub change_annotation
   };
 }
 
+sub safe_equals
+{
+  my $a = shift;
+  my $b = shift;
+
+  if (ref $a or ref $b) {
+    die;
+  } else {
+    if (!defined $a and !defined $b) {
+      return 1;
+    } else {
+      if (defined $a and defined $b) {
+        return $a eq $b
+      } else {
+        return 0;
+      }
+    }
+  }
+}
+
+sub conditions_equal
+{
+  my $self = shift;
+
+  my $existing_conditions = shift // [];
+  my $new_conditions = shift // [];
+
+  my @existing_condition_names = sort map {
+    $self->_term_name_from_id($_) // $_;
+  } @$existing_conditions;
+
+  my @new_condition_names = sort map {
+    $_->{name};
+  } @$new_conditions;
+
+  return (join ":::", @existing_condition_names) eq (join ":::", @new_condition_names);
+}
+
+sub extension_equal
+{
+  my $existing_extension = shift // [];
+  my $new_extension = shift // [];
+
+  if (@$existing_extension > 1 || @$new_extension > 1) {
+    # give up because one of the annotations has an "independent
+    # extension" and was created by an admin
+    return 0;
+  }
+
+  if (@$existing_extension == 0 && @$new_extension == 0) {
+    return 1;
+  }
+
+  if (@$existing_extension == 0 || @$new_extension == 0) {
+    return 0
+  }
+
+  my @existing_and_parts = @{$existing_extension->[0]};
+  my @new_and_parts = @{$new_extension->[0]};
+
+  if (scalar(@existing_and_parts) != scalar(@new_and_parts)) {
+    return 0;
+  }
+
+  my $sorter = sub {
+    my $a = shift;
+    my $b = shift;
+
+    ($a->{relation} // 'UNKNOWN') cmp ($b->{relation} // 'UNKNOWN')
+      ||
+    ($a->{rangeType} // 'UNKNOWN') cmp ($b->{rangeType} // 'UNKNOWN')
+      ||
+    ($a->{rangeValue} // 'UNKNOWN') cmp ($b->{rangeValue} // 'UNKNOWN')
+  };
+
+  my @sorted_existing_and_parts = sort {
+    $sorter->($a, $b);
+  } @existing_and_parts;
+
+  my @sorted_new_and_parts = sort {
+    $sorter->($a, $b);
+  } @new_and_parts;
+
+  for (my $i = 0; $i < @sorted_new_and_parts; $i++) {
+    my $new_part = $sorted_new_and_parts[$i];
+    my $existing_part = $sorted_existing_and_parts[$i];
+    if ($new_part->{relation} ne $existing_part->{relation} ||
+        $new_part->{rangeType} ne $existing_part->{rangeType} ||
+        $new_part->{rangeValue} ne $existing_part->{rangeValue}) {
+      return 0;
+    }
+  }
+
+  return 1;
+}
+
+
+sub find_existing_annotation
+{
+  my $self = shift;
+
+  my $details = shift;
+
+  my $curs_schema = $self->curs_schema();
+
+  my $annotation_type_name = $details->{annotation_type};
+  my $annotation_type =
+    $self->config()->get_annotation_type_by_name($annotation_type_name);
+
+  my $feature_id = $details->{feature_id};
+  my $feature_type = $details->{feature_type};
+  my $term_ontid = $details->{term_ontid};
+
+  my $base_rs;
+
+  if ($feature_type eq 'gene') {
+    $base_rs = $curs_schema->resultset('GeneAnnotation');
+  } else {
+    if ($feature_type eq 'genotype') {
+      $base_rs = $curs_schema->resultset('GenotypeAnnotation');
+    } else {
+      if ($feature_type eq 'metagenotype') {
+        $base_rs = $curs_schema->resultset('MetagenotypeAnnotation');
+      } else {
+        return undef;
+      }
+    }
+  }
+
+  my $rs = $base_rs->search(
+    {
+      $feature_type => $feature_id,
+      'annotation.type' => $annotation_type_name,
+    },
+    {
+      prefetch => 'annotation'
+    });
+
+  while (defined (my $row = $rs->next())) {
+    my $existing_annotation = $row->annotation();
+
+    if (defined $details->{annotation_id} &&
+        $existing_annotation->annotation_id() == $details->{annotation_id}) {
+      next;
+    }
+
+    my $existing_data = $existing_annotation->data();
+
+    if ($existing_data->{term_ontid} ne $term_ontid) {
+      next;
+    }
+    if ($existing_data->{evidence_code} ne $details->{evidence_code}) {
+      next;
+    }
+    if (!safe_equals($existing_data->{with_gene_id}, $details->{with_gene_id})) {
+      next;
+    }
+    if (!extension_equal($existing_data->{extension}, $details->{extension})) {
+      next;
+    }
+    if (!$self->conditions_equal($existing_data->{conditions}, $details->{conditions})) {
+      next;
+    }
+
+    return $existing_annotation;
+  }
+
+  return undef;
+}
+
+
 =head2
 
  Usage   : $service_utils->create_annotation($details);
@@ -1699,6 +1892,23 @@ sub create_annotation
   }
 
   my $curs_schema = $self->curs_schema();
+
+  my $category = $self->_category_from_type($annotation_type);
+
+  if ($category eq 'ontology') {
+    my $existing_annotation = $self->find_existing_annotation($details);
+
+    if (defined $existing_annotation) {
+      my $existing_annotation_hash =
+        Canto::Curs::Utils::make_ontology_annotation($self->config(),
+                                                     $curs_schema,
+                                                     $existing_annotation);
+
+      return { status => 'existing',
+               annotation => $existing_annotation_hash };
+    }
+  }
+
   $curs_schema->txn_begin();
 
   try {
@@ -1710,7 +1920,7 @@ sub create_annotation
 
     my $annotation_hash = undef;
 
-    if ($self->_category_from_type($annotation_type) eq 'ontology') {
+    if ($category eq 'ontology') {
       $annotation_hash =
         Canto::Curs::Utils::make_ontology_annotation($self->config(),
                                                      $curs_schema,
