@@ -7706,7 +7706,7 @@ canto.controller('AnnotationTransferDialogCtrl',
 
 
 var annotationTransferAllDialogCtrl =
-  function ($scope, $window, $uibModal, $uibModalInstance, $q,
+  function ($scope, $timeout, $window, $uibModal, $uibModalInstance, $q,
             AnnotationProxy,
             AnnotationTypeConfig, CursGenotypeList, CursGeneList,
             CantoGlobals, Curs, toaster, args) {
@@ -7798,6 +7798,11 @@ var annotationTransferAllDialogCtrl =
         return;
       }
 
+      let successCount = 0;
+      let existingCount = 0;
+
+      let promises = [];
+
       $.map($scope.data.selectedAnnotationIds,
             function(sourceAnnotationId) {
               var sourceAnnotation = $scope.data.annotationsById[sourceAnnotationId];
@@ -7813,34 +7818,59 @@ var annotationTransferAllDialogCtrl =
               loadingStart();
               var q = AnnotationProxy.newAnnotation(annotationCopy);
 
+              promises.push(q);
+
               var storePop = toaster.pop({
                 type: 'info',
                 title: 'Storing annotation...',
                 timeout: 0, // last until the finally()
                 showCloseButton: false
               });
-              q.then(function () {
-                $uibModalInstance.close();
-                toaster.pop({
-                  type: 'success',
-                  title: 'Annotation stored successfully.',
-                  timeout: 5000,
-                  showCloseButton: true
-                });
-                var destFeatureUrl =
-                    CantoGlobals.curs_root_uri + '/feature/' +
-                    $scope.data.annotationType.feature_type +
-                    '/view/' + $scope.data.chosenDestFeatureId;
-                $window.location.href = destFeatureUrl;
+              q.then(function (status) {
+                toaster.clear(storePop);
+                if (status === 'EXISTING') {
+                  existingCount++;
+                  toaster.pop({
+                    type: 'info',
+                    title: 'Not storing annotation for "' + sourceAnnotation.term_name +
+                      '", evidence code "' + sourceAnnotation.evidence_code +
+                      '": an identical annotation exists',
+                    timeout: 10000,
+                    showCloseButton: true
+                  });
+                } else {
+                  successCount++;
+                  toaster.pop({
+                    type: 'success',
+                    title: 'Annotation stored successfully.',
+                    timeout: 5000,
+                    showCloseButton: true
+                  });
+                }
               })
               .catch(function (message) {
-                toaster.pop('error', message);
-              })
-              .finally(function () {
-                loadingEnd();
                 toaster.clear(storePop);
+                toaster.pop('error', message);
               });
             });
+
+      $q.all(promises).then(function () {
+        if (existingCount == 0) {
+          $uibModalInstance.close();
+
+          $timeout(function() {
+            // give users time to see the messages
+            const destFeatureUrl =
+                  CantoGlobals.curs_root_uri + '/feature/' +
+                  $scope.data.annotationType.feature_type +
+                  '/view/' + $scope.data.chosenDestFeatureId;
+            $window.location.href = destFeatureUrl;
+          }, 500);
+        }
+      })
+      .finally(function () {
+        loadingEnd();
+      });
     };
 
     $scope.cancel = function () {
@@ -7849,7 +7879,7 @@ var annotationTransferAllDialogCtrl =
   };
 
 canto.controller('AnnotationTransferAllDialogCtrl',
-  ['$scope', '$window', '$uibModal', '$uibModalInstance', '$q',
+  ['$scope', '$timeout', '$window', '$uibModal', '$uibModalInstance', '$q',
    'AnnotationProxy',
    'AnnotationTypeConfig', 'CursGenotypeList', 'CursGeneList',
    'CantoGlobals', 'Curs', 'toaster', 'args',
