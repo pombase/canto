@@ -1195,6 +1195,8 @@ sub make_annotation
 
   $self->_store_change_hash($new_annotation, $data);
 
+  $self->_update_annotation_interactions($new_annotation, $data);
+
   $self->set_annotation_curator($new_annotation);
   $self->metadata_storer()->store_counts($curs_schema);
 
@@ -1588,6 +1590,19 @@ sub _store_change_hash
       " has no gene or genotype\n";
   }
 
+  $self->_update_annotation_interactions($annotation, $changes);
+
+  $annotation->data($data);
+  $annotation->update();
+}
+
+
+sub _update_annotation_interactions
+{
+  my $self = shift;
+  my $annotation = shift;
+  my $changes = shift;
+
   if ($annotation->genotype_annotations()->count() > 0) {
     # only try this for phenotype annotations
 
@@ -1599,6 +1614,29 @@ sub _store_change_hash
     # remove, then re-add interactions with phenotype
     my $interaction_annotations_with_phenotypes =
       $changes->{interaction_annotations_with_phenotypes} // [];
+
+    my $ontology_lookup =
+      Canto::Track::get_adaptor($self->config(), 'ontology');
+    my $organism_lookup =
+      Canto::Track::get_adaptor($self->config(), 'organism');
+
+    my @existing_interactions =
+      Canto::Curs::Utils::make_interaction_annotations($self->config(),
+                                                       $self->curs_schema(),
+                                                       $annotation,
+                                                       $ontology_lookup,
+                                                       $organism_lookup);
+
+    my @existing_interactions_without_phenotypes = ();
+    my @existing_interactions_with_phenotypes = ();
+
+    map {
+      if (exists $_->{genotype_a_phenotype_annotations}) {
+        push @existing_interactions_with_phenotypes, $_;
+      } else {
+        push @existing_interactions_without_phenotypes, $_;
+      }
+    } @existing_interactions;
 
     $primary_genotype_annotation
       ->genotype_interactions_with_phenotype_primary_genotype_annotation()
@@ -1621,7 +1659,7 @@ sub _store_change_hash
                                                   $genotype_b_id);
 
       } @{$dir_annotation->{genotype_a_phenotype_annotations}};
-    } @$interaction_annotations_with_phenotypes;
+    } (@existing_interactions_with_phenotypes, @$interaction_annotations_with_phenotypes);
 
 
     # remove, then re-add interactions without phenotypes
@@ -1643,13 +1681,9 @@ sub _store_change_hash
                                     $genotype_a_id,
                                     $genotype_b_id);
 
-    } @$interaction_annotations;
+    } (@existing_interactions_without_phenotypes, @$interaction_annotations);
   }
-
-  $annotation->data($data);
-  $annotation->update();
 }
-
 
 sub _category_from_type
 {
@@ -1720,6 +1754,8 @@ sub change_annotation
     my $existing_annotation = $self->find_existing_annotation(\%details_for_find);
 
     if (defined $existing_annotation) {
+      $self->_update_annotation_interactions($existing_annotation, $changes);
+
       my $existing_annotation_hash =
         Canto::Curs::Utils::make_ontology_annotation($self->config(),
                                                      $curs_schema,
@@ -2005,6 +2041,8 @@ sub create_annotation
     my $existing_annotation = $self->find_existing_annotation($details);
 
     if (defined $existing_annotation) {
+      $self->_update_annotation_interactions($existing_annotation, $details);
+
       my $existing_annotation_hash =
         Canto::Curs::Utils::make_ontology_annotation($self->config(),
                                                      $curs_schema,
