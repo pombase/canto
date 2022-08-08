@@ -7644,14 +7644,26 @@ var annotationTransferDialogCtrl =
         annotationCopy.extension = [];
       }
 
+      let existingCount = 0;
+
+      let promises = [];
+
       $.map($scope.selectedFeatureIds,
             function(newId) {
+              let destFeature = undefined;
+
               if ($scope.annotationType.category === 'ontology' ||
                   $scope.annotationType.category === 'interaction' &&
                   $scope.annotationType.feature_type !== 'metagenotype') {
                 if ($scope.annotationType.category !== 'interaction' ||
                    $scope.interactorAorB === 'A') {
                   annotationCopy.feature_id = newId;
+
+                  destFeature =
+                    ($.grep($scope.features,
+                            feature => feature.feature_id === annotationCopy.feature_id))[0];
+
+
                 } else {
                   annotationCopy.interacting_gene_id = newId;
                 }
@@ -7666,22 +7678,38 @@ var annotationTransferDialogCtrl =
               loadingStart();
               var q = AnnotationProxy.newAnnotation(annotationCopy);
 
+              promises.push(q);
+
               var storePop = toaster.pop({
                 type: 'info',
                 title: 'Storing annotation...',
                 timeout: 0, // last until the finally()
                 showCloseButton: false
               });
-              q.then(function (annotation) {
-                $uibModalInstance.close();
-                toaster.pop({
-                  type: 'success',
-                  title: 'Annotation stored successfully.',
-                  timeout: 5000,
-                  showCloseButton: true
-                });
+
+              q.then(function (statusOrAnnotation) {
+                toaster.clear(storePop);
+                if (statusOrAnnotation === 'EXISTING') {
+                  existingCount++;
+
+                  toaster.pop({
+                    type: 'info',
+                    title: 'Not storing new annotation for ' + destFeature.display_name +
+                      ': an identical annotation exists',
+                    timeout: 10000,
+                    showCloseButton: true
+                  });
+                } else {
+                  toaster.pop({
+                    type: 'success',
+                    title: 'Annotation stored successfully.',
+                    timeout: 5000,
+                    showCloseButton: true
+                  });
+                }
               })
               .catch(function (message) {
+                toaster.clear(storePop);
                 toaster.pop('error', message);
               })
               .finally(function () {
@@ -7689,6 +7717,12 @@ var annotationTransferDialogCtrl =
                 toaster.clear(storePop);
               });
             });
+
+      $q.all(promises).then(function () {
+        if (existingCount == 0) {
+          $uibModalInstance.close();
+        }
+      });
     };
 
     $scope.cancel = function () {
@@ -7798,7 +7832,6 @@ var annotationTransferAllDialogCtrl =
         return;
       }
 
-      let successCount = 0;
       let existingCount = 0;
 
       let promises = [];
@@ -7826,9 +7859,10 @@ var annotationTransferAllDialogCtrl =
                 timeout: 0, // last until the finally()
                 showCloseButton: false
               });
-              q.then(function (status) {
+
+              q.then(function (statusOrAnnotation) {
                 toaster.clear(storePop);
-                if (status === 'EXISTING') {
+                if (statusOrAnnotation === 'EXISTING') {
                   existingCount++;
                   toaster.pop({
                     type: 'info',
@@ -7839,7 +7873,6 @@ var annotationTransferAllDialogCtrl =
                     showCloseButton: true
                   });
                 } else {
-                  successCount++;
                   toaster.pop({
                     type: 'success',
                     title: 'Annotation stored successfully.',
