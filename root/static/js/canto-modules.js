@@ -7758,6 +7758,7 @@ var annotationTransferAllDialogCtrl =
     $scope.data.otherFeatures = null;
     $scope.data.chosenDestFeatureId = null;
     $scope.data.selectedAnnotationIds = [];
+    $scope.data.transferExtension = true;
 
     $scope.data.annotationsById = {};
 
