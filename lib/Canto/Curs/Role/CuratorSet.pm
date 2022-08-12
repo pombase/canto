@@ -69,6 +69,7 @@ sub set_annotation_curator
   my $curator_known_as;
   my $accepted_date;
   my $community_curated;
+  my ($creation_date, $curs_curator_id, $curator_orcid);
 
   my ($state, $submitter, $gene_count) = $self->state()->get_state($schema);
 
@@ -77,7 +78,8 @@ sub set_annotation_curator
     $curator_email = $self->get_metadata($schema, 'approver_email');
   } else {
     ($curator_email, $curator_name, $curator_known_as,
-     $accepted_date, $community_curated) =
+     $accepted_date, $community_curated,
+     $creation_date, $curs_curator_id, $curator_orcid) =
       $self->state()->curator_manager()->current_curator($curs_key);
   }
 
@@ -86,6 +88,7 @@ sub set_annotation_curator
     email => $curator_email,
     name => $curator_name,
     community_curated => $community_curated // 0,
+    curator_orcid => $curator_orcid,
   };
 
   $annotation->data($data);

@@ -969,13 +969,15 @@ sub _get_curator_details
   my $curator_manager = $self->curator_manager();
 
   my ($curator_email, $curator_name, $curator_known_as,
-      $accepted_date, $community_curated) =
+      $accepted_date, $community_curated, $creation_date,
+      $curs_curator_id, $curator_orcid) =
         $self->state()->curator_manager()->current_curator($curs_key);
 
   return {
     curator_email => $curator_email,
     curator_name => $curator_name,
     curator_known_as => $curator_known_as,
+    curator_orcid => $curator_orcid,
     accepted_date => $accepted_date,
     # false means that an admin user is doing the curation
     community_curated => $community_curated ? JSON::true : JSON::false,
