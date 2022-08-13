@@ -614,12 +614,14 @@ my $full_expected_curation_session_with_names =
         {
           'annotation_count' => 1,
           'community_curator' => JSON::XS::true,
-          'name' => 'Another Testperson'
+          'name' => 'Another Testperson',
+          'orcid' => undef,
         },
         {
           'annotation_count' => 8,
           'name' => 'Some Testperson',
           'community_curator' => JSON::XS::false,
+          'orcid' => undef,
         }
       ],
       curator_role => 'community',
