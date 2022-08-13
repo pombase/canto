@@ -68,7 +68,7 @@ sub _curs_curator_rs
         'me.curs' => {
           -in => $curs_rs->get_column('curs_id')->as_query(),
         },
-      });
+      }, { join => 'curator' });
 }
 
 sub _get_current_curator_row_rs
@@ -154,7 +154,8 @@ sub current_curator
  Args    : $curs_key - the curs_key for the session
  Return  : An array of curator information, ordered from oldest to newest.
            Each element in the array has the form:
-            [$email, $name, $known_as, $accepted_date, $community_curated]
+            [$email, $name, $known_as, $accepted_date, $community_curated,
+             $creation_date, $curs_curator_id, $curator_orcid]
          note: the $accepted_date will be undef if the session hasn't been
                accepted by that curator
                $community_curated is a flag: 0 or 1
@@ -169,6 +170,36 @@ sub session_curators
   return map {
     [_format_curs_curator_row($_)];
   } $self->_curs_curator_rs($curs_key)->search({}, { order_by => 'curs_curator_id' })->all();
+}
+
+=head2 curator_details_by_email
+
+ Usage   : $curator_manager->curator_details_by_email($email);
+ Function: Return a summary of the curator with the given email address
+ Args    : $email - the email of the curator to find
+ Return  : An array of curator information:
+            ($email, $name, $known_as, $curator_orcid)
+
+=cut
+
+sub curator_details_by_email
+{
+  my $self = shift;
+  my $email = shift;
+
+  my $rs = $self->schema()->resultset('Person')
+    ->search(
+      {
+        'email_address' => $email,
+      });
+
+  my $person = $rs->next();
+
+  if ($person) {
+    return ($email, $person->name(), $person->known_as(), $person->orcid())
+  }
+
+  return ();
 }
 
 sub _orcid_is_valid

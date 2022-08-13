@@ -230,7 +230,6 @@ sub _get_annotations
     );
 
     if (defined $data{curator}) {
-      delete $data{email};
       if (defined $data{curator}->{community_curated}) {
         if ($data{curator}->{community_curated}) {
           # make sure that we have "true" in the JSON output, not "1"
@@ -270,7 +269,6 @@ sub _get_annotations
 
       if (exists $current->{email}) {
         # curator section
-        delete $current->{email};
         if (!$options->{export_curator_names}) {
           delete $current->{name};
         }
@@ -690,6 +688,8 @@ sub _get_pubs
 
 sub _get_curators_from_annotations
 {
+  my $curs_key = shift;
+  my $curator_manager = shift;
   my $annotations_ref = shift;
   my @annotations = @$annotations_ref;
 
@@ -704,10 +704,28 @@ sub _get_curators_from_annotations
       if ($curator->{community_curated} == JSON::true) {
         $has_community_annotation = JSON::true;
       }
-      if (defined $curator->{name}) {
-        $annotation_curators{$curator->{name}}->{annotation_count}++;
-        $annotation_curators{$curator->{name}}->{community_curator} =
+      my $name = $curator->{name};
+
+      # we need the email for looking up the ORCID but we don't want to include
+      # it in the JSON output
+      my $curator_email = delete $curator->{email};
+
+      if (defined $name) {
+        $annotation_curators{$name}->{annotation_count}++;
+        $annotation_curators{$name}->{community_curator} =
           $curator->{community_curated};
+
+        my $curator_orcid = $curator->{curator_orcid};
+
+        if (!defined $curator_orcid) {
+
+          if (defined $curator_email) {
+            my ($curator_email, $curator_name, $curator_known_as, $curator_orcid) =
+              $curator_manager->curator_details_by_email($curator_email);
+
+            $annotation_curators{$name}->{curator_orcid} = $curator_orcid;
+          }
+        }
       }
     }
   } @annotations;
@@ -717,11 +735,13 @@ sub _get_curators_from_annotations
       my $name = $_;
       my $count = $annotation_curators{$name}->{annotation_count};
       my $community = $annotation_curators{$name}->{community_curator};
+      my $orcid = $annotation_curators{$name}->{curator_orcid};
 
       {
         name => $name,
         annotation_count => $count,
         community_curator => $community,
+        orcid => $orcid,
       };
     } sort keys %annotation_curators;
 
@@ -776,6 +796,9 @@ sub perl
   my $options = shift;
   my $curs_status = shift;
 
+  my $curator_manager =
+    Canto::Track::CuratorManager->new(config => $config);
+
   my $curs_schema =
     Canto::Curs::get_schema_for_key($config, $curs_key,
                                     {
@@ -799,7 +822,8 @@ sub perl
     $ret{annotations} = _get_annotations($config, $track_schema, $curs_schema, $options);
 
     my ($has_community_annotation, $annotation_curators) =
-      _get_curators_from_annotations($ret{annotations});
+      _get_curators_from_annotations($curs_key, $curator_manager,
+                                     $ret{annotations});
 
     $ret{metadata}{has_community_curation} = $has_community_annotation;
 
