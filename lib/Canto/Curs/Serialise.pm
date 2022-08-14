@@ -723,7 +723,10 @@ sub _get_curators_from_annotations
             my ($curator_email, $curator_name, $curator_known_as, $curator_orcid) =
               $curator_manager->curator_details_by_email($curator_email);
 
-            $annotation_curators{$name}->{curator_orcid} = $curator_orcid;
+            if (defined $curator_orcid && $curator_orcid =~ m|.*?(\d\d\d\d-\d\d\d\d-\d\d\d\d-\d\d\d[\dX]$)|) {
+              # remove any prefixes
+              $annotation_curators{$name}->{curator_orcid} = $1;
+            }
           }
         }
       }
