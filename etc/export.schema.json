@@ -587,6 +587,11 @@
                   "description": "The role of the current curator of the curation session; specifically whether they are an admin curator or a community curator.",
                   "type": "string"
                 },
+                "has_community_curation": {
+                  "title": "Session has community curation",
+                  "description": "True if any of the annotations in the curation session were created by a community curator.",
+                  "type": "boolean"
+                },
                 "initial_curator_name": {
                   "title": "Initial curator name",
                   "description": "The name of of the curator that created the curation session.",
