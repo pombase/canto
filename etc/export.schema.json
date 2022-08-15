@@ -492,6 +492,46 @@
                   "description": "Boolean string that tracks whether the curation session is in admin mode. For internal use only.",
                   "$ref": "#/definitions/stringInteger"
                 },
+                "annotation_curators": {
+                  "title": "Annotation curators",
+                  "description": "Tracks statistics about the annotations made by all curators involved in the curation session.",
+                  "type": "array",
+                  "items": {
+                    "title": "Annotation curator details",
+                    "description": "Statistics about the annotations made by a curator involved in the curation session.",
+                    "type": "object",
+                    "properties": {
+                      "annotation_count": {
+                        "title": "Annotation count",
+                        "description": "The number of annotations made by the curator in the curation session.",
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "community_curator": {
+                        "title": "Community curator",
+                        "description": "True if the curator who made the annotation was a community curator (that is, not a member of the admin curation team).",
+                        "type": "boolean"
+                      },
+                      "name": {
+                        "title": "Curator name",
+                        "description": "The full name of the curator.",
+                        "type": "string"
+                      },
+                      "orcid": {
+                        "title": "Curator ORCID identifier",
+                        "description": "The ORCID identifier of the curator. May be `null` if the curator did not provide an ORCID identifier.",
+                        "oneOf": [
+                          {
+                            "$ref": "#/definitions/orcid"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
                 "annotation_mode": {
                   "title": "Annotation mode",
                   "description": "Tracks the annotation mode of the curation session in Canto. For internal use only.",
