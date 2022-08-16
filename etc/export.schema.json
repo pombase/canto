@@ -537,7 +537,13 @@
                           }
                         ]
                       }
-                    }
+                    },
+                    "required": [
+                      "annotation_count",
+                      "community_curator",
+                      "name",
+                      "orcid"
+                    ]
                   }
                 },
                 "annotation_mode": {
@@ -660,7 +666,10 @@
                   "description": "The number of experimental conditions in the session that are not found in the experimental conditions ontology.",
                   "$ref": "#/definitions/stringInteger"
                 }
-              }
+              },
+              "required": [
+                "has_community_curation"
+              ]
             },
             "metagenotypes": {
               "title": "Metagenotypes",
