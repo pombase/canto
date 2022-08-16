@@ -234,6 +234,18 @@
                         "description": "`true` if the curator who created the annotation was a community curator (not a member of the admin curation team), otherwise `false`.",
                         "type": "boolean"
                       },
+                      "curator_orcid": {
+                        "title": "Curator ORCID identifier",
+                        "description": "The ORCID identifier of the curator who made the annotation. May be `null` if the curator did not provide an ORCID identifier.",
+                        "oneOf": [
+                          {
+                            "$ref": "#/definitions/orcid"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
                       "email": {
                         "title": "Annotation curator email",
                         "description": "The email address of the curator who created the annotation.",
