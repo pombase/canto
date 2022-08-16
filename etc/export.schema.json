@@ -108,7 +108,7 @@
     },
     "metagenotypeId": {
       "title": "Metagenotype identifier",
-      "description": "A unique identifer for a metagenotype, consisting of 1) the curation session identifier, 2) the string '-metagenotype-', and 3) a sequentially incremented integer.",
+      "description": "A unique identifier for a metagenotype, consisting of 1) the curation session identifier, 2) the string '-metagenotype-', and 3) a sequentially incremented integer.",
       "type": "string",
       "pattern": "^[a-f0-9]{8,16}-metagenotype-\\d+$",
       "examples": [
