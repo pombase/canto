@@ -1,7 +1,7 @@
 <table ng-show="ready" class="list">
   <thead>
     <tr>
-      <th>
+      <th ng-show="showDoubleMutantPhenotype">
         Double mutant phenotype
       </th>
       <th>
@@ -22,7 +22,7 @@
   </thead>
   <tbody>
     <tr ng-repeat="interaction in interactions">
-      <td>
+      <td ng-show="showDoubleMutantPhenotype">
         {{interaction.term_name}}
       </td>
       <td>

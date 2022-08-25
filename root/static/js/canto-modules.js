@@ -6731,6 +6731,7 @@ var GenotypeInteractionAnnotationTableCtrl =
       scope: {
         interactions: '=',
         phenotypeAnnotationType: '<',
+        showDoubleMutantPhenotype: '<',
         showPhenotypesLink: '<',
         allowDeletion: '<',
       },
