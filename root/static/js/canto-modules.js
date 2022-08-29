@@ -7191,14 +7191,20 @@ function interactionEvCodesFromPhenotype(phenotypeAnnotationType, phenotypeTermD
     if (allele0.type == 'deletion' && allele1.type == 'deletion') {
       filterEvCodes(evidenceCodeGroups.both_alleles_deletions);
     } else {
-      if (allele0.expression && allele0.expression == 'Overexpression' ||
-          allele1.expression && allele1.expression == 'Overexpression') {
+      const allele0Overexpressed = 
+            allele0.expression && allele0.expression == 'Overexpression';
+      const allele1Overexpressed = 
+            allele1.expression && allele1.expression == 'Overexpression';
+      if (allele0Overexpressed || allele1Overexpressed) {
         filterEvCodes(evidenceCodeGroups.one_allele_overexpressed);
 
-        if (allele0.expression && allele0.expression == 'Overexpression') {
-          overexpressedAllele = 0;
-        } else {
-          overexpressedAllele = 1;
+        if (!allele0Overexpressed || !allele1Overexpressed) {
+          // one is not overexpressed
+          if (allele0Overexpressed) {
+            overexpressedAllele = 0;
+          } else {
+            overexpressedAllele = 1;
+          }
         }
       } else {
         returnEvidenceCodes = phenotypeEvidenceCodes;
