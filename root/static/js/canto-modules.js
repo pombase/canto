@@ -7020,16 +7020,8 @@ var AnnotationInteractionsEditDialogCtrl =
     };
     $scope.$watch('interactionType', typeWatcher);
 
-    $scope.directionChanged = function() {
-      if ($scope.data.interactionForward !== null) {
-        $scope.data.annotationSelectorVisible = true;
-      }
-
-      $scope.data.directionSelectorVisible = false;
-
-      $scope.data.interactingAnnotations = [];
-
-      if ($scope.data.interactionForward) {
+    $scope.setDirection = function(isForward) {
+      if (isForward) {
         $scope.data.subjectAllele = $scope.data.alleleA;
         $scope.data.subjectGenotype = $scope.data.alleleGenotypeA;
         $scope.data.objectAllele = $scope.data.alleleB;
@@ -7040,6 +7032,22 @@ var AnnotationInteractionsEditDialogCtrl =
         $scope.data.objectAllele = $scope.data.alleleA;
         $scope.data.subjectAnnotations = $scope.data.genotypeAnnotationsB;
       }
+    };
+
+    if (args.initialData.overexpressedAllele !== null) {
+      $scope.setDirection(args.initialData.overexpressedAllele != 0);
+    }
+
+    $scope.directionChanged = function() {
+      if ($scope.data.interactionForward !== null) {
+        $scope.data.annotationSelectorVisible = true;
+      }
+
+      $scope.data.directionSelectorVisible = false;
+
+      $scope.data.interactingAnnotations = [];
+
+      $scope.setDirection($scope.data.interactionForward);
 
       $scope.data.interactionAnnotationType =
         $scope.data.annotationType.associated_interaction_annotation_type;
