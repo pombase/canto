@@ -7594,6 +7594,9 @@ var annotationEditDialogCtrl =
 
     // See: https://github.com/pombase/canto/issues/2540
     $scope.interactionAnnotationsChange = function(newCollection, oldCollection) {
+      if (!newCollection || !oldCollection) {
+        return;
+      }
       if (newCollection.length != oldCollection.length) {
         $scope.interactionsChanged = true;
       }
