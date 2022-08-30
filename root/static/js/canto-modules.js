@@ -1838,6 +1838,28 @@ var featureChooser =
           $scope.showCompleter = !$scope.showCompleter;
         };
 
+        $scope.chosenFeature = function() {
+          if ($scope.chosenFeatureId) {
+            for (const feature of $scope.features) {
+              if (feature.feature_id === $scope.chosenFeatureId) {
+                return feature;
+              }
+            }
+          }
+
+          return null;
+        };
+
+        $scope.featureDisplayName = function() {
+          const chosenFeature = $scope.chosenFeature();
+
+          if (chosenFeature) {
+            return chosenFeature.display_name;
+          }
+
+          return 'UNKNOWN';
+        };
+
         featureChooserControlHelper($scope, $uibModal, CursGeneList, CursGenotypeList,
           Curs, toaster);
 
@@ -7516,6 +7538,7 @@ var annotationEditDialogCtrl =
     $scope.currentUserIsAdmin = CantoGlobals.current_user_is_admin;
     $scope.flyBaseMode = CantoGlobals.flybase_mode;
     $scope.showFigureField = CantoGlobals.annotationFigureField;
+    $scope.app_static_path = CantoGlobals.app_static_path;
     $scope.annotation = {};
     $scope.annotationTypeName = args.annotationTypeName;
     $scope.annotationType = null;
@@ -8025,6 +8048,14 @@ var annotationEditDialogCtrl =
       copyIfChanged(args.annotation, objectToStore, changesToStore);
       delete changesToStore.feature_type;
       return countKeys(changesToStore) > 0;
+    };
+
+    $scope.featureChooserTitle = function() {
+      if ($scope.featureEditable) {
+        return 'Choose a ' + $scope.annotationType.feature_type;
+      } else {
+        return 'This annotation is not editable because it has associate genetic interactions';
+      }
     };
 
     $scope.okButtonTitleMessage = function () {

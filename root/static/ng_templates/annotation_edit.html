@@ -35,11 +35,15 @@
           {{displayAnnotationFeatureType}}
         </td>
         <td colspan="2">
-          <div ng-if="filteredFeatures">
+          <div ng-if="filteredFeatures"
+               title="{{featureChooserTitle()}}">
             <feature-chooser feature-type="{{chooseFeatureType}}"
                              features="filteredFeatures"
                              feature-editable="featureEditable"
                              chosen-feature-id="annotation.feature_id"></feature-chooser>
+
+            <img ng-show="!featureEditable" ng-src="{{app_static_path + '/images/help.png'}}"/>
+
             <span ng-show="filteredFeatures.length != 0 && !annotation.feature_id"
                   class="help-block">Please select a {{chooseFeatureType}}</span>
 
@@ -47,7 +51,7 @@
               No {{chooseFeatureType}}s in this session for the selected organism
             </span>
 
-            <div ng-if="!multiOrganismMode && chooseFeatureType == 'gene'">
+            <div ng-if="featureEditable && !multiOrganismMode && chooseFeatureType == 'gene'">
               <a ng-click="openSingleGeneAddDialog()">Add new gene to this session…</a>
             </div>
           </div>

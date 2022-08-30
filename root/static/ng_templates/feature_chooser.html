@@ -5,7 +5,11 @@ Loading ...
   </span>
 
   <span ng-show="features && features.length != 0">
-    <select ng-disabled="!featureEditable" ng-hide="showCompleter" class="form-control" ng-model="chosenFeatureId">
+    <span ng-if="!featureEditable">
+      {{featureDisplayName()}}
+    </span>
+
+    <select ng-if="featureEditable" ng-hide="showCompleter" class="form-control" ng-model="chosenFeatureId">
       <option value="">Choose a {{featureType}} ...</option>
       <option ng-repeat="feature in features track by feature.feature_id"
               ng-value="{{feature.feature_id}}"
