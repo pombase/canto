@@ -7174,13 +7174,19 @@ function interactionEvCodesFromPhenotype(phenotypeAnnotationType, phenotypeTermD
 
     var parentConstraintParts = popPhenotypeEvCodeConfig.parent_constraint.split('|');
 
-    if (phenotypeTermDetails.subset_ids.includes(popPhenotypeEvCodeConfig.parent_constraint) ||
+    const hasParent = (subsetId) => {
+      return parentConstraintParts.includes(subsetId);
+    };
+
+    if (phenotypeTermDetails.subset_ids.filter(hasParent).length > 0 ||
         $.grep(parentConstraintParts,
                function(constraintPart) {
                  return constraintPart == 'is_a(' + phenotypeTermDetails.id + ')';
                }).length > 0) {
+
       // is a population term
       phenotypeEvidenceCodes = [...popPhenotypeEvCodeConfig.evidence_codes];
+
       if (phenotypeTermDetails.subset_ids.includes(popPhenotypeEvCodeConfig.inviable_parent_constraint) ||
           'is_a(' + phenotypeTermDetails.id + ')' == popPhenotypeEvCodeConfig.inviable_parent_constraint) {
         // add extra ev codes only valid for inviable population terms:
