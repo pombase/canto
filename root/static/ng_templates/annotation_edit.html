@@ -36,7 +36,7 @@
         </td>
         <td colspan="2">
           <div ng-if="filteredFeatures"
-               title="{{featureChooserTitle()}}">
+               uib-tooltip="{{featureChooserTitle()}}">
             <feature-chooser feature-type="{{chooseFeatureType}}"
                              features="filteredFeatures"
                              feature-editable="featureEditable"
