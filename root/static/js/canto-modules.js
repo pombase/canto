@@ -7023,7 +7023,8 @@ var AnnotationInteractionsEditDialogCtrl =
           } else {
           $scope.data.overexpressedAllele = args.initialData.overexpressedAllele;
 
-          if ($scope.data.overexpressedAllele != null) {
+          if ($scope.data.overexpressedAllele != null &&
+              evidenceConfig.overexpression_implies_direction) {
             if ($scope.data.overexpressedAllele == 1) {
               $scope.data.interactionForward = true;
             } else {

@@ -1648,6 +1648,7 @@ evidence_types:
     definition: "A genetic interaction is inferred when over expression or increased dosage of one gene causes a growth defect in a strain that is mutated or deleted for another gene."
     name: 'Dosage Growth Defect (growth defect in presence of overexpressed)'
     is_symmetric: 0
+    overexpression_implies_direction: 1
     non_symmetric_interaction_labels:
       interactor_a: growth defect in presence of overexpressed
       interactor_b: overexpression causes growth defect to
@@ -1657,6 +1658,7 @@ evidence_types:
     definition: "A genetic interaction is inferred when over expression or increased dosage of one gene causes lethality in a strain that is mutated or deleted for another gene."
     name: 'Dosage Lethality (inviable in presence of overexpressed)'
     is_symmetric: 0
+    overexpression_implies_direction: 1
     non_symmetric_interaction_labels:
       interactor_a: inviable in presence of overexpressed
       interactor_b: overexpression lethal to
@@ -1666,6 +1668,7 @@ evidence_types:
     definition: "A genetic interaction is inferred when over expression or increased dosage of one gene rescues the lethality or growth defect of a strain that is mutated or deleted for another gene."
     name: 'Dosage Rescue (lethality or growth defect rescued by overexpression of)'
     is_symmetric: 0
+    overexpression_implies_direction: 1
     non_symmetric_interaction_labels:
       interactor_a: rescued by overexpression of
       interactor_b: overexpression rescues
@@ -1693,6 +1696,7 @@ evidence_types:
     definition: "A genetic interaction is inferred when mutation or overexpression of one gene results in enhancement of any phenotype (other than lethality/growth defect) associated with mutation or over expression of another gene."
     name: 'Phenotypic Enhancement (phenotype other than growth defect or lethality enhanced by)'
     is_symmetric: 0
+    overexpression_implies_direction: 0
     non_symmetric_interaction_labels:
       interactor_a: phenotype enhanced by
       interactor_b: enhances phenotype of
@@ -1701,6 +1705,7 @@ evidence_types:
     definition: "A genetic interaction is inferred when mutation or over expression of one gene results in suppression of any phenotype (other than lethality/growth defect) associated with mutation or over expression of another gene."
     name: 'Phenotypic Suppression (phenotype other than growth defect or lethality rescued by)'
     is_symmetric: 0
+    overexpression_implies_direction: 0
     non_symmetric_interaction_labels:
       interactor_a: suppressed by
       interactor_b: suppresses
@@ -1737,6 +1742,7 @@ evidence_types:
     definition: "A genetic interaction is inferred when mutations or deletions of one gene rescues the lethality or growth defect of a strain mutated or deleted for another gene."
     name: 'Synthetic Rescue (lethality or growth defect synthetically rescued by)'
     is_symmetric: 0
+    overexpression_implies_direction: 1
     non_symmetric_interaction_labels:
       interactor_a: synthetically rescued by
       interactor_b: synthetically rescues
