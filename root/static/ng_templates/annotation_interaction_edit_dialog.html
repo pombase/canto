@@ -54,7 +54,7 @@
         <span ng-if="data.interactionForward">
           {{data.alleleA.long_display_name}}
           <span style="font-weight: bold">
-            phenotype(s) {{interactionTypeDisplayLabel}}
+            {{interactionTypeDisplayLabel}}
           </span>
           {{data.alleleB.long_display_name}}
         </span>
@@ -62,7 +62,7 @@
         <span ng-if="!data.interactionForward">
           {{data.alleleB.long_display_name}}
           <span style="font-weight: bold">
-            phenotype(s) {{interactionTypeDisplayLabel}}
+            {{interactionTypeDisplayLabel}}
           </span>
           {{data.alleleA.long_display_name}}
         </span>
@@ -98,7 +98,7 @@
     <div ng-if="data.interactionPhenotypeNotNeeded">
       Confirm:&nbsp;&nbsp;
       {{data.alleleA.long_display_name}}
-      <span style="font-weight: bold">displays {{interactionType}} with</span>
+      <span style="font-weight: bold">{{interactionTypeDisplayLabel}}</span>
       {{data.alleleB.long_display_name}}
     </div>
 
