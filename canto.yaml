@@ -1653,7 +1653,6 @@ evidence_types:
       interactor_a: growth defect in presence of overexpressed
       interactor_b: overexpression causes growth defect to
     interaction_does_not_need_phenotype: 1
-    interaction_dialog_type_label: growth defect in presence of overexpressed
   'Dosage Lethality':
     definition: "A genetic interaction is inferred when over expression or increased dosage of one gene causes lethality in a strain that is mutated or deleted for another gene."
     name: 'Dosage Lethality (inviable in presence of overexpressed)'
@@ -1663,16 +1662,14 @@ evidence_types:
       interactor_a: inviable in presence of overexpressed
       interactor_b: overexpression lethal to
     interaction_does_not_need_phenotype: 1
-    interaction_dialog_type_label: inviable in presence of overexpressed
   'Dosage Rescue':
     definition: "A genetic interaction is inferred when over expression or increased dosage of one gene rescues the lethality or growth defect of a strain that is mutated or deleted for another gene."
     name: 'Dosage Rescue (lethality or growth defect rescued by overexpression of)'
     is_symmetric: 0
     overexpression_implies_direction: 1
     non_symmetric_interaction_labels:
-      interactor_a: rescued by overexpression of
+      interactor_a: "lethality or growth defect rescued by overexpression of"
       interactor_b: overexpression rescues
-    interaction_dialog_type_label: "lethality or growth defect rescued by overexpression of"
   'FRET':
     definition: "An interaction is inferred when close proximity of interaction partners is detected by fluorescence resonance energy transfer between pairs of fluorophore-labeled molecules, such as occurs between CFP (donor) and YFP (acceptor) fusion proteins."
     name: 'FRET (fluorescence resonance energy donor to)'
@@ -1698,18 +1695,16 @@ evidence_types:
     is_symmetric: 0
     overexpression_implies_direction: 0
     non_symmetric_interaction_labels:
-      interactor_a: phenotype enhanced by
+      interactor_a: "phenotype(s) other than growth defect or lethality enhanced by"
       interactor_b: enhances phenotype of
-    interaction_dialog_type_label: "phenotype(s) other than growth defect or lethality enhanced by"
   'Phenotypic Suppression':
     definition: "A genetic interaction is inferred when mutation or over expression of one gene results in suppression of any phenotype (other than lethality/growth defect) associated with mutation or over expression of another gene."
     name: 'Phenotypic Suppression (phenotype other than growth defect or lethality rescued by)'
     is_symmetric: 0
     overexpression_implies_direction: 0
     non_symmetric_interaction_labels:
-      interactor_a: suppressed by
+      interactor_a: "phenotype(s) other than growth defect or lethality suppressed by"
       interactor_b: suppresses
-    interaction_dialog_type_label: "phenotype(s) other than growth defect or lethality suppressed by"
   'Protein-RNA':
     definition: "An interaction is detected between and protein and an RNA in vitro."
     name: 'Protein-RNA (binds to RNA)'
@@ -1731,22 +1726,19 @@ evidence_types:
   'Synthetic Growth Defect':
     definition: "A genetic interaction is inferred when mutations in separate genes, each of which alone causes a minimal phenotype, result in a significant growth defect under a given condition when combined in the same cell."
     is_symmetric: 1
-    interaction_dialog_type_label: displays Synthetic Growth Defect with
   'Synthetic Haploinsufficiency':
     definition: "A genetic interaction is inferred when mutations or deletions in separate genes, at least one of which is hemizygous, cause a minimal phenotype alone but result in lethality when combined in the same cell under a given condition."
   'Synthetic Lethality':
     definition: "A genetic interaction is inferred when mutations or deletions in separate genes, each of which alone causes a minimal phenotype, result in lethality when combined in the same cell under a given condition."
     is_symmetric: 1
-    interaction_dialog_type_label: displays Synthetic Lethality with
   'Synthetic Rescue':
     definition: "A genetic interaction is inferred when mutations or deletions of one gene rescues the lethality or growth defect of a strain mutated or deleted for another gene."
     name: 'Synthetic Rescue (lethality or growth defect synthetically rescued by)'
     is_symmetric: 0
     overexpression_implies_direction: 1
     non_symmetric_interaction_labels:
-      interactor_a: synthetically rescued by
+      interactor_a: lethality or growth defect rescued by
       interactor_b: synthetically rescues
-    interaction_dialog_type_label: lethality or growth defect rescued by
   'Two-hybrid':
     definition: "Bait protein expressed as a DNA binding domain (DBD) fusion and prey expressed as a transcriptional activation domain (TAD) fusion and interaction measured by reporter gene activation."
     name: 'Two-hybrid (binds activation domain construct with)'
