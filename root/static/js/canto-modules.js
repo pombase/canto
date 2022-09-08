@@ -8908,7 +8908,9 @@ var annotationTableRow =
                 $scope.interactionFeatureType = 'genotype';
               }
             }
-            $scope.showTransferLink = annotationType.allow_annotation_transfer &&
+            $scope.showTransferLink =
+              (annotationType.allow_annotation_transfer ||
+               CantoGlobals.is_admin_user) &&
               !(annotationType.category == 'ontology' &&
                 annotationType.feature_type === 'metagenotype');
           });
