@@ -95,7 +95,7 @@ test_psgi $app, sub {
       die "$@\n", $res->content();
     }
 
-    is (@$obj, 6);
+    is (@$obj, 7);
 
     ok(grep { $_->{id} =~ /FYECO:0000012/ } @$obj);
     ok(grep { $_->{name} =~ /standard glucose rich medium/ } @$obj);

@@ -98,6 +98,20 @@ is_a: FYECO:0000137 ! glucose rich medium
 created_by: antonialock
 creation_date: 2012-02-07T12:39:25Z
 
+[Term]
+id: FYECO:0000138
+name: glycerol YE
+alt_id: FYECO:0000083
+def: "Experiments were performed in rich medium containing glycerol as the sole carbon source, yeast extract and other components. The concentration of glycerol is typically around 2-3% and supplemented with trace amounts of another carbon source (e.g. glucose)." [PomBase:al]
+comment: Use the medium terms to specify the general type of growth medium and its carbon source. If certain chemicals not normally found in the medium were added, please also use the 'chemical added/excluded' terms, such as 'caffeine added' or 'nitrogen excluded'. If a chemical was added in a much lower quantity than normal, please use the 'limited chemical added' conditions, for instance 'limited adenine added'.
+synonym: "glycerol rich medium" BROAD [PomBase:al]
+synonym: "glycerol sole carbon source rich medium" EXACT [PomBase:al]
+synonym: "glycerol sole carbon source YE" RELATED [PomBase:al]
+is_obsolete: true
+is_a: FYECO:0000080 ! grouping rich medium
+created_by: antonialock
+creation_date: 2012-06-14T20:38:23Z
+
 [Typedef]
 id: part_of
 name: part_of

@@ -178,7 +178,7 @@ $ontology_index = Canto::Track::OntologyIndex->new(config => $config, index_path
 $test_util->load_test_ontologies($ontology_index, 1, 1);
 @loaded_cvterms = $schema->resultset('Cvterm')->all();
 
-is(@loaded_cvterms, 157);
+is(@loaded_cvterms, 158);
 
 ok((grep {
   $_->name() eq 'OBSOLETE FYPO:0002233 viable elongated vegetative cell population'

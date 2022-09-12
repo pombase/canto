@@ -48,7 +48,7 @@ $subset_process->process_subset_data($track_schema, $subset_data);
 
 my $after_cvtermprop_count = $prop_rs->count();
 
-is ($after_cvtermprop_count, 55);
+is ($after_cvtermprop_count, 56);
 
 sub get_subset_props
 {
