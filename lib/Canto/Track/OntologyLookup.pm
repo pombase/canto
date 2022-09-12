@@ -601,11 +601,12 @@ END
       ['value', $_];
     } @flat_ids;
 
-    $rs = $schema->resultset('Cvterm')->search(\[$where, @bind_params]);
+    $rs = $schema->resultset('Cvterm')->search(\["is_obsolete = 0 AND ($where)", @bind_params]);
   } else {
     my $cv = $self->_find_cv($search_scope);
     $rs = $schema->resultset('Cvterm')->search({
       cv_id => $cv->cv_id(),
+      is_obsolete => 0,
       is_relationshiptype => 0,
     });
   }
@@ -640,7 +641,8 @@ END
                                             include_children => 1|0,
                                             include_definition => 1|0,
                                             include_exact_synonyms => 1|0);
- Function: Return all the non-relation terms from an ontology or subset
+ Function: Return all the non-obsolete, non-relation terms from an ontology
+           or subset
  Args    : ontology_name - the ontology or subset to search, subsets look like:
                            "[GO:000123|SO:000345]"
            include_children - include data about the child terms (default: 0)

@@ -128,16 +128,24 @@ if ($lookup_type eq 'gene') {
       usage("no ontology name argument");
     }
 
+    my $res = [];
     my @lookup_args = (ontology_name => $ontology_name,
-                       search_string => $search_string,
                        max_results => 20);
 
     if ($verbose) {
       push @lookup_args, include_children => 1,
-        include_synonyms => ['exact', 'broad', 'related'],
+        include_synonyms => ['exact', 'broad', 'related'];
     }
 
-    my $res = $lookup->lookup(@lookup_args);
+    if ($search_string =~ /^\s*:ALL:\s*/) {
+      $res = [$lookup->get_all(@lookup_args)];
+    } else {
+
+      push @lookup_args, search_string => $search_string;
+
+      $res = $lookup->lookup(@lookup_args);
+
+    }
 
     for my $hit (@$res) {
       my $synonym_text = '';
