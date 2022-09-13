@@ -1592,6 +1592,8 @@ evidence_types:
     name: Not Recorded
   TAS:
     name: Traceable Author Statement
+  HDA:
+    name: Inferred from High Throughput Direct Assay
   UNK:
     name: Unknown
   Microscopy: ~
