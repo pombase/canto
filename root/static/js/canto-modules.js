@@ -8154,7 +8154,12 @@ function startEditing($uibModal, annotationTypeName, annotation,
     backdrop: 'static',
   });
 
-  return editInstance.result;
+  return editInstance.result
+    .catch(function(res) {
+      if (!(res === 'cancel' || res === 'escape key press')) {
+        throw res;
+      }
+    });
 }
 
 function startTransfer($uibModal, annotation, currentFeatureDisplayName) {
@@ -8964,6 +8969,10 @@ var annotationTableRow =
               $scope.featureFilterDisplayName, false, true);
 
           editPromise.then(function (editedAnnotation) {
+            if (!editedAnnotation) {
+              // dialog was cancelled
+              return;
+            }
             $scope.annotation = editedAnnotation;
             if (typeof ($scope.annotation.conditions) !== 'undefined') {
               $scope.annotation.conditionsString =
