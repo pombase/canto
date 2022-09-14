@@ -9837,10 +9837,8 @@ var organismPicker = function ($http, OrganismList) {
       }
 
       function updateTaxonIds() {
-        var taxonIds = [];
-        angular.forEach($scope.selectedOrganisms, function (organism) {
-          taxonIds.push(organism.taxonid);
-        });
+        var taxonIds = 
+            $scope.selectedOrganisms.map(organism => organism.taxonid);
         $scope.taxon_ids = taxonIds.join(" ");
       }
 
