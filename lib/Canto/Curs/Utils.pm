@@ -923,6 +923,31 @@ sub get_annotation_table
   return ($completed_count, [@annotations])
 }
 
+sub _add_ext_range_display_values
+{
+  my $ontology_lookup = shift;
+  my $extension = shift;
+
+  map {
+    my $or_group = $_;
+
+    map {
+      my $and_group = $_;
+
+      if ((!defined $and_group->{rangeType} || $and_group->{rangeType} eq 'Ontology') &&
+          !defined $and_group->{rangeDisplayName} &&
+          defined $and_group->{rangeValue} &&
+          $and_group->{rangeValue} =~ /^[A-Z_]+:\d+$/) {
+        my $res = $ontology_lookup->lookup_by_id(id => $and_group->{rangeValue});
+
+        if ($res && $res->{name}) {
+          $and_group->{rangeDisplayName} = $res->{name};
+        }
+      }
+    } @$or_group;
+  } @$extension
+}
+
 sub _process_existing_db_ontology
 {
   my $config = shift;
@@ -1005,6 +1030,12 @@ sub _process_existing_db_ontology
         $genotype_id = $db_genotype->genotype_id();
       }
     }
+  }
+
+  my $extension = $row->{extension};
+
+  if (defined $extension) {
+    _add_ext_range_display_values($ontology_lookup, $extension);
   }
 
   my %ret = (
