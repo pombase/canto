@@ -3161,8 +3161,9 @@ var extensionOrGroupDisplay =
 
         $.map($scope.orGroup,
           function (andGroup) {
-            if (!andGroup.rangeType && andGroup.rangeValue.match('^[A-Z_]+:\\d+') ||
-              andGroup.rangeType && andGroup.rangeType == 'Ontology') {
+            if (!andGroup.rangeDisplayName &&
+                (!andGroup.rangeType && andGroup.rangeValue.match('^[A-Z_]+:\\d+') ||
+                 andGroup.rangeType && andGroup.rangeType == 'Ontology')) {
               CantoService.lookup('ontology', [andGroup.rangeValue], {})
                 .then(function (data) {
                   andGroup.rangeDisplayName = data.name;
