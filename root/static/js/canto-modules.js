@@ -7196,7 +7196,7 @@ function interactionEvCodesFromPhenotype(phenotypeAnnotationType, phenotypeTermD
       }
     } else {
       // isn't a population term
-      phenotypeEvidenceCodes = popPhenotypeEvCodeConfig.not_population_evidence_codes;
+      phenotypeEvidenceCodes = evidenceCodeGroups.not_population_evidence_codes;
     }
 
     var returnEvidenceCodes = [];

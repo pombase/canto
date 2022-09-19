@@ -2174,15 +2174,13 @@ available_annotation_type_list:
           - Dosage Rescue
           - Synthetic Rescue
           - Synthetic Growth Defect
-          - Phenotypic Enhancement
-          - Phenotypic Suppression
         inviable_parent_constraint: 'is_a(FYPO:0002059)'
         inviable_only_evidence_codes:
           - Dosage Lethality
           - Synthetic Lethality
-        not_population_evidence_codes:
-          - Phenotypic Enhancement
-          - Phenotypic Suppression
+      not_population_evidence_codes:
+        - Phenotypic Enhancement
+        - Phenotypic Suppression
       both_alleles_deletions:
         - Phenotypic Enhancement
         - Phenotypic Suppression
