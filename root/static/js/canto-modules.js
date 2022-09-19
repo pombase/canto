@@ -9961,6 +9961,7 @@ var annotationTableRow =
 
           editPromise.then(function (editedAnnotation) {
             $scope.annotation = editedAnnotation;
+            $scope.updateInteractionInitialData();
             if (typeof ($scope.annotation.conditions) !== 'undefined') {
               $scope.annotation.conditionsString =
                 conditionsToStringHighlightNew($scope.annotation.conditions);
@@ -9968,6 +9969,7 @@ var annotationTableRow =
           });
         };
 
+        $scope.updateInteractionInitialData = function() {
         $q.all([annotationTypePromise, $scope.genotypesPromiseForInteractions])
           .then(function(results) {
             var annotationType = results[0];
@@ -10010,6 +10012,9 @@ var annotationTableRow =
               });
             }
           });
+        };
+
+        $scope.updateInteractionInitialData();
 
         $scope.viewEditInteractions = function() {
           annotationTypePromise.then(function(annotationType) {
