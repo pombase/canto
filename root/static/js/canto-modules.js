@@ -7013,11 +7013,11 @@ var AnnotationInteractionsEditDialogCtrl =
       if ($scope.interactionType) {
         var evidenceConfig = $scope.data.evidenceConfig[$scope.interactionType];
         $scope.data.interactionTypeConfig = evidenceConfig;
-        $scope.interactionTypeDisplayLabel =
-          evidenceConfig.non_symmetric_interaction_labels.interactor_a;
        if (evidenceConfig.is_symmetric) {
           $scope.data.interactionPhenotypeNotNeeded  = true;
         } else {
+          $scope.interactionTypeDisplayLabel =
+            evidenceConfig.non_symmetric_interaction_labels.interactor_a;
           if (evidenceConfig.interaction_does_not_need_phenotype) {
           $scope.data.interactionPhenotypeNotNeeded  = true;
           } else {
