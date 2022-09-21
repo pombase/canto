@@ -165,10 +165,15 @@ sub lookup
 
   while (defined (my $row = $syn_rs->next())) {
     my $synonym = $row->synonym();
-    push @{$res{$row->feature_id()}->{synonyms}}, {
-      synonym => $synonym->name(),
-      edit_status => 'existing',
-    };
+    my $allele = $res{$row->feature_id()};
+    if (!grep {
+      $_->{synonym} eq $synonym->name()
+    } @{$allele->{synonyms}}) {
+      push @{$allele->{synonyms}}, {
+        synonym => $synonym->name(),
+        edit_status => 'existing',
+      };
+    }
   }
 
   my $desc_rs = $schema->resultset('Cv')
