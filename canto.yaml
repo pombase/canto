@@ -2171,7 +2171,7 @@ available_annotation_type_list:
     evidence_code_groups:
       double_mutant_population_phenotype:
         parent_constraint: 'is_a(FYPO:0000139)|is_a(FYPO:0002057)'
-        evidence_codes:
+        viable_evidence_codes:
           - Dosage Growth Defect
           - Dosage Rescue
           - Synthetic Rescue

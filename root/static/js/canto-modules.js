@@ -7185,9 +7185,6 @@ function interactionEvCodesFromPhenotype(phenotypeAnnotationType, phenotypeTermD
                  return constraintPart == 'is_a(' + phenotypeTermDetails.id + ')';
                }).length > 0) {
 
-      // is a population term
-      phenotypeEvidenceCodes = [...popPhenotypeEvCodeConfig.evidence_codes];
-
       if (phenotypeTermDetails.subset_ids.includes(popPhenotypeEvCodeConfig.inviable_parent_constraint) ||
           'is_a(' + phenotypeTermDetails.id + ')' == popPhenotypeEvCodeConfig.inviable_parent_constraint) {
         // add extra ev codes only valid for inviable population terms:
@@ -7195,6 +7192,9 @@ function interactionEvCodesFromPhenotype(phenotypeAnnotationType, phenotypeTermD
               inviableEvCode => {
                 phenotypeEvidenceCodes.push(inviableEvCode);
               });
+      } else {
+        // is a population term
+        phenotypeEvidenceCodes = [...popPhenotypeEvCodeConfig.viable_evidence_codes];
       }
     } else {
       // isn't a population term
