@@ -1725,11 +1725,13 @@ evidence_types:
   'RNA protection assay evidence': ~
   'Synthetic Growth Defect':
     definition: "A genetic interaction is inferred when mutations in separate genes, each of which alone causes a minimal phenotype, result in a significant growth defect under a given condition when combined in the same cell."
+    interaction_dialog_type_label: displays Synthetic Growth Defect with
     is_symmetric: 1
   'Synthetic Haploinsufficiency':
     definition: "A genetic interaction is inferred when mutations or deletions in separate genes, at least one of which is hemizygous, cause a minimal phenotype alone but result in lethality when combined in the same cell under a given condition."
   'Synthetic Lethality':
     definition: "A genetic interaction is inferred when mutations or deletions in separate genes, each of which alone causes a minimal phenotype, result in lethality when combined in the same cell under a given condition."
+    interaction_dialog_type_label: displays Synthetic Lethality with
     is_symmetric: 1
   'Synthetic Rescue':
     definition: "A genetic interaction is inferred when mutations or deletions of one gene rescues the lethality or growth defect of a strain mutated or deleted for another gene."

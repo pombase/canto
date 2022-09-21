@@ -7014,7 +7014,9 @@ var AnnotationInteractionsEditDialogCtrl =
         var evidenceConfig = $scope.data.evidenceConfig[$scope.interactionType];
         $scope.data.interactionTypeConfig = evidenceConfig;
        if (evidenceConfig.is_symmetric) {
+          $scope.interactionTypeDisplayLabel = evidenceConfig.interaction_dialog_type_label;
           $scope.data.interactionPhenotypeNotNeeded  = true;
+          $scope.setDirection(true);
         } else {
           $scope.interactionTypeDisplayLabel =
             evidenceConfig.non_symmetric_interaction_labels.interactor_a;
