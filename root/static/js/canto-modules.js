@@ -7021,7 +7021,8 @@ var AnnotationInteractionsEditDialogCtrl =
           $scope.interactionTypeDisplayLabel =
             evidenceConfig.non_symmetric_interaction_labels.interactor_a;
           if (evidenceConfig.interaction_does_not_need_phenotype) {
-          $scope.data.interactionPhenotypeNotNeeded  = true;
+            $scope.data.interactionPhenotypeNotNeeded  = true;
+            $scope.setDirection(true);
           } else {
           $scope.data.overexpressedAllele = args.initialData.overexpressedAllele;
 
