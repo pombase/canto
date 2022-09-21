@@ -6916,7 +6916,7 @@ var selectInteractionAnnotationsCtrl =
          if ($scope.annotationType.associated_interaction_annotation_type) {
            var termConstraints =
                $scope.annotationType.associated_interaction_annotation_type.interaction_single_allele_phenotype_constraints;
-           termConstraint = termConstraints['Synthetic Rescue'];
+//           termConstraint = termConstraints['Synthetic Rescue'];
          }
 
          var addPromise =
