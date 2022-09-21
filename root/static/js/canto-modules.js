@@ -3821,12 +3821,25 @@ var alleleNameComplete =
           return $.map(
             lookupResponse,
             function (el) {
+              const synonyms = [];
+              const seenSynonyms = {};
+
+              if (el.synonyms) {
+                el.synonyms.map(syn => {
+                  const key = syn.synonym + '-' + syn.edit_status;
+                  if (!seenSynonyms[key]) {
+                    seenSynonyms[key] = true;
+                    synonyms.push(syn);
+                  }
+                });
+              }
+
               return {
                 value: el.name,
                 allele_primary_identifier: el.uniquename,
                 display_name: el.display_name,
                 description: el.description,
-                synonyms: el.synonyms,
+                synonyms: synonyms,
                 type: el.type,
               };
             });
