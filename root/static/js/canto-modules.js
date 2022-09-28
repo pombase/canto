@@ -9972,9 +9972,15 @@ var annotationTableRow =
           });
         };
 
-        $scope.updateInteractionInitialData = function() {
-        $q.all([annotationTypePromise, $scope.genotypesPromiseForInteractions])
-          .then(function(results) {
+        $scope.updateInteractionInitialData = function(genotypesPromise) {
+          if (!genotypesPromise) {
+            genotypesPromise = CursGenotypeList.cursGenotypeList({
+              include_allele: 1
+            });
+          }
+
+          return $q.all([annotationTypePromise, genotypesPromise])
+           .then(function(results) {
             var annotationType = results[0];
             var genotypes = results[1];
 
@@ -9991,7 +9997,7 @@ var annotationTableRow =
                                             annotationType, $scope.annotation.term_ontid,
                                             $scope.annotation.feature_id, genotypes);
 
-              interactionInitialDataPromise
+            return interactionInitialDataPromise
                 .then(function(data) {
                   return findGenotypesOfAlleles(data, $q, AnnotationProxy,
                                                 annotationType,
@@ -10010,17 +10016,29 @@ var annotationTableRow =
                     $scope.annotation.interaction_annotations_with_phenotypes = [];
                   }
 
-                  $scope.genotypeInteractionInitialData = initialData;
+                  return initialData;
+                } else {
+                  return null;
                 }
               });
             }
+
+            return null;
           });
         };
 
-        $scope.updateInteractionInitialData();
+        $scope.updateInteractionInitialData($scope.genotypesPromiseForInteractions)
+          .then((initialData) => {
+            $scope.genotypeInteractionInitialData = initialData;
+          });
 
         $scope.viewEditInteractions = function() {
           annotationTypePromise.then(function(annotationType) {
+            var interactionInitialDataPromise =
+                $scope.updateInteractionInitialData(null);
+
+            interactionInitialDataPromise.then((initialData) => {
+
             if ($scope.genotypeInteractionCount() == 0) {
               var editedAnnotation = {};
 
@@ -10028,7 +10046,7 @@ var annotationTableRow =
 
               var newInteractionsPromise =
                   startInteractionAnnotationsEdit($uibModal, annotationType,
-                                                  $scope.genotypeInteractionInitialData);
+                                                  initialData);
 
               newInteractionsPromise.then(function(result) {
                 if (result.genotype_a_phenotype_annotations.length == 0) {
@@ -10046,8 +10064,9 @@ var annotationTableRow =
             } else {
               editGenotypeInteractions($uibModal, $scope.annotation,
                                        annotationType,
-                                       $scope.genotypeInteractionInitialData);
+                                       initialData);
             }
+          });
           });
         };
 
