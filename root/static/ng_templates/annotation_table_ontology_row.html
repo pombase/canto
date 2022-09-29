@@ -85,7 +85,7 @@
     </span>
 
     <div class="curs-annotation-table-view-edit-interactions"
-         ng-if="genotypeInteractionInitialData">
+         ng-if="interactionViewLinkVisible()">
       <div ng-if="genotypeInteractionCount() == 0">
         Associated genetic interactions (0) -
         <a ng-click="viewEditInteractions()">add ...</a>

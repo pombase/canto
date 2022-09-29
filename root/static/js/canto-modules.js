@@ -9972,6 +9972,12 @@ var annotationTableRow =
           });
         };
 
+        $scope.interactionViewLinkVisible = function() {
+          return $scope.genotypeInteractionInitialData &&
+            annotation.status !== 'existing' &&
+            !$scope.read_only_curs;
+        };
+
         $scope.updateInteractionInitialData = function(genotypesPromise) {
           if (!genotypesPromise) {
             genotypesPromise = CursGenotypeList.cursGenotypeList({
