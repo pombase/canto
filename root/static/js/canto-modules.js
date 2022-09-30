@@ -7022,7 +7022,7 @@ var AnnotationInteractionsEditDialogCtrl =
             evidenceConfig.non_symmetric_interaction_labels.interactor_a;
           if (evidenceConfig.interaction_does_not_need_phenotype) {
             $scope.data.interactionPhenotypeNotNeeded  = true;
-            $scope.setDirection(true);
+            $scope.setDirection(args.initialData.overexpressedAllele != 0);
           } else {
           $scope.data.overexpressedAllele = args.initialData.overexpressedAllele;
 
