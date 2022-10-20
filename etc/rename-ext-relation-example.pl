@@ -40,9 +40,8 @@ my $schema = Canto::TrackDB->new(config => $config);
 my $track_schema = Canto::TrackDB->new(config => $config);
 
 
-my $old_ext_rel_name = 'gene_for_gene_interaction';
-my $new_ext_rel_name = 'interaction_compatibility';
-
+my $old_ext_rel_name = 'has_regulation_target';
+my $new_ext_rel_name = 'has_input';
 
 my $proc = sub {
   my $curs = shift;
@@ -58,20 +57,19 @@ my $proc = sub {
 
     my $extension = $data->{extension};
 
-    if (defined $extension && @$extension == 1) {
+    if (defined $extension) {
 
         map {
           my $or_part = $_;
           map {
             my $and_part = $_;
-            if ((!$and_part->{rangeType} || $and_part->{rangeType} && $and_part->{rangeType} eq 'Ontology') &&
-                  $and_part->{relation} eq $old_ext_rel_name ) {
-              if ($and_part->{rangeValue} eq 'PHIPO:0001189' ||
-                    $and_part->{rangeValue} eq 'PHIPO:0001190') {
-                $and_part->{relation} = $new_ext_rel_name;
-                warn "changed annotation in ", $curs->curs_key(), "\n";
-                $changed = 1;
-              }
+
+            if ((1 || !$and_part->{rangeType} ||
+                 $and_part->{rangeType} && $and_part->{rangeType} eq 'Ontology') &&
+                $and_part->{relation} eq $old_ext_rel_name ) {
+              $and_part->{relation} = $new_ext_rel_name;
+              warn "changed annotation in ", $curs->curs_key(), "\n";
+              $changed = 1;
             }
           } @$or_part;
         } @$extension;
