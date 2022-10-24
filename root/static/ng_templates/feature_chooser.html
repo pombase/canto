@@ -5,11 +5,11 @@ Loading ...
   </span>
 
   <span ng-show="features && features.length != 0">
-    <span ng-if="!featureEditable">
+    <span ng-if="!featureIsEditable()">
       {{featureDisplayName()}}
     </span>
 
-    <select ng-hide="showCompleter || !featureEditable" class="form-control" ng-model="chosenFeatureId">
+    <select ng-hide="showCompleter || !featureIsEditable()" class="form-control" ng-model="chosenFeatureId">
       <option value="">Choose a {{featureType}} ...</option>
       <option ng-repeat="feature in features track by feature.feature_id"
               ng-value="{{feature.feature_id}}"
@@ -23,7 +23,7 @@ Loading ...
       </feature-complete>
     </span>
 
-    <a ng-show="featureType == 'genotype' && featureEditable" href="#" ng-click="search()">
+    <a ng-show="featureType == 'genotype' && featureIsEditable()" href="#" ng-click="search()">
       <img ng-show="!showCompleter"
            ng-src="{{app_static_path + '/images/search.svg'}}"
            title="{{'Search ' + featureType + 's'}}"

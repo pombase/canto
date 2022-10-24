@@ -187,6 +187,7 @@
           <div ng-if="filteredFeaturesB">
             <feature-chooser feature-type="{{chooseFeatureType}}"
                              features="filteredFeaturesB"
+                             feature-editable="true"
                              chosen-feature-id="annotation.second_feature_id"></feature-chooser>
             <span ng-show="filteredFeaturesB.length == 0 && annotationType && annotationType.interaction_same_locus">
               <span ng-show="annotationType.single_allele_only">

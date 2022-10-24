@@ -1850,6 +1850,15 @@ var featureChooser =
           return null;
         };
 
+        $scope.featureIsEditable = function() {
+          if (typeof($scope.featureEditable) === 'undefined') {
+            // default to editable
+            return true;
+          } else {
+            return $scope.featureEditable;
+          }
+        };
+
         $scope.featureDisplayName = function() {
           const chosenFeature = $scope.chosenFeature();
 
