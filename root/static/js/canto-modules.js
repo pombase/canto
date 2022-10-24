@@ -8071,7 +8071,7 @@ var annotationEditDialogCtrl =
       if ($scope.featureEditable) {
         return 'Choose a ' + $scope.annotationType.feature_type;
       } else {
-        return 'This annotation is not editable because it has associate genetic interactions';
+        return 'This annotation is not editable because it has associated genetic interactions';
       }
     };
 
