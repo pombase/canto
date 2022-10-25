@@ -2128,6 +2128,8 @@ sub delete_annotation
     my $interaction =
       $genotype_annotation->genotype_interactions_with_phenotype_primary_genotype_annotation()->first()
       //
+      $genotype_annotation->genotype_interactions_with_phenotype_genotype_annotation_a()->first()
+      //
       $genotype_annotation->genotype_interactions()->first();
 
     if ($interaction) {
