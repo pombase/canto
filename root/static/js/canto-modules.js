@@ -7326,7 +7326,7 @@ function getInteractionInitialData($q, CantoConfig,
         return null;
       }
 
-      if (genotype.alleles.length != 2) {
+      if (genotype.alleles.length != 2 || genotype.locus_count != 2) {
         return null;
       }
 
