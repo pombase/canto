@@ -6140,7 +6140,6 @@ var genotypeListViewCtrl =
         $scope.multi_organism_mode = CantoGlobals.multi_organism_mode;
         $scope.alleles_have_expression = CantoGlobals.alleles_have_expression;
         $scope.diploid_mode = CantoGlobals.diploid_mode;
-        $scope.userIsAdmin = CantoGlobals.current_user_is_admin;
 
         function hasDifferentStrains(genotypes) {
           var firstStrain = genotypes[0].strain_name;
