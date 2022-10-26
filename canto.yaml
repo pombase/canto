@@ -2202,6 +2202,7 @@ available_annotation_type_list:
     display_name: 'legacy genetic interaction'
     feature_type: 'gene'
     help_text: 'Examples: synthetic lethality, dosage suppression, phenotype enhancement.'
+    delete_only: 1
     evidence_codes:
       - Dosage Growth Defect
       - Dosage Lethality

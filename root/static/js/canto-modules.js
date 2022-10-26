@@ -9826,6 +9826,7 @@ var annotationTableRow =
         $scope.showInteractionTermColumns = false;
         $scope.hasWildTypeHost = false;
         $scope.showTransferLink = false;
+        $scope.showEditLink = false;
         $scope.isMetagenotypeAnnotation = false;
         $scope.checkboxChecked = false;
         $scope.genotypeInteractionInitialData = null;
@@ -9934,11 +9935,13 @@ var annotationTableRow =
                 $scope.interactionFeatureType = 'genotype';
               }
             }
+            $scope.showEditLink = !annotationType.delete_only;
             $scope.showTransferLink =
+              !annotationType.delete_only && (
               (annotationType.allow_annotation_transfer ||
                CantoGlobals.is_admin_user) &&
               !(annotationType.category == 'ontology' &&
-                annotationType.feature_type === 'metagenotype');
+                annotationType.feature_type === 'metagenotype'));
           });
 
         CantoConfig.get('instance_organism').then(function (results) {

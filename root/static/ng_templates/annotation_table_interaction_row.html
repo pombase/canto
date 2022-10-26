@@ -62,14 +62,14 @@
   </td>
   <td class="table-row-actions">
     <div ng-if="addLinks()">
-      <div>
+      <div ng-if="showEditLink">
         <a ng-click="edit()">Edit</a>
       </div>
       <div ng-if="showTransferLink">
         <a title="{{'Copy this annotation to other ' + annotationType.feature_type + 's'}}"
            ng-click="transferAnnotation()">Transfer</a>
       </div>
-      <div>
+      <div ng-if="showEditLink">
         <a ng-click="duplicate()">Copy and edit</a>
       </div>
       <div>

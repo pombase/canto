@@ -157,7 +157,7 @@
            href="{{featureLink('metagenotype', annotation.metagenotype_id)}}">View metagenotype</a>
       </div>
       <div>
-        <a title="Edit this annotation" ng-click="edit()">Edit</a>
+        <a title="Edit this annotation" ng-if="showEditLink" ng-click="edit()">Edit</a>
       </div>
       <div ng-if="showTransferLink">
         <a title="{{'Copy this annotation to other ' + annotationType.feature_type + 's'}}"
@@ -165,6 +165,7 @@
       </div>
       <div>
         <a title="Make copy of this annotation and then edit the details"
+           ng-if="showEditLink"
            ng-click="duplicate()">Copy and edit</a>
       </div>
       <div>
