@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 140;
+use Test::More tests => 126;
 use Test::Deep;
 
 use Canto::TestUtil;
@@ -60,35 +60,6 @@ sub check_new_annotations
     is ($annotations[0]->{taxonid}, '4896');
     like ($annotations[0]->{creation_date}, qr/\d+-\d+-\d+/);
     is ($annotations[0]->{gene_synonyms_string}, 'SPAC637.01c');
-  }
-
-  {
-    my ($completed_count, $annotations_ref) =
-      Canto::Curs::Utils::get_annotation_table($config, $curs_schema,
-                                                'genotype_interaction');
-
-    my @annotations = @$annotations_ref;
-
-    is (@annotations, 1);
-
-    my $interacting_gene_count = 0;
-
-    for my $annotation (@annotations) {
-      is ($annotation->{genotype_a_display_name}, 'SPCC63.05delta ssm4KE');
-      is ($annotation->{genotype_a_taxonid}, '4896');
-      is ($annotation->{publication_uniquename}, 'PMID:19756689');
-      if ($annotation->{evidence_code} eq 'Synthetic Haploinsufficiency') {
-        $interacting_gene_count++
-      } else {
-        if ($annotation->{evidence_code} eq 'Far Western') {
-          $interacting_gene_count++
-        } else {
-          fail ("unknown interacting gene");
-        }
-      }
-    }
-
-    is ($interacting_gene_count, 1);
   }
 
   {
@@ -170,7 +141,7 @@ sub check_new_annotations
                  'needs_with' => undef,
                  'completed' => 1,
                  'annotation_type' => 'phenotype',
-                 'annotation_id' => 6,
+                 'annotation_id' => 5,
                  'is_not' => JSON::false,
                  'evidence_code' => 'Epitope-tagged protein immunolocalization experiment data',
                  'annotation_type_abbreviation' => '',
@@ -218,6 +189,8 @@ sub check_new_annotations
                    }
                  ],
                  checked => 'no',
+                 interaction_annotations_with_phenotypes => [],
+                 interaction_annotations => [],
                },
                {
                  'publication_uniquename' => 'PMID:19756689',
@@ -253,7 +226,7 @@ sub check_new_annotations
                  'term_name' => 'elongated cell',
                  'needs_with' => undef,
                  'completed' => 1,
-                 'annotation_id' => 7,
+                 'annotation_id' => 6,
                  'annotation_type' => 'phenotype',
                  'genotype_id' => 2,
                  'extension' => [],
@@ -279,6 +252,8 @@ sub check_new_annotations
                    }
                  ],
                  checked => 'no',
+                 interaction_annotations_with_phenotypes => [],
+                 interaction_annotations => [],
                }
              ]);
   }

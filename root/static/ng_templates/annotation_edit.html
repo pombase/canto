@@ -35,13 +35,15 @@
           {{displayAnnotationFeatureType}}
         </td>
         <td colspan="2">
-          <div ng-if="!featureEditable">
-            {{currentFeatureDisplayName}}
-          </div>
-          <div ng-if="featureEditable && filteredFeatures">
+          <div ng-if="filteredFeatures"
+               uib-tooltip="{{featureChooserTitle()}}">
             <feature-chooser feature-type="{{chooseFeatureType}}"
                              features="filteredFeatures"
+                             feature-editable="featureEditable"
                              chosen-feature-id="annotation.feature_id"></feature-chooser>
+
+            <img ng-show="!featureEditable" ng-src="{{app_static_path + '/images/help.png'}}"/>
+
             <span ng-show="filteredFeatures.length != 0 && !annotation.feature_id"
                   class="help-block">Please select a {{chooseFeatureType}}</span>
 
@@ -49,7 +51,7 @@
               No {{chooseFeatureType}}s in this session for the selected organism
             </span>
 
-            <div ng-if="!multiOrganismMode && chooseFeatureType == 'gene'">
+            <div ng-if="featureEditable && !multiOrganismMode && chooseFeatureType == 'gene'">
               <a ng-click="openSingleGeneAddDialog()">Add new gene to this session…</a>
             </div>
           </div>
@@ -61,7 +63,12 @@
         <td ng-if="annotationType.category == 'interaction'" class="title">
           Phenotype <span ng-hide="annotationType.interaction_term_required">(optional)</span>
         </td>
-        <td colspan="2">
+        <td ng-if="!termEditable()" colspan="2">
+          <span title="Term can't be edited while there are interactions for this annotation">
+            {{annotation.term_name}}
+          </span>
+        </td>
+        <td ng-if="termEditable()" colspan="2">
           <div ng-if="annotationType.term_suggestions_annotation_type && termSuggestions.length">
             Suggested terms:
             <select class="form-control" ng-model="models.chosenSuggestedTerm"
@@ -75,7 +82,7 @@
           <div ng-if="filteredFeatures && filteredFeatures.length != 0">
             <term-name-complete current-term-name="{{annotation.term_name}}"
                                 found-callback="termFoundCallback(termId, termName, searchString, matchingSynonym)"
-                                annotation-type-name="{{annotationType.name}}">
+                                annotation-type-name="{{termNameConstraint}}">
             </term-name-complete>
             <span ng-show="!isValidTerm()"
                   class="help-block">Start typing to choose a term</span>
@@ -180,6 +187,7 @@
           <div ng-if="filteredFeaturesB">
             <feature-chooser feature-type="{{chooseFeatureType}}"
                              features="filteredFeaturesB"
+                             feature-editable="true"
                              chosen-feature-id="annotation.second_feature_id"></feature-chooser>
             <span ng-show="filteredFeaturesB.length == 0 && annotationType && annotationType.interaction_same_locus">
               <span ng-show="annotationType.single_allele_only">
@@ -227,6 +235,31 @@
                  placeholder="e.g. Figure 1, Table 1"
                  ng-model="annotation.figure"/>
         </td>
+      </tr>
+    </table>
+    </div>
+  </div>
+
+  <div ng-if="allowInteractionAnnotations" class="modal-header">
+    <h4 class="modal-title">
+      Add/edit genetic interaction for genotype {{annotation.feature_display_name}}
+    </h4>
+  </div>
+
+  <div ng-if="allowInteractionAnnotations" class="modal-body">
+    <table class="curs-definition-table">
+      <tr>
+        <td class="title"><div>Genetic interaction</div><div>(Optional)</div></td>
+        <td>
+          <div ng-if="genotypeInteractionInitialData">
+            <genotype-interaction-edit
+              annotation="annotation"
+              annotation-type="annotationType"
+              genotype-interaction-initial-data="genotypeInteractionInitialData">
+            </genotype-interaction-edit>
+          </div>
+        </td>
+
       </tr>
 
     </table>

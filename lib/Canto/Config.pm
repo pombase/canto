@@ -212,6 +212,10 @@ sub setup
 
   $self->{extension_configuration} = \@ext_conf;
 
+  if (!defined $self->{ontology_namespace_config}) {
+    $self->{ontology_namespace_config} = {}
+  }
+
   # make the field_infos available as a hash in the config and make
   # the config inheritable using "extends"
   for my $model (keys %{$self->{class_info}}) {
@@ -357,6 +361,28 @@ sub setup
   if (defined $self->{available_annotation_type_list}) {
     my @available_annotation_type_list =
       @{$self->{available_annotation_type_list}};
+
+    map {
+      if ($_->{category} eq 'genotype_interaction') {
+        my $interaction_annotation_type = $_;
+        my $associated_phenotype_type_name =
+          $interaction_annotation_type->{associated_phenotype_annotation_type};
+        if (!defined $associated_phenotype_type_name) {
+          use Data::Dumper;
+          die 'no associated_phenotype_annotation_type field for configuration: ',
+            Dumper([$interaction_annotation_type]);
+        }
+
+        map {
+          if ($_->{name} eq $associated_phenotype_type_name) {
+            my $associated_phenotype_type = $_;
+
+            $associated_phenotype_type->{associated_interaction_annotation_type} =
+              $interaction_annotation_type;
+          }
+        } @available_annotation_type_list;
+      }
+    } @available_annotation_type_list;
 
     my @annotation_type_list = ();
 
@@ -697,7 +723,7 @@ sub class_info
   return $self->{class_info}->{$model_name};
 }
 
-my @boolean_field_names = qw|description_required allele_name_required allow_expression_change can_have_conditions use_select_element|;
+my @boolean_field_names = qw|description_required allele_name_required allow_expression_change can_have_conditions use_select_element is_symmetric overexpression_implies_direction|;
 
 sub for_json
 {

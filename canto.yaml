@@ -27,7 +27,7 @@ canto_url: https://curation.pombase.org/
 
 app_version: v1704
 
-schema_version: 33
+schema_version: 34
 
 ## Set this to create a Canto instance for a particular organism.  If not set,
 ## Canto will be in multi-organism mode and the multi_organism_mode will be set.
@@ -1602,29 +1602,34 @@ evidence_types:
   'Affinity Capture-Luminescence':
     definition: "An interaction is inferred when a bait protein, tagged with luciferase, is enzymatically detected in immunoprecipitates of the prey protein as light emission. The prey protein is affinity captured from cell extracts by either polyclonal antibody or epitope tag."
     name: 'Affinity Capture-Luminescence (affinity captures)'
+    is_symmetric: 0
     non_symmetric_interaction_labels:
       interactor_a: affinity captures
       interactor_b: affinity captured by
   'Affinity Capture-MS':
     definition: "An interaction is inferred when a bait protein is affinity captured from cell extracts by either polyclonal antibody or epitope tag and the associated interaction partner is identified by mass spectrometric methods."
     name: 'Affinity Capture-MS (affinity captures)'
+    is_symmetric: 0
     non_symmetric_interaction_labels:
       interactor_a: affinity captures
       interactor_b: affinity captured by
   'Affinity Capture-RNA':
     definition: "An interaction is inferred when a bait protein is affinity captured from cell extracts by either polyclonal antibody or epitope tag and associated RNA species identified by Northern blot, RT-PCR, affinity labeling, sequencing, or microarray analysis."
     name: 'Affinity Capture-RNA (affinity captures)'
+    is_symmetric: 0
     non_symmetric_interaction_labels:
       interactor_a: affinity captures
       interactor_b: affinity captured by
   'Affinity Capture-Western':
     definition: "An interaction is inferred when a bait protein is affinity captured from cell extracts by either polyclonal antibody or epitope tag and the associated interaction partner identified by Western blot with a specific polyclonal antibody or second epitope tag. This category is also used if an interacting protein is visualized directly by dye stain or radioactivity. Note that this differs from any co-purification experiment involving affinity capture in that the co-purification experiment involves at least one extra purification step to get rid of potential contaminating proteins."
     name: 'Affinity Capture-Western (affinity captures)'
+    is_symmetric: 0
     non_symmetric_interaction_labels:
       interactor_a: affinity captures
       interactor_b: affinity captured by
   'Biochemical Activity':
     definition: 'An interaction is inferred from the biochemical effect of one protein upon another, for example, GTP-GDP exchange activity or phosphorylation of a substrate by a kinase. The "bait" protein executes the activity on the substrate "hit" protein. A Modification value is recorded for interactions of this type with the possible values Phosphorylation, Ubiquitination, Sumoylation, Dephosphorylation, Methylation, Prenylation, Acetylation, Deubiquitination, Proteolytic Processing, Glucosylation, Nedd(Rub1)ylation, Deacetylation, No Modification, Demethylation.'
+    is_symmetric: 0
     non_symmetric_interaction_labels:
       interactor_a: n/a (would be modifies)
       interactor_b: (would be modified by)
@@ -1632,39 +1637,52 @@ evidence_types:
   'Co-crystal Structure':
     definition: "Interaction directly demonstrated at the atomic level by X-ray crystallography. Also used for NMR or Electron Microscopy (EM) structures. If there is no obvious bait-hit directionality to the interaction involving 3 or more proteins, then the co-crystallized proteins should be listed as a complex."
     name: 'Co-crystal Structure (or NMR structure)'
+    is_symmetric: 1
   'Co-fractionation':
     definition: "Interaction inferred from the presence of two or more protein subunits in a partially purified protein preparation. If co-fractionation is demonstrated between 3 or more proteins, then add them as a complex."
+    is_symmetric: 1
   'Co-localization':
     definition: "Interaction inferred from two proteins that co-localize in the cell by indirect immunofluorescence only when in addition, if one gene is deleted, the other protein becomes mis-localized. Also includes co-dependent association of proteins with promoter DNA in chromatin immunoprecipitation experiments."
   'Co-purification':
     definition: "An interaction is inferred from the identification of two or more protein subunits in a purified protein complex, as obtained by classical biochemical fractionation or affinity purification and one or more additional fractionation steps."
+    is_symmetric: 1
   'Dosage Growth Defect':
     definition: "A genetic interaction is inferred when over expression or increased dosage of one gene causes a growth defect in a strain that is mutated or deleted for another gene."
     name: 'Dosage Growth Defect (growth defect in presence of overexpressed)'
+    is_symmetric: 0
+    overexpression_implies_direction: 1
     non_symmetric_interaction_labels:
       interactor_a: growth defect in presence of overexpressed
       interactor_b: overexpression causes growth defect to
+    interaction_does_not_need_phenotype: 1
   'Dosage Lethality':
     definition: "A genetic interaction is inferred when over expression or increased dosage of one gene causes lethality in a strain that is mutated or deleted for another gene."
     name: 'Dosage Lethality (inviable in presence of overexpressed)'
+    is_symmetric: 0
+    overexpression_implies_direction: 1
     non_symmetric_interaction_labels:
       interactor_a: inviable in presence of overexpressed
       interactor_b: overexpression lethal to
+    interaction_does_not_need_phenotype: 1
   'Dosage Rescue':
     definition: "A genetic interaction is inferred when over expression or increased dosage of one gene rescues the lethality or growth defect of a strain that is mutated or deleted for another gene."
-    name: 'Dosage Rescue (rescued by overexpression of)'
+    name: 'Dosage Rescue (lethality or growth defect rescued by overexpression of)'
+    is_symmetric: 0
+    overexpression_implies_direction: 1
     non_symmetric_interaction_labels:
-      interactor_a: rescued by overexpression of
+      interactor_a: "lethality or growth defect rescued by overexpression of"
       interactor_b: overexpression rescues
   'FRET':
     definition: "An interaction is inferred when close proximity of interaction partners is detected by fluorescence resonance energy transfer between pairs of fluorophore-labeled molecules, such as occurs between CFP (donor) and YFP (acceptor) fusion proteins."
     name: 'FRET (fluorescence resonance energy donor to)'
+    is_symmetric: 0
     non_symmetric_interaction_labels:
       interactor_a: fluorescence resonance energy donor to
       interactor_b: fluorescence resonance energy acceptor from
   'Far Western':
     definition: "An interaction is detected between a protein immobilized on a membrane and a purified protein probe."
     name: 'Far Western (captures)'
+    is_symmetric: 0
     non_symmetric_interaction_labels:
       interactor_a: captures
       interactor_b: captured by
@@ -1672,48 +1690,63 @@ evidence_types:
   'PCA':
     definition: "A Protein-Fragment Complementation Assay (PCA) is a protein-protein interaction assay in which a bait protein is expressed as fusion to one of the either N- or C- terminal peptide fragments of a reporter protein and prey protein is expressed as fusion to the complementary N- or C- terminal fragment of the same reporter protein. Interaction of bait and prey proteins bring together complementary fragments, which can then fold into an active reporter, e.g. the split-ubiquitin assay."
     name: 'PCA (interacts with)'
+    is_symmetric: 1
   'Phenotypic Enhancement':
     definition: "A genetic interaction is inferred when mutation or overexpression of one gene results in enhancement of any phenotype (other than lethality/growth defect) associated with mutation or over expression of another gene."
-    name: 'Phenotypic Enhancement (phenotype enhanced by)'
+    name: 'Phenotypic Enhancement (phenotype other than growth defect or lethality enhanced by)'
+    is_symmetric: 0
+    overexpression_implies_direction: 0
     non_symmetric_interaction_labels:
-      interactor_a: phenotype enhanced by
+      interactor_a: "phenotype(s) other than growth defect or lethality enhanced by"
       interactor_b: enhances phenotype of
   'Phenotypic Suppression':
     definition: "A genetic interaction is inferred when mutation or over expression of one gene results in suppression of any phenotype (other than lethality/growth defect) associated with mutation or over expression of another gene."
-    name: 'Phenotypic Suppression (rescued by)'
+    name: 'Phenotypic Suppression (phenotype other than growth defect or lethality rescued by)'
+    is_symmetric: 0
+    overexpression_implies_direction: 0
     non_symmetric_interaction_labels:
-      interactor_a: rescued by
-      interactor_b: rescues
+      interactor_a: "phenotype(s) other than growth defect or lethality suppressed by"
+      interactor_b: suppresses
   'Protein-RNA':
     definition: "An interaction is detected between and protein and an RNA in vitro."
     name: 'Protein-RNA (binds to RNA)'
+    is_symmetric: 0
     non_symmetric_interaction_labels:
       interactor_a: binds to RNA
       interactor_b: binds to protein
   'Protein-peptide':
     definition: "An interaction is detected between a protein and a peptide derived from an interaction partner. This includes phage display experiments."
     name: 'Protein-peptide (binds to peptide)'
+    is_symmetric: 0
     non_symmetric_interaction_labels:
       interactor_a: binds to peptide
       interactor_b: (peptide) binds to protein
   'Reconstituted Complex':
     definition: "An interaction is detected between two proteins in vitro."
+    is_symmetric: 1
   'RNA protection assay evidence': ~
   'Synthetic Growth Defect':
     definition: "A genetic interaction is inferred when mutations in separate genes, each of which alone causes a minimal phenotype, result in a significant growth defect under a given condition when combined in the same cell."
+    interaction_dialog_type_label: displays Synthetic Growth Defect with
+    is_symmetric: 1
   'Synthetic Haploinsufficiency':
     definition: "A genetic interaction is inferred when mutations or deletions in separate genes, at least one of which is hemizygous, cause a minimal phenotype alone but result in lethality when combined in the same cell under a given condition."
   'Synthetic Lethality':
     definition: "A genetic interaction is inferred when mutations or deletions in separate genes, each of which alone causes a minimal phenotype, result in lethality when combined in the same cell under a given condition."
+    interaction_dialog_type_label: displays Synthetic Lethality with
+    is_symmetric: 1
   'Synthetic Rescue':
     definition: "A genetic interaction is inferred when mutations or deletions of one gene rescues the lethality or growth defect of a strain mutated or deleted for another gene."
-    name: 'Synthetic Rescue (synthetically rescued by)'
+    name: 'Synthetic Rescue (lethality or growth defect synthetically rescued by)'
+    is_symmetric: 0
+    overexpression_implies_direction: 1
     non_symmetric_interaction_labels:
-      interactor_a: synthetically rescued by
+      interactor_a: lethality or growth defect rescued by
       interactor_b: synthetically rescues
   'Two-hybrid':
     definition: "Bait protein expressed as a DNA binding domain (DBD) fusion and prey expressed as a transcriptional activation domain (TAD) fusion and interaction measured by reporter gene activation."
     name: 'Two-hybrid (binds activation domain construct with)'
+    is_symmetric: 0
     non_symmetric_interaction_labels:
       interactor_a: binds activation domain construct with
       interactor_b: binds DNA-binding domain construct with
@@ -1761,6 +1794,12 @@ ontology_namespace_config:
   do_not_annotate_subsets:
     - "is_a(canto_root_subset)"
     - "is_a(qc_do_not_annotate)"
+  interesting_parent_ids:
+    - "FYPO:0000003"
+    - "FYPO:0000139"
+    - "FYPO:0002057"
+    - "FYPO:0002058"
+    - "FYPO:0002059"
 
 # Namespace used for the phenotype condition ontology. If you
 # use an ontology other than FYECO for your phenotype conditions, then
@@ -2124,26 +2163,43 @@ available_annotation_type_list:
       - Western blot
     detailed_help_path: /docs/gene_expression
   - name: genotype_interaction
-    namespace: fission_yeast_phenotype
-    can_have_conditions: 1
-    category: interaction
-    term_suggestions_annotation_type: phenotype
-    display_name: 'genetic interaction'
-    feature_type: 'metagenotype'
-    help_text: 'Examples: synthetic lethality, dosage suppression, phenotype enhancement.'
-    evidence_codes:
-      - Dosage Growth Defect
-      - Dosage Lethality
-      - Dosage Rescue
-      - Phenotypic Enhancement
-      - Phenotypic Suppression
-      - Synthetic Growth Defect
-      - Synthetic Lethality
-      - Synthetic Rescue
-    detailed_help_path: /docs/genetic_interaction_annotation
+    category: genotype_interaction
+    feature_type: genotype
+    display_name: genetic interaction
+    associated_phenotype_annotation_type: phenotype
+    direct_editing_disabled: 1
+    interaction_single_allele_phenotype_constraints:
+      Synthetic Rescue: "[FYPO:0000003]"
+    evidence_code_groups:
+      double_mutant_population_phenotype:
+        parent_constraint: 'is_a(FYPO:0000139)|is_a(FYPO:0002057)'
+        viable_evidence_codes:
+          - Dosage Growth Defect
+          - Dosage Rescue
+          - Synthetic Rescue
+          - Synthetic Growth Defect
+        inviable_parent_constraint: 'is_a(FYPO:0002059)'
+        inviable_only_evidence_codes:
+          - Dosage Lethality
+          - Synthetic Lethality
+      not_population_evidence_codes:
+        - Phenotypic Enhancement
+        - Phenotypic Suppression
+      both_alleles_deletions:
+        - Phenotypic Enhancement
+        - Phenotypic Suppression
+        - Synthetic Growth Defect
+        - Synthetic Lethality
+        - Synthetic Rescue
+      one_allele_overexpressed:
+        - Dosage Growth Defect
+        - Dosage Lethality
+        - Dosage Rescue
+        - Phenotypic Enhancement
+        - Phenotypic Suppression
   - name: genetic_interaction
     category: interaction
-    display_name: 'genetic interaction'
+    display_name: 'legacy genetic interaction'
     feature_type: 'gene'
     help_text: 'Examples: synthetic lethality, dosage suppression, phenotype enhancement.'
     evidence_codes:
@@ -2200,6 +2256,7 @@ enabled_annotation_type_list:
   - biological_process
   - cellular_component
   - phenotype
+  - genotype_interaction
   - post_translational_modification
   - wt_rna_expression
   - wt_protein_expression

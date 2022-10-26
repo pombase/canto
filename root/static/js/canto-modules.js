@@ -762,7 +762,7 @@ canto.service('Metagenotype', function ($rootScope, $http, toaster, Curs) {
           break;
       }
     }, function errorCallback() {
-      toaster.pop('error', 'Failed to add metageneotype, could not contact the Canto server');
+      toaster.pop('error', 'Failed to add metagenetype, could not contact the Canto server');
     });
 
   };
@@ -948,6 +948,8 @@ var keysForServer = {
   second_feature_id: true,
   second_feature_type: true,
   interacting_gene_id: true,
+  interaction_annotations: true,
+  interaction_annotations_with_phenotypes: true,
 };
 
 var annotationProxy =
@@ -1755,14 +1757,12 @@ function openSingleGeneAddDialog($uibModal) {
 
 function featureChooserControlHelper($scope, $uibModal, CursGeneList,
                                      CursGenotypeList, Curs, toaster) {
-  if ($scope.chosenFeatureUniquename !== undefined ||
-    $scope.chosenFeatureDisplayName !== undefined) {
     $scope.$watch('chosenFeatureId',
       function (newFeatureId) {
         if (newFeatureId && $scope.features) {
           $.map($scope.features,
             function (feature) {
-              if (feature.feature_id === newFeatureId) {
+              if (feature.feature_id == newFeatureId) {
                 if ($scope.chosenFeatureUniquename !== undefined) {
                   $scope.chosenFeatureUniquename = feature.primary_identifier;
                 }
@@ -1773,7 +1773,6 @@ function featureChooserControlHelper($scope, $uibModal, CursGeneList,
             });
         }
       });
-  }
 }
 
 
@@ -1823,6 +1822,7 @@ var featureChooser =
       scope: {
         features: '=',
         featureType: '@',
+        featureEditable: '=',
         chosenFeatureId: '=',
         chosenFeatureUniquename: '=',
         chosenFeatureDisplayName: '=',
@@ -1836,6 +1836,37 @@ var featureChooser =
 
         $scope.search = function() {
           $scope.showCompleter = !$scope.showCompleter;
+        };
+
+        $scope.chosenFeature = function() {
+          if ($scope.chosenFeatureId) {
+            for (const feature of $scope.features) {
+              if (feature.feature_id === $scope.chosenFeatureId) {
+                return feature;
+              }
+            }
+          }
+
+          return null;
+        };
+
+        $scope.featureIsEditable = function() {
+          if (typeof($scope.featureEditable) === 'undefined') {
+            // default to editable
+            return true;
+          } else {
+            return $scope.featureEditable;
+          }
+        };
+
+        $scope.featureDisplayName = function() {
+          const chosenFeature = $scope.chosenFeature();
+
+          if (chosenFeature) {
+            return chosenFeature.display_name;
+          }
+
+          return 'UNKNOWN';
         };
 
         featureChooserControlHelper($scope, $uibModal, CursGeneList, CursGenotypeList,
@@ -5724,6 +5755,10 @@ var genotypeListRowLinksCtrl =
                   return false;
                 }
 
+                if (annotationType.direct_editing_disabled) {
+                  return false;
+                }
+
                 if ($scope.pathogen_host_mode &&
                   genotypePathogenOrHost !== annotationType.feature_subtype) {
                   return false;
@@ -6735,13 +6770,806 @@ canto.directive('termChildrenDisplay',
   ]);
 
 
+var GenotypeInteractionAnnotationTableCtrl =
+  function ($uibModal, CantoConfig, CantoGlobals) {
+    return {
+      scope: {
+        interactions: '=',
+        phenotypeAnnotationType: '<',
+        showDoubleMutantPhenotype: '<',
+        showPhenotypesLink: '<',
+        allowDeletion: '<',
+      },
+      restrict: 'E',
+      replace: true,
+      templateUrl: app_static_path + 'ng_templates/genotype_interaction_annotation_table.html',
+      controller: function ($scope) {
+        $scope.ready = false;
+        $scope.evidenceTypes = {};
+
+        $scope.curs_root_uri = CantoGlobals.curs_root_uri;
+        $scope.read_only_curs = CantoGlobals.read_only_curs;
+
+        CantoConfig.get('evidence_types').
+          then(function(result) {
+            $scope.evidenceTypes = result;
+            $scope.ready = true;
+          });
+
+        $scope.getDisplayEvidence = function(interaction) {
+          var interactionType = interaction.interaction_type;
+          if ($scope.evidenceTypes[interactionType] &&
+             $scope.evidenceTypes[interactionType].name) {
+            return $scope.evidenceTypes[interactionType].name;
+          } else {
+            return interactionType;
+          }
+        };
+
+        $scope.phentoypeANames = function(interaction) {
+          if (interaction.genotype_a_phenotype_annotations) {
+            return $.map(interaction.genotype_a_phenotype_annotations,
+                         function(aAnnotation) {
+                           return aAnnotation.term_name;
+                         });
+          } else {
+            return [];
+          }
+        };
+
+        $scope.viewPhenotypes = function(interaction) {
+          startViewInteractionPhenotypes($uibModal, interaction.genotype_a,
+                                         $scope.phenotypeAnnotationType,
+                                         interaction.genotype_a_phenotype_annotations);
+        };
+
+        $scope.deleteInteraction = function(interaction) {
+          var idx = $scope.interactions.indexOf(interaction);
+
+          $scope.interactions.splice(idx, 1);
+        };
+      },
+    };
+  };
+
+canto.directive('genotypeInteractionAnnotationTable',
+                ['$uibModal', 'CantoConfig', 'CantoGlobals',
+                 GenotypeInteractionAnnotationTableCtrl]);
+
+
+var viewInteractionPhenotypesDialogCtrl =
+  function ($scope, $uibModalInstance,
+            CantoGlobals, Curs, toaster, args) {
+    $scope.data = {};
+
+    $scope.data.genotype = args.genotype;
+    $scope.data.annotationType = args.annotationType;
+    $scope.data.annotations = args.annotations;
+
+    $scope.ok = function () {
+      $uibModalInstance.dismiss('ok');
+    };
+  };
+
+canto.controller('ViewInteractionPhenotypesDialogCtrl',
+  ['$scope', '$uibModalInstance',
+   'CantoGlobals', 'Curs', 'toaster', 'args',
+    viewInteractionPhenotypesDialogCtrl
+  ]);
+
+
+function startViewInteractionPhenotypes($uibModal, genotype,
+                                        annotationType, annotations) {
+  var instance = $uibModal.open({
+    templateUrl: app_static_path + 'ng_templates/view_interaction_phenotypes.html',
+    controller: 'ViewInteractionPhenotypesDialogCtrl',
+    title: 'Interaction phenotypes',
+    animate: false,
+    size: 'lg',
+    resolve: {
+      args: function () {
+        return {
+          genotype: genotype,
+          annotationType: annotationType,
+          annotations: annotations,
+        };
+      }
+    },
+    backdrop: 'static',
+  });
+
+  return instance.result;
+}
+
+
+var selectInteractionAnnotationsCtrl =
+  function ($http, $uibModal,
+            CantoGlobals, CursGenotypeList, Curs, toaster)
+{
+   return {
+     scope: {
+       subjectAllele: '<',
+       subjectGenotype: '<',
+       objectAllele: '<',
+       annotationType: '<',
+       interactionTypeConfig: '<',
+       subjectAnnotations: '<',
+       interactingAnnotations: '=',
+     },
+     restrict: 'E',
+     replace: true,
+     templateUrl: app_static_path + 'ng_templates/select_interaction_annotations.html',
+     controller: function ($scope) {
+     },
+     link: function ($scope) {
+       $scope.data = {};
+
+       $scope.data.selectedAnnotationIds = [];
+
+       $scope.data.annotationsById = {};
+
+       $.map($scope.subjectAnnotations,
+             function(annotation) {
+               $scope.data.annotationsById[annotation.annotation_id] = annotation;
+             });
+
+       $scope.selectionChanged = function(annotationIds) {
+         $scope.data.selectedAnnotationIds = annotationIds;
+
+         $scope.interactingAnnotations.length = 0;
+
+         $.map($scope.data.selectedAnnotationIds,
+                function(annotationId) {
+                  const annotation = $scope.data.annotationsById[annotationId];
+                  $scope.interactingAnnotations.push(annotation);
+                });
+       };
+
+       $scope.canSelect = function() {
+         return $scope.data.selectedAnnotationIds.length > 0;
+       };
+
+       $scope.okButtonTitleMessage = function() {
+         return "Select";
+       };
+
+       function popupAnnotationEdit(genotype) {
+         var termConstraint;
+
+         if ($scope.annotationType.associated_interaction_annotation_type) {
+           var termConstraints =
+               $scope.annotationType.associated_interaction_annotation_type.interaction_single_allele_phenotype_constraints;
+//           termConstraint = termConstraints['Synthetic Rescue'];
+         }
+
+         var addPromise =
+             addAnnotation($uibModal, $scope.annotationType.name,
+                           'genotype',
+                           genotype.genotype_id,
+                           genotype.genotype_display_name,
+                           genotype.taxonid, termConstraint);
+
+         addPromise.then(function (newAnnotation) {
+           $scope.interactingAnnotations.push(newAnnotation);
+         });
+       }
+
+       $scope.addPhenotypeAnnotation = function() {
+         // need to store subjectAllele as a new genotype and use it as
+         // subjectGenotype
+
+         if ($scope.subjectGenotype) {
+           popupAnnotationEdit($scope.subjectGenotype);
+         } else {
+           var storePromise =
+               CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined,
+                                              [$scope.subjectAllele],
+                                              undefined, undefined, undefined);
+
+           storePromise.then(function(storedGenotype) {
+             popupAnnotationEdit(storedGenotype);
+           });
+         }
+       };
+     }
+   };
+};
+
+canto.directive('selectInteractionAnnotations',
+                ['$http', '$uibModal',
+                  'CantoGlobals', 'CursGenotypeList', 'Curs', 'toaster',
+                  selectInteractionAnnotationsCtrl
+                 ]);
+
+
+function filterAnnotationsByFeature(annotations, feature) {
+  return $.grep(annotations,
+               function(annotation) {
+                 return annotation.feature_id == feature.feature_id;
+               });
+}
+
+var AnnotationInteractionsEditDialogCtrl =
+  function ($scope, $uibModalInstance, $uibModal,
+            CantoGlobals, Curs, CursGenotypeList, toaster, args) {
+    const defaultTitle = 'Add interaction';
+    const titleForAddingPhenotype = 'Select phenotype for interaction';
+
+    $scope.data = {
+      modalTitle: defaultTitle,
+      interactionForward: null,
+      annotationSelectorVisible: false,
+      interactionPhenotypeNotNeeded: false,
+      directionSelectorVisible: false,
+      alleleA: args.initialData.alleleA,
+      alleleB: args.initialData.alleleB,
+      alleleGenotypeA: args.initialData.alleleGenotypeA,
+      alleleGenotypeB: args.initialData.alleleGenotypeB,
+      annotationType: args.annotationType,
+      evidenceConfig: args.initialData.evidenceConfig,
+      genotypeAnnotationsA: args.initialData.genotypeAnnotationsA,
+      genotypeAnnotationsB: args.initialData.genotypeAnnotationsB,
+      interactingAnnotations: [],
+      subjectAnnotations: [],
+      subjectAllele: null,
+      subjectGenotype: null,
+      objectAllele: null,
+      interactionTypeConfig: null,
+      overexpressedAllele: null,
+    };
+
+    $scope.interactionType = null;
+    $scope.interactionTypeDisplayLabel = null;
+
+    // for now we always show all types
+    $scope.hideAsymmetricTypes = false;
+
+    $scope.evidenceCodes = Object.keys($scope.data.evidenceConfig);
+
+    var typeWatcher = function() {
+      $scope.data.interactionPhenotypeNotNeeded = false;
+      $scope.data.annotationSelectorVisible = false;
+      $scope.data.directionSelectorVisible = false;
+      $scope.data.interactionTypeConfig = null;
+      $scope.data.overexpressedAllele = null;
+
+      if ($scope.interactionType) {
+        var evidenceConfig = $scope.data.evidenceConfig[$scope.interactionType];
+        $scope.data.interactionTypeConfig = evidenceConfig;
+       if (evidenceConfig.is_symmetric) {
+          $scope.interactionTypeDisplayLabel = evidenceConfig.interaction_dialog_type_label;
+          $scope.data.interactionPhenotypeNotNeeded  = true;
+          $scope.setDirection(true);
+        } else {
+          $scope.interactionTypeDisplayLabel =
+            evidenceConfig.non_symmetric_interaction_labels.interactor_a;
+          if (evidenceConfig.interaction_does_not_need_phenotype) {
+            $scope.data.interactionPhenotypeNotNeeded  = true;
+            $scope.setDirection(args.initialData.overexpressedAllele != 0);
+          } else {
+          $scope.data.overexpressedAllele = args.initialData.overexpressedAllele;
+
+          if ($scope.data.overexpressedAllele != null &&
+              evidenceConfig.overexpression_implies_direction) {
+            if ($scope.data.overexpressedAllele == 1) {
+              $scope.data.interactionForward = true;
+            } else {
+              $scope.data.interactionForward = false;
+            }
+            $scope.data.directionSelectorVisible = false;
+            $scope.data.annotationSelectorVisible = true;
+          } else {
+            $scope.data.directionSelectorVisible = true;
+          }
+          }
+        }
+      }
+    };
+    $scope.$watch('interactionType', typeWatcher);
+
+    $scope.setDirection = function(isForward) {
+      if (isForward) {
+        $scope.data.subjectAllele = $scope.data.alleleA;
+        $scope.data.subjectGenotype = $scope.data.alleleGenotypeA;
+        $scope.data.objectAllele = $scope.data.alleleB;
+        $scope.data.subjectAnnotations = $scope.data.genotypeAnnotationsA;
+      } else {
+        $scope.data.subjectAllele = $scope.data.alleleB;
+        $scope.data.subjectGenotype = $scope.data.alleleGenotypeB;
+        $scope.data.objectAllele = $scope.data.alleleA;
+        $scope.data.subjectAnnotations = $scope.data.genotypeAnnotationsB;
+      }
+    };
+
+    if (args.initialData.overexpressedAllele !== null) {
+      $scope.setDirection(args.initialData.overexpressedAllele != 0);
+    }
+
+    $scope.directionChanged = function() {
+      if ($scope.data.interactionForward !== null) {
+        $scope.data.annotationSelectorVisible = true;
+      }
+
+      $scope.data.directionSelectorVisible = false;
+
+      $scope.data.interactingAnnotations = [];
+
+      $scope.setDirection($scope.data.interactionForward);
+
+      $scope.data.interactionAnnotationType =
+        $scope.data.annotationType.associated_interaction_annotation_type;
+
+      $scope.data.selectedAnnotationIds = [];
+
+      $scope.data.modalTitle = titleForAddingPhenotype;
+    };
+
+    $scope.canFinish = function() {
+      if ($scope.data.interactingAnnotations.length > 0) {
+        return true;
+      }
+
+      if ($scope.interactionType) {
+        var conf = $scope.data.evidenceConfig[$scope.interactionType];
+
+        if (conf.is_symmetric || conf.interaction_does_not_need_phenotype) {
+          return true;
+        }
+      }
+
+      return false;
+    };
+
+    $scope.ok = function () {
+      var alleleA;
+      var genotypeA;
+      var alleleB;
+      var genotypeB;
+
+      if ($scope.data.interactionForward) {
+        alleleA = $scope.data.alleleA;
+        genotypeA = $scope.data.alleleGenotypeA;
+        alleleB = $scope.data.alleleB;
+        genotypeB = $scope.data.alleleGenotypeB;
+      } else {
+        alleleA = $scope.data.alleleB;
+        genotypeA = $scope.data.alleleGenotypeB;
+        alleleB = $scope.data.alleleA;
+        genotypeB = $scope.data.alleleGenotypeA;
+      }
+
+      $uibModalInstance.close({
+        allele_a: alleleA,
+        genotype_a: genotypeA,
+        allele_b: alleleB,
+        genotype_b: genotypeB,
+        interaction_type: $scope.interactionType,
+        genotype_a_phenotype_annotations: $scope.data.interactingAnnotations,
+      });
+    };
+
+    $scope.cancel = function () {
+      $uibModalInstance.dismiss('cancel');
+    };
+  };
+
+canto.controller('AnnotationInteractionsEditDialogCtrl',
+                 ['$scope', '$uibModalInstance', '$uibModal',
+                  'CantoGlobals', 'Curs', 'CursGenotypeList', 'toaster', 'args',
+                  AnnotationInteractionsEditDialogCtrl
+                 ]);
+
+
+function startInteractionAnnotationsEdit($uibModal, annotationType, initialData) {
+  var selectInstance = $uibModal.open({
+    templateUrl: app_static_path + 'ng_templates/annotation_interaction_edit_dialog.html',
+    controller: 'AnnotationInteractionsEditDialogCtrl',
+    title: 'Add an interaction',
+    animate: false,
+    size: 'lg',
+    resolve: {
+      args: function () {
+        return {
+          annotationType: annotationType,
+          initialData: initialData,
+        };
+      }
+    },
+    backdrop: 'static',
+  });
+
+  return selectInstance.result;
+}
+
+
+function interactionEvCodesFromPhenotype(phenotypeAnnotationType, phenotypeTermDetails,
+                                         genotype) {
+  var interactionAnnotationType =
+      phenotypeAnnotationType.associated_interaction_annotation_type;
+
+  var evidenceCodeGroups = interactionAnnotationType.evidence_code_groups;
+
+  if (!evidenceCodeGroups || genotype.alleles.length != 2) {
+    return [phenotypeAnnotationType.associated_interaction_annotation_type.evidence_codes,
+            null];;
+  } else {
+    var popPhenotypeEvCodeConfig = evidenceCodeGroups.double_mutant_population_phenotype;
+
+    var phenotypeEvidenceCodes = [];
+
+    var parentConstraintParts = popPhenotypeEvCodeConfig.parent_constraint.split('|');
+
+    const hasParent = (subsetId) => {
+      return parentConstraintParts.includes(subsetId);
+    };
+
+    if (phenotypeTermDetails.subset_ids.filter(hasParent).length > 0 ||
+        $.grep(parentConstraintParts,
+               function(constraintPart) {
+                 return constraintPart == 'is_a(' + phenotypeTermDetails.id + ')';
+               }).length > 0) {
+
+      if (phenotypeTermDetails.subset_ids.includes(popPhenotypeEvCodeConfig.inviable_parent_constraint) ||
+          'is_a(' + phenotypeTermDetails.id + ')' == popPhenotypeEvCodeConfig.inviable_parent_constraint) {
+        // add extra ev codes only valid for inviable population terms:
+        $.map(popPhenotypeEvCodeConfig.inviable_only_evidence_codes || [],
+              inviableEvCode => {
+                phenotypeEvidenceCodes.push(inviableEvCode);
+              });
+      } else {
+        // is a population term
+        phenotypeEvidenceCodes = [...popPhenotypeEvCodeConfig.viable_evidence_codes];
+      }
+    } else {
+      // isn't a population term
+      phenotypeEvidenceCodes = evidenceCodeGroups.not_population_evidence_codes;
+    }
+
+    var returnEvidenceCodes = [];
+
+    var filterEvCodes = function(evCodes) {
+      $.map(phenotypeEvidenceCodes,
+            function(phenotypeCode) {
+              if (evCodes.includes(phenotypeCode)) {
+                returnEvidenceCodes.push(phenotypeCode);
+              }
+            });
+    };
+
+    var allele0 = genotype.alleles[0];
+    var allele1 = genotype.alleles[1];
+
+    var overexpressedAllele = null;
+
+    if (allele0.type == 'deletion' && allele1.type == 'deletion') {
+      filterEvCodes(evidenceCodeGroups.both_alleles_deletions);
+    } else {
+      const allele0Overexpressed = 
+            allele0.expression && allele0.expression == 'Overexpression';
+      const allele1Overexpressed = 
+            allele1.expression && allele1.expression == 'Overexpression';
+      if (allele0Overexpressed || allele1Overexpressed) {
+        filterEvCodes(evidenceCodeGroups.one_allele_overexpressed);
+
+        if (!allele0Overexpressed || !allele1Overexpressed) {
+          // one is not overexpressed
+          if (allele0Overexpressed) {
+            overexpressedAllele = 0;
+          } else {
+            overexpressedAllele = 1;
+          }
+        }
+      } else {
+        returnEvidenceCodes = phenotypeEvidenceCodes;
+      }
+    }
+
+    return [returnEvidenceCodes, overexpressedAllele];
+  }
+}
+
+
+function findGenotypeInArray(genotypes, searchGenotypeId) {
+  for (var i = 0; i < genotypes.length; i++) {
+    var testGenotype = genotypes[i];
+
+    if (testGenotype.genotype_id == searchGenotypeId) {
+      return testGenotype;
+    }
+  }
+
+  return undefined;
+}
+
+// find single allele gneotypes by allele ID
+function findGenotypeInArrayByAlleleId(genotypes, searchAlleleId) {
+  for (var i = 0; i < genotypes.length; i++) {
+    var testGenotype = genotypes[i];
+
+    if (testGenotype.alleles.length != 1) {
+      continue;
+    }
+    if (testGenotype.alleles[0].allele_id === searchAlleleId) {
+      return testGenotype;
+    }
+  }
+
+  return undefined;
+}
+
+
+// if it's possible to make a genotype interaction annotation attached to
+// the phenotype, return:
+// {
+//   alleleA: ...,
+//   alleleB: ...,
+//   evidenceConfig: ...        // the possible interaction types,
+//   genotypeAnnotationsA: ...  // the annotations for alleleA
+//   genotypeAnnotationsB: ...  // the annotations for alleleB
+// }
+//
+// returns null if no interactions are possible 
+function getInteractionInitialData($q, CantoConfig,
+                                   termDetailsPromise,
+                                   phenotypeAnnotationType, phenotypeTermId,
+                                   genotypeId, allGenotypes) {
+  var evidencePromise = CantoConfig.get('evidence_types');
+
+  return $q.all([evidencePromise, termDetailsPromise])
+    .then(function(result) {
+      var evidenceTypes = result[0];
+      var phenotypeTermDetails = result[1];
+
+      var genotype = findGenotypeInArray(allGenotypes, genotypeId);
+
+      if (!genotype) {
+        return null;
+      }
+
+      if (genotype.alleles.length != 2) {
+        return null;
+      }
+
+      var alleleA = genotype.alleles[0];
+      var alleleB = genotype.alleles[1];
+
+      var codeFromPhenotypeResult = 
+          interactionEvCodesFromPhenotype(phenotypeAnnotationType, phenotypeTermDetails,
+                                          genotype);
+
+      var genotypeInteractionEvidenceCodes = codeFromPhenotypeResult[0];
+      var overexpressedAllele = codeFromPhenotypeResult[1];
+
+      var evidenceConfig = {};
+
+      $.map(genotypeInteractionEvidenceCodes,
+            function(code) {
+              evidenceConfig[code] = evidenceTypes[code];
+            });
+
+      return {
+        alleleA: alleleA,
+        alleleB: alleleB,
+        evidenceConfig: evidenceConfig,
+        overexpressedAllele: overexpressedAllele,
+      };
+    });
+}
+
+
+function findGenotypesOfAlleles(data, $q, AnnotationProxy,
+                                phenotypeAnnotationType, allGenotypes) {
+
+  if (data == null) {
+    return $q.when(null);
+  }
+
+  var annotationsPromise =
+      AnnotationProxy.getAnnotation(phenotypeAnnotationType.name);
+
+  return annotationsPromise.then(function(annotations) {
+
+    var alleleA = data.alleleA;
+    var alleleB = data.alleleB;
+
+    var alleleGenotypeA = findGenotypeInArrayByAlleleId(allGenotypes, alleleA.allele_id);
+    var alleleGenotypeB = findGenotypeInArrayByAlleleId(allGenotypes, alleleB.allele_id);
+
+    var genotypeAnnotationsA = [];
+
+    if (alleleGenotypeA) {
+      genotypeAnnotationsA = filterAnnotationsByFeature(annotations, alleleGenotypeA);
+    }
+
+    var genotypeAnnotationsB = [];
+
+    if (alleleGenotypeB) {
+      genotypeAnnotationsB = filterAnnotationsByFeature(annotations, alleleGenotypeB);
+    }
+
+    data.alleleGenotypeA = alleleGenotypeA;
+    data.alleleGenotypeB = alleleGenotypeB;
+    data.genotypeAnnotationsA = genotypeAnnotationsA;
+    data.genotypeAnnotationsB = genotypeAnnotationsB;
+
+    return data;
+  });
+
+}
+
+function createMissingGenotypesOfAlleles(data, $q, $http, toaster, CursGenotypeList) {
+  if (data == null) {
+    return $q.when(null);
+  }
+
+  var genotypeAPromise = null;
+  var genotypeBPromise = null;
+
+  if (data.alleleGenotypeA) {
+    genotypeAPromise = $q.when(data.alleleGenotypeA);
+  } else {
+    genotypeAPromise =
+      CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined,
+                                     [data.alleleA],
+                                     undefined, undefined, undefined);
+  }
+
+  if (data.alleleGenotypeB) {
+    genotypeBPromise = $q.when(data.alleleGenotypeB);
+  } else {
+    genotypeBPromise =
+      CursGenotypeList.storeGenotype(toaster, $http, undefined, undefined, undefined,
+                                     [data.alleleB],
+                                     undefined, undefined, undefined);
+  }
+
+  return $q.all([genotypeAPromise, genotypeBPromise])
+    .then(function(result) {
+      var alleleGenotypeA = result[0];
+      var alleleGenotypeB = result[1];
+
+      data.alleleGenotypeA = alleleGenotypeA;
+      data.alleleGenotypeB = alleleGenotypeB;
+
+      return data;
+    });
+}
+
+var genotypeInteractionEditCtrl = function ($uibModal) {
+  return {
+    scope: {
+      annotation: '=',
+      annotationType: '<',
+      genotypeInteractionInitialData: '<',
+    },
+    restrict: 'E',
+    replace: true,
+    templateUrl: app_static_path + 'ng_templates/genotype_interaction_edit.html',
+    controller: function ($scope) {
+    },
+    link: function ($scope) {
+
+      $scope.editAnnotationInteractions = function() {
+        var newInteractionsPromise =
+            startInteractionAnnotationsEdit($uibModal, $scope.annotationType,
+                                            $scope.genotypeInteractionInitialData);
+
+        newInteractionsPromise.then(function(result) {
+          if (result.genotype_a_phenotype_annotations.length == 0) {
+            $scope.annotation.interaction_annotations.push(result);
+          } else {
+            $scope.annotation.interaction_annotations_with_phenotypes.push(result);
+          }
+        });
+      };
+    }
+  };
+};
+
+canto.directive('genotypeInteractionEdit',
+                ['$uibModal',
+                 genotypeInteractionEditCtrl]);
+
+
+
+function storeAnnotationToaster(AnnotationProxy, originalAnnotation,
+                                editedAnnotation, toaster) {
+  var q = AnnotationProxy.storeChanges(originalAnnotation,
+                                       editedAnnotation, false);
+  loadingStart();
+  var storePop = toaster.pop({
+    type: 'info',
+    title: 'Storing annotation...',
+    timeout: 0, // last until the finally()
+    showCloseButton: false
+  });
+  q.then(function (annotation) {
+    toaster.pop({
+      type: 'success',
+      title: 'Interaction stored successfully.',
+      timeout: 5000,
+      showCloseButton: true
+    });
+  })
+    .catch(function (message) {
+      toaster.pop('error', message);
+    })
+    .finally(function () {
+      loadingEnd();
+      toaster.clear(storePop);
+    });
+
+  return q;
+}
+
+var EditGenotypeInteractionDialogCtl =
+  function ($scope, $uibModal, $uibModalInstance, toaster, AnnotationProxy, args) {
+    $scope.annotationType = args.annotationType;
+    $scope.genotypeInteractionInitialData = args.genotypeInteractionInitialData;
+
+    $scope.editedAnnotation = {};
+
+    copyObject(args.annotation, $scope.editedAnnotation);
+
+    $scope.ok = function() {
+      var q = storeAnnotationToaster(AnnotationProxy, args.annotation,
+                                     $scope.editedAnnotation, toaster);
+
+      q.then(function() {
+        $uibModalInstance.close($scope.editedAnnotation);
+
+        setTimeout(function () {
+          // hopefully temporary:
+          window.location.reload();
+        }, 600);
+      });
+    };
+
+    $scope.cancel = function () {
+      $uibModalInstance.dismiss('cancel');
+    };
+  };
+
+canto.controller('EditGenotypeInteractionDialogCtl',
+                 ['$scope', '$uibModal', '$uibModalInstance',
+                  'toaster', 'AnnotationProxy', 'args',
+                  EditGenotypeInteractionDialogCtl
+                 ]);
+
+
+
+function editGenotypeInteractions($uibModal, annotation, annotationType, genotypeInteractionInitialData) {
+  var editInstance = $uibModal.open({
+    templateUrl: app_static_path + 'ng_templates/genotype_interaction_edit_dialog.html',
+    controller: 'EditGenotypeInteractionDialogCtl',
+    title: 'Edit message',
+    animate: false,
+    size: 'lg',
+    resolve: {
+      args: function () {
+        return {
+          annotation: annotation,
+          annotationType: annotationType,
+          genotypeInteractionInitialData: genotypeInteractionInitialData,
+        };
+      }
+    },
+    backdrop: 'static',
+  });
+
+  return editInstance.result;
+}
+
+
+
 var annotationEditDialogCtrl =
-  function ($scope, $uibModal, $q, $uibModalInstance, AnnotationProxy,
+  function ($scope, $uibModal, $q, $uibModalInstance, $http, AnnotationProxy,
             AnnotationTypeConfig, CantoConfig, CursGenotypeList, CursGeneList,
             CursSessionDetails, CantoService, CantoGlobals, Curs, toaster, args) {
     $scope.currentUserIsAdmin = CantoGlobals.current_user_is_admin;
     $scope.flyBaseMode = CantoGlobals.flybase_mode;
     $scope.showFigureField = CantoGlobals.annotationFigureField;
+    $scope.app_static_path = CantoGlobals.app_static_path;
     $scope.annotation = {};
     $scope.annotationTypeName = args.annotationTypeName;
     $scope.annotationType = null;
@@ -6751,6 +7579,10 @@ var annotationEditDialogCtrl =
     $scope.matchingConfigurations = [];
     $scope.termSuggestionVisible = false;
     $scope.featureSubtype = null;
+    $scope.allowInteractionAnnotations = false;
+    $scope.interactionsChanged = false;
+
+    $scope.genotypeInteractionInitialData = null;
 
     if (args.annotation.term_suggestion_name ||
         args.annotation.term_suggestion_definition) {
@@ -6772,6 +7604,8 @@ var annotationEditDialogCtrl =
 
     $scope.initialSelectedOrganismId = null;
     $scope.initialSelectedOrganismBId = null;
+
+    $scope.termNameConstraint = undefined;
 
     if (args.annotation.feature_a_taxonid) {
       $scope.initialSelectedOrganismId = args.annotation.feature_a_taxonid;
@@ -6801,6 +7635,10 @@ var annotationEditDialogCtrl =
     $scope.termSuggestions = [];
     $scope.isMetagenotypeAnnotation = null;
 
+    if ($scope.annotation.interaction_type === undefined) {
+      $scope.annotation.interaction_type = null;
+    }
+
     copyObject(args.annotation, $scope.annotation);
 
     $scope.filteredFeatures = null;
@@ -6808,12 +7646,63 @@ var annotationEditDialogCtrl =
 
     $scope.hasFigure = $scope.annotation.figure;
 
+    // See: https://github.com/pombase/canto/issues/2540
+    $scope.interactionAnnotationsChange = function(newCollection, oldCollection) {
+      if (!newCollection || !oldCollection) {
+        return;
+      }
+      if (newCollection.length != oldCollection.length) {
+        $scope.interactionsChanged = true;
+      }
+      if ($scope.annotation.interaction_annotations &&
+          $scope.annotation.interaction_annotations.length > 0 ||
+          $scope.annotation.interaction_annotations_with_phenotypes &&
+          $scope.annotation.interaction_annotations_with_phenotypes.length > 0) {
+        $scope.featureEditable = false;
+      } else {
+        $scope.featureEditable = args.featureEditable;
+      }
+    };
+    $scope.$watchCollection('annotation.interaction_annotations',
+                            $scope.interactionAnnotationsChange);
+    $scope.$watchCollection('annotation.interaction_annotations_with_phenotypes',
+                            $scope.interactionAnnotationsChange);
+
+    $scope.hasInteractions = function() {
+      return $scope.annotation.interaction_annotations &&
+        $scope.annotation.interaction_annotations.length > 0 ||
+        $scope.annotation.interaction_annotations_with_phenotypes &&
+        $scope.annotation.interaction_annotations_with_phenotypes.length > 0;
+    };
+
+    $scope.termEditable = function() {
+      return !$scope.annotation.term_ontid || !$scope.hasInteractions();
+    };
+
     $scope.showStrainName = (
       CantoGlobals.strains_mode &&
       $scope.annotation.strain_name
     );
 
     $scope.annotationTypePromise = AnnotationTypeConfig.getByName($scope.annotationTypeName);
+
+    $scope.annotationTypePromise
+      .then(annotationType => {
+        if (annotationType.associated_interaction_annotation_type) {
+          if (!$scope.annotation.interaction_annotations) {
+            $scope.annotation.interaction_annotations = [];
+          }
+          if (!$scope.annotation.interaction_annotations_with_phenotypes) {
+            $scope.annotation.interaction_annotations_with_phenotypes = [];
+          }
+        }
+      });
+
+    $scope.annotationTypePromise
+      .then(function(annotationType) {
+        $scope.termNameConstraint = args.termConstraint || annotationType.name;
+      });
+
     $scope.alleleTypesPromise = CantoConfig.get('allele_types');
     $scope.organismPromise = Curs.list('organism', [{ include_counts: 1 }]);
     $scope.instanceOrganismPromise = CantoConfig.get('instance_organism');
@@ -7065,6 +7954,8 @@ var annotationEditDialogCtrl =
                 };
               filterFeatures(results, filterFunc);
 
+              $scope.allFeatures = results;
+
               $scope.filteredFeaturesB = $scope.filteredFeatures;
             });
           }).catch(function (err) {
@@ -7190,6 +8081,14 @@ var annotationEditDialogCtrl =
       return countKeys(changesToStore) > 0;
     };
 
+    $scope.featureChooserTitle = function() {
+      if ($scope.featureEditable) {
+        return 'Choose a ' + $scope.annotationType.feature_type;
+      } else {
+        return 'This annotation is not editable because it has associated genetic interactions';
+      }
+    };
+
     $scope.okButtonTitleMessage = function () {
       if ($scope.isValid()) {
         if ($scope.annotationChanged()) {
@@ -7251,6 +8150,47 @@ var annotationEditDialogCtrl =
       return null;
     }
 
+    function setGenotypeInteractionData(featureId, annotationType) {
+      if (!featureId ||
+          !annotationType.associated_interaction_annotation_type ||
+          !$scope.annotation.term_ontid || !$scope.allFeatures) {
+        return;
+      }
+
+      $scope.genotypeInteractionInitialData = null;
+
+      var interactionInitialDataPromise =
+          getInteractionInitialData($q, CantoConfig,
+                                    $scope.termDetailsPromise,
+                                    annotationType, $scope.annotation.term_ontid,
+                                    featureId, $scope.allFeatures);
+
+      interactionInitialDataPromise
+        .then(function(data) {
+          return findGenotypesOfAlleles(data, $q, AnnotationProxy,
+                                        annotationType,
+                                        $scope.allFeatures);
+        })
+        .then(function(data) {
+          return createMissingGenotypesOfAlleles(data, $q, $http, toaster,
+                                                   CursGenotypeList);
+        })
+        .then(function(initialData) {
+        if (initialData !== null) {
+          $scope.allowInteractionAnnotations = true;
+          if (!$scope.annotation.interaction_annotations) {
+            $scope.annotation.interaction_annotations = [];
+          }
+          if (!$scope.annotation.interaction_annotations_with_phenotypes) {
+            $scope.annotation.interaction_annotations_with_phenotypes = [];
+          }
+
+          $scope.genotypeInteractionInitialData = initialData;
+        }
+      });
+
+    }
+
     function featureIdWatcher(featureId) {
       $q.all([$scope.annotationTypePromise, $scope.filteredFeaturesPromise])
         .then(function (data) {
@@ -7259,6 +8199,12 @@ var annotationEditDialogCtrl =
           if (annotationType.second_feature_organism_selector) {
             return;
           }
+
+          $scope.allowInteractionAnnotations = false;
+          $scope.interactionGenotypeA = null;
+          $scope.interactionGenotypeB = null;
+
+          setGenotypeInteractionData(featureId, annotationType);
 
           if (featureId) {
 
@@ -7321,12 +8267,17 @@ var annotationEditDialogCtrl =
       $scope.matchingConfigurations = [];
 
       if ($scope.annotation.term_ontid) {
-        var ontLookupPromise =
-            CantoService.lookup('ontology', [$scope.annotation.term_ontid], {
-              subset_ids: 1,
-            });
+        $scope.termDetailsPromise =
+          CantoService.lookup('ontology', [$scope.annotation.term_ontid], {
+            subset_ids: 1,
+          });
 
-        $q.all([$scope.extConfigPromise, ontLookupPromise])
+        $scope.annotationTypePromise.then(function(annotationType) {
+          setGenotypeInteractionData($scope.annotation.feature_id,
+                                     annotationType);
+        });
+
+        $q.all([$scope.extConfigPromise, $scope.termDetailsPromise])
           .then(function (data) {
             var extensionConfiguration = data[0];
             var termDetails = data[1];
@@ -7482,6 +8433,13 @@ var annotationEditDialogCtrl =
         .finally(function () {
           loadingEnd();
           toaster.clear(storePop);
+
+          if ($scope.interactionsChanged) {
+            setTimeout(function () {
+              // hopefully temporary:
+              window.location.reload();
+            }, 1000);
+          }
         });
     };
 
@@ -7501,7 +8459,7 @@ var annotationEditDialogCtrl =
   };
 
 canto.controller('AnnotationEditDialogCtrl',
-  ['$scope', '$uibModal', '$q', '$uibModalInstance', 'AnnotationProxy',
+  ['$scope', '$uibModal', '$q', '$uibModalInstance', '$http', 'AnnotationProxy',
    'AnnotationTypeConfig', 'CantoConfig', 'CursGenotypeList', 'CursGeneList',
     'CursSessionDetails', 'CantoService',
     'CantoGlobals', 'Curs', 'toaster', 'args',
@@ -8145,8 +9103,12 @@ angular.module('cantoApp')
   });
 
 
+// if termConstraint is undefined, allow all terms from the CV
+// of annotationTypeName
+// termConstraint should be on the form '[FYPO:0000003]'
 function startEditing($uibModal, annotationTypeName, annotation,
-  currentFeatureDisplayName, newlyAdded, featureEditable) {
+                      currentFeatureDisplayName, newlyAdded, featureEditable,
+                      termConstraint) {
   var editInstance = $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/annotation_edit.html',
     controller: 'AnnotationEditDialogCtrl',
@@ -8161,6 +9123,7 @@ function startEditing($uibModal, annotationTypeName, annotation,
           currentFeatureDisplayName: currentFeatureDisplayName,
           newlyAdded: newlyAdded,
           featureEditable: featureEditable,
+          termConstraint: termConstraint,
         };
       }
     },
@@ -8238,13 +9201,13 @@ function makeNewAnnotation(template) {
 
 
 function addAnnotation($uibModal, annotationTypeName, featureType, featureId,
-                       featureDisplayName, featureTaxonId) {
+                       featureDisplayName, featureTaxonId, termConstraint) {
   var template = {
     annotation_type: annotationTypeName,
     feature_type: featureType,
   };
   if (featureId) {
-    template.feature_id = featureId;
+    template.feature_id = Number(featureId);
   }
   if (featureTaxonId) {
     template.organism = {
@@ -8254,8 +9217,8 @@ function addAnnotation($uibModal, annotationTypeName, featureType, featureId,
 
   var featureEditable = !featureId;
   var newAnnotation = makeNewAnnotation(template);
-  startEditing($uibModal, annotationTypeName, newAnnotation,
-               featureDisplayName, true, featureEditable);
+  return startEditing($uibModal, annotationTypeName, newAnnotation,
+                      featureDisplayName, true, featureEditable, termConstraint);
 }
 
 var annotationQuickAdd =
@@ -8304,7 +9267,8 @@ var annotationQuickAdd =
           }
 
           addAnnotation($uibModal, $scope.annotationTypeName, $scope.featureType,
-                        $scope.featureId, $scope.featureDisplayName, $scope.featureTaxonId);
+                        $scope.featureId, $scope.featureDisplayName, $scope.featureTaxonId,
+                        undefined);
         };
       },
     };
@@ -8397,7 +9361,7 @@ function setHideColumns(annotation, hideColumns) {
 }
 
 var annotationTableCtrl =
-  function ($timeout, CantoGlobals, AnnotationTypeConfig, CursGenotypeList,
+  function ($timeout, $q, CantoGlobals, AnnotationTypeConfig, CursGenotypeList,
             CursSessionDetails, CantoConfig) {
     return {
       scope: {
@@ -8433,8 +9397,6 @@ var annotationTableCtrl =
 
         $scope.selectAllModel = false;
 
-        $scope.data = {};
-
         // default is no sorting
         $scope.sortColumn = null;
         $scope.prevSortColumn = null;
@@ -8443,6 +9405,9 @@ var annotationTableCtrl =
           sortedAnnotations: null,
           hideColumns: {},
           publicationUniquename: null,
+          interactionAnnotations: [],
+          interactionAnnotationsWithPhenotypes: [],
+          interactionPhenotypeType: null,
         };
 
         $scope.checkboxChanged = function(annotationId, checkboxChecked) {
@@ -8475,6 +9440,16 @@ var annotationTableCtrl =
           AnnotationTypeConfig.getByName($scope.annotationTypeName)
           .then(function(annotationType) {
             $scope.annotationType = annotationType;
+
+            var interactionPhenotypeTypeName =
+                $scope.annotationType.associated_phenotype_annotation_type;
+            if (interactionPhenotypeTypeName) {
+              AnnotationTypeConfig.getByName(interactionPhenotypeTypeName)
+                .then(function(annotationType) {
+                  $scope.data.interactionPhenotypeType = annotationType;
+                });
+            }
+
             return annotationType;
           });
 
@@ -8569,6 +9544,25 @@ var annotationTableCtrl =
 
         $scope.sortAnnotations();
 
+        $scope.processGenotypeInteractions =
+          function(annotationType) {
+            if (annotationType.category !== 'genotype_interaction') {
+              return;
+            }
+
+            $scope.$watch('annotations',
+                          function() {
+                            $.map($scope.annotations,
+                                  function(annotation) {
+                                    if (annotation.genotype_a_phenotype_annotations) {
+                                      $scope.data.interactionAnnotationsWithPhenotypes.push(annotation);
+                                    } else {
+                                      $scope.data.interactionAnnotations.push(annotation);
+                                    }
+                                  });
+                          });
+          };
+
         $scope.setSortBy = function(col) {
           if ($scope.sortColumn === col) {
             $scope.setDefaultSort();
@@ -8589,15 +9583,12 @@ var annotationTableCtrl =
             if ($scope.annotations) {
               $scope.updateColumns();
               $scope.sortAnnotations();
+              $scope.annotationTypeConfigPromise.then(function (annotationType) {
+                $scope.processGenotypeInteractions(annotationType);
+              });
             }
           },
           true);
-
-        $scope.data = {
-          annotations: null,
-          hideColumns: {},
-          publicationUniquename: null,
-        };
 
         CursSessionDetails.get()
           .then(function (sessionDetails) {
@@ -8651,12 +9642,27 @@ var annotationTableCtrl =
                 }
               });
           });
+
+
+        // used by annotationTableRow code, create here so we don't re-fetch the
+        // genotypes in every row
+        $scope.genotypesPromiseForInteractions = 
+          $scope.annotationTypeConfigPromise.then(function (annotationType) {
+            if (typeof(annotationType.associated_interaction_annotation_type) !== 'undefined'  &&
+                $scope.alleleCountFilter == 'multi') {
+              return CursGenotypeList.cursGenotypeList({
+                include_allele: 1
+              });
+            } else {
+              return $q.when([]);
+            }
+        });
       }
     };
   };
 
 canto.directive('annotationTable',
-   ['$timeout', 'CantoGlobals',
+   ['$timeout', '$q', 'CantoGlobals',
     'AnnotationTypeConfig', 'CursGenotypeList', 'CursSessionDetails', 'CantoConfig',
     annotationTableCtrl
   ]);
@@ -8716,7 +9722,8 @@ var annotationTableList =
 
                 $scope.byTypeSplit[annotationType.name] = {};
 
-                if (annotationType.feature_type == 'genotype') {
+                if (annotationType.feature_type == 'genotype' &&
+                    annotationType.category != 'genotype_interaction') {
                   doFilter(annotations, 'new', 'single');
                   doFilter(annotations, 'new', 'multi');
                   doFilter(annotations, 'existing', 'single');
@@ -8795,7 +9802,10 @@ canto.directive('annotationTableList',
 
 
 var annotationTableRow =
-  function ($uibModal, CursSessionDetails, CursAnnotationDataService, AnnotationProxy, AnnotationTypeConfig, CantoGlobals, CantoConfig, toaster) {
+    function ($uibModal, $q, $http, CursGenotypeList,
+              CursSessionDetails, CursAnnotationDataService,
+              AnnotationProxy, AnnotationTypeConfig, CantoGlobals,
+              CantoConfig, CantoService, toaster) {
     return {
       restrict: 'A',
       replace: true,
@@ -8818,12 +9828,14 @@ var annotationTableRow =
         $scope.showTransferLink = false;
         $scope.isMetagenotypeAnnotation = false;
         $scope.checkboxChecked = false;
+        $scope.genotypeInteractionInitialData = null;
 
         CursSessionDetails.get()
           .then(function (sessionDetails) {
             $scope.sessionState = sessionDetails.state;
           });
 
+        // from the parent scope:
         var annotation = $scope.annotation;
 
         $scope.isMetagenotypeAnnotation = (
@@ -8978,11 +9990,129 @@ var annotationTableRow =
 
           editPromise.then(function (editedAnnotation) {
             $scope.annotation = editedAnnotation;
+            $scope.updateInteractionInitialData();
             if (typeof ($scope.annotation.conditions) !== 'undefined') {
               $scope.annotation.conditionsString =
                 conditionsToStringHighlightNew($scope.annotation.conditions);
             }
           });
+        };
+
+        $scope.interactionViewLinkVisible = function() {
+          return $scope.genotypeInteractionInitialData &&
+            annotation.status !== 'existing' &&
+            !$scope.read_only_curs;
+        };
+
+        $scope.updateInteractionInitialData = function(genotypesPromise) {
+          if (!genotypesPromise) {
+            genotypesPromise = CursGenotypeList.cursGenotypeList({
+              include_allele: 1
+            });
+          }
+
+          return $q.all([annotationTypePromise, genotypesPromise])
+           .then(function(results) {
+            var annotationType = results[0];
+            var genotypes = results[1];
+
+            if (annotationType.associated_interaction_annotation_type) {
+              var termDetailsPromise =
+                  CantoService.lookup('ontology',
+                                      [$scope.annotation.term_ontid], {
+                  subset_ids: 1,
+                                      });
+
+              var interactionInitialDataPromise =
+                  getInteractionInitialData($q, CantoConfig,
+                                            termDetailsPromise,
+                                            annotationType, $scope.annotation.term_ontid,
+                                            $scope.annotation.feature_id, genotypes);
+
+            return interactionInitialDataPromise
+                .then(function(data) {
+                  return findGenotypesOfAlleles(data, $q, AnnotationProxy,
+                                                annotationType,
+                                                genotypes);
+                })
+                .then(function(data) {
+                  return createMissingGenotypesOfAlleles(data, $q, $http, toaster,
+                                                         CursGenotypeList);
+                })
+                .then(function(initialData) {
+                if (initialData !== null) {
+                  if (!$scope.annotation.interaction_annotations) {
+                    $scope.annotation.interaction_annotations = [];
+                  }
+                  if (!$scope.annotation.interaction_annotations_with_phenotypes) {
+                    $scope.annotation.interaction_annotations_with_phenotypes = [];
+                  }
+
+                  return initialData;
+                } else {
+                  return null;
+                }
+              });
+            }
+
+            return null;
+          });
+        };
+
+        $scope.updateInteractionInitialData($scope.genotypesPromiseForInteractions)
+          .then((initialData) => {
+            $scope.genotypeInteractionInitialData = initialData;
+          });
+
+        $scope.viewEditInteractions = function() {
+          annotationTypePromise.then(function(annotationType) {
+            var interactionInitialDataPromise =
+                $scope.updateInteractionInitialData(null);
+
+            interactionInitialDataPromise.then((initialData) => {
+
+            if ($scope.genotypeInteractionCount() == 0) {
+              var editedAnnotation = {};
+
+              copyObject($scope.annotation, editedAnnotation);
+
+              var newInteractionsPromise =
+                  startInteractionAnnotationsEdit($uibModal, annotationType,
+                                                  initialData);
+
+              newInteractionsPromise.then(function(result) {
+                if (result.genotype_a_phenotype_annotations.length == 0) {
+                  editedAnnotation.interaction_annotations.push(result);
+                } else {
+                  editedAnnotation.interaction_annotations_with_phenotypes.push(result);
+                }
+
+                storeAnnotationToaster(AnnotationProxy, $scope.annotation,
+                                       editedAnnotation, toaster)
+                  .then(function() {
+                    copyObject(editedAnnotation, $scope.annotation);
+                  });
+              });
+            } else {
+              editGenotypeInteractions($uibModal, $scope.annotation,
+                                       annotationType,
+                                       initialData);
+            }
+          });
+          });
+        };
+
+        $scope.genotypeInteractionCount = function() {
+          var count = 0;
+          var annotation = $scope.annotation;
+          if (annotation.interaction_annotations) {
+            count += annotation.interaction_annotations.length;
+          }
+          if (annotation.interaction_annotations_with_phenotypes) {
+            count += annotation.interaction_annotations_with_phenotypes.length;
+          }
+
+          return count;
         };
 
         $scope.transferAnnotation = function() {
@@ -8991,6 +10121,8 @@ var annotationTableRow =
 
         $scope.duplicate = function () {
           var newAnnotation = makeNewAnnotation($scope.annotation);
+          newAnnotation.interaction_annotations = [];
+          newAnnotation.interaction_annotations_with_phenotypes = [];
           startEditing($uibModal, annotation.annotation_type,
             newAnnotation, $scope.featureFilterDisplayName,
             true, true);
@@ -9026,9 +10158,10 @@ var annotationTableRow =
   };
 
 canto.directive('annotationTableRow',
-  ['$uibModal', 'CursSessionDetails', 'CursAnnotationDataService',
+   ['$uibModal', '$q', '$http', 'CursGenotypeList',
+    'CursSessionDetails', 'CursAnnotationDataService',
     'AnnotationProxy', 'AnnotationTypeConfig',
-    'CantoGlobals', 'CantoConfig', 'toaster',
+    'CantoGlobals', 'CantoConfig', 'CantoService', 'toaster',
     annotationTableRow
   ]);
 

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 95;
+use Test::More tests => 91;
 use Test::Deep;
 use JSON;
 
@@ -552,96 +552,11 @@ is ($c2d7_gene->direct_annotations()->count(), 1);
 is ($curs_schema->resultset('Annotation')->search({ annotation_id => $new_annotation_id })->count(), 0);
 
 
-# test interaction annotation services
-
-my $genotype_interaction_annotation =
-  $curs_schema->resultset('Annotation')->find({ type => 'genotype_interaction',
-                                                data => { -like => '%Synthetic Haploinsufficiency%' } });
-
-
-# test illegal field type
-$stderr = capture_stderr {
-  $res = $service_utils->change_annotation($genotype_interaction_annotation->annotation_id(),
-                                           {
-                                             key => $curs_key,
-                                             illegal => "something",
-                                           });
-};
-is ($res->{status}, 'error');
-my $illegal_field_type_message = 'No such annotation field type: illegal';
-is ($res->{message}, $illegal_field_type_message);
-
-
-my $metagenotype_rs = $curs_schema->resultset('Metagenotype')->search();
-
-my $test_metagenotype = $metagenotype_rs->first();
-
-# test editing
-$res = $service_utils->change_annotation($genotype_interaction_annotation->annotation_id(),
-                                         {
-                                           key => $curs_key,
-                                           feature_id => $test_metagenotype->metagenotype_id(),
-                                           feature_type => 'metagenotype',
-                                         });
-
-is ($res->{status}, 'success');
-cmp_deeply ($res->{annotation},
-            {
-              'publication_uniquename' => 'PMID:19756689',
-              'score' => '',
-              'annotation_id' => $genotype_interaction_annotation->annotation_id(),
-              'curator' => 'Some Testperson <some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org>',
-              'genotype_a_display_name' => 'SPCC63.05delta ssm4KE',
-              'genotype_a_id' => 1,
-              'genotype_a_taxonid' => 4896,
-              'genotype_a_gene_ids' => [2, 4],
-              'feature_a_display_name' => 'SPCC63.05delta ssm4KE',
-              'feature_a_id' => 1,
-              'feature_a_taxonid' => 4896,
-              'genotype_b_display_name' => 'ssm4-D4(del_100-200)[Knockdown]',
-              'genotype_b_id' => 2,
-              'genotype_b_taxonid' => 4896,
-              'feature_b_display_name' => 'ssm4-D4(del_100-200)[Knockdown]',
-              'feature_b_id' => 2,
-              'feature_b_taxonid' => 4896,
-              'genotype_b_gene_ids' => [2],
-              'organism' => {
-                taxonid => '4896',
-                scientific_name => 'Schizosaccharomyces pombe',
-                full_name => 'Schizosaccharomyces pombe',
-                common_name => 'fission yeast',
-                pathogen_or_host => 'unknown',
-              },
-              'term_ontid' => 'FYPO:0000114',
-              'term_name' => 'cellular process phenotype',
-              'extension' => [],
-              'conditions' => [{
-                                'name' => 'glucose rich medium',
-                                'term_id' => 'FYECO:0000137'
-                              }],
-              'is_inferred_annotation' => 0,
-              'evidence_code' => 'Synthetic Haploinsufficiency',
-              'status' => 'new',
-              'completed' => 1,
-              'submitter_comment' => '',
-              'figure' => '',
-              'is_obsolete_term' => 0,
-              'annotation_type' => 'genotype_interaction',
-              'annotation_type_display_name' => 'genetic interaction',
-              'checked' => 'no',
-            }
-          );
-
-
 # test condition list service
 my $cond_res = $service_utils->list_for_service('condition');
 
 cmp_deeply($cond_res,
            [
-             {
-               'name' => 'glucose rich medium',
-               'term_id' => 'FYECO:0000137'
-             },
              {
                'term_id' => 'FYECO:0000006',
                'name' => 'low temperature'
@@ -923,7 +838,7 @@ cmp_deeply($annotation_res,
                               ],
               'publication_uniquename' => 'PMID:19756689',
               'feature_id' => 1,
-              'annotation_id' => 6,
+              'annotation_id' => 5,
               'extension' => [],
               'annotation_type' => 'phenotype',
               'status' => 'new',
@@ -974,6 +889,8 @@ cmp_deeply($annotation_res,
                   'synonyms' => [],
                 }
               ],
+              interaction_annotations_with_phenotypes => [],
+              interaction_annotations => [],
             },
             {
               'evidence_code' => 'Co-immunoprecipitation experiment',
@@ -1012,7 +929,7 @@ cmp_deeply($annotation_res,
               'is_obsolete_term' => 0,
               'publication_uniquename' => 'PMID:19756689',
               'feature_id' => 2,
-              'annotation_id' => 7,
+              'annotation_id' => 6,
               'annotation_type' => 'phenotype',
               'extension' => [],
               'status' => 'new',
@@ -1034,54 +951,19 @@ cmp_deeply($annotation_res,
                   'synonyms' => [{ edit_status => 'new', synonym => 'ssm4-c1' }],
                 }
               ],
+              interaction_annotations_with_phenotypes => [],
+              interaction_annotations => [],
             },
             $cycloheximide_annotation_res,
             $post_translational_modification_res,
-            {
-              'genotype_a_display_name' => 'SPCC63.05delta ssm4KE',
-              'genotype_a_id' => 1,
-              'genotype_a_taxonid' => 4896,
-              'feature_a_display_name' => 'SPCC63.05delta ssm4KE',
-              'feature_a_id' => 1,
-              'feature_a_taxonid' => 4896,
-              'genotype_a_gene_ids' => [2, 4],
-              'genotype_b_display_name' => 'ssm4-D4(del_100-200)[Knockdown]',
-              'genotype_b_id' => 2,
-              'genotype_b_taxonid' => 4896,
-              'feature_b_display_name' => 'ssm4-D4(del_100-200)[Knockdown]',
-              'feature_b_id' => 2,
-              'feature_b_taxonid' => 4896,
-              'genotype_b_gene_ids' => [2],
-              'organism' => {
-                taxonid => '4896',
-                scientific_name => 'Schizosaccharomyces pombe',
-                full_name => 'Schizosaccharomyces pombe',
-                common_name => 'fission yeast',
-                pathogen_or_host => 'unknown',
-              },
-              'term_ontid' => 'FYPO:0000114',
-              'term_name' => 'cellular process phenotype',
-              'extension' => [],
-              'conditions' => [{'name' => 'glucose rich medium', 'term_id' => 'FYECO:0000137'}],
-              'evidence_code' => 'Synthetic Haploinsufficiency',
-              'submitter_comment' => '',
-              'figure' => '',
-              'is_inferred_annotation' => 0,
-              'publication_uniquename' => 'PMID:19756689',
-              'score' => '',
-              'annotation_id' => 4,
-              'status' => 'new',
-              'is_obsolete_term' => 0,
-              'annotation_type' => 'genotype_interaction',
-              'annotation_type_display_name' => 'genetic interaction',
-              'curator' => 'Some Testperson <some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org>',
-              'completed' => 1
-            },
             {
               'evidence_code' => 'Phenotypic Enhancement',
               'publication_uniquename' => 'PMID:19756689',
               'status' => 'existing',
               'gene_display_name' => 'ste20',
+              'feature_a_display_name' => 'ste20',
+              'interacting_gene_display_name' => 'cdc11',
+              'feature_b_display_name' => 'cdc11',
               'gene_identifier' => 'SPBC12C2.02c',
               'feature_a_display_name' => 'ste20',
               'interacting_gene_display_name' => 'cdc11',
@@ -1095,6 +977,7 @@ cmp_deeply($annotation_res,
             },
             {
               'gene_display_name' => 'ste20',
+              'feature_a_display_name' => 'ste20',
               'status' => 'existing',
               'evidence_code' => undef,
               'publication_uniquename' => 'PMID:19756689',
@@ -1117,7 +1000,7 @@ cmp_deeply($annotation_res,
               'gene_display_name' => 'SPCC63.05',
               'gene_id' => 4,
               'gene_identifier' => 'SPCC63.05',
-              'annotation_id' => 5,
+              'annotation_id' => 4,
               'feature_b_taxonid' => '4896',
               'interacting_gene_taxonid' => '4896',
               'feature_id' => 4,

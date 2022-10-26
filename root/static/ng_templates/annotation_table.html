@@ -1,6 +1,10 @@
 <div>
   <div ng-show="annotations.length > 0">
-    <span ng-if="featureStatusFilter === 'existing' && annotations !== null && annotations.length > 0"
+    <div ng-if="featureStatusFilter === 'new' && alleleCountFilter && alleleCountFilter == 'multi'" class="curs-annotation-sub-heading">
+      Multi locus genotype annotations and genetic interactions:
+    </div>
+
+    <div ng-if="featureStatusFilter === 'existing' && annotations !== null && annotations.length > 0"
           class="curs-annotation-sub-heading">
       <span ng-if="!alleleCountFilter">
         Existing annotations
@@ -11,7 +15,7 @@
       <span ng-show="featureFilterDisplayName">
         for {{featureFilterDisplayName}}
       </span>
-    </span>
+    </div>
     <div class="curs-annotation-table">
       <div class="list" ng-switch="annotationType.category">
         <table ng-switch-when="ontology" class="list">
@@ -219,6 +223,25 @@
             </tr>
           </tbody>
         </table>
+
+        <div ng-switch-when="genotype_interaction">
+          <div ng-if="data.interactionAnnotations.length != 0 && data.interactionPhenotypeType">
+            <genotype-interaction-annotation-table
+              interactions="data.interactionAnnotations"
+              phenotype-annotation-type="data.interactionPhenotypeType"
+              show-double-mutant-phenotype="true"
+              show-phenotypes-link="false" allow-deletion="false">
+            </genotype-interaction-annotation-table>
+          </div>
+          <div ng-if="data.interactionAnnotationsWithPhenotypes.length != 0 && data.interactionPhenotypeType">
+            <genotype-interaction-annotation-table
+              interactions="data.interactionAnnotationsWithPhenotypes"
+              phenotype-annotation-type="data.interactionPhenotypeType"
+              show-double-mutant-phenotype="true"
+              show-phenotypes-link="true" allow-deletion="false">
+            </genotype-interaction-annotation-table>
+          </div>
+        </div>
       </div>
     </div>
   </div>

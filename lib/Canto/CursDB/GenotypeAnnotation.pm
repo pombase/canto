@@ -109,9 +109,60 @@ __PACKAGE__->belongs_to(
   },
 );
 
+=head2 genotype_interactions
 
-# Created by DBIx::Class::Schema::Loader v0.07033 @ 2013-11-24 19:46:37
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:imHVS384VQ8wQ3LFi56crQ
+Type: has_many
+
+Related object: L<Canto::CursDB::GenotypeInteraction>
+
+=cut
+
+__PACKAGE__->has_many(
+  "genotype_interactions",
+  "Canto::CursDB::GenotypeInteraction",
+  {
+    "foreign.primary_genotype_annotation_id" => "self.genotype_annotation_id",
+  },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 genotype_interactions_with_phenotype_genotype_annotation_a
+
+Type: has_many
+
+Related object: L<Canto::CursDB::GenotypeInteractionWithPhenotype>
+
+=cut
+
+__PACKAGE__->has_many(
+  "genotype_interactions_with_phenotype_genotype_annotation_a",
+  "Canto::CursDB::GenotypeInteractionWithPhenotype",
+  {
+    "foreign.genotype_annotation_a_id" => "self.genotype_annotation_id",
+  },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 genotype_interactions_with_phenotype_primary_genotype_annotation
+
+Type: has_many
+
+Related object: L<Canto::CursDB::GenotypeInteractionWithPhenotype>
+
+=cut
+
+__PACKAGE__->has_many(
+  "genotype_interactions_with_phenotype_primary_genotype_annotation",
+  "Canto::CursDB::GenotypeInteractionWithPhenotype",
+  {
+    "foreign.primary_genotype_annotation_id" => "self.genotype_annotation_id",
+  },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2022-04-12 16:57:14
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:o+PTBmw2jIhZ7M/LZLUWDQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

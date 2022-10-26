@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 43;
+use Test::More tests => 42;
 
 use Try::Tiny;
 
@@ -307,9 +307,3 @@ my $res = $service_utils->create_annotation({
       ]
     ],
 });
-
-
-my $delete_result =
-  $genotype_manager->delete_metagenotype($metagenotype_2->metagenotype_id());
-
-ok ($delete_result =~ /delete failed/);

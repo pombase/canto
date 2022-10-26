@@ -172,6 +172,79 @@ sub _get_metagenotype_by_id
     ->find({ metagenotype_id => $metagenotype_id });
 }
 
+
+sub _get_genotype_interactions_no_phenotype
+{
+  my $annotation = shift;
+
+  my $interaction_rs = $annotation->genotype_annotations()
+    ->search_related('genotype_interactions')
+    ->search({},
+                {
+                  prefetch => ['genotype_a', 'genotype_b'],
+                });
+
+  my @interactions = ();
+
+  while (defined (my $interaction_row = $interaction_rs->next())) {
+    my $genotype_a = $interaction_row->genotype_a();
+    my $genotype_b = $interaction_row->genotype_b();
+
+    push @interactions,
+      {
+        interaction_type => $interaction_row->interaction_type(),
+        genotype_a => $genotype_a->identifier(),
+        genotype_b => $genotype_b->identifier(),
+      };
+  }
+
+  return @interactions;
+}
+
+sub _get_genotype_interactions_with_phenotype
+{
+  my $annotation = shift;
+
+  my $interaction_rs = $annotation->genotype_annotations()
+    ->search_related('genotype_interactions_with_phenotype_primary_genotype_annotation')
+    ->search({},
+                {
+                  prefetch => [
+                    {
+                      genotype_annotation_a => [
+                        ['genotype', 'annotation'],
+                      ]
+                    },
+                    'genotype_b'
+                  ],
+                });
+
+  my @interactions = ();
+
+  while (defined (my $interaction_row = $interaction_rs->next())) {
+    my $genotype_annotation_a = $interaction_row->genotype_annotation_a();
+    my $genotype_a = $genotype_annotation_a->genotype();
+    my $genotype_b = $interaction_row->genotype_b();
+
+    my $genotype_annotation_a_annotation = $genotype_annotation_a->annotation();
+
+    my $annotation_a_data = $genotype_annotation_a_annotation->data();
+
+    my $phenotype_termid = $annotation_a_data->{term_ontid};
+
+
+    push @interactions,
+      {
+        interaction_type => $interaction_row->interaction_type(),
+        genotype_a => $genotype_a->identifier(),
+        genotype_b => $genotype_b->identifier(),
+        genotype_a_phenotype_termid => $phenotype_termid,
+      };
+  }
+
+  return @interactions;
+}
+
 sub _get_annotations
 {
   my $config = shift;
@@ -292,6 +365,21 @@ sub _get_annotations
         }
       }
     } %data;
+
+
+    my @genotype_interactions_no_phenotype =
+      _get_genotype_interactions_no_phenotype($annotation);
+
+    if (@genotype_interactions_no_phenotype) {
+      $data{genotype_interactions_no_phenotype} = \@genotype_interactions_no_phenotype;
+    }
+
+    my @genotype_interactions_with_phenotype =
+      _get_genotype_interactions_with_phenotype($annotation);
+
+    if (@genotype_interactions_with_phenotype) {
+      $data{genotype_interactions_with_phenotype} = \@genotype_interactions_with_phenotype;
+    }
 
     if (!$data{extension} || @{$data{extension}} == 0) {
       push @ret, \%data;

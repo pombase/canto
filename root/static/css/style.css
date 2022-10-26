@@ -1116,8 +1116,7 @@ fieldset.curs-genes span {
 }
 
 .curs-annotation-sub-heading {
-  margin-top: 5px;
-  font-size: 95%;
+  margin-top: 1em;
 }
 .curs-annotation-table a.curs-sort-button {
   color: black;
@@ -1950,6 +1949,29 @@ a:not([href]) {
   font-weight: bold;
   margin-top: 2em;
   font-size: 110%;
+}
+
+button.curs-annotation-edit-suggest {
+  margin-left: 1em;
+}
+
+.curs-annotation-interaction-edit-type-select {
+  padding-bottom: 0.5em;
+}
+
+.curs-annotation-select-dialog {
+  max-height: 30em;
+  overflow: auto;
+}
+
+.curs-annotation-interaction-edit label {
+  font-weight: normal;
+}
+
+.curs-annotation-table-view-edit-interactions {
+  padding: 0.2em 0 0 1em;
+  font-size: 90%;
+  white-space: nowrap;
 }
 
 .curs-annotation-edit-suggest-new-term-button {

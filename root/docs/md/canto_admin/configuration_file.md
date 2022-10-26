@@ -436,3 +436,36 @@ gene's name or systematic ID.
 If true, don't show genotypes containing just this allele in the
 genotype selectors.  And ignore alleles of this type when deciding if
 a genotype is single or multi allele.
+
+### evidence_code_groups
+For the `genotype_interaction` annotation type we need to configure
+which interaction types are permitted for a given double mutant
+phenotype and for the alleles of the double mutant.
+
+There are three sub-attributes:
+
+#### double_mutant_population_phenotype
+Settings and constraints for the case where the double mutant has a
+population phenotype.
+
+##### parent_constraint
+The term constraint used of populations phenotype terms.
+
+##### evidence_codes
+Interaction types to allow when the double mutant is a viable poputatation phenotype.
+
+##### inviable_parent_constraint
+The term constraint for inviable population phenotypes.
+
+##### inviable_only_evidence_codes
+Interaction types to allow when the double mutant is inviable.
+
+##### not_population_evidence_codes
+Types allowed when the double mutant doesn't have a poputation phenotype.
+
+#### both_alleles_deletions
+Interaction types allowed when both alleles are deletions.
+
+#### one_allele_overexpressed
+Interaction types allowed when at least one allele is overexpressed.
+

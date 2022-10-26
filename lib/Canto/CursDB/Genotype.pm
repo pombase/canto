@@ -153,6 +153,51 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 genotype_interaction_genotype_bs
+
+Type: has_many
+
+Related object: L<Canto::CursDB::GenotypeInteraction>
+
+=cut
+
+__PACKAGE__->has_many(
+  "genotype_interaction_genotype_bs",
+  "Canto::CursDB::GenotypeInteraction",
+  { "foreign.genotype_b_id" => "self.genotype_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 genotype_interaction_genotypes_a
+
+Type: has_many
+
+Related object: L<Canto::CursDB::GenotypeInteraction>
+
+=cut
+
+__PACKAGE__->has_many(
+  "genotype_interaction_genotypes_a",
+  "Canto::CursDB::GenotypeInteraction",
+  { "foreign.genotype_a_id" => "self.genotype_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 genotype_interactions_with_phenotype
+
+Type: has_many
+
+Related object: L<Canto::CursDB::GenotypeInteractionWithPhenotype>
+
+=cut
+
+__PACKAGE__->has_many(
+  "genotype_interactions_with_phenotype",
+  "Canto::CursDB::GenotypeInteractionWithPhenotype",
+  { "foreign.genotype_b_id" => "self.genotype_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 metagenotype_first_genotypes
 
 Type: has_many
@@ -224,8 +269,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2019-06-17 20:56:44
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:q4OLCAH0iwZo5n5NC/wsWw
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2022-04-12 16:57:14
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JV2TN7kBZ8gpMVUAKMXdVw
 
 =head2 annotations
 

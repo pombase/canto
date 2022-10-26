@@ -487,6 +487,47 @@ sub make_genotype
   return $genotype;
 }
 
+
+=head2 find_or_make_genotype
+
+ Usage   : my $genotype = $manager->find_or_make_genotype($taxon_id, $background,
+                                                          $strain_name, \@alleles);
+ Function: Return any existing genotype the same background and alleles as
+           the argument.
+           We should have at most one in the CursDB.
+ Args    : - $taxon_id
+           - $background - can be undef
+           - $strain_name - can be undef
+           - \@alleles
+ Return  : the found Genotype or undef if there is no Genotype with those
+           alleles
+
+=cut
+
+sub find_or_make_genotype
+{
+  my $self = shift;
+
+  my $genotype_taxonid = shift;
+  my $background = shift;
+  my $strain_name = shift;
+  my $allele_data = shift;
+
+  my $genotype = $self->find_genotype($genotype_taxonid, $background,
+                                      $strain_name, $allele_data);
+
+  if (!defined $genotype) {
+    $genotype =
+      $self->make_genotype(undef, $background,
+                           $allele_data, $genotype_taxonid, undef,
+                           undef, undef);
+  }
+
+  return $genotype;
+}
+
+
+
 =head2 get_wildtype_genotype
 
  Usage   : $genotype_manager->get_wildtype_genotype($taxonid, $strain_name);

@@ -3,6 +3,7 @@
     <span ng-if="disabled">Gene</span>
     <feature-chooser ng-if="!disabled && genes"
                      features="genes" feature-type="gene"
+                     feature-editable="true"
                      chosen-feature-uniquename="extensionRelation.rangeValue"
                      chosen-feature-display-name="extensionRelation.rangeDisplayName"
                      chosen-feature-id="rangeGeneId"></feature-chooser>
@@ -11,6 +12,7 @@
   <span ng-if="rangeConfig.type == 'Metagenotype'">
     <span ng-if="disabled">Metagenotype</span>
     <feature-chooser ng-if="!disabled && metagenotypes"
+                     feature-editable="true"
                      features="metagenotypes" feature-type="'metagenotype'"
                      chosen-feature-display-name="extensionRelation.rangeDisplayName"
                      chosen-feature-id="extensionRelation.rangeValue"></feature-chooser>

@@ -1,0 +1,18 @@
+<div class="curs-select-interaction-annotations">
+  <div class="modal-body curs-annotation-select-dialog">
+    <annotation-table annotation-type-name="{{annotationType.name}}"
+                      annotations="subjectAnnotations"
+                      feature-status-filter="selecting"
+                      show-menu="false"
+                      show-checkboxes="true"
+                      show-features="false"
+                      checkboxes-changed="selectionChanged(annotationIds)"
+                      show-metagenotype-link="false">
+    </annotation-table>
+
+    <div>
+      <button ng-click="addPhenotypeAnnotation()"
+              class="btn btn-primary">Add phenotype ...</button>
+    </div>
+  </div>
+</div>

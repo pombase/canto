@@ -60,6 +60,22 @@ CREATE TABLE genotype_annotation (
        annotation integer REFERENCES annotation(annotation_id)
 );
 
+CREATE TABLE genotype_interaction (
+       genotype_interaction_id integer PRIMARY KEY,
+       interaction_type TEXT NOT NULL,
+       primary_genotype_annotation_id integer NOT NULL REFERENCES genotype_annotation(genotype_annotation_id),   -- phenotype annotation for the combined genotype
+       genotype_a_id integer NOT NULL REFERENCES genotype(genotype_id),                                    -- genotype A of the interaction
+       genotype_b_id integer NOT NULL REFERENCES genotype(genotype_id)                                     -- genotype B of the interaction
+);
+
+CREATE TABLE genotype_interaction_with_phenotype (
+       genotype_interaction_with_phenotype_id integer PRIMARY KEY,
+       interaction_type TEXT NOT NULL,
+       primary_genotype_annotation_id integer NOT NULL REFERENCES genotype_annotation(genotype_annotation_id),   -- phenotype annotation for the combined genotype
+       genotype_annotation_a_id integer NOT NULL REFERENCES genotype_annotation(genotype_annotation_id),    -- genotype A and the phenotype rescued, suppressed, etc.
+       genotype_b_id integer NOT NULL REFERENCES genotype(genotype_id)                                    -- genotype B of the interaction
+);
+
 CREATE TABLE strain (
        strain_id integer PRIMARY KEY AUTOINCREMENT,
        organism_id integer NOT NULL REFERENCES organism(organism_id),

@@ -1,0 +1,19 @@
+<div class="curs-genotype-interaction-edit-dialog modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title">
+      View and edit genetic interactions for {{editedAnnotation.genotype_display_name}}
+    </h4>
+  </div>
+  <div class="modal-body">
+    <genotype-interaction-edit
+      annotation="editedAnnotation"
+      annotation-type="annotationType"
+      genotype-interaction-initial-data="genotypeInteractionInitialData">
+    </genotype-interaction-edit>
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-primary" ng-click="ok()" ng-alt-enter="ok()">OK</button>
+  </div>
+</div>

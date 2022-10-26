@@ -244,19 +244,6 @@ my $full_expected_curation_session =
         gene => 'Schizosaccharomyces pombe SPBC14F5.07',
       },
       {
-        type => 'genotype_interaction',
-        publication => 'PMID:19756689',
-        conditions => ['FYECO:0000137'],
-        metagenotype => 'test-metagenotype-1',
-        term => 'FYPO:0000114',
-        curator => {
-          community_curated => JSON::XS::false,
-        },
-        status => 'new',
-        creation_date => "2010-01-02",
-        evidence_code => 'Synthetic Haploinsufficiency',
-      },
-      {
         type => 'physical_interaction',
         publication => 'PMID:19756689',
         interacting_genes => ['Schizosaccharomyces pombe SPAC27D7.13c'],
@@ -524,20 +511,6 @@ my $full_expected_curation_session_with_names =
         gene => 'Schizosaccharomyces pombe SPBC14F5.07',
       },
       {
-        type => 'genotype_interaction',
-        publication => 'PMID:19756689',
-        conditions => ['FYECO:0000137'],
-        metagenotype => 'test-metagenotype-1',
-        term => 'FYPO:0000114',
-        curator => {
-          name => 'Some Testperson',
-          community_curated => JSON::XS::false,
-        },
-        status => 'new',
-        creation_date => "2010-01-02",
-        evidence_code => 'Synthetic Haploinsufficiency',
-      },
-      {
         type => 'physical_interaction',
         publication => 'PMID:19756689',
         interacting_genes => ['Schizosaccharomyces pombe SPAC27D7.13c'],
@@ -618,7 +591,7 @@ my $full_expected_curation_session_with_names =
           'orcid' => undef,
         },
         {
-          'annotation_count' => 8,
+          'annotation_count' => 7,
           'name' => 'Some Testperson',
           'community_curator' => JSON::XS::false,
           'orcid' => undef,

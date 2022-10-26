@@ -729,6 +729,40 @@ CREATE TABLE strainsynonym (
 
     $dbh->do("ALTER TABLE strain ADD COLUMN strain_abbreviation text;");
   },
+
+  34 => sub {
+    my $config = shift;
+    my $track_schema = shift;
+
+    my $update_proc = sub {
+      my $curs = shift;
+      my $curs_schema = shift;
+
+      my $curs_dbh = $curs_schema->storage()->dbh();
+
+      $curs_dbh->do("
+CREATE TABLE genotype_interaction (
+       genotype_interaction_id integer PRIMARY KEY,
+       interaction_type TEXT NOT NULL,
+       primary_genotype_annotation_id integer NOT NULL REFERENCES genotype_annotation(genotype_annotation_id),   -- phenotype annotation for the combined genotype
+       genotype_a_id integer NOT NULL REFERENCES genotype(genotype_id),                                    -- genotype A of the interaction
+       genotype_b_id integer NOT NULL REFERENCES genotype(genotype_id)                                     -- genotype B of the interaction
+);
+");
+
+      $curs_dbh->do("
+CREATE TABLE genotype_interaction_with_phenotype (
+       genotype_interaction_with_phenotype_id integer PRIMARY KEY,
+       interaction_type TEXT NOT NULL,
+       primary_genotype_annotation_id integer NOT NULL REFERENCES genotype_annotation(genotype_annotation_id),   -- phenotype annotation for the combined genotype
+       genotype_annotation_a_id integer NOT NULL REFERENCES genotype_annotation(genotype_annotation_id),    -- genotype A and the phenotype rescued, suppressed, etc.
+       genotype_b_id integer NOT NULL REFERENCES genotype(genotype_id)                                    -- genotype B of the interaction
+);
+");
+    };
+
+    Canto::Track::curs_map($config, $track_schema, $update_proc);
+  },
 );
 
 sub upgrade_to

@@ -1,0 +1,113 @@
+<div class="curs-dialog curs-annotation-interaction-edit">
+  <div class="modal-header">
+    <h4 class="modal-title">
+      {{data.modalTitle}}
+    </h4>
+  </div>
+
+  <div class="modal-body">
+
+    <div>
+      <div ng-show="!interactionType" class="curs-annotation-interaction-edit-type-select">
+        <select class="form-control" ng-model="interactionType">
+          <option value="">Select an interaction type ...</option>
+
+          <option ng-repeat="code in evidenceCodes" value="{{code}}">
+            {{data.evidenceConfig[code].name}}
+          </option>
+        </select>
+      </div>
+
+      <div ng-if="data.directionSelectorVisible">
+        Select direction:
+
+        <div>
+          <input type="radio" ng-value="true"
+                 ng-model="data.interactionForward"
+                 ng-change="directionChanged()"
+                 id="annotation-interaction-direction-1"/>
+          <label for="annotation-interaction-direction-1">
+            {{data.alleleA.long_display_name}}
+            <span style="font-weight: bold">{{interactionTypeDisplayLabel}}</span>
+            {{data.alleleB.long_display_name}}
+          </label>
+        </div>
+
+        <div>
+          <input type="radio" ng-value="false"
+                 ng-model="data.interactionForward"
+                 ng-change="directionChanged()"
+                 id="annotation-interaction-direction-2"/>
+          <label for="annotation-interaction-direction-2">
+            {{data.alleleB.long_display_name}}
+            <span style="font-weight: bold">{{interactionTypeDisplayLabel}}</span>
+            {{data.alleleA.long_display_name}}
+          </label>
+        </div>
+      </div>
+
+      <div ng-if="data.annotationSelectorVisible">
+        <div>
+          <span ng-if="data.interactingAnnotations.length == 0">
+            Select the
+          </span>
+        <span ng-if="data.interactionForward">
+          {{data.alleleA.long_display_name}}
+          <span style="font-weight: bold">
+            {{interactionTypeDisplayLabel}}
+          </span>
+          {{data.alleleB.long_display_name}}
+        </span>
+
+        <span ng-if="!data.interactionForward">
+          {{data.alleleB.long_display_name}}
+          <span style="font-weight: bold">
+            {{interactionTypeDisplayLabel}}
+          </span>
+          {{data.alleleA.long_display_name}}
+        </span>
+        </div>
+
+        <div style="padding-top: 1em">
+          <div ng-if="data.interactingAnnotations.length == 0">
+          <select-interaction-annotations
+            subject-allele="data.subjectAllele"
+            subject-genotype="data.subjectGenotype"
+            object-allele="data.objectAllele"
+            annotation-type="data.annotationType"
+            interaction-type-config="data.interactionTypeConfig"
+            subject-annotations="data.subjectAnnotations"
+            interacting-annotations="data.interactingAnnotations">
+          </select-interaction-annotations>
+          </div>
+
+          <div ng-if="data.interactingAnnotations.length != 0">
+            <annotation-table annotation-type-name="{{data.annotationType.name}}"
+                              annotations="data.interactingAnnotations"
+                              feature-status-filter="selecting"
+                              show-menu="false"
+                              show-checkboxes="false"
+                              show-features="false"
+                              show-metagenotype-link="false">
+            </annotation-table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div ng-if="data.interactionPhenotypeNotNeeded">
+      Confirm:&nbsp;&nbsp;
+      {{data.subjectAllele.long_display_name}}
+      <span style="font-weight: bold">{{interactionTypeDisplayLabel}}</span>
+      {{data.objectAllele.long_display_name}}
+    </div>
+
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-primary" ng-click="ok()" ng-alt-enter="ok()"
+            title="{{ okButtonTitleMessage() }}"
+            ng-disabled="!canFinish()">OK</button>
+  </div>
+</div>
