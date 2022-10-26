@@ -10,7 +10,8 @@
   <div class="curs-box-body">
     <ul class="curs-quick-links-list">
 % for my $annotation_type (@annotation_type_list) {
-%   if (!$annotation_type->{direct_editing_disabled}) {
+%   next if $annotation_type->{delete_only};
+%   next if $annotation_type->{direct_editing_disabled};
     <li ng-if="getAnnotationMode() == 'advanced' || '<% $annotation_type->{category} %>' == 'interaction' && '<% $annotation_type->{feature_type} %>' == 'metagenotype'">
 %   if ($_show_link->($annotation_type)) {
       <annotation-quick-add annotation-type-name="<% $annotation_type->{name} %>"
@@ -25,7 +26,6 @@
       </span>
     </li>
 %   }
-% }
 % }
     </ul>
   </div>

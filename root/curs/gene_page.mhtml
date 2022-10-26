@@ -19,6 +19,7 @@ Choose curation type for <% $gene->display_name() %>:
   <div class="curs-box-body">
   <ul class="annotation-start">
 % for my $annotation_type (@annotation_type_list) {
+%   next if $annotation_type->{delete_only};
 %   my $annotation_type_name = $annotation_type->{name};
 %   my $type_display_name = $annotation_type->{display_name};
 %   if ($annotation_type->{feature_type} eq 'gene') {
