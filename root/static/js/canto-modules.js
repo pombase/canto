@@ -9829,6 +9829,7 @@ var annotationTableRow =
         $scope.isMetagenotypeAnnotation = false;
         $scope.checkboxChecked = false;
         $scope.genotypeInteractionInitialData = null;
+        $scope.editInProgress = false;
 
         CursSessionDetails.get()
           .then(function (sessionDetails) {
@@ -10067,6 +10068,10 @@ var annotationTableRow =
           });
 
         $scope.viewEditInteractions = function() {
+          if ($scope.editInProgress) {
+            return;
+          }
+          $scope.editInProgress = true;
           annotationTypePromise.then(function(annotationType) {
             var interactionInitialDataPromise =
                 $scope.updateInteractionInitialData(null);
@@ -10094,11 +10099,18 @@ var annotationTableRow =
                   .then(function() {
                     copyObject(editedAnnotation, $scope.annotation);
                   });
+              })
+              .finally(() => {
+                $scope.editInProgress = false;
               });
             } else {
-              editGenotypeInteractions($uibModal, $scope.annotation,
-                                       annotationType,
-                                       initialData);
+              const editPromise = editGenotypeInteractions($uibModal, $scope.annotation,
+                                                           annotationType,
+                                                           initialData);
+
+              editPromise.finally(() => {
+                $scope.editInProgress = false;
+              });
             }
           });
           });
