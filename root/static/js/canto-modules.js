@@ -6805,12 +6805,9 @@ var GenotypeInteractionAnnotationTableCtrl =
           }
         };
 
-        $scope.phentoypeANames = function(interaction) {
+        $scope.genotypeAPhenotypes = function(interaction) {
           if (interaction.genotype_a_phenotype_annotations) {
-            return $.map(interaction.genotype_a_phenotype_annotations,
-                         function(aAnnotation) {
-                           return aAnnotation.term_name;
-                         });
+              return interaction.genotype_a_phenotype_annotations;
           } else {
             return [];
           }

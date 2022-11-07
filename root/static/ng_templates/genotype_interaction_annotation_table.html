@@ -38,8 +38,12 @@
       </td>
       <td ng-if="showPhenotypesLink">
         <ul style="padding-left: 1.45em; margin-bottom: 0;">
-          <li style="list-style-type: disc" ng-repeat="phenotypeAName in phentoypeANames(interaction)">
-            {{phenotypeAName}}
+          <li style="list-style-type: disc" ng-repeat="phenotypeA in genotypeAPhenotypes(interaction)">
+            {{phenotypeA.term_name}}
+            <div ng-if="phenotypeA.extension">
+              <extension-display extension="phenotypeA.extension">
+              </extension-display>
+            </div>
           </li>
         </ul>
       </td>
