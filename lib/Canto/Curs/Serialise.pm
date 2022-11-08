@@ -239,6 +239,7 @@ sub _get_genotype_interactions_with_phenotype
         genotype_a => $genotype_a->identifier(),
         genotype_b => $genotype_b->identifier(),
         genotype_a_phenotype_termid => $phenotype_termid,
+        genotype_a_phenotype_extension => $annotation_a_data->{extension},
       };
   }
 
