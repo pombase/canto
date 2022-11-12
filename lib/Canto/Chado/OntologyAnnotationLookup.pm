@@ -261,7 +261,7 @@ sub lookup
 
     my $constraint = { -and => [%$constraint_and_bits] };
 
-    my $options = { prefetch => [ { feature => 'organism' },
+    my $options = { prefetch => [ { feature => ['organism', 'type'] },
                                   { cvterm => [ 'cv', { dbxref => 'db' } ] } ],
                     join => ['cvterm', 'feature'] };
     my $rs = $schema->resultset('FeatureCvterm')->search($constraint, $options);
@@ -276,6 +276,13 @@ sub lookup
 
     while (defined (my $row = $rs->next())) {
       my $feature = $self->_gene_of_feature($row->feature());
+
+      my $feature_type = $feature->type();
+
+      if ($feature_type->name() eq 'genotype_interaction') {
+        next;
+      }
+
       my $cvterm = $row->cvterm();
       my @props = $row->feature_cvtermprops()->all();
       my %prop_type_values = (evidence => 'Unknown',
