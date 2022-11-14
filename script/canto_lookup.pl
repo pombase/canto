@@ -120,51 +120,53 @@ if ($lookup_type eq 'gene') {
       }
     }
   }
-} else {
-  if ($lookup_type eq 'ontology') {
-    my $search_string = "@ARGV";
+  exit 0;
+}
 
-    if (!defined $ontology_name && $search_string !~ /^\w+:[\w\d]+$/) {
-      usage("no ontology name argument");
+if ($lookup_type eq 'ontology') {
+  my $search_string = "@ARGV";
+
+  if (!defined $ontology_name && $search_string !~ /^\w+:[\w\d]+$/) {
+    usage("no ontology name argument");
+  }
+
+  my $res = [];
+  my @lookup_args = (ontology_name => $ontology_name,
+                     max_results => 20);
+
+  if ($verbose) {
+    push @lookup_args, include_children => 1,
+      include_synonyms => ['exact', 'broad', 'related'];
+  }
+
+  if ($search_string =~ /^\s*:ALL:\s*/) {
+    $res = [$lookup->get_all(@lookup_args)];
+  } else {
+
+    push @lookup_args, search_string => $search_string;
+
+    $res = $lookup->lookup(@lookup_args);
+
+  }
+
+  for my $hit (@$res) {
+    my $synonym_text = '';
+    if (defined $hit->{matching_synonym}) {
+      $synonym_text =
+        q{ (matching synonym: "} . $hit->{matching_synonym} . q{")};
     }
-
-    my $res = [];
-    my @lookup_args = (ontology_name => $ontology_name,
-                       max_results => 20);
+    print $hit->{id}, " - ", $hit->{name}, "$synonym_text\n";
 
     if ($verbose) {
-      push @lookup_args, include_children => 1,
-        include_synonyms => ['exact', 'broad', 'related'];
-    }
-
-    if ($search_string =~ /^\s*:ALL:\s*/) {
-      $res = [$lookup->get_all(@lookup_args)];
-    } else {
-
-      push @lookup_args, search_string => $search_string;
-
-      $res = $lookup->lookup(@lookup_args);
-
-    }
-
-    for my $hit (@$res) {
-      my $synonym_text = '';
-      if (defined $hit->{matching_synonym}) {
-        $synonym_text =
-          q{ (matching synonym: "} . $hit->{matching_synonym} . q{")};
+      print "  synonyms:\n";
+      for my $synonym (@{$hit->{synonyms}}) {
+        print "    ", $synonym->{name}, " [", $synonym->{type}, "]\n";
       }
-      print $hit->{id}, " - ", $hit->{name}, "$synonym_text\n";
-
-      if ($verbose) {
-        print "  synonyms:\n";
-        for my $synonym (@{$hit->{synonyms}}) {
-          print "    ", $synonym->{name}, " [", $synonym->{type}, "]\n";
-        }
-        print "  child terms:\n";
-        for my $child (@{$hit->{children}}) {
-          print "    ", $child->{name}, " (", $child->{id}, ")\n";
-        }
+      print "  child terms:\n";
+      for my $child (@{$hit->{children}}) {
+        print "    ", $child->{name}, " (", $child->{id}, ")\n";
       }
     }
   }
+  exit 0;
 }
