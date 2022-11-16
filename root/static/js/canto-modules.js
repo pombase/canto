@@ -7256,7 +7256,7 @@ function interactionEvCodesFromPhenotype(phenotypeAnnotationType, phenotypeTermD
           }
         }
       } else {
-        returnEvidenceCodes = phenotypeEvidenceCodes;
+        filterEvCodes(evidenceCodeGroups.not_double_deletion_no_overexpression);
       }
     }
 

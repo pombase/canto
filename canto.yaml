@@ -2197,6 +2197,10 @@ available_annotation_type_list:
         - Dosage Rescue
         - Phenotypic Enhancement
         - Phenotypic Suppression
+      not_double_deletion_no_overexpression:
+        - Synthetic Growth Defect
+        - Synthetic Lethality
+        - Synthetic Rescue
   - name: genetic_interaction
     category: interaction
     display_name: 'legacy genetic interaction'
