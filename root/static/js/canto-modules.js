@@ -8612,6 +8612,9 @@ var annotationTransferDialogCtrl =
         annotationCopy.extension = [];
       }
 
+      annotationCopy.interaction_annotations = [];
+      annotationCopy.interaction_annotations_with_phenotypes = [];
+
       let existingCount = 0;
 
       let promises = [];
@@ -8815,6 +8818,9 @@ var annotationTransferAllDialogCtrl =
               if (!$scope.data.transferExtension) {
                 annotationCopy.extension = [];
               }
+
+              annotationCopy.interaction_annotations = [];
+              annotationCopy.interaction_annotations_with_phenotypes = [];
 
               annotationCopy.feature_id = $scope.data.chosenDestFeatureId;
               loadingStart();
