@@ -24,6 +24,10 @@
     <tr ng-repeat="interaction in interactions">
       <td ng-show="showDoubleMutantPhenotype">
         {{interaction.term_name}}
+        <div ng-if="interaction.double_mutant_phenotype_extension">
+          <extension-display extension="interaction.double_mutant_phenotype_extension">
+          </extension-display>
+        </div>
       </td>
       <td>
         <a href="{{curs_root_uri + '/feature/genotype/view/' + interaction.genotype_a.genotype_id + (read_only_curs ? '/ro' : '')}}">

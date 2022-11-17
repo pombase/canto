@@ -866,6 +866,7 @@ sub make_interaction_annotations
       }
 
       $entry->{term_name} = $term_name;
+      $entry->{double_mutant_phenotype_extension} = $data->{extension};
 
       $entry;
     } (@sym_genotype_interactions, @dir_genotype_interactions);
