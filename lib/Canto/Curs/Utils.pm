@@ -1346,6 +1346,61 @@ sub get_existing_interaction_annotations
   return ($all_interactions_count, \@res);
 }
 
+=head2 get_existing_genotype_interactions
+
+ Usage   :
+   my ($all_existing_annotations_count, $annotations) =
+      Canto::Curs::Utils::get_existing_genotype_interactions($config, $curs_schema, $options);
+ Function: Return a count of the all the matching genotype-genotype interactions
+           and table of the existing interactions from the database with at most
+           max_results rows
+ Args    : $config - the Canto::Config object
+           $options->{pub_uniquename} - the publication ID (eg. PubMed ID)
+               to retrieve annotations from
+           $options->{gene_identifier} - the gene identifier to use to constrain
+               the search; only annotations for the gene are returned (optional)
+           $options->{max_results} - maximum number of interactions to return
+ Returns : An array of hashes containing the annotations in the same form as
+           get_annotation_table(), except that annotation_id will be a
+           database identifier for the annotation.
+
+=cut
+sub get_existing_genotype_interactions
+{
+  my $config = shift;
+  my $curs_schema = shift;
+  my $options = shift;
+
+  my $pub_uniquename = $options->{pub_uniquename};
+  my $gene_identifier = $options->{gene_identifier};
+  my $interaction_type_name = $options->{annotation_type_name};
+  my $max_results = $options->{max_results};
+
+  my $args = {
+    pub_uniquename => $pub_uniquename,
+    gene_identifier => $gene_identifier,
+    interaction_type_name => $interaction_type_name,
+    max_results => $max_results,
+  };
+
+  my $annotation_lookup =
+    Canto::Track::get_adaptor($config, 'genotype_interaction');
+
+  if (defined $annotation_lookup) {
+    my ($all_interactions_count, $lookup_ret_interactions) =
+      $annotation_lookup->lookup($args);
+    if (!defined $all_interactions_count) {
+      use Data::Dumper;
+      die "annotation lookup returned undef count for args: ",
+        Dumper([$args]);
+    }
+
+    return ($all_interactions_count, $lookup_ret_interactions);
+  } else {
+    return (0, []);
+  }
+}
+
 =head2 get_existing_annotations
 
  Usage   :
@@ -1379,7 +1434,7 @@ sub get_existing_annotations
     return get_existing_ontology_annotations($config, $curs_schema, $options);
   } else {
     if ($annotation_type_category eq 'genotype_interaction') {
-      return (0, []);
+      return get_existing_genotype_interactions($config, $curs_schema, $options)
     } else {
       return get_existing_interaction_annotations($config, $curs_schema, $options);
     }

@@ -30,15 +30,17 @@
         </div>
       </td>
       <td>
-        <a href="{{curs_root_uri + '/feature/genotype/view/' + interaction.genotype_a.genotype_id + (read_only_curs ? '/ro' : '')}}">
+        <a ng-if="interaction.genotype_a.genotype_id" href="{{curs_root_uri + '/feature/genotype/view/' + interaction.genotype_a.genotype_id + (read_only_curs ? '/ro' : '')}}">
           <span ng-bind-html="interaction.genotype_a.display_name | breakAtSpaces | toTrusted"></span>
         </a>
+        <span ng-if="!interaction.genotype_a.genotype_id" ng-bind-html="interaction.genotype_a.display_name | breakAtSpaces | toTrusted"></span>
       </td>
       <td>{{getDisplayEvidence(interaction)}}</td>
       <td>
-        <a href="{{curs_root_uri + '/feature/genotype/view/' + interaction.genotype_b.genotype_id + (read_only_curs ? '/ro' : '')}}">
+        <a ng-if="interaction.genotype_b.genotype_id" href="{{curs_root_uri + '/feature/genotype/view/' + interaction.genotype_b.genotype_id + (read_only_curs ? '/ro' : '')}}">
           <span ng-bind-html="interaction.genotype_b.display_name | breakAtSpaces | toTrusted"></span>
         </a>
+        <span ng-if="!interaction.genotype_b.genotype_id" ng-bind-html="interaction.genotype_b.display_name | breakAtSpaces | toTrusted"></span>
       </td>
       <td ng-if="showPhenotypesLink">
         <ul style="padding-left: 1.45em; margin-bottom: 0;">
