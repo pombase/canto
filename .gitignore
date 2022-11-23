@@ -9,6 +9,7 @@ pipeline-example-config.yaml
 t/scratch/
 canto_deploy.yaml
 canto_deploy.yaml.*
+canto_chado.yaml
 
 canto_test.yaml
 local*
