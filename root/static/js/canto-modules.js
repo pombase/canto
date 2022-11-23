@@ -9329,6 +9329,7 @@ function filterAnnotations(annotations, params) {
         }
         if (params.featureType === 'genotype' &&
             (annotation.genotype_id == params.featureId ||
+             annotation.double_mutant_genotype_id == params.featureId ||
              annotation.genotype_a_id == params.featureId ||
              annotation.genotype_b_id == params.featureId)) {
           return true;

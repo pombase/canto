@@ -868,6 +868,13 @@ sub make_interaction_annotations
       $entry->{term_name} = $term_name;
       $entry->{double_mutant_phenotype_extension} = $data->{extension};
 
+      $entry->{annotation_type} =
+        $annotation_config->{associated_interaction_annotation_type}->{name};
+      $entry->{feature_type} =
+        $annotation_config->{feature_type};
+      $entry->{double_mutant_genotype_id} =
+        $annotation->genotypes()->first()->feature_id();
+
       $entry;
     } (@sym_genotype_interactions, @dir_genotype_interactions);
 };
