@@ -1402,6 +1402,10 @@ sub get_existing_genotype_interactions
         Dumper([$args]);
     }
 
+    map {
+      $_->{annotation_type} = $interaction_type_name;
+    } @$lookup_ret_interactions;
+
     return ($all_interactions_count, $lookup_ret_interactions);
   } else {
     return (0, []);
