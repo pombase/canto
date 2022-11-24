@@ -7483,7 +7483,7 @@ function storeAnnotationToaster(AnnotationProxy, originalAnnotation,
     toaster.pop({
       type: 'success',
       title: 'Interaction stored successfully.',
-      timeout: 5000,
+      timeout: 4000,
       showCloseButton: true
     });
   })
@@ -7499,7 +7499,7 @@ function storeAnnotationToaster(AnnotationProxy, originalAnnotation,
 }
 
 var EditGenotypeInteractionDialogCtl =
-  function ($scope, $uibModal, $uibModalInstance, toaster, AnnotationProxy, args) {
+  function ($scope, $uibModal, $uibModalInstance, toaster, AnnotationProxy, CantoGlobals, args) {
     $scope.annotationType = args.annotationType;
     $scope.genotypeInteractionInitialData = args.genotypeInteractionInitialData;
 
@@ -7514,10 +7514,18 @@ var EditGenotypeInteractionDialogCtl =
       q.then(function() {
         $uibModalInstance.close($scope.editedAnnotation);
 
-        setTimeout(function () {
-          // hopefully temporary:
-          window.location.reload();
-        }, 600);
+        if (CantoGlobals.current_user_is_admin) {
+          toaster.pop({type: 'warning',
+                       title: 'Reload page to see changes',
+                       timeout: 6000,
+                       showCloseButton: false
+                      });
+        } else {
+          setTimeout(function () {
+            // hopefully temporary:
+            window.location.reload();
+          }, 600);
+        }
       });
     };
 
@@ -7528,7 +7536,7 @@ var EditGenotypeInteractionDialogCtl =
 
 canto.controller('EditGenotypeInteractionDialogCtl',
                  ['$scope', '$uibModal', '$uibModalInstance',
-                  'toaster', 'AnnotationProxy', 'args',
+                  'toaster', 'AnnotationProxy', 'CantoGlobals', 'args',
                   EditGenotypeInteractionDialogCtl
                  ]);
 
