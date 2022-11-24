@@ -2373,7 +2373,7 @@ external_links:
       Schizosaccharomyces pombe:
         - name: PomBase
           icon: pombase_logo_small.png
-          url: 'http://www.pombase.org/spombe/result/@@primary_identifier@@'
+          url: 'http://www.pombase.org/gene/@@primary_identifier@@'
           sysid_link: 1
   pub:
     - name: PubMed
