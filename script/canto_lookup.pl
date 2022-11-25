@@ -63,6 +63,8 @@ Search for term ID - ontology-name isn't needed
    $0 -v -t ontology 'FYPO:0000114'
 Search for gene name or systematic ID
    $0 -t gene 'cdc11'
+Retreive Chado genotype-genotype interactions for a given publication
+   $0 -t genotype-interaction PMID:1234567
 |;
 
   exit(1);
@@ -93,7 +95,7 @@ if (!Canto::Meta::Util::app_initialised($app_name, $suffix)) {
 
 my $config = Canto::Config::get_config();
 
-my $lookup = Canto::Track::get_adaptor($config, $lookup_type);
+my $lookup = Canto::Track::get_adaptor($config, $lookup_type =~ s/-/_/gr);
 
 if (!defined $lookup) {
   usage("no lookup of type: $lookup_type");
@@ -169,4 +171,20 @@ if ($lookup_type eq 'ontology') {
     }
   }
   exit 0;
+}
+
+if ($lookup_type eq 'genotype-interaction') {
+  if (@ARGV != 1) {
+    usage (qq|the genotype-interaction lookup type needs exactly one PMID as the
+search term, got: "@ARGV"|);
+  }
+
+  my %args = (
+    pub_uniquename => $ARGV[0],
+    max_results => 10,
+    interaction_type_name => 'genotype_interaction',
+  );
+
+  use Data::Dumper;
+  warn Dumper([$lookup->lookup(\%args)]);
 }
