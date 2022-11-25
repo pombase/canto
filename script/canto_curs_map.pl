@@ -32,8 +32,15 @@ if ($ARGV[0] eq '-h' || $ARGV[0] eq '--help') {
   usage();
 }
 
-if (@ARGV != 1) {
-  usage("Needs exactly one argument\n");
+my $use_transaction = 1;
+
+if (@ARGV > 0 and $ARGV[0] eq '--no-transaction') {
+  $use_transaction = 0;
+  shift;
+}
+
+if (@ARGV == 0) {
+  usage("Not enough arguments");
 }
 
 sub usage
@@ -49,6 +56,8 @@ sub usage
   die qq|${message}usage:
   $0 'Perl code'
 or
+  $0 --no-transaction 'Perl code'
+or
   $0 -
   (to read code from STDIN)
 or
@@ -63,6 +72,9 @@ also available as \$config.  Example; print the curs_key and gene
 count for each curs DB:
 
 $0 'print \$curs->curs_key(), " ", \$curs_schema->resultset("Gene")->count(), "\\n"'
+
+The TrackDB will locked due while the command is running unless the
+"--no-transaction" flag is passed.
 |;
 }
 
@@ -105,4 +117,8 @@ my $proc = sub {
   Canto::Track::curs_map($config, $track_schema, $user_proc);
 };
 
-$track_schema->txn_do($proc);
+if ($use_transaction) {
+  $track_schema->txn_do($proc);
+} else {
+  $proc->();
+}
