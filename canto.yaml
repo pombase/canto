@@ -1374,8 +1374,8 @@ export:
 load:
   ontology:
     synonym_boosts:
-      name: 1.1
-      exact: 1.1
+      name: 1.5
+      exact: 1.0
       broad: 0.2
       related: 0.2
     term_boosts: ~

@@ -149,8 +149,21 @@ sub add_to_index
 
   my $writer = $self->{_index};
 
+  my @all_name_details = _get_all_names($term_name, $synonym_details);
+
+  my %type_counts = ();
+
+  for my $details (@all_name_details) {
+    my $type = $details->[0];
+    if (exists $type_counts{$type}) {
+      $type_counts{$type}++;
+    } else {
+      $type_counts{$type} = 1;
+    }
+  }
+
   # $text can be the name or a synonym
-  for my $details (_get_all_names($term_name, $synonym_details)) {
+  for my $details (@all_name_details) {
     my $doc = Lucene::Document->new();
 
     my $type = $details->[0];
@@ -170,7 +183,8 @@ sub add_to_index
     );
 
     if (exists $synonym_boosts{$type}) {
-      map { $_->setBoost($synonym_boosts{$type}); } @fields;
+      my $factor = $type_counts{$type};
+      map { $_->setBoost($synonym_boosts{$type} / $factor); } @fields;
     }
 
     if (exists $term_boosts{$db_accession}) {
