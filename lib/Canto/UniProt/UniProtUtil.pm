@@ -102,6 +102,17 @@ sub parse_results
         for my $synonym (@{$entry->{gene}->[0]->{name}}) {
           my $synonym_content = _content($synonym);
 
+          if ($synonym->{type} eq 'ordered locus') {
+            $name = $synonym_content;
+            last;
+          }
+        }
+      }
+
+      if (!defined $name) {
+        for my $synonym (@{$entry->{gene}->[0]->{name}}) {
+          my $synonym_content = _content($synonym);
+
           if ($synonym->{type} eq 'ORF') {
             $name = $synonym_content;
             last;
