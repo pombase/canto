@@ -134,8 +134,8 @@ is($results[0]->{doc}->get('term_name'), 'modified residue with a secondary neut
 
 
 # molecular_function with synonym
-my $long_ugly_synonym_query = 'aminobenzoate methenyltransferase activity';
-@results = $ontology_index->lookup('molecular_function', [], $long_ugly_synonym_query, 100);
+my $synonym_query = 'dihydropteroate pyrophosphorylase activity';
+@results = $ontology_index->lookup('molecular_function', [], $synonym_query, 100);
 
 is(@results, 6);
 
@@ -146,7 +146,7 @@ for my $result (@results) {
   is($cv_name, 'molecular_function');
 }
 
-is($results[0]->{doc}->get('text'), '2-amino-4-hydroxy-6-hydroxymethyl-7,8-dihydropteridine-diphosphate:4-aminobenzoate 2-amino-4-hydroxydihydropteridine-6-methenyltransferase activity');
+is($results[0]->{doc}->get('text'), 'dihydropteroate synthase activity');
 is($results[0]->{doc}->get('term_name'), 'dihydropteroate synthase activity');
 
 @results = $ontology_index->lookup('molecular_function', [],
@@ -154,7 +154,7 @@ is($results[0]->{doc}->get('term_name'), 'dihydropteroate synthase activity');
 
 is(@results, 6);
 is($results[0]->{doc}->get('cv_name'), 'molecular_function');
-is($results[0]->{doc}->get('text'), 'dihydropteroate synthetase activity');
+is($results[0]->{doc}->get('text'), 'dihydropteroate synthase activity');
 is($results[0]->{doc}->get('term_name'), 'dihydropteroate synthase activity');
 
 
