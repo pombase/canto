@@ -40,18 +40,22 @@ then
     EXTRA_ARGS="--net=host --env=OWLTOOLS_MEMORY"
 fi
 
-if [ "$1" == "--debug" ]; then
-    shift
-    DEBUG="-e CANTO_DEBUG=TRUE"
-fi
-
 TTY_OPT="-t"
 
-if [ "$1" == "--no-tty" ]; then
-    shift
-    TTY_OPT=""
-fi
-
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --debug)
+            DEBUG="-e CANTO_DEBUG=TRUE"
+            shift
+            ;;
+        --no-tty)
+            TTY_OPT=""
+            shift
+            ;;
+        *)
+            ;;
+    esac
+done
 
 CANTO_DOCKER_RUN_ARGS="$EXTRA_ARGS -i $TTY_OPT --rm $DEBUG --security-opt seccomp=unconfined --cap-add=SYS_PTRACE --mount type=bind,source=$(pwd)/logs,target=/logs  --mount type=bind,source=$(pwd)/data,target=/data --mount type=bind,source=$(pwd)/import_export,target=/import_export --mount type=bind,source=$(pwd)/canto,target=/canto -w=/canto pombase/canto-base:v15"
 
