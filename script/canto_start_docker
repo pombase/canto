@@ -13,26 +13,26 @@ fi
 
 if [ ! -d data ]
 then
-   echo 'missing "data" directory - exiting'
-   exit 1
+    echo 'missing "data" directory - exiting'
+    exit 1
 fi
 
 if [ ! -d canto ]
 then
-   echo 'missing "canto" directory - exiting'
-   exit 1
+    echo 'missing "canto" directory - exiting'
+    exit 1
 fi
 
 if [ ! -d import_export ]
 then
-   echo 'missing "import_export" directory - exiting'
-   exit 1
+    echo 'missing "import_export" directory - exiting'
+    exit 1
 fi
 
 if [ ! -d logs ]
 then
-   echo 'missing "logs" directory - exiting'
-   exit 1
+    echo 'missing "logs" directory - exiting'
+    exit 1
 fi
 
 if [ $(uname) = Linux ]
