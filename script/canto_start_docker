@@ -2,56 +2,72 @@
 
 if [ "$1" = "-h" ]
 then
-    echo "usage:"; echo "   $0 [--debug] [--auto]"
+    echo "usage:"; echo "   $0 [--debug] [--no-tty] [--publish port]"
     echo;
     echo "options:"
-    echo "  --debug: turn on the CANTO_DEBUG environment variable"
-    echo "  --no-tty: don't add the '-t' flag on the 'docker run' call so that"
-    echo "            this script can be called from a non-interactive script"
+    echo "     --debug         turn on the CANTO_DEBUG environment variable"
+    echo "     --no-tty        don't add the '-t' flag on the 'docker run' call so that"
+    echo "                     this script can be called from a non-interactive script"
+    echo " -p, --publish PORT  add ports to the '-p' flag on the 'docker run' call"
     exit 0
 fi
 
 if [ ! -d data ]
 then
-   echo 'missing "data" directory - exiting'
-   exit 1
+    echo 'missing "data" directory - exiting'
+    exit 1
 fi
 
 if [ ! -d canto ]
 then
-   echo 'missing "canto" directory - exiting'
-   exit 1
+    echo 'missing "canto" directory - exiting'
+    exit 1
 fi
 
 if [ ! -d import_export ]
 then
-   echo 'missing "import_export" directory - exiting'
-   exit 1
+    echo 'missing "import_export" directory - exiting'
+    exit 1
 fi
 
 if [ ! -d logs ]
 then
-   echo 'missing "logs" directory - exiting'
-   exit 1
-fi
-
-if [ $(uname) = Linux ]
-then
-    EXTRA_ARGS="--net=host --env=OWLTOOLS_MEMORY"
-fi
-
-if [ "$1" == "--debug" ]; then
-    shift
-    DEBUG="-e CANTO_DEBUG=TRUE"
+    echo 'missing "logs" directory - exiting'
+    exit 1
 fi
 
 TTY_OPT="-t"
 
-if [ "$1" == "--no-tty" ]; then
-    shift
-    TTY_OPT=""
-fi
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --debug)
+            DEBUG="-e CANTO_DEBUG=TRUE"
+            shift
+            ;;
+        --no-tty)
+            TTY_OPT=""
+            shift
+            ;;
+        -p|--publish)
+            PUBLISH_PORTS="$2"
+            shift
+            shift
+            ;;
+        *)
+            ;;
+    esac
+done
 
+if [ $(uname) = Linux ]
+then
+    EXTRA_ARGS="--env=OWLTOOLS_MEMORY"
+    if [ -z "$PUBLISH_PORTS" ]
+    then
+        EXTRA_ARGS="$EXTRA_ARGS --net=host"
+    else
+        EXTRA_ARGS="$EXTRA_ARGS -p $PUBLISH_PORTS"
+    fi
+fi
 
 CANTO_DOCKER_RUN_ARGS="$EXTRA_ARGS -i $TTY_OPT --rm $DEBUG --security-opt seccomp=unconfined --cap-add=SYS_PTRACE --mount type=bind,source=$(pwd)/logs,target=/logs  --mount type=bind,source=$(pwd)/data,target=/data --mount type=bind,source=$(pwd)/import_export,target=/import_export --mount type=bind,source=$(pwd)/canto,target=/canto -w=/canto pombase/canto-base:v15"
 
