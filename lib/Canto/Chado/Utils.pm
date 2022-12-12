@@ -175,7 +175,7 @@ sub annotation_types_by_year
 SELECT annotation_year, annotation_type, count(distinct id)
 FROM pombase_genes_annotations_dates
 WHERE (evidence_code IS NULL OR evidence_code <> 'Inferred from Electronic Annotation')
-  AND (annotation_type NOT IN ('PomBase gene products', 'cat_act', 'subunit_composition', 'external_link', 'pathway'))
+  AND (annotation_type NOT IN ('cat_act', 'subunit_composition', 'external_link', 'pathway'))
   AND (annotation_source IS NULL OR annotation_source <> 'BIOGRID')
 GROUP BY annotation_type, annotation_year;
 EOF
