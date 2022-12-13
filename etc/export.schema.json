@@ -386,6 +386,8 @@
                     "type": "string"
                   },
                   "with_gene_id": {
+                    "title": "With gene ID",
+                    "description": "The gene identifier for Gene Ontology annotations that use the Inferred from Physical Interaction or Inferred from Genetic Interaction evidence codes. This provides the value for the With/From column in a GO Annotation File.",
                     "$ref": "#/definitions/nullableString"
                   }
                 },
