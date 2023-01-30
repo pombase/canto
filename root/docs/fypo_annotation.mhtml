@@ -99,7 +99,7 @@ box will pop up where you can add allele details:
 	For combinations of substitutions, insertions, and/or
 	deletions, separate parts of the description with commas. For
 	example, "858-MKGYP,F124D" means five amino acid residues were
-	inserted after position 858, and Asp was changed to Phe at
+	inserted after position 858, and Phe was changed to Asp at
 	position 124.
       </li>
       <li>
