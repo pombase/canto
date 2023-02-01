@@ -1455,7 +1455,7 @@ allele_type_list:
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: e.g. 858-MKGYP
+    placeholder: e.g. A858-MKGYP
   - name: "amino acid substitution(s)"
     export_type: amino_acid_mutation
     show_description: true
@@ -1471,7 +1471,7 @@ allele_type_list:
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: e.g. 858-MKGYP,F124D
+    placeholder: e.g. A858-MKGYP,F124D
   - name: amino acid insertion and deletion
     export_type: amino_acid_insertion_and_deletion
     show_description: true
@@ -1479,7 +1479,7 @@ allele_type_list:
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: e.g. 858-MKGYP,100-200
+    placeholder: e.g. A858-MKGYP,100-200
   - name: partial deletion and amino acid change
     export_type: amino_acid_deletion_and_mutation
     show_description: true
@@ -1503,7 +1503,7 @@ allele_type_list:
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: e.g. 132-AATTT
+    placeholder: e.g. C132-AATTT
   - name: "nucleotide substitution(s)"
     export_type: nucleotide_mutation
     show_description: true
