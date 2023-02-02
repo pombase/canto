@@ -93,7 +93,7 @@ box will pop up where you can add allele details:
       </li>
       <li>
 	For insertions, enter the one-letter symbol and number of the residue
-  before the insertion, a hyphen, and the inserted sequence.
+	before the insertion, a hyphen, and the inserted sequence.
       </li>
       <li>
 	For combinations of substitutions, insertions, and/or
