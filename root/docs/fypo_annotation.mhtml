@@ -92,14 +92,14 @@ box will pop up where you can add allele details:
 	methionine is removed.
       </li>
       <li>
-	For insertions, enter the number of the residue before the
-	insertion, a hyphen, and the inserted sequence.
+	For insertions, enter the one-letter symbol and number of the residue
+	before the insertion, a hyphen, and the inserted sequence.
       </li>
       <li>
 	For combinations of substitutions, insertions, and/or
 	deletions, separate parts of the description with commas. For
-	example, "858-MKGYP,F124D" means five amino acid residues were
-	inserted after position 858, and Phe was changed to Asp at
+	example, "A858-MKGYP,F124D" means five amino acid residues were
+	inserted after Ala at position 858, and Phe was changed to Asp at
 	position 124.
       </li>
       <li>
