@@ -1369,6 +1369,7 @@ export:
       - DNA recombination related
       - Mitochondrial sequence related
       - Sequence feature or region
+      - Structure
       - Other
 
 load:
