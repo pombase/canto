@@ -62,13 +62,18 @@ authentication:
   realms:
     members:
       credential:
-        class: 'Password'
-        password_field: 'password'
-        password_type: 'hashed'
-        password_hash_type: 'SHA-1'
+        class: 'NoPassword'
       store:
         class: DBIx::Class
         user_class: TrackModel::Person
+        id_field: orcid
+
+oauth:
+  grant_uri: 'https://orcid.org/oauth/authorize'
+  token_uri: 'https://orcid.org/oauth/token'
+  client_id: 'CONFIGURE_IN_CANTO_DEPLOY.YAML'
+  client_secret: 'CONFIGURE_IN_CANTO_DEPLOY.YAML'
+  scope: 'CONFIGURE_IN_CANTO_DEPLOY.YAML'
 
 view_options:
   max_inline_results_length: 1000

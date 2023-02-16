@@ -21,9 +21,6 @@ class_info:
           default_value: "'user'"
           editable: 1
           admin_edit_only: 1
-        - name: password
-          editable: 1
-          admin_only: 1
         - name: lab
           editable: 1
     lab:

@@ -175,12 +175,11 @@ CREATE TABLE person (
        orcid text UNIQUE,
        role integer REFERENCES cvterm(cvterm_id) DEFERRABLE INITIALLY DEFERRED  NOT NULL,
        lab INTEGER REFERENCES lab (lab_id),
-       session_data text,
-       password text,
        added_date timestamp
 );
 
 CREATE INDEX person_role_idx ON person(role);
+CREATE INDEX person_orcid_idx ON person(orcid);
 
 CREATE TABLE curs (
        curs_id integer NOT NULL PRIMARY KEY,
