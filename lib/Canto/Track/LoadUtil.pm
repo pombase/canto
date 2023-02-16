@@ -716,13 +716,19 @@ sub get_person
 
   my $hashed_password = sha1_base64($password);
 
-  return $schema->resultset('Person')->find_or_create(
-      {
-        name => $name,
-        email_address => $email_address,
-        orcid => $orcid,
-        role => $role_cvterm,
-      });
+  my %args = (
+    name => $name,
+    email_address => $email_address,
+    password => $hashed_password,
+    role => $role_cvterm,
+  );
+
+  if ($orcid) {
+    $orcid =~ s|(?:(?:https?://)orcid.org/)||;
+    $args{orcid} = $orcid;
+  }
+
+  return $schema->resultset('Person')->find_or_create(\%args);
 }
 
 =head2 create_user_session
