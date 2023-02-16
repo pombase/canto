@@ -619,7 +619,7 @@ my %expected_people = (
     'password' => sha1_base64('dom@40f92df84557e35aa67918b1912c3beeb02112ab.med.harvard.edu'),
     'lab' => 'Winston Lab',
     'name' => 'Dom Helmlinger',
-    'orcid' => undef,
+    'orcid' => '0000-0000-0001-0002',
     'role' => 'user'
   },
   'Pascale.Beauregard@5b066279c6c138f5b3b17bfa37986c8cfad042c4.ca' => {
@@ -627,7 +627,7 @@ my %expected_people = (
     'lab' => 'Rokeach Lab',
     'name' => 'Pascale Beauregard',
     'role' => 'user',
-    'orcid' => undef,
+    'orcid' => '0000-0000-0001-0012',
   },
   'peter.espenshade@38f4cb0f29557aca4b0422facb7de6f798ad031a.edu' => {
     'password' => sha1_base64('peter.espenshade@38f4cb0f29557aca4b0422facb7de6f798ad031a.edu'),
@@ -648,14 +648,14 @@ my %expected_people = (
     'lab' => 'Hoffman Lab',
     'name' => 'Charles Hoffman',
     'role' => 'user',
-    'orcid' => undef,
+    'orcid' => '0000-0000-0001-0006',
   },
   'fred.winston@40f92df84557e35aa67918b1912c3beeb02112ab.med.harvard.edu' => {
     'password' => sha1_base64('fred.winston@40f92df84557e35aa67918b1912c3beeb02112ab.med.harvard.edu'),
     'lab' => 'Winston Lab',
     'name' => 'Fred Winston',
     'role' => 'user',
-    'orcid' => undef,
+    'orcid' => '0000-0000-0001-0001',
   },
   'h.yamano@0e028b17263bde65a25de03c75f849251ade2fab.ac.uk' => {
     'password' => sha1_base64('h.yamano@0e028b17263bde65a25de03c75f849251ade2fab.ac.uk'),
@@ -669,7 +669,7 @@ my %expected_people = (
     'lab' => 'User Lab',
     'name' => 'Test User',
     'role' => 'user',
-    'orcid' => undef,
+    'orcid' => '0000-0000-0001-0022',
   },
   'Mary.Porter-Goff@2c0e6282230890808f2298475c741b2d2f44de03.edu' => {
     'password' => sha1_base64('Mary.Porter-Goff@2c0e6282230890808f2298475c741b2d2f44de03.edu'),
@@ -683,7 +683,7 @@ my %expected_people = (
     'lab' => 'Testperson Lab',
     'name' => 'Some Testperson',
     'role' => 'user',
-    'orcid' => undef,
+    'orcid' => '0000-0000-0001-0013',
   },
   'val@3afaba8a00c4465102939a63e03e2fecba9a4dd7.ac.uk' => {
     'password' => sha1_base64('val@3afaba8a00c4465102939a63e03e2fecba9a4dd7.ac.uk'),
@@ -697,7 +697,7 @@ my %expected_people = (
     'lab' => undef,
     'name' => 'Midori Harris',
     'role' => 'admin',
-    'orcid' => undef,
+    'orcid' => '0000-0000-0000-200X',
   },
   'other.tester@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org' => {
     'password' => sha1_base64('other.tester@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org'),
@@ -718,7 +718,7 @@ my %expected_people = (
     'lab' => 'Rhind Lab',
     'name' => 'Nicholas Willis',
     'role' => 'user',
-    'orcid' => undef,
+    'orcid' => '0000-0000-0001-0010',
   },
   'stuart.macneill@5d99f83194201e89dc3a1241ff1fb7381be5a4be.ac.uk' => {
     'password' => sha1_base64('stuart.macneill@5d99f83194201e89dc3a1241ff1fb7381be5a4be.ac.uk'),
@@ -732,14 +732,14 @@ my %expected_people = (
     'lab' => 'Rhind Lab',
     'name' => 'Nick Rhind',
     'role' => 'user',
-    'orcid' => undef,
+    'orcid' => '0000-0000-0001-0009',
   },
   'Luis.Rokeach@5b066279c6c138f5b3b17bfa37986c8cfad042c4.ca' => {
     'password' => sha1_base64('Luis.Rokeach@5b066279c6c138f5b3b17bfa37986c8cfad042c4.ca'),
     'lab' => 'Rokeach Lab',
     'name' => 'Luis Rokeach',
     'role' => 'user',
-    'orcid' => undef,
+    'orcid' => '0000-0000-0001-0011',
   },
   'wahlswaynep@2c2aecc4ae15f550b3602b69113f1dedb9337ab1.edu' => {
     'password' => sha1_base64('wahlswaynep@2c2aecc4ae15f550b3602b69113f1dedb9337ab1.edu'),
@@ -753,16 +753,63 @@ my %expected_people = (
     'lab' => 'Espenshade Lab',
     'name' => 'John Burg',
     'role' => 'user',
-    'orcid' => undef,
+    'orcid' => '0000-0000-0001-0004',
   },
   'a.nilsson@3416497253c29354cb08ec29abe683fc296c35b3.ac.uk' => {
     'password' => sha1_base64('a.nilsson@3416497253c29354cb08ec29abe683fc296c35b3.ac.uk'),
     'lab' => undef,
     'name' => 'Antonia Nilsson',
-    'orcid' => undef,
+    'orcid' => '0000-0000-0000-300X',
     'role' => 'admin',
-    'orcid' => undef,
   },
+  'Mary.Porter-Goff@umassmed.edu' => {
+    'role' => 'user',
+    'lab' => 'Rhind Lab',
+    'name' => 'Mary Porter-Goff',
+    'orcid' => '0000-0000-0001-0015'
+  },
+  'h.yamano@mcri.ac.uk' => {
+    'role' => 'user',
+    'name' => 'Hiro Yamano',
+    'orcid' => '0000-0000-0001-0008',
+    'lab' => 'Yamano Lab'
+  },
+  'iwasaki@tsurumi.yokohama-cu.ac.jp' => {
+    'role' => 'user',
+    'orcid' => '0000-0000-0001-0007',
+    'name' => "\x{5ca9}\x{5d0e}\x{3072}\x{308d}\x{3057}",
+    'lab' => "\x{5ca9}\x{5d0e}\x{3072}\x{308d}\x{3057} Lab"
+  },
+  'wahlswaynep@uams.edu' => {
+    'name' => 'Wayne Wahls',
+    'orcid' => '0000-0000-0001-0016',
+    'lab' => 'Wahls Lab',
+    'role' => 'user'
+  },
+  'other.tester@pombase.org' => {
+    'role' => 'user',
+    'orcid' => '0000-0000-0001-0019',
+    'name' => 'Other Tester',
+    'lab' => 'Tester Lab'
+  },
+  'stuart.macneill@st-andrews.ac.uk' => {
+    'role' => 'user',
+    'orcid' => '0000-0000-0001-0020',
+    'name' => 'Stuart Macneill',
+    'lab' => 'Macneill Lab'
+  },
+  'peter.espenshade@jhmi.edu' => {
+    'role' => 'user',
+    'lab' => 'Espenshade Lab',
+    'name' => 'Peter Espenshade',
+    'orcid' => '0000-0000-0001-0003'
+  },
+  'kevin.hardwick@ed.ac.uk' => {
+    'role' => 'user',
+    'name' => 'Kevin Hardwick',
+    'orcid' => '0000-0000-0001-0005',
+    'lab' => 'Hardwick Lab'
+  }
 );
 
 my %expected_labs = (
