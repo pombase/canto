@@ -18,13 +18,19 @@ use MooseX::NonMoose;
 use MooseX::MarkAsMethods autoclean => 1;
 extends 'DBIx::Class::Core';
 
-=head1 TABLE: C<strains>
+=head1 TABLE: C<strain>
 
 =cut
 
-__PACKAGE__->table("strains");
+__PACKAGE__->table("strain");
 
 =head1 ACCESSORS
+
+=head2 strain_id
+
+  data_type: 'integer'
+  is_auto_increment: 1
+  is_nullable: 0
 
 =head2 organism_id
 
@@ -40,11 +46,25 @@ __PACKAGE__->table("strains");
 =cut
 
 __PACKAGE__->add_columns(
+  "strain_id",
+  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "organism_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "strain_name",
   { data_type => "text", is_nullable => 0 },
 );
+
+=head1 PRIMARY KEY
+
+=over 4
+
+=item * L</strain_id>
+
+=back
+
+=cut
+
+__PACKAGE__->set_primary_key("strain_id");
 
 =head1 RELATIONS
 
@@ -63,9 +83,24 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
+=head2 strainsynonyms
 
-# Created by DBIx::Class::Schema::Loader v0.07046 @ 2018-03-28 16:13:56
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:vVq3KqSVHV1fk5NVx0oj6w
+Type: has_many
+
+Related object: L<Canto::TrackDB::Strainsynonym>
+
+=cut
+
+__PACKAGE__->has_many(
+  "strainsynonyms",
+  "Canto::TrackDB::Strainsynonym",
+  { "foreign.strain_id" => "self.strain_id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2023-02-16 18:31:17
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:GWGMM/KTyZlsCeoXBQBphA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
