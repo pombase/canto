@@ -206,7 +206,7 @@ sub _orcid_is_valid
 {
   my $orcid = shift;
 
-  return $orcid =~ /^\d\d\d\d-\d\d\d\d-\d\d\d\d-\d\d\d[\dX]$/;
+  return $orcid =~ m|^(?:(?:https?://)orcid.org/)\d\d\d\d-\d\d\d\d-\d\d\d\d-\d\d\d[\dX]$|;
 }
 
 =head2 set_curator
@@ -238,7 +238,9 @@ sub set_curator
   my $curs_curator_name = shift;
   my $curs_curator_orcid = shift;
 
-  Canto::Util::trim($curs_curator_orcid);
+  if (defined $curs_curator_orcid) {
+    Canto::Util::trim($curs_curator_orcid);
+  }
 
   my $schema = $self->schema();
 
@@ -281,11 +283,10 @@ sub set_curator
         $curator->name($curs_curator_name);
       }
 
-    warn "$curs_curator_orcid ", length $curs_curator_orcid, " ",
-      $curator->orcid(), " ", _orcid_is_valid($curs_curator_orcid), "\n";
-
     if (defined $curs_curator_orcid && length $curs_curator_orcid > 0 &&
         !$curator->orcid() && _orcid_is_valid($curs_curator_orcid)) {
+      $curs_curator_orcid =~ s|(?:(?:https?://)orcid.org/)||;
+
       $curator->orcid($curs_curator_orcid);
       $curator->update();
     } else {
