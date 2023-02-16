@@ -687,6 +687,8 @@ sub get_lab
 =cut
 sub get_person
 {
+  warn "@_";
+
   my $self = shift;
   my $name = shift;
   my $email_address = shift;
@@ -707,6 +709,9 @@ sub get_person
   }
   if (!$password) {
     die "empty password passed to get_person()\n";
+  }
+  if (!$role_cvterm) {
+    die "no role passed to get_person()\n";
   }
 
   my $hashed_password = sha1_base64($password);
