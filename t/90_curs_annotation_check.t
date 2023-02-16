@@ -117,6 +117,7 @@ test_psgi $app, sub {
   # check we can start approving a session when logged in as admin
   {
     my $req = GET "$root_url/begin_approval/";
+    $cookie_jar->add_cookie_header($req);
 
     my $res = $cb->($req);
     is $res->code, 302;
@@ -126,15 +127,16 @@ test_psgi $app, sub {
     is ($redirect_url, "$root_url");
 
     my $redirect_req = GET $redirect_url;
+    $cookie_jar->add_cookie_header($redirect_req);
     my $redirect_res = $cb->($redirect_req);
 
     (my $content = $redirect_res->content()) =~ s/\s+/ /g;
 
-    like ($content, qr//s);
-    like ($content, qr/$thank_you/s);
+    unlike ($content, qr/$thank_you/s);
     unlike ($content, qr/$admin_only/s);
+    like ($content, qr/Session is being checked by Val Wood/s);
 
-    is($status_storage->retrieve($curs_key, 'annotation_status'), "NEEDS_APPROVAL");
+    is($status_storage->retrieve($curs_key, 'annotation_status'), "APPROVAL_IN_PROGRESS");
   }
 
 

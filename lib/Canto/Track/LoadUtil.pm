@@ -675,11 +675,12 @@ sub get_lab
 
 =head2 get_person
 
- Usage   : my $person = $load_util->get_person($name, $email_address,
+ Usage   : my $person = $load_util->get_person($name, $email_address, $orcid,
                                                $role_cvterm);
  Function: Find or create, and then return the object matching the arguments
  Args    : $name - the Person full name
            $email_address - the email address
+           $orcid
            $role_cvterm - a cvterm from the user types cv
  Returns : The new person object
 
@@ -689,6 +690,7 @@ sub get_person
   my $self = shift;
   my $name = shift;
   my $email_address = shift;
+  my $orcid = shift;
   my $role_cvterm = shift;
   my $password = shift;
   my $orcid = shift;
@@ -702,18 +704,13 @@ sub get_person
     die "name not set for $email_address\n";
   }
 
-  my %args = (
-    name => $name,
-    email_address => $email_address,
-    password => $hashed_password,
-    role => $role_cvterm,
-  );
-
-  if ($orcid) {
-    $args{orcid} = $orcid;
-  }
-
-  return $schema->resultset('Person')->find_or_create(\%args);
+  return $schema->resultset('Person')->find_or_create(
+      {
+        name => $name,
+        email_address => $email_address,
+        orcid => $orcid,
+        role => $role_cvterm,
+      });
 }
 
 =head2 create_user_session

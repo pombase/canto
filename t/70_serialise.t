@@ -690,7 +690,7 @@ my %expected_people = (
     'lab' => undef,
     'name' => 'Val Wood',
     'role' => 'admin',
-    'orcid' => undef,
+    'orcid' => '0000-0000-0000-123X',
   },
   'mah79@2b996589fd60a6e63d154d6d33fe9da221aa88e9.ac.uk' => {
     'password' => sha1_base64('mah79@2b996589fd60a6e63d154d6d33fe9da221aa88e9.ac.uk'),

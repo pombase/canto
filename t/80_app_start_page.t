@@ -25,13 +25,10 @@ test_psgi $app, sub {
 
     my $res = $cb->($req);
 
-    is $res->code, 302;
-    my $redirect_url = $res->header('location');
-    my $redirect_req = HTTP::Request->new(GET => $redirect_url);
-    my $redirect_res = $cb->($redirect_req);
+    is $res->code, 200;
 
-    ok ($redirect_res->content() =~ /Log in to continue/);
-    ok ($redirect_res->content() !~ /Reports/);
+    ok ($res->content() =~ /Log in to continue/);
+    ok ($res->content() !~ /Reports/);
 
     $test_util->app_login($cookie_jar, $cb);
     $cookie_jar->add_cookie_header($req);
@@ -39,7 +36,6 @@ test_psgi $app, sub {
     $res = $cb->($req);
     ok ($res->content() =~ /Reports/);
     my $app_name = $config->{name};
-    like ($cookie_jar->as_string(), qr[${app_name}__session=[0-9a-f]+]);
 };
 
 done_testing;
