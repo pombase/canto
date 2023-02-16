@@ -675,8 +675,8 @@ sub get_lab
 
 =head2 get_person
 
- Usage   : my $person = $load_util->get_person($name, $email_address, $orcid,
-                                               $role_cvterm);
+ Usage   : my $person = $load_util->get_person($name, $email_address, $role_cvterm,
+                                               $password, $orcid);
  Function: Find or create, and then return the object matching the arguments
  Args    : $name - the Person full name
            $email_address - the email address
@@ -690,7 +690,6 @@ sub get_person
   my $self = shift;
   my $name = shift;
   my $email_address = shift;
-  my $orcid = shift;
   my $role_cvterm = shift;
   my $password = shift;
   my $orcid = shift;
@@ -703,6 +702,14 @@ sub get_person
   if (!defined $name || length $name == 0) {
     die "name not set for $email_address\n";
   }
+  if (!defined $password) {
+    die "no password passed to get_person()\n";
+  }
+  if (!$password) {
+    die "empty password passed to get_person()\n";
+  }
+
+  my $hashed_password = sha1_base64($password);
 
   return $schema->resultset('Person')->find_or_create(
       {
