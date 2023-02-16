@@ -281,10 +281,12 @@ sub set_curator
         $curator->name($curs_curator_name);
       }
 
-      if (defined $curs_curator_orcid && length $curs_curator_orcid > 0 &&
-          _orcid_is_valid($curs_curator_orcid)) {
-        $curator->orcid($curs_curator_orcid);
-      }
+    warn "$curs_curator_orcid ", length $curs_curator_orcid, " ",
+      $curator->orcid(), " ", _orcid_is_valid($curs_curator_orcid), "\n";
+
+    if (defined $curs_curator_orcid && length $curs_curator_orcid > 0 &&
+        !$curator->orcid() && _orcid_is_valid($curs_curator_orcid)) {
+      $curator->orcid($curs_curator_orcid);
       $curator->update();
     } else {
       my $user_role_id =
