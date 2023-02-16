@@ -33,6 +33,7 @@ use Canto::Track;
 use Canto::CursDB;
 use Canto::Curs;
 use Canto::Controller::Curs;
+use Canto::Controller::Root;
 use Canto::Track::GeneLookup;
 use Canto::Track::CurationLoad;
 use Canto::Track::GeneLoad;
@@ -400,30 +401,7 @@ sub plack_app
     test_psgi $app, sub {
       my $cb = shift;
 
-      my $uri = new URI('http://localhost:5000/login');
-      my $val_email = 'val@3afaba8a00c4465102939a63e03e2fecba9a4dd7.ac.uk';
-      my $return_path = $args{login};
-
-      $uri->query_form(email_address => $val_email,
-                       password => $val_email,
-                       return_path => $return_path);
-
-      my $req = HTTP::Request->new(GET => $uri);
-      my $res = $cb->($req);
-
-      my $login_cookie = $res->header('set-cookie');
-      $cookie_jar->extract_cookies($res);
-
-      my $expected_return_code = 302;
-      if ($res->code != $expected_return_code) {
-        die "unexpected return code: got ", $res->code(),
-          " instead of $expected_return_code";
-      }
-      if ($res->header('location') ne $return_path) {
-        die "unexpected location returned from login: got ",
-          $res->header('location'), " instead of $return_path";
-
-      }
+      $self->app_login($cookie_jar, $cb);
     };
   }
 
@@ -1159,79 +1137,37 @@ sub cookie_jar
 
 =cut
 sub app_login
-  {
-    my $self = shift;
-    my $cookie_jar = shift;
-    my $cb = shift;
-    my $req_base = shift;
-    my $dest_redirect_url = shift // 'http://localhost:5000/';
+{
+  my $self = shift;
+  my $cookie_jar = shift;
+  my $cb = shift;
+  my $req_base = shift;
+  my $dest_redirect_url = shift // 'http://localhost:5000/';
 
-    if (!defined $cookie_jar) {
-      croak "no cookie jar passed to app_login()";
-    }
+  $Canto::Controller::Root::CANTO_DEBUG_FAKE_ADMIN_LOGIN = 1;
 
-    if (!defined $cb) {
-      croak "no callback passed to app_login()";
-    }
-
-    my $track_schema = $self->track_schema();
-
-    my $admin_role =
-      $track_schema->resultset('Cvterm')->find({ name => 'admin' });
-
-    my $admin_people =
-      $track_schema->resultset('Person')->
-      search({ role => $admin_role->cvterm_id() });
-
-    my $first_admin = $admin_people->first();
-    if (!defined $first_admin) {
-      croak "can't find an admin user";
-    }
-
-    # reset so that the database isn't open for reading, otherwise login
-    # will time out waiting for a write lock
-    $admin_people->reset();
-
-    my $first_admin_email_address = $first_admin->email_address();
-    my $first_admin_password = $first_admin->email_address();
-
-    my $uri = new URI("http://localhost:5000/login");
-    $uri->query_form(email_address => $first_admin_email_address,
-                     password => $first_admin_password,
-                     return_path => $dest_redirect_url,
-                     submit => 'login',
-                   );
-    my $req = GET $uri;
-    if (defined $req_base) {
-      $req->header('X-Request-Base', "$req_base");
-    }
-    $cookie_jar->add_cookie_header($req);
-
-    my $res = $cb->($req);
-    if ($res->code != 302) {
-      croak "couldn't login: " . $res->content();
-    }
-    $cookie_jar->extract_cookies($res);
-
-    my $redirect_url = $res->header('location');
-    if ($redirect_url ne $dest_redirect_url) {
-      croak "login didn't redirect to the front page";
-    }
-
-    my $redirect_req = GET $redirect_url;
-    if (defined $req_base) {
-      $redirect_req->header('X-Request-Base', "$req_base");
-    }
-    $cookie_jar->add_cookie_header($redirect_req);
-
-    my $redirect_res = $cb->($redirect_req);
-    my $login_text = "Login successful";
-    if ($redirect_res->content() !~ m/$login_text/) {
-      croak q(after login page doesn't contain "$login_text");
-    }
-
-    return $res;
+  if (!defined $cookie_jar) {
+    croak "no cookie jar passed to app_login()";
   }
+
+  if (!defined $cb) {
+    croak "no callback passed to app_login()";
+  }
+
+  my $uri = new URI("http://localhost:5000");
+  my $req = GET $uri;
+  if (defined $req_base) {
+    $req->header('X-Request-Base', "$req_base");
+  }
+  $cookie_jar->add_cookie_header($req);
+
+  my $res = $cb->($req);
+  if ($res->code != 200 ||
+      $res->content() !~ m|<span class="email-address"> val\@sanger.ac.uk </span>|) {
+    croak "couldn't login: " . $res->content();
+  }
+  $cookie_jar->extract_cookies($res);
+}
 
 =head2 enable_access_control
 

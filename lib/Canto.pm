@@ -84,7 +84,7 @@ __PACKAGE__->deny_access_unless(
     my ($c, $action) = @_;
 
     return $c->user_exists() || $c->config()->{public_mode} ||
-      !$access_control_enabled || $action eq 'front';
+      !$access_control_enabled || $action eq 'front' || $action eq 'begin';
   },
 );
 __PACKAGE__->allow_access('/default');

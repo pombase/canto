@@ -10,8 +10,14 @@ use Digest::SHA;
 use LWP::UserAgent;
 use URI;
 use JSON::Any;
+use Carp;
+
+use Canto::TrackDB;
 
 __PACKAGE__->config->{namespace} = '';
+
+# set to true in tests to fake that an admin user is logged in
+our $CANTO_DEBUG_FAKE_ADMIN_LOGIN=0;
 
 =head1 NAME
 
@@ -20,6 +26,38 @@ Canto::Controller::Root - Root Controller for Canto tracking application
 =head1 METHODS
 
 =cut
+
+sub begin: Private
+{
+  my ($self, $c) = @_;
+
+  if ($CANTO_DEBUG_FAKE_ADMIN_LOGIN) {
+    my $track_schema = Canto::TrackDB->new(config => $c->config());
+
+    my $admin_role =
+      $track_schema->resultset('Cvterm')->find({ name => 'admin' });
+
+    my $admin_people_rs =
+      $track_schema->resultset('Person')->
+      search({ role => $admin_role->cvterm_id() });
+
+    my $first_admin = $admin_people_rs->first();
+    if (!defined $first_admin) {
+      croak "can't find an admin user";
+    }
+
+    # reset so that the database isn't open for reading, otherwise login
+    # will time out waiting for a write lock
+    $admin_people_rs->reset();
+
+    if ($first_admin->orcid()) {
+      $c->authenticate({orcid => $first_admin->orcid()});
+      $CANTO_DEBUG_FAKE_ADMIN_LOGIN = 0;
+    } else {
+      croak "admin user has no ORCID\n";
+    }
+  }
+}
 
 =head2 default
 
@@ -414,9 +452,9 @@ sub logout : Global {
 sub access_denied : Private {
   my ($self, $c, $action) = @_;
 
-  $c->res->redirect($c->uri_for('/login_needed',
-                                { return_path => $c->req()->uri() }));
-  $c->detach();
+  $c->stash()->{return_path} = $c->req()->uri();
+
+  $c->forward('/login_needed');
 }
 
 =head1 LICENSE
