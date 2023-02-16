@@ -6,6 +6,10 @@ use parent 'Catalyst::Controller';
 
 use Text::MultiMarkdown qw(markdown);
 use IO::All;
+use Digest::SHA;
+use LWP::UserAgent;
+use URI;
+use JSON::Any;
 
 __PACKAGE__->config->{namespace} = '';
 
@@ -73,8 +77,8 @@ sub end : Private
   }
 
   # copied from RenderView.pm
-  if (! $c->response->content_type ) {
-    $c->response->content_type( 'text/html; charset=utf-8' );
+  if (! $c->response->content_type) {
+    $c->response->content_type( 'text/html; charset=utf-8');
   }
   return 1 if $c->req->method eq 'HEAD';
   return 1 if defined $c->response->body && length($c->response->body);
@@ -246,66 +250,161 @@ sub docs : Global('docs')
   _do_local_and_docs($base_docs_path, @_);
 }
 
-=head2 account
+=head2 login_needed
 
- User page for logins
+
 
 =cut
-sub account :Global
+sub login_needed :Global
 {
   my ($self, $c) = @_;
 
   my $st = $c->stash;
 
   $st->{title} = "Log in to continue";
-  $st->{template} = 'account.mhtml';
-
-  $st->{return_path} = $c->req()->param("return_path");
+  $st->{template} = 'login_needed.mhtml';
 }
 
-=head2 login
+my $json = JSON::Any->new;
 
- Try to authenticate a user based on email_address and password parameters
+sub request_access_token
+{
+  my ($self, $c, $callback_uri, $code, $auth_info) = @_;
+
+  my $oauth_config = $c->config()->{oauth};
+  my $token_uri = $oauth_config->{token_uri};
+  my $client_id = $oauth_config->{client_id};
+  my $client_secret = $oauth_config->{client_secret};
+
+  my $uri = URI->new($token_uri);
+  my $query = {
+    client_id => $client_id,
+    client_secret => $client_secret,
+    redirect_uri => $callback_uri,
+    code => $code,
+    grant_type => 'authorization_code'
+  };
+
+  use Data::Dumper;
+warn Dumper([$uri, $query]);
+
+
+  my $response = LWP::UserAgent->new()->post($uri, $query);
+
+use Data::Dumper;
+$Data::Dumper::Maxdepth = 3;
+warn Dumper([$response]);
+
+
+  return unless $response->is_success;
+  return $json->jsonToObj($response->decoded_content());
+}
+
+sub _build_callback_uri {
+  my ($self, $c) = @_;
+  my $uri = $c->request->uri->clone();
+  $uri->query(undef);
+  return $uri;
+}
+
+sub authenticate
+{
+  my ($self, $c, $auth_info) = @_;
+  my $callback_uri = $self->_build_callback_uri($c);
+
+  if (!defined(my $code = $c->req()->params->{code})) {
+    my $oauth_config = $c->config()->{oauth};
+    my $grant_uri = $oauth_config->{grant_uri};
+    my $client_id = $oauth_config->{client_id};
+    my $scope = $oauth_config->{scope};
+    my $uri = URI->new($grant_uri);
+    my $query = {
+      response_type => 'code',
+      client_id => $client_id,
+      redirect_uri => $callback_uri,
+      state => $auth_info->{state},
+      scope => $scope,
+    };
+    $uri->query_form($query);
+    use Data::Dumper;
+    warn Dumper([$uri]);
+
+    $c->response->redirect($uri);
+
+    return;
+  } else {
+    my $token =
+      $self->request_access_token($c, $callback_uri, $code, $auth_info);
+
+    use Data::Dumper;
+warn Dumper([$token]);
+
+
+    die 'Error validating verification code' unless $token;
+
+    $c->authenticate({orcid => $token->{orcid}});
+  }
+}
+
+=head2 oauth
+
+ Authenticate using OAuth2
 
 =cut
-sub login : Global {
-  my ( $self, $c ) = @_;
-  my $email_address = $c->req->param('email_address');
-  my $password = $c->req->param('password');
 
-  my $return_path = $c->req->param('return_path');
+sub oauth :Global
+{
+  my ($self, $c) = @_;
 
-  if (!defined $password || length $password == 0) {
-    $c->stash()->{error} =
-      { title => "Login error",
-        text => "No password given, please try again" };
-    $c->forward('account');
+  if (exists $c->request->params->{error}) {
+    $c->stash(template => "err_mess_notice.mhtml");
+    $c->stash(error => "OAuth2 login failed: " . $c->request->params->{error});
     $c->detach();
-    return 0;
   }
 
-  if ($c->authenticate({email_address => $email_address,
-                        password => $password})) {
-    push @{$c->flash->{message}}, "Login successful";
+  my $sha1 = undef;
+  if (exists $c->request->params->{state}) {
+    $sha1 = $c->request->params->{state};
 
-    $c->delete_expired_sessions();
-
-    if ($return_path =~ m/logout|login/) {
-      $c->forward($c->config()->{instance_front_path});
-      return 0;
+    if ($sha1 ne $c->session->{oauth_state}) {
+      $c->log->debug("state doesn't match $sha1 vs " . $c->session->{oauth_state});
     }
   } else {
-    $c->stash()->{error} =
-      { title => "Login error",
-        text => "Incorrect email address or password, please try again" };
-    $c->forward('account');
-    $c->detach();
-    return 0;
+    $sha1 = Digest::SHA->new(512)->add($$, "Auth for login",
+                                       Time::HiRes::time(), rand()*10000)->hexdigest();
+    $sha1 = substr($sha1, 4, 16);
+    $c->session(oauth_state => $sha1);
   }
 
-  $c->res->redirect($return_path, 302);
-  $c->detach();
-  return 0;
+# https://accounts.google.com/o/oauth2/auth?client_id=701928355724-sabh5s9kg2op2vm49sqtadjv3d0h2n9a.apps.googleusercontent.com&
+#  redirect_uri=https%3A%2F%2Fcuration.pombase.org%2Fdev%2Foauth&
+#  response_type=code&
+#  scope=profile+email&
+#  state=e5b4addb75c047ef
+
+# --->
+
+# https://curation.pombase.org/dev/oauth?state=e5b4addb75c047ef&
+#   code=4/psvLXvVUW0qAZld3QTaMePs0uO_veKi-wiHlv-F-a-g#
+
+
+  if ($self->authenticate($c, {
+    state => $sha1,
+  })) {
+    $c->log->debug("Authenticated!");
+
+    # Redirect to a page that requires authentication - such as an account page
+    $c->response->redirect($c->uri_for("/"));
+    $c->detach();
+  } elsif (exists $c->req->params->{ code }) {
+    # If the code parameter isn't present, we've not yet redirected to the
+    # login server for authentication so a redirect is likely already present.
+    $c->log->debug("Not authenticated");
+    # Here we would need to redirect or something..
+
+    $c->stash()->{error} = "Login failed";
+    $c->forward('front');
+  }
 }
 
 =head2 logout
@@ -315,8 +414,9 @@ sub login : Global {
 =cut
 
 sub logout : Global {
-  my ( $self, $c ) = @_;
-  $c->logout;
+  my ($self, $c) = @_;
+
+  $c->logout();
 
   $c->stash()->{message} = "You have been logged out";
   $c->forward('front');
@@ -333,7 +433,7 @@ sub logout : Global {
 sub access_denied : Private {
   my ($self, $c, $action) = @_;
 
-  $c->res->redirect($c->uri_for('/account',
+  $c->res->redirect($c->uri_for('/login_needed',
                                 { return_path => $c->req()->uri() }));
   $c->detach();
 }
