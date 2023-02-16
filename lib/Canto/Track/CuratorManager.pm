@@ -283,12 +283,13 @@ sub set_curator
         $curator->name($curs_curator_name);
       }
 
-    if (defined $curs_curator_orcid && length $curs_curator_orcid > 0 &&
-        !$curator->orcid() && _orcid_is_valid($curs_curator_orcid)) {
-      $curs_curator_orcid =~ s|(?:(?:https?://)orcid.org/)||;
+      if (defined $curs_curator_orcid && length $curs_curator_orcid > 0 &&
+          !$curator->orcid() && _orcid_is_valid($curs_curator_orcid)) {
+        $curs_curator_orcid =~ s|(?:(?:https?://)orcid.org/)||;
 
-      $curator->orcid($curs_curator_orcid);
-      $curator->update();
+        $curator->orcid($curs_curator_orcid);
+        $curator->update();
+      }
     } else {
       my $user_role_id =
         $schema->find_with_type('Cvterm', { name => 'user' })->cvterm_id();
