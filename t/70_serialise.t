@@ -594,7 +594,7 @@ my $full_expected_curation_session_with_names =
           'annotation_count' => 7,
           'name' => 'Some Testperson',
           'community_curator' => JSON::XS::false,
-          'orcid' => undef,
+          'orcid' => '0000-0000-0001-0013'
         }
       ],
       curator_role => 'community',
