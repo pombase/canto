@@ -398,7 +398,7 @@ sub oauth :Global
   if (exists $c->request->params->{state}) {
     $sha1 = $c->request->params->{state};
 
-    if ($sha1 ne $c->session->{oauth_state}) {
+    if (exists $c->session->{oauth_state} && $sha1 ne $c->session->{oauth_state}) {
       $c->log->debug("state doesn't match $sha1 vs " . $c->session->{oauth_state});
     }
   } else {
