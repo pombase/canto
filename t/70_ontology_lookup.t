@@ -123,7 +123,7 @@ my @extension_exclude_subsets = @{$config_subsets_to_ignore->{extension}};
   is(scalar(@$results), 2);
 
   is($results->[0]->{matching_synonym}, 'protein tagging activity');
-  is($results->[1]->{matching_synonym}, 'protein tagging activity');
+  is($results->[1]->{matching_synonym}, 'protein degradation tagging activity');
 
   ok(grep {
     $_->{id} eq 'GO:0031386' && $_->{name} eq 'protein tag'
