@@ -4,5 +4,5 @@
 
 <%init>
 my $current_uri = $c->req()->uri();
-my $login_uri = $c->uri_for('/oauth', { return_path => $current_uri });
+my $login_uri = $c->uri_for('/do_oauth', { return_path => $current_uri });
 </%init>

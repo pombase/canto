@@ -91,6 +91,7 @@ __PACKAGE__->allow_access('/begin');
 __PACKAGE__->allow_access('/front');
 __PACKAGE__->allow_access('/default');
 __PACKAGE__->allow_access('/end');
+__PACKAGE__->allow_access('/do_oauth');
 __PACKAGE__->allow_access('/oauth');
 __PACKAGE__->allow_access('/login_needed');
 __PACKAGE__->allow_access('/logout');

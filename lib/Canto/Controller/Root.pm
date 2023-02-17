@@ -332,54 +332,57 @@ sub request_access_token
 sub _build_callback_uri {
   my ($self, $c) = @_;
   my $uri = $c->request->uri->clone();
+  $uri->path($uri->path() =~ s|/do_oauth|/oauth|r);
   $uri->query(undef);
   return $uri;
 }
 
-sub authenticate
+=head2 do_oauth
+
+ Authenticate using OAuth2
+
+=cut
+
+sub do_oauth :Global
 {
-  my ($self, $c, $auth_info) = @_;
+  my ($self, $c) = @_;
+
+  my $return_uri = $c->req()->params()->{return_path};
+
+  if ($return_uri) {
+    $c->flash()->{oauth_return_uri} = $return_uri;
+  }
+
+  my $sha1 = Digest::SHA->new(512)->add($$, "Auth for login",
+                                        Time::HiRes::time(), rand()*10000)->hexdigest();
+  $sha1 = substr($sha1, 4, 16);
+
+  $c->session(oauth_state => $sha1);
+
   my $callback_uri = $self->_build_callback_uri($c);
 
-  if (!defined(my $code = $c->req()->params->{code})) {
-    my $oauth_config = $c->config()->{oauth};
-    my $grant_uri = $oauth_config->{grant_uri};
-    my $client_id = $oauth_config->{client_id};
-    my $scope = $oauth_config->{scope};
-    my $uri = URI->new($grant_uri);
-    my $query = {
-      response_type => 'code',
-      client_id => $client_id,
-      redirect_uri => $callback_uri,
-      state => $auth_info->{state},
-      scope => $scope,
-    };
+  my $oauth_config = $c->config()->{oauth};
+  my $grant_uri = $oauth_config->{grant_uri};
+  my $client_id = $oauth_config->{client_id};
+  my $scope = $oauth_config->{scope};
+  my $uri = URI->new($grant_uri);
+  my $query = {
+    response_type => 'code',
+    client_id => $client_id,
+    redirect_uri => $callback_uri,
+    state => $sha1,
+    scope => $scope,
+  };
 
-    $uri->query_form($query);
-    $c->response->redirect($uri);
+  $uri->query_form($query);
+  $c->response->redirect($uri);
 
-    return;
-  } else {
-    my $token =
-      $self->request_access_token($c, $callback_uri, $code, $auth_info);
-
-    if (!defined $token) {
-      $c->stash(template => "login_failed.mhtml");
-      $c->stash(title => "Failed to authenticate using " . $c->config()->{oauth}->{authenticator});
-      $c->stash()->{oauth_error} = 'Error authenticating with ORCID.  Please try again later.';
-      $c->detach();
-      return;
-    }
-
-    if (length $token->{orcid}) {
-      $c->authenticate({orcid => $token->{orcid}});
-    }
-  }
 }
+
 
 =head2 oauth
 
- Authenticate using OAuth2
+ OAuth2 callback
 
 =cut
 
@@ -401,23 +404,32 @@ sub oauth :Global
     $c->flash()->{oauth_return_uri} = $return_uri;
   }
 
-  my $sha1 = undef;
-  if (exists $c->request->params->{state}) {
-    $sha1 = $c->request->params->{state};
+  my $sha1 = $c->request->params->{state};
 
-    if (exists $c->session->{oauth_state} && $sha1 ne $c->session->{oauth_state}) {
-      $c->log->debug("state doesn't match $sha1 vs " . $c->session->{oauth_state});
-    }
-  } else {
-    $sha1 = Digest::SHA->new(512)->add($$, "Auth for login",
-                                       Time::HiRes::time(), rand()*10000)->hexdigest();
-    $sha1 = substr($sha1, 4, 16);
-    $c->session(oauth_state => $sha1);
+  if (exists $c->session->{oauth_state} && $sha1 ne $c->session->{oauth_state}) {
+    $c->log->debug("state doesn't match $sha1 vs " . $c->session->{oauth_state});
   }
 
-  if ($self->authenticate($c, {
+  my $callback_uri = $self->_build_callback_uri($c);
+
+  my $code = $c->req()->params->{code};
+
+  my $auth_info = {
     state => $sha1,
-  })) {
+  };
+
+  my $token =
+    $self->request_access_token($c, $callback_uri, $code, $auth_info);
+
+  if (!defined $token || !$token->{orcid} || length $token->{orcid} == 0) {
+    $c->stash(template => "login_failed.mhtml");
+    $c->stash(title => "Failed to authenticate using " . $c->config()->{oauth}->{authenticator});
+    $c->stash()->{oauth_error} = 'Error authenticating with ORCID.  Please try again later.';
+    $c->detach();
+    return;
+  }
+
+  if ($c->authenticate({orcid => $token->{orcid}})) {
     if ($c->user()->role()->name() eq 'admin') {
       $c->flash()->{message} = "Admin login successful";
     } else {
@@ -430,10 +442,11 @@ sub oauth :Global
       $c->response->redirect($c->uri_for("/"));
     }
     $c->detach();
-  } elsif (exists $c->req->params->{ code }) {
+  } else {
     $c->stash()->{error} = "Login failed - no such user";
     $c->forward('front');
   }
+
 }
 
 =head2 logout
