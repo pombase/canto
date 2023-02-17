@@ -412,7 +412,11 @@ sub oauth :Global
   if ($self->authenticate($c, {
     state => $sha1,
   })) {
-    $c->flash()->{message} = "Login successful";
+    if ($c->user()->role()->name() eq 'admin') {
+      $c->flash()->{message} = "Admin login successful";
+    } else {
+      $c->flash()->{message} = "User login successful";
+    }
     my $return_uri = $c->stash()->{oauth_return_uri};
     if ($return_uri) {
       $c->response->redirect($return_uri);

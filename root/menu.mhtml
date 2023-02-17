@@ -20,7 +20,7 @@
           <a href="<% $c->uri_for('/logout') %>">Logout</a>
         </li>
 % } else {
-        <li><a href="<% $login_url %>">Admin log in</a></li>
+        <li><a href="<% $login_url %>">Log in</a></li>
 % }
       </ul>
     </span>
