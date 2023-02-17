@@ -32,5 +32,5 @@
 <%init>
 my $local_path = $c->req()->path();
 my $return_path_uri = $c->req()->uri();
-my $login_url = $c->uri_for('/oauth', { return_path => $return_path_uri });
+my $login_url = $c->uri_for('/do_oauth', { return_path => $return_path_uri });
 </%init>
