@@ -363,7 +363,13 @@ sub authenticate
     my $token =
       $self->request_access_token($c, $callback_uri, $code, $auth_info);
 
-    die 'Error validating verification code' unless $token;
+    if (!defined $token) {
+      $c->stash(template => "login_failed.mhtml");
+      $c->stash(title => "Failed to authenticate using " . $c->config()->{oauth}->{authenticator});
+      $c->stash()->{oauth_error} = 'Error authenticating with ORCID.  Please try again later.';
+      $c->detach();
+      return;
+    }
 
     if (length $token->{orcid}) {
       $c->authenticate({orcid => $token->{orcid}});
