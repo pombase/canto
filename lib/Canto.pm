@@ -93,6 +93,7 @@ __PACKAGE__->allow_access('/default');
 __PACKAGE__->allow_access('/end');
 __PACKAGE__->allow_access('/oauth');
 __PACKAGE__->allow_access('/login_needed');
+__PACKAGE__->allow_access('/logout');
 __PACKAGE__->allow_access('/curs');
 __PACKAGE__->allow_access('/ws');
 __PACKAGE__->allow_access('/tools/pubmed_id_lookup');
