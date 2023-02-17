@@ -408,6 +408,12 @@ sub oauth :Global
 
   if (exists $c->session->{oauth_state} && $sha1 ne $c->session->{oauth_state}) {
     $c->log->debug("state doesn't match $sha1 vs " . $c->session->{oauth_state});
+
+    $c->stash(template => "login_failed.mhtml");
+    $c->stash(title => "Failed to authenticate using " . $c->config()->{oauth}->{authenticator});
+    $c->stash()->{oauth_error} = 'Error authenticating with ORCID.  Please try again later.';
+    $c->detach();
+    return;
   }
 
   my $callback_uri = $self->_build_callback_uri($c);
