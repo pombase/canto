@@ -354,6 +354,7 @@ sub authenticate
       state => $auth_info->{state},
       scope => $scope,
     };
+
     $uri->query_form($query);
     $c->response->redirect($uri);
 
