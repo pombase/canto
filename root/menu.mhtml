@@ -2,7 +2,11 @@
   <span>
 % if ($c->user_exists()) {
      <div class="useridentifier">
-       <span class="email-address"> <% $c->user()->email_address() %> </span>
+       <span class="email-address"> <% $c->user()->email_address() %>
+% if ($c->user()->role()->name() eq 'admin') {
+         (admin)
+% }
+       </span>
      </div>
 % }
   </span>
