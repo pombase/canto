@@ -1163,7 +1163,7 @@ sub app_login
 
   my $res = $cb->($req);
   if ($res->code != 200 ||
-      $res->content() !~ m|<span class="email-address"> val\@3afaba8a00c4465102939a63e03e2fecba9a4dd7.ac.uk </span>|) {
+      $res->content() !~ m|<span class="email-address"> val\@3afaba8a00c4465102939a63e03e2fecba9a4dd7.ac.uk|) {
     croak "couldn't login: " . $res->content();
   }
   $cookie_jar->extract_cookies($res);
