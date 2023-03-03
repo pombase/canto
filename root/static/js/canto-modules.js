@@ -5734,17 +5734,17 @@ var genotypeListRowLinksCtrl =
             $scope.deleteTitle =
               'This genotype is part of an interaction so cannot be deleted';
           } else {
-          if (Object.keys(genotype.metagenotype_count_by_type).length > 0) {
-            $scope.canDelete = false;
-            if (genotype.metagenotype_count_by_type['pathogen-host']) {
-              $scope.deleteTitle =
-                'This genotype is part of a metagenotype - delete the metagenotype(s) first';
-            } else {
-              var metagenotypeType = (Object.keys(genotype.metagenotype_count_by_type))[0];
-              $scope.deleteTitle =
-                'First delete the ' + metagenotypeType + '(s) that contain this genotype';
+            if (Object.keys(genotype.metagenotype_count_by_type).length > 0) {
+              $scope.canDelete = false;
+              if (genotype.metagenotype_count_by_type['pathogen-host']) {
+                $scope.deleteTitle =
+                  'This genotype is part of a metagenotype - delete the metagenotype(s) first';
+              } else {
+                var metagenotypeType = (Object.keys(genotype.metagenotype_count_by_type))[0];
+                $scope.deleteTitle =
+                  'First delete the ' + metagenotypeType + '(s) that contain this genotype';
+              }
             }
-          }
           }
         }
 
