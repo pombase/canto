@@ -427,6 +427,11 @@ sub _genotype_details_hash
     }
   }
 
+  my $interaction_count =
+    $genotype->genotype_interaction_genotype_bs()->count() +
+    $genotype->genotype_interaction_genotypes_a()->count() +
+    $genotype->genotype_interactions_with_phenotype()->count();
+
   my %metagenotype_count_by_type = $genotype->metagenotype_count_by_type();
 
   my %ret = (
@@ -438,6 +443,7 @@ sub _genotype_details_hash
     display_name => $genotype->display_name($config),
     genotype_id => $genotype->genotype_id(),
     annotation_count => $genotype->annotations()->count(),
+    interaction_count => $interaction_count,
     metagenotype_count_by_type => \%metagenotype_count_by_type,
     strain_name => $strain_name,
     organism => $organism_details,

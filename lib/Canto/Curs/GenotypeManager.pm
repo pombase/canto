@@ -844,6 +844,12 @@ sub delete_genotype
 
   my $genotype = $schema->resultset('Genotype')->find($genotype_id);
 
+  if ($genotype->genotype_interaction_genotype_bs()->count() > 0 ||
+      $genotype->genotype_interaction_genotypes_a()->count() > 0 ||
+      $genotype->genotype_interactions_with_phenotype()->count() > 0) {
+    return "this genotype is part of a interaction so can't be deleted";
+  }
+
   if ($genotype->annotations()->count() > 0) {
     return "genotype has annotations - delete failed";
   }

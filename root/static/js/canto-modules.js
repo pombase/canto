@@ -5704,6 +5704,7 @@ var genotypeListRowLinksCtrl =
         genotypeId: '=',
         alleleCount: '@',
         annotationCount: '@',
+        interactionCount: '@',
       },
       replace: true,
       templateUrl: CantoGlobals.app_static_path + 'ng_templates/genotype_list_row_links.html',
@@ -5728,6 +5729,11 @@ var genotypeListRowLinksCtrl =
           $scope.deleteTitle =
             'Genotypes with annotations cannot be deleted - delete the annotations first';
         } else {
+          if ($scope.interactionCount > 0) {
+            $scope.canDelete = false;
+            $scope.deleteTitle =
+              'This genotype is part of an interaction so cannot be deleted';
+          } else {
           if (Object.keys(genotype.metagenotype_count_by_type).length > 0) {
             $scope.canDelete = false;
             if (genotype.metagenotype_count_by_type['pathogen-host']) {
@@ -5738,6 +5744,7 @@ var genotypeListRowLinksCtrl =
               $scope.deleteTitle =
                 'First delete the ' + metagenotypeType + '(s) that contain this genotype';
             }
+          }
           }
         }
 
