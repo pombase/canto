@@ -12,18 +12,18 @@
       <div class="curs-diploid-constructor-choices">
         <input type="radio" value="homozygous" id="homozygous" name="homozygous" ng-model="diploidType"/>
         <label for="homozygous">homozygous
-          <span ng-bind-html="startAllele.display_name | encodeAlleleSymbols | toTrusted"></span>
+          <span ng-bind-html="startAllele.long_display_name | encodeAlleleSymbols | toTrusted"></span>
         </label>
       </div>
-      <div class="curs-diploid-constructor-choices">
+      <div ng-if="!isWTAndWTExpression(startAllele)" class="curs-diploid-constructor-choices">
         <input type="radio" value="wild type" id="wild-type" name="wild-type" ng-model="diploidType"/>
         <label for="wild-type">
-          <span ng-bind-html="startAllele.display_name | encodeAlleleSymbols | toTrusted"></span> / wild type</label>
+          <span ng-bind-html="startAllele.long_display_name | encodeAlleleSymbols | toTrusted"></span> / wild type</label>
       </div>
       <div class="curs-diploid-constructor-choices" ng-show="selectorAlleles.length != 0">
         <input type="radio" id="other" value="other" name="other" ng-model="diploidType"/>
         <label for="other">
-          <span ng-bind-html="startAllele.display_name | encodeAlleleSymbols | toTrusted"></span>
+          <span ng-bind-html="startAllele.long_display_name | encodeAlleleSymbols | toTrusted"></span>
           /
           <span ng-if="selectorAlleles.length == 1">{{selectorAlleles[0].displayName}}</span>
         </label>

@@ -6013,14 +6013,23 @@ var diploidConstructorDialogCtrl =
       $scope.diploidType = 'homozygous';
       $scope.selectorAlleles = [];
 
+      $scope.isWTAndWTExpression = function(allele) {
+        return allele.type === "wild type" &&
+               (typeof allele.expression == "undefined" ||
+               allele.expression == "Wild type product level")
+      };
+
+      $scope.startAlleleIsWTAndWTExpression =
+        $scope.isWTAndWTExpression($scope.startAllele);
+
       $.map(args.alleles,
             function(allele) {
-              var displayName = allele.display_name;
+              var displayName = allele.long_display_name;
               if (allele.allele_id === $scope.startAllele.allele_id) {
                 return;
               }
 
-              if (allele.type === 'wild type' && !allele.expresion) {
+              if ($scope.isWTAndWTExpression(allele)) {
                 return;
               }
 
