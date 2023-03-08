@@ -26,6 +26,20 @@ $title
 <link href="<% $c->uri_for($c->config()->{extra_css}) %>" type="text/css" rel="stylesheet" />
 %}
 
+% if (defined $google_tag_manager_id) {
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=<% $google_tag_manager_id %>"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', '<% $google_tag_manager_id %>');
+</script>
+
+% }
+
 <script language="javascript" type="text/javascript">
 var application_root = '<% $c->uri_for('/') =~ s|/$||r %>';
 var app_static_path = '<% $c->uri_for('/static/') %>';
@@ -35,3 +49,7 @@ var is_admin_user = '<% $c->stash()->{is_admin_user} %>';
 <%flags>
 inherit => undef
 </%flags>
+
+<%init>
+my $google_tag_manager_id = $c->config()->{google_tag_manager_id};
+</%init>
