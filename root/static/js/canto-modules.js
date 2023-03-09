@@ -7203,7 +7203,7 @@ function interactionEvCodesFromPhenotype(phenotypeAnnotationType, phenotypeTermD
 
   if (!evidenceCodeGroups || genotype.alleles.length != 2) {
     return [phenotypeAnnotationType.associated_interaction_annotation_type.evidence_codes,
-            null];;
+            null];
   } else {
     var popPhenotypeEvCodeConfig = evidenceCodeGroups.double_mutant_population_phenotype;
 
