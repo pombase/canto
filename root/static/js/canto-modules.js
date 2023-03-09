@@ -7215,6 +7215,8 @@ function interactionEvCodesFromPhenotype(phenotypeAnnotationType, phenotypeTermD
       return parentConstraintParts.includes(subsetId);
     };
 
+    var returnEvidenceCodes = null;
+
     if (phenotypeTermDetails.subset_ids.filter(hasParent).length > 0 ||
         $.grep(parentConstraintParts,
                function(constraintPart) {
@@ -7229,23 +7231,25 @@ function interactionEvCodesFromPhenotype(phenotypeAnnotationType, phenotypeTermD
                 phenotypeEvidenceCodes.push(inviableEvCode);
               });
       } else {
-        // is a population term
         phenotypeEvidenceCodes = [...popPhenotypeEvCodeConfig.viable_evidence_codes];
       }
     } else {
       // isn't a population term
-      phenotypeEvidenceCodes = evidenceCodeGroups.not_population_evidence_codes;
+      returnEvidenceCodes = evidenceCodeGroups.not_population_evidence_codes;
     }
 
-    var returnEvidenceCodes = [];
-
     var filterEvCodes = function(evCodes) {
-      $.map(phenotypeEvidenceCodes,
-            function(phenotypeCode) {
-              if (evCodes.includes(phenotypeCode)) {
-                returnEvidenceCodes.push(phenotypeCode);
-              }
-            });
+      if (returnEvidenceCodes) {
+        // the term isn't a population phenotype so we already know
+        // the possible evidence codes
+      } else {
+        $.map(phenotypeEvidenceCodes,
+              function(phenotypeCode) {
+                if (evCodes.includes(phenotypeCode)) {
+                  returnEvidenceCodes.push(phenotypeCode);
+                }
+              });
+      }
     };
 
     var allele0 = genotype.alleles[0];
