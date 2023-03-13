@@ -502,6 +502,21 @@ db_initial_data:
               accession: admin
               db:
                 name: Canto
+          - name: inactive_user
+            dbxref:
+              accession: inactive_user
+              db:
+                name: Canto
+          - name: group_leader
+            dbxref:
+              accession: group_leader
+              db:
+                name: Canto
+          - name: inactive_group_leader
+            dbxref:
+              accession: inactive_group_leader
+              db:
+                name: Canto
       - name: Canto publication curation status
         cvterms:
           - name: not started
