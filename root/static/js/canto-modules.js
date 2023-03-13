@@ -1805,6 +1805,17 @@ var multiFeatureChooser =
             $scope.selectedFeatureIds.push(featureId);
           }
         };
+
+        $scope.selectNone = () => {
+          $scope.selectedFeatureIds.length = 0;
+        };
+
+        $scope.selectAll = () => {
+          $scope.selectNone();
+          $.map($scope.features,
+                (feature) => $scope.selectedFeatureIds.push(feature.feature_id));
+        };
+
       },
       templateUrl: app_static_path + 'ng_templates/multi_feature_chooser.html',
     };

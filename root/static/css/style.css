@@ -980,6 +980,14 @@ tr .curs-genotype-allele-gene {
   float: left;
 }
 
+.curs-multi-feature-chooser-select-all-none {
+  margin: 0.6em 0;
+}
+
+.curs-multi-feature-chooser-select-all-none a {
+  margin: 0 0.15em;
+}
+
 .curs-feature-chooser {
   white-space:nowrap;
 }

@@ -3,9 +3,15 @@
        ng-repeat="feature in features">
     <label>
       <input type="checkbox" name="selectedFeatureIds[]"
-             ng-checked="selectedFeatureIds.indexOf(featurere.feature_id) > -1"
+             ng-checked="selectedFeatureIds.indexOf(feature.feature_id) > -1"
              ng-click="toggleSelection(feature.feature_id)" />
       <span ng-bind-html="feature | featureChooserFilter:showOrganism | encodeAlleleSymbols | toTrusted"></span>
     </label>
+  </div>
+
+  <div class="curs-multi-feature-chooser-select-all-none">
+    Select:
+    <a ng-click="selectAll()">All</a> |
+    <a ng-click="selectNone()">None</a>
   </div>
 </div>
