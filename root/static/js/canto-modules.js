@@ -7226,7 +7226,7 @@ function interactionEvCodesFromPhenotype(phenotypeAnnotationType, phenotypeTermD
       return parentConstraintParts.includes(subsetId);
     };
 
-    var returnEvidenceCodes = null;
+    var isNotPopTerm = false;
 
     if (phenotypeTermDetails.subset_ids.filter(hasParent).length > 0 ||
         $.grep(parentConstraintParts,
@@ -7245,12 +7245,19 @@ function interactionEvCodesFromPhenotype(phenotypeAnnotationType, phenotypeTermD
         phenotypeEvidenceCodes = [...popPhenotypeEvCodeConfig.viable_evidence_codes];
       }
     } else {
+      isNotPopTerm = true;
       // isn't a population term
-      returnEvidenceCodes = evidenceCodeGroups.not_population_evidence_codes;
+      phenotypeEvidenceCodes = evidenceCodeGroups.not_population_evidence_codes;
+    }
+
+    var returnEvidenceCodes = [];
+
+    if (isNotPopTerm) {
+      returnEvidenceCodes = phenotypeEvidenceCodes;
     }
 
     var filterEvCodes = function(evCodes) {
-      if (returnEvidenceCodes) {
+      if (isNotPopTerm) {
         // the term isn't a population phenotype so we already know
         // the possible evidence codes
       } else {
