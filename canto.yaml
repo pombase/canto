@@ -1758,7 +1758,7 @@ evidence_types:
     interaction_dialog_type_label: displays Synthetic Lethality with
     is_symmetric: 1
   'Synthetic Phenotype':
-    definition: "A genetic interaction is inferred when mutations or deletions in separate genes produce a phenotype that is not present in either of the single mutations or deletions under a given condition"
+    definition: "A genetic interaction is inferred when mutations or deletions in separate genes produce a phenotype that is not present in either of the single mutations or deletions under a given condition."
     interaction_dialog_type_label: displays Synthetic Phenotype with
     is_symmetric: 1
   'Synthetic Rescue':
