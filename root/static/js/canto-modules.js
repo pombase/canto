@@ -1094,7 +1094,7 @@ function fetch_conditions(conditionNamespace) {
           if (typeof (item.matching_synonym) === 'undefined') {
             label = item.name;
           } else {
-            label = item.matching_synonym + ' (synonym)';
+            label = item.name + ' (' + item.matching_synonym + ')';
           }
           return {
             label: label,
@@ -3787,7 +3787,12 @@ var conditionPicker =
                 $scope.conditions.length = 0;
                 $field.find('li .tagit-label').map(function (index, $elem) {
                   $scope.conditions.push({
-                    name: $elem.textContent.trim()
+// This fix is a hacky work around for a bug in the tag-it library.
+// If condition synonym is selected with down arrow + return, the
+// synonym text is used as the condition instead of the term name.  So
+// we remove the synonym text (the bit in brackets), leaving the term
+// name.
+                    name: $elem.textContent.trim().replace(/\s+\(.*\)$/, ''),
                   });
                 });
               });
