@@ -1431,8 +1431,19 @@ sub _ontology_change_keys
       my @conditions_with_ids =
         Canto::Curs::ConditionUtil::get_conditions_from_names($lookup,
                                                               \@condition_names);
+
+      my %seen_terms = ();
+
       $data->{conditions} =
-        [ map { $_->{term_id} // $_->{name} } @conditions_with_ids ];
+        [ map {
+          my $term = $_->{term_id} // $_->{name};
+          if ($seen_terms{$term}) {
+            ();
+          } else {
+            $seen_terms{$term} = 1;
+            $term;
+          }
+        } @conditions_with_ids ];
 
       return 1;
     },
