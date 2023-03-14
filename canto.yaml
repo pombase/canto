@@ -1757,6 +1757,10 @@ evidence_types:
     definition: "A genetic interaction is inferred when mutations or deletions in separate genes, each of which alone causes a minimal phenotype, result in lethality when combined in the same cell under a given condition."
     interaction_dialog_type_label: displays Synthetic Lethality with
     is_symmetric: 1
+  'Synthetic Phenotype':
+    definition: "A genetic interaction is inferred when mutations or deletions in separate genes produce a phenotype that is not present in either of the single mutations or deletions under a given condition"
+    interaction_dialog_type_label: displays Synthetic Phenotype with
+    is_symmetric: 1
   'Synthetic Rescue':
     definition: "A genetic interaction is inferred when mutations or deletions of one gene rescues the lethality or growth defect of a strain mutated or deleted for another gene."
     name: 'Synthetic Rescue (lethality or growth defect synthetically rescued by)'
@@ -2200,6 +2204,7 @@ available_annotation_type_list:
           - Dosage Rescue
           - Synthetic Rescue
           - Synthetic Growth Defect
+          - Synthetic Phenotype
         inviable_parent_constraint: 'is_a(FYPO:0002059)'
         inviable_only_evidence_codes:
           - Dosage Lethality
@@ -2207,11 +2212,13 @@ available_annotation_type_list:
       not_population_evidence_codes:
         - Phenotypic Enhancement
         - Phenotypic Suppression
+        - Synthetic Phenotype
       both_alleles_deletions:
         - Phenotypic Enhancement
         - Phenotypic Suppression
         - Synthetic Growth Defect
         - Synthetic Lethality
+        - Synthetic Phenotype
         - Synthetic Rescue
       one_allele_overexpressed:
         - Dosage Growth Defect
@@ -2219,9 +2226,11 @@ available_annotation_type_list:
         - Dosage Rescue
         - Phenotypic Enhancement
         - Phenotypic Suppression
+        - Synthetic Phenotype
       not_double_deletion_no_overexpression:
         - Synthetic Growth Defect
         - Synthetic Lethality
+        - Synthetic Phenotype
         - Synthetic Rescue
   - name: genetic_interaction
     category: interaction
