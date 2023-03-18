@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
 
-# find term alt_ids used in annotation and change to use the primary ID
+# find term alt_ids used in annotations and in annotation extensions
+# and change to use the primary ID
 #
 # See: https://github.com/pombase/canto/issues/2708
 
