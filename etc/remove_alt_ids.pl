@@ -43,20 +43,47 @@ my $schema = Canto::TrackDB->new(config => $config);
 my $track_schema = Canto::TrackDB->new(config => $config);
 
 
+my $db_name = shift;
+
+if (!defined $db_name) {
+  die "needs one arg, eg.
+  $0 'GO'
+";
+}
+
+
 my %alt_id_to_id_map = ();
 
 my $track_dbh = $track_schema->storage()->dbh();
 
+my %term_names_map = ();
+
+my $term_names_sth =
+  $track_dbh->prepare("
+SELECT db.name || ':' || x.accession AS term_id,
+       t.name AS term_name
+  FROM cvterm t JOIN dbxref x ON x.dbxref_id = t.dbxref_id
+  JOIN db ON db.db_id = x.db_id
+  WHERE db.name = ?");
+
+$term_names_sth->execute($db_name);
+
+while (my ($term_id, $term_name) = $term_names_sth->fetchrow_array()) {
+  $term_names_map{$term_id} = $term_name;
+}
+
+
 my $alt_ids_sth =
   $track_dbh->prepare("
-SELECT db.name || ':' || x.accession AS term_id, db.name || ':' || alt_x.accession AS alt_id
+SELECT db.name || ':' || x.accession AS term_id,
+       db.name || ':' || alt_x.accession AS alt_id
   FROM cvterm t JOIN dbxref x ON x.dbxref_id = t.dbxref_id
   JOIN db ON db.db_id = x.db_id
   JOIN cvterm_dbxref tx ON tx.cvterm_id = t.cvterm_id
   JOIN dbxref alt_x ON alt_x.dbxref_id = tx.dbxref_id
- WHERE x.db_id = alt_x.db_id;");
+ WHERE x.db_id = alt_x.db_id AND db.name = ?;");
 
-$alt_ids_sth->execute();
+$alt_ids_sth->execute($db_name);
 
 while (my ($term_id, $alt_id) = $alt_ids_sth->fetchrow_array()) {
   if ($alt_id_to_id_map{$alt_id}) {
@@ -79,8 +106,6 @@ my $proc = sub {
     if ($data->{term_ontid}) {
       my $term_id = $data->{term_ontid};
 
-      print "$term_id\n";
-
       if (exists $alt_id_to_id_map{$term_id}) {
         warn "$curs_key: found annotation using alt_id: $term_id\n";
       }
@@ -98,15 +123,22 @@ my $proc = sub {
             my $and_part = $_;
 
             if ($and_part->{rangeValue}) {
-              my $range_value_term_id = $and_part->{rangeValue};
+              my $range_term_id = $and_part->{rangeValue};
 
-              if (exists $alt_id_to_id_map{$range_value_term_id}) {
+              if (exists $alt_id_to_id_map{$range_term_id}) {
                 $changed = 1;
-                warn "$curs_key: found alt_id in extension: $range_value_term_id\n";
+                my $primary_id = $alt_id_to_id_map{$range_term_id};
+                my $primary_name = $term_names_map{$primary_id} or die;
+
+                warn "$curs_key: found alt_id in extension: $range_term_id -> $primary_id ($primary_name)\n";
+                $and_part->{rangeValue} = $primary_id;
+                $and_part->{rangeDisplayName} = $primary_name;
+                $and_part->{rangeType} = 'Ontology';
               }
             }
 
           } @$or_part;
+
         } @$extension;
     }
 
