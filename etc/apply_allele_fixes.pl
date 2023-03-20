@@ -128,7 +128,7 @@ my $proc = sub {
             warn qq|for "$name" description in DB doesn't match file: "$old_description" vs "|,
               $changes->{allele_description}, qq|"\n|;
           } else {
-            warn qq|$curs_key: $name: changing description "$old_description" to "$new_description"\n|;
+            print qq|$curs_key: $name: changing description "$old_description" to "$new_description"\n|;
             $allele->description($new_description);
             $allele->update();
           }
@@ -141,11 +141,11 @@ my $proc = sub {
           my $new_type_name = $allele_export_type_map{$new_type};
           if (!defined $new_type_name) {
             warn "Unknown allele type: $new_type\n";
-            die;
+            next;
           }
 
           my $old_type = $allele->type();
-          warn qq|$curs_key: $name: changing type "$old_type" to "$new_type_name"\n|;
+          print qq|$curs_key: $name: changing type "$old_type" to "$new_type_name"\n|;
           $allele->type($new_type);
           $allele->update();
         }
@@ -153,7 +153,7 @@ my $proc = sub {
         my $new_name = $changes->{change_name_to};
 
         if ($new_name) {
-          warn qq|$curs_key: $name: changing name to "$new_name"\n|;
+          print qq|$curs_key: $name: changing name to "$new_name"\n|;
           $allele->name($new_name);
           $allele->update();
         }
