@@ -4,6 +4,9 @@
 # and types
 #
 # See: https://github.com/pombase/canto/issues/2689
+#
+# Run in the canto directory like:
+#   ./etc/apply_allele_fixes.pl <PATH_TO_ALLELE_FIX_TSV_FILE>
 
 use strict;
 use warnings;
