@@ -1550,19 +1550,19 @@ allele_type_list:
     expression_required: true
     allele_name_required: false
     placeholder: 'e.g. aa123->stop, aa1299->amber'
-  - name: other
-    export_type: other
-    show_description: true
-    description_required: true
-    allele_name_required: false
-    allow_expression_change: true
-    expression_required: true
-    placeholder: Please provide a description
   - name: fusion or chimera
     export_type: fusion_or_chimera
     show_description: true
     description_required: true
     allele_name_required: true
+    allow_expression_change: true
+    expression_required: true
+    placeholder: Please provide a description
+  - name: other
+    export_type: other
+    show_description: true
+    description_required: true
+    allele_name_required: false
     allow_expression_change: true
     expression_required: true
     placeholder: Please provide a description
