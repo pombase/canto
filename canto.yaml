@@ -1558,6 +1558,14 @@ allele_type_list:
     allow_expression_change: true
     expression_required: true
     placeholder: Please provide a description
+  - name: fusion or chimera
+    export_type: fusion_or_chimera
+    show_description: true
+    description_required: true
+    allele_name_required: true
+    allow_expression_change: true
+    expression_required: true
+    placeholder: Please provide a description
 #  - name: aberration
 #    export_type: aberration
 #    show_description: true
