@@ -1501,7 +1501,7 @@ allele_type_list:
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: e.g. A858-MKGYP,100-200
+    placeholder: e.g. A858-MKGYP,100-200,P500*
   - name: partial deletion and amino acid change
     export_type: amino_acid_deletion_and_mutation
     show_description: true
@@ -1509,7 +1509,7 @@ allele_type_list:
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: e.g. 100-200,F124D
+    placeholder: e.g. 100-200,F124D,P500*
   - name: partial deletion, amino acid
     export_type: partial_amino_acid_deletion
     show_description: true
@@ -1517,7 +1517,7 @@ allele_type_list:
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: "Please specify deleted residues - eg. 100-200 OR 10-20,40-50"
+    placeholder: "Specify deleted residues - eg. 100-200 OR 10-20,40-50. Use P500* for nonsense mutation"
   - name: nucleotide insertion
     export_type: nucleotide_insertion
     show_description: true
@@ -1541,7 +1541,7 @@ allele_type_list:
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: "Please specify deleted residues - eg. 100-200 OR -20--30 (for promoter region)"
+    placeholder: "Please specify deleted residues - eg. 100-200 OR (-20)-(-30) (for promoter region)"
   - name: nonsense mutation
     export_type: nonsense_mutation
     show_description: true
@@ -1549,7 +1549,7 @@ allele_type_list:
     allow_expression_change: true
     expression_required: true
     allele_name_required: false
-    placeholder: 'e.g. aa123->stop, aa1299->amber'
+    placeholder: 'e.g. P123*'
   - name: fusion or chimera
     export_type: fusion_or_chimera
     show_description: true
