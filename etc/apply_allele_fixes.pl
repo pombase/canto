@@ -153,8 +153,16 @@ my $proc = sub {
         my $new_name = $changes->{change_name_to};
 
         if ($new_name) {
+          my $old_name = $allele->name();
           print qq|$curs_key: $name: changing name to "$new_name"\n|;
           $allele->name($new_name);
+          if ($old_name) {
+            $cursdb->resultset('Allelesynonym')
+              ->create({ allele => $allele->allele_id(),
+                         edit_status => 'new',
+                         synonym => $old_name });
+          }
+
           $allele->update();
         }
       }
