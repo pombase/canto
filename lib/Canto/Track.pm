@@ -298,7 +298,8 @@ sub curs_map
 
   my @ret = ();
 
-  my @curs_objects = $track_schema->resultset('Curs')->all();
+  my @curs_objects = $track_schema->resultset('Curs')
+    ->search({}, { order_by => 'curs_key' })->all();
 
   while (defined (my $curs = shift @curs_objects)) {
     my $curs_key = $curs->curs_key();
