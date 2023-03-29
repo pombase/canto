@@ -70,7 +70,8 @@ open my $change_fh, '<', $change_file or die;
 
 
 my $tsv = Text::CSV->new({ sep_char => "\t", binary => 1,
-                           auto_diag => 1, strict => 1 });
+                           quote_char => undef,
+                           auto_diag => 1 });
 
 $tsv->column_names($tsv->getline($change_fh));
 
