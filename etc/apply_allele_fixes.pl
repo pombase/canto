@@ -209,6 +209,28 @@ my $proc = sub {
 
           $allele->update();
         }
+
+      my $add_synonym = $changes->{add_synonym};
+
+      if (defined $add_synonym && length($add_synonym) > 0) {
+        print qq|$curs_key: $allele_name: adding synonym "$add_synonym"\n|;
+
+        $cursdb->resultset('Allelesynonym')
+          ->create({ allele => $allele->allele_id(),
+                     edit_status => 'new',
+                     synonym => $add_synonym });
+      }
+
+      my $add_comment = $changes->{add_comment};
+
+      if (defined $add_comment && length($add_comment) > 0) {
+        print qq|$curs_key: $allele_name: adding comment "$add_comment"\n|;
+
+        $cursdb->resultset('AlleleNote')
+          ->create({ allele => $allele->allele_id(),
+                     key => 'comment',
+                     value => $add_comment });
+      }
     }
   }
 };
