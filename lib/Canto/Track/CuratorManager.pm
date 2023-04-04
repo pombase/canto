@@ -206,7 +206,7 @@ sub _orcid_is_valid
 {
   my $orcid = shift;
 
-  return $orcid =~ m|^(?:(?:https?://)orcid.org/)\d\d\d\d-\d\d\d\d-\d\d\d\d-\d\d\d[\dX]$|;
+  return $orcid =~ m|^(?:(?:https?://)?orcid.org/)?\d\d\d\d-\d\d\d\d-\d\d\d\d-\d\d\d[\dX]$|;
 }
 
 =head2 set_curator
