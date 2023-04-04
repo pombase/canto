@@ -47,6 +47,7 @@ use base 'Catalyst::Controller::HTML::FormFu';
 use Moose;
 
 use Canto::DBLayer::Path;
+use Canto::Util qw(trim);
 
 with 'Canto::Role::CheckACL';
 
@@ -637,6 +638,9 @@ sub _update_object {
                                     ($value eq 1 || lc $value eq 'on' ||
                                      lc $value eq 'yes'));
         } else {
+          if (defined $value) {
+            $value = trim($value);
+          }
           $object->$field_db_column($value || undef);
         }
       } else {
