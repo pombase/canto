@@ -8663,8 +8663,13 @@ var annotationTransferDialogCtrl =
         annotationCopy.extension = [];
       }
 
-      annotationCopy.interaction_annotations = [];
-      annotationCopy.interaction_annotations_with_phenotypes = [];
+      if (annotationCopy.interaction_annotations) {
+        annotationCopy.interaction_annotations = [];
+      }
+      
+      if (annotationCopy.interaction_annotations_with_phenotypes) {
+        annotationCopy.interaction_annotations_with_phenotypes = [];
+      }
 
       let existingCount = 0;
 
