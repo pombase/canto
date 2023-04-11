@@ -1585,7 +1585,7 @@ var pubmedIdStart =
           }
           return url;
         }
-        
+
         function getRestartApprovalPermission() {
           var sessionExists = ($scope.data.results && $scope.data.results.sessions.length > 0);
           if ($scope.userIsAdmin && sessionExists) {
@@ -2254,7 +2254,7 @@ function arrayIntersection(arr1, arr2) {
 // current, logged in user isn't an admin.
 function extensionConfFilter(allConfigs, subsetIds, userRole, annotationTypeName, featureType) {
   return allConfigs.filter(isValidExtension).map(getProperties);
-  
+
   function getProperties(config) {
     return {
       displayText: config.display_text,
@@ -2266,7 +2266,7 @@ function extensionConfFilter(allConfigs, subsetIds, userRole, annotationTypeName
       cardinality: config.cardinality,
     };
   }
-  
+
   function isValidExtension(config) {
     var userNotPermitted = (config.role == 'admin' && userRole != 'admin');
     var noAnnotationTypeMatch = (
@@ -2274,7 +2274,7 @@ function extensionConfFilter(allConfigs, subsetIds, userRole, annotationTypeName
       config.annotation_type_name !== annotationTypeName
     );
     var wrongFeatureType = (
-      !! featureType && !! config.feature_type &&  
+      !! featureType && !! config.feature_type &&
       config.feature_type != featureType
     );
 
@@ -3990,7 +3990,7 @@ var alleleEditDialogCtrl =
 
     $scope.userIsAdmin = CantoGlobals.current_user_is_admin;
     $scope.pathogenHostMode = CantoGlobals.pathogen_host_mode;
-    
+
     $scope.showAlleleTypeField = (
       ! $scope.lockedAlleleType && (
         $scope.alleleData.type != 'aberration' ||
@@ -4937,7 +4937,7 @@ function GenotypeGeneList() {
     restrict: 'E',
     replace: true,
     templateUrl: app_static_path + 'ng_templates/genotype_gene_list.html',
-    controller: 'genotypeGeneListCtrl' 
+    controller: 'genotypeGeneListCtrl'
   };
 };
 
@@ -7283,9 +7283,9 @@ function interactionEvCodesFromPhenotype(phenotypeAnnotationType, phenotypeTermD
     if (allele0.type == 'deletion' && allele1.type == 'deletion') {
       filterEvCodes(evidenceCodeGroups.both_alleles_deletions);
     } else {
-      const allele0Overexpressed = 
+      const allele0Overexpressed =
             allele0.expression && allele0.expression == 'Overexpression';
-      const allele1Overexpressed = 
+      const allele1Overexpressed =
             allele1.expression && allele1.expression == 'Overexpression';
       if (allele0Overexpressed || allele1Overexpressed) {
         filterEvCodes(evidenceCodeGroups.one_allele_overexpressed);
@@ -7347,7 +7347,7 @@ function findGenotypeInArrayByAlleleId(genotypes, searchAlleleId) {
 //   genotypeAnnotationsB: ...  // the annotations for alleleB
 // }
 //
-// returns null if no interactions are possible 
+// returns null if no interactions are possible
 function getInteractionInitialData($q, CantoConfig,
                                    termDetailsPromise,
                                    phenotypeAnnotationType, phenotypeTermId,
@@ -7372,7 +7372,7 @@ function getInteractionInitialData($q, CantoConfig,
       var alleleA = genotype.alleles[0];
       var alleleB = genotype.alleles[1];
 
-      var codeFromPhenotypeResult = 
+      var codeFromPhenotypeResult =
           interactionEvCodesFromPhenotype(phenotypeAnnotationType, phenotypeTermDetails,
                                           genotype);
 
@@ -8666,7 +8666,7 @@ var annotationTransferDialogCtrl =
       if (annotationCopy.interaction_annotations) {
         annotationCopy.interaction_annotations = [];
       }
-      
+
       if (annotationCopy.interaction_annotations_with_phenotypes) {
         annotationCopy.interaction_annotations_with_phenotypes = [];
       }
@@ -9705,7 +9705,7 @@ var annotationTableCtrl =
 
         // used by annotationTableRow code, create here so we don't re-fetch the
         // genotypes in every row
-        $scope.genotypesPromiseForInteractions = 
+        $scope.genotypesPromiseForInteractions =
           $scope.annotationTypeConfigPromise.then(function (annotationType) {
             if (typeof(annotationType.associated_interaction_annotation_type) !== 'undefined'  &&
                 $scope.alleleCountFilter == 'multi') {
@@ -10479,7 +10479,7 @@ var termNameComplete =
             if (searchAnnotationTypeName.indexOf('[') != 0 &&
                 // if the namespace isn't set we're searching GO terms so this
                 // isn't a problem:
-                $scope.annotationType && !$scope.annotationType.namespace && 
+                $scope.annotationType && !$scope.annotationType.namespace &&
                 typeof item.annotation_type_name !== 'undefined' &&
                 searchAnnotationTypeName !== item.annotation_type_name) {
               warning = '<br/><span class="autocomplete-warning">WARNING: this is the ID of a ' +
@@ -11057,7 +11057,7 @@ var organismPicker = function ($http, OrganismList) {
       }
 
       function updateTaxonIds() {
-        var taxonIds = 
+        var taxonIds =
             $scope.selectedOrganisms.map(organism => organism.taxonid);
         $scope.taxon_ids = taxonIds.join(" ");
       }
