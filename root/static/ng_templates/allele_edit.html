@@ -209,6 +209,11 @@
                      type="radio" value="Knockdown" />
               <label for="allele-edit-knockdown">Knockdown</label>
             </div>
+            <div>
+              <input ng-model="alleleData.expression" name="curs-allele-expression" id="allele-edit-ectopic"
+                     type="radio" value="Ectopic" />
+              <label for="allele-edit-ectopic">Ectopic</label>
+            </div>
             <div ng-show="alleleData.type == 'disruption' || alleleData.type == 'other'">
               <input ng-model="alleleData.expression" name="curs-allele-expression" id="allele-edit-null-expression"
                      type="radio" value="Null" />
