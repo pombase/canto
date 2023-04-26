@@ -86,10 +86,14 @@ box will pop up where you can add allele details:
     in grey text. To specify positions:
     <ul>
       <li>
-	Number amino acid residues starting at the initiator
-	methionine for all proteins <b>except</b> histones. For
-	histones, residue numbering assumes that the initiator
-	methionine is removed.
+	In the description, number amino acid residues starting at the initiator
+	methionine for all proteins <b>including</b> histones. It's a convention for histones
+  that residue numbering assumes that the initiator methionine is removed, and this
+  should be reflected in the allele name only. For example, the allele with allele name
+  `hht1-K14A` should have a description `K15A`.
+      </li>
+      <li>
+	For nonsense mutations, simply use "partial deletion, amino acid".
       </li>
       <li>
 	For insertions, enter the one-letter symbol and number of the residue
