@@ -1542,6 +1542,22 @@ allele_type_list:
     allow_expression_change: true
     expression_required: true
     placeholder: "Please specify deleted residues - eg. 100-200 OR (-20)-(-30) (for promoter region)"
+  - name: partial deletion and nucleotide change
+    export_type: nucleotide_deletion_and_mutation
+    show_description: true
+    description_required: true
+    allele_name_required: false
+    allow_expression_change: true
+    expression_required: true
+    placeholder: e.g. 100-200,A124T,C128G
+  - name: nucleotide insertion and substitution
+    export_type: nucleotide_insertion_and_mutation
+    show_description: true
+    description_required: true
+    allele_name_required: false
+    allow_expression_change: true
+    expression_required: true
+    placeholder: e.g. T858-TTGA,T124A
   - name: nonsense mutation
     export_type: nonsense_mutation
     show_description: true
