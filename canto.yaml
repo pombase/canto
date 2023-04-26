@@ -1558,14 +1558,15 @@ allele_type_list:
     allow_expression_change: true
     expression_required: true
     placeholder: e.g. T858-TTGA,T124A
-  - name: nonsense mutation
-    export_type: nonsense_mutation
-    show_description: true
-    description_required: true
-    allow_expression_change: true
-    expression_required: true
-    allele_name_required: false
-    placeholder: 'e.g. P123*'
+  #   currently replaced by partial aminoacid deletion
+  # - name: nonsense mutation
+  #   export_type: nonsense_mutation
+  #   show_description: true
+  #   description_required: true
+  #   allow_expression_change: true
+  #   expression_required: true
+  #   allele_name_required: false
+  #   placeholder: 'e.g. P123*'
   - name: fusion or chimera
     export_type: fusion_or_chimera
     show_description: true
