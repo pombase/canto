@@ -36,6 +36,7 @@ my %export_modules = (
   'canto-json' => 'Canto::Export::CantoJSON',
   'gaf' => 'Canto::Export::GeneAssociationFile',
   'tab-zip' => 'Canto::Export::TabZip',
+  'allele-table' => 'Canto::Export::AlleleTable',
 );
 
 sub usage
