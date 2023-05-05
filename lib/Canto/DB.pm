@@ -44,6 +44,17 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
+=head1 MISC
+
+Third Normal Form: a mythical approach to database design said to be
+used by future advanced civilizations to avoid data redundancy and
+improve performance. Depicted primarily in works of high science
+fiction such as E. F. Codd's "Further Normalization of the Data Base
+Relational Model,"
+  -- IBM Research Report RJ909 (August 31st, 1971).
+
+=cut
+
 =head1 FUNCTIONS
 
 =cut

@@ -1841,9 +1841,9 @@ sub change_annotation
                                                      1, 1);
     } else {
       $annotation_hash =
-        Canto::Curs::Utils::make_interaction_annotation($self->config(),
-                                                        $curs_schema,
-                                                        $annotation);
+        Canto::Curs::Utils::make_gene_interaction_annotation($self->config(),
+                                                             $curs_schema,
+                                                             $annotation);
     }
     $self->metadata_storer()->store_counts($curs_schema);
 
