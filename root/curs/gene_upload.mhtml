@@ -18,12 +18,15 @@ or <% $primary_name_desc |n %> (eg. <% $example_name %>)
 % }
 separated by commas, spaces, tabs or one per line.
 </div>
+
+% if ($c->config()->{database_name} eq 'PomBase') {
 <div>
 If you have large datasets please consider our <a href="https://www.pombase.org/submit-data/bulk-annotation">bulk annotation formats</a>.
 </div>
 <div>
 Note: Only supply high confidence interactions for large datasets.
 </div>
+% }
 <div style="margin: 5px 0 5px 0">
 You can edit this list later if you need to add more genes or remove
 "unused" genes.
