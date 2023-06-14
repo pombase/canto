@@ -97,7 +97,9 @@ test_psgi $app, sub {
                    'comment' => undef,
                    'synonyms' => [],
                    'notes' => {},
-                 },
+                   'exogenous_promoter' => undef,
+                   'promoter_gene' => undef,
+                },
                  {
                    'display_name' => 'SPCC63.05delta',
                    'long_display_name' => 'SPCC63.05delta',
@@ -113,6 +115,8 @@ test_psgi $app, sub {
                    'comment' => undef,
                    'synonyms' => [],
                    'notes' => {},
+                   'exogenous_promoter' => undef,
+                   'promoter_gene' => undef,
                  }
                ],
                'display_name' => 'SPCC63.05delta ssm4KE',
