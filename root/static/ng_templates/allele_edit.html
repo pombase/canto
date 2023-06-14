@@ -227,6 +227,31 @@
           </td>
         </tr>
       </table>
+
+      <div class="curs-allele-promoter ng-cloak" ng-show="showPromoterOpts()">
+        <table>
+          <tr>
+            <td>
+              Gene promoter:
+            </td>
+            <td>
+              <feature-chooser
+                ng-if="genes"
+                feature-type="gene" features="genes"
+                feature-editable="true"
+                chosen-feature-id="data.promoterGeneId"></feature-chooser>
+              <a ng-click="openSingleGeneAddDialog()">Add another gene</a>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Exogenous promoter:
+            </td>
+            <td>
+              ...
+            </td>
+          </tr>
+        </table>
       </div>
 
       <div class="modal-footer">

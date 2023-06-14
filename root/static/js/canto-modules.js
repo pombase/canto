@@ -3969,7 +3969,7 @@ function makeAutopopulateName(template, geneName) {
 
 
 var alleleEditDialogCtrl =
-  function ($scope, $uibModalInstance, toaster, CantoConfig, args, Curs, CantoGlobals) {
+  function ($scope, $uibModal, $uibModalInstance, toaster, CantoConfig, args, Curs, CursGeneList, CantoGlobals) {
     $scope.alleleData = {};
     copyObject(args.allele, $scope.alleleData);
     $scope.taxonId = args.taxonId;
@@ -3984,7 +3984,10 @@ var alleleEditDialogCtrl =
     $scope.alleleData.synonyms = $scope.alleleData.synonyms || [];
     $scope.alleleData.existingSynonyms = [];
     $scope.alleleData.newSynonyms = [];
+    $scope.genes = null;
+
     $scope.data = {
+      promoterGeneId: null,
       newSynonymsString: '',
     };
 
@@ -4028,6 +4031,42 @@ var alleleEditDialogCtrl =
         !!$scope.alleleData.type &&
         $scope.current_type_config != undefined &&
         $scope.current_type_config.allow_expression_change;
+    };
+
+    $scope.showPromoterOpts = function() {
+      return $scope.showExpression() &&
+        $scope.alleleData.expression && 
+        ($scope.alleleData.expression == 'Overexpression' ||
+         $scope.alleleData.expression == 'Knockdown' ||
+         $scope.alleleData.expression == 'Ectopic');
+    };
+
+    $scope.getGenesFromServer = function() {
+      CursGeneList.geneList().then(function (results) {
+        $scope.genes = results;
+
+        if (typeof($scope.alleleData.promoter_gene) != 'undefined') {
+          $.map($scope.genes,
+                (gene) => {
+                  if (gene.primary_identifier == $scope.alleleData.promoter_gene) {
+                    $scope.data.promoterGeneId = gene.gene_id;
+                  }
+                });
+        }
+
+
+      }).catch(function (err) {
+        toaster.pop('note', "couldn't read the gene list from the server");
+      });
+    };
+
+    $scope.getGenesFromServer();
+
+    $scope.openSingleGeneAddDialog = function () {
+      var modal = openSingleGeneAddDialog($uibModal);
+      modal.result.then(function () {
+        $scope.getGenesFromServer();
+      });
     };
 
     $scope.strainSelected = function (strain) {
@@ -4147,6 +4186,16 @@ var alleleEditDialogCtrl =
       if ($scope.isValid()) {
         splitSynonymsForStoring($scope.alleleData, $scope.data.newSynonymsString);
         copyObject($scope.alleleData, args.allele);
+        if ($scope.data.promoterGeneId == null) {
+          args.allele.promoter_gene = null;
+        } else {
+          $.map($scope.genes,
+                (gene) => {
+                  if (gene.gene_id == $scope.data.promoterGeneId) {
+                    args.allele.promoter_gene = gene.primary_identifier;
+                  }
+                });
+        }
         var strainName = null;
         if ($scope.strainData.selectedStrain) {
           strainName = $scope.strainData.selectedStrain.strain_name;
@@ -4199,7 +4248,8 @@ var alleleEditDialogCtrl =
   };
 
 canto.controller('AlleleEditDialogCtrl',
-  ['$scope', '$uibModalInstance', 'toaster', 'CantoConfig', 'args', 'Curs', 'CantoGlobals',
+                 ['$scope', '$uibModal', '$uibModalInstance', 'toaster', 'CantoConfig', 'args',
+                  'Curs', 'CursGeneList', 'CantoGlobals',
     alleleEditDialogCtrl
   ]);
 
@@ -4700,7 +4750,8 @@ var genotypeEdit =
           return allele1.type === allele2.type &&
             allele1.gene_id === allele2.gene_id &&
             (allele1.expression || '') === (allele2.expression || '') &&
-            (allele1.name || '') === (allele2.name || '');
+            (allele1.name || '') === (allele2.name || '') &&
+            (allele1.promoter_gene || '') === (allele2.promoter_gene || '');
         };
 
         $scope.findExistingAllele = function (alleleData) {

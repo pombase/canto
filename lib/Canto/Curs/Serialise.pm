@@ -587,6 +587,9 @@ sub _get_alleles
     if (defined $allele->description()) {
       $allele_data{description} = $allele->description();
     }
+    if (defined $allele->promoter_gene()) {
+      $allele_data{promoter_gene} = $allele->promoter_gene();
+    }
     if ($allele->type() eq 'deletion') {
       my $gene_proxy = Canto::Curs::GeneProxy->new(config => $config,
                                                    cursdb_gene => $gene);
