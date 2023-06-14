@@ -4196,6 +4196,12 @@ var alleleEditDialogCtrl =
                   }
                 });
         }
+
+        if (!$scope.showPromoterOpts()) {
+          delete args.allele.promoter_gene;
+          delete args.allele.exogenous_promoter;
+        }
+
         var strainName = null;
         if ($scope.strainData.selectedStrain) {
           strainName = $scope.strainData.selectedStrain.strain_name;
@@ -4751,7 +4757,8 @@ var genotypeEdit =
             allele1.gene_id === allele2.gene_id &&
             (allele1.expression || '') === (allele2.expression || '') &&
             (allele1.name || '') === (allele2.name || '') &&
-            (allele1.promoter_gene || '') === (allele2.promoter_gene || '');
+            (allele1.promoter_gene || '') === (allele2.promoter_gene || '') &&
+            (allele1.exogenous_promoter || '') === (allele2.exogenous_promoter || '');
         };
 
         $scope.findExistingAllele = function (alleleData) {

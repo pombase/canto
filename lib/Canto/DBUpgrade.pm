@@ -776,6 +776,7 @@ CREATE TABLE genotype_interaction_with_phenotype (
       my $curs_dbh = $curs_schema->storage()->dbh();
 
       $curs_dbh->do("ALTER TABLE allele ADD COLUMN promoter_gene text;");
+      $curs_dbh->do("ALTER TABLE allele ADD COLUMN exogenous_promoter text;");
     };
 
     Canto::Track::curs_map($config, $track_schema, $update_proc);
