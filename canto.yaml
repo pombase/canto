@@ -1854,6 +1854,7 @@ ontology_namespace_config:
     - "FYPO:0002057"
     - "FYPO:0002058"
     - "FYPO:0002059"
+    - "SO:0001527"
 
 # Namespace used for the phenotype condition ontology. If you
 # use an ontology other than FYECO for your phenotype conditions, then
