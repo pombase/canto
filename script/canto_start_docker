@@ -38,6 +38,8 @@ fi
 
 TTY_OPT="-t"
 
+DOCKER_COMMAND="docker"
+
 while [[ $# -gt 0 ]]; do
     case $1 in
         --debug)
@@ -51,6 +53,10 @@ while [[ $# -gt 0 ]]; do
         -p|--publish)
             PUBLISH_PORTS="$2"
             shift
+            shift
+            ;;
+        --use-podman)
+            DOCKER_COMMAND="podman"
             shift
             ;;
         *)
@@ -73,4 +79,4 @@ CANTO_DOCKER_RUN_ARGS="$EXTRA_ARGS -i $TTY_OPT --rm $DEBUG --mount type=bind,sou
 
 cd canto
 
-exec docker run $CANTO_DOCKER_RUN_ARGS ./script/canto_start "$@"
+exec $DOCKER_COMMAND run $CANTO_DOCKER_RUN_ARGS ./script/canto_start "$@"
