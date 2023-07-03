@@ -1082,6 +1082,10 @@ class_info:
       class_display_name: Duplicated in PubMed
       extends: pub
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Duplicated in PubMed')"
+    triage_bioarchive_publications:
+      class_display_name: Bioarchive
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Bioarchive')"
     curatable_publications_with_sessions:
       extends: pub
       constraint: "pub_id in (select pub from curs) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"
@@ -1348,6 +1352,7 @@ reports:
                 - report: triage_biotech_publications
                 - report: triage_database_publications
                 - report: triage_loaded_in_error_publications
+                - report: triage_bioarchive_publications
                 - report: triage_duplicated_in_pubmed_publications
                 - report: triage_other_publications
             - report: curated_publications
