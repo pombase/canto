@@ -438,7 +438,7 @@ db_initial_data:
                 name: Canto
           - name: Bioarchive
             dbxref:
-              accession: Bioarchive
+              accession: bioarchive
               db:
                 name: Canto
           - name: Retracted
