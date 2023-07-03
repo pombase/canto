@@ -229,29 +229,26 @@
       </table>
 
       <div class="curs-allele-promoter ng-cloak" ng-show="showPromoterOpts()">
-        <table>
-          <tr>
-            <td>
-              Gene promoter (optional):
-            </td>
-            <td>
-              <feature-chooser
-                ng-if="genes"
-                feature-type="gene" features="genes"
-                feature-editable="true"
-                chosen-feature-id="data.promoterGeneId"></feature-chooser>
-              <a ng-click="openSingleGeneAddDialog()">Add another gene</a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              Exogenous promoter (optional):
-            </td>
-            <td>
-              <input type="text" ng-model="alleleData.exogenous_promoter"/>
-            </td>
-          </tr>
-        </table>
+        Promoter:
+        <div>
+          <input id="promoter-none" type="radio" value="none" ng-model="promoterSelect">
+          <label for="promoter-none">None</label>
+        </div>
+        <div>
+          <input id="promoter-gene" type="radio" value="gene" ng-model="promoterSelect">
+          <label for="promoter-gene">Gene</label>
+          <feature-chooser
+            ng-if="genes && promoterSelect == 'gene'"
+            feature-type="gene" features="genes"
+            feature-editable="true"
+            chosen-feature-id="data.promoterGeneId"></feature-chooser>
+          <a ng-if="promoterSelect == 'gene'" ng-click="openSingleGeneAddDialog()">Add another gene</a>
+        </div>
+        <div>
+          <input id="promoter-exogenous" type="radio" value="exogenous" ng-model="promoterSelect">
+          <label for="promoter-exogenous">Exogenous</label>
+          <input type="text" ng-if="promoterSelect == 'exogenous'" ng-model="alleleData.exogenous_promoter"/>
+        </div>
       </div>
 
       <div class="modal-footer">
