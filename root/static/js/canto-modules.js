@@ -4133,6 +4133,7 @@ var alleleEditDialogCtrl =
     $scope.alleleData.existingSynonyms = [];
     $scope.alleleData.newSynonyms = [];
     $scope.genes = null;
+    $scope.promoterSelect = 'none';
 
     $scope.data = {
       promoterGeneId: null,
