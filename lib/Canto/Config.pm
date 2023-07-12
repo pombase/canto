@@ -346,8 +346,11 @@ sub setup
       if ($allele_type->{name} =~ /^wild[ _]?type$/) {
         $allele_type->{autopopulate_name} = $self->{wildtype_name_template};
       }
-      if ($allele_type->{name} eq 'deletion') {
+      elsif ($allele_type->{name} eq 'deletion') {
         $allele_type->{autopopulate_name} = $self->{deletion_name_template};
+      }
+      elsif ($allele_type->{name} eq 'transformant') {
+        $allele_type->{autopopulate_name} = $self->{transformant_name_template};
       }
       my $export_type = $allele_type->{export_type} // $allele_type->{name};
       push @{$self->{export_type_to_allele_type}->{$export_type}}, $allele_type;
