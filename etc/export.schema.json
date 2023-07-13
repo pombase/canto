@@ -277,7 +277,15 @@
                           "title": "Extension range type",
                           "description": "The type of the range of the annotation extension relation. Note that this may be absent in the case that an admin curator has entered the relation as text.",
                           "type": "string",
-                          "enum": ["Gene", "Ontology", "%", "Text"]
+                          "enum": [
+                            "Gene",
+                            "Ontology",
+                            "%",
+                            "Text",
+                            "HostTaxonID",
+                            "PathogenTaxonID",
+                            "Metagenotype"
+                          ]
                         },
                         "rangeValue": {
                           "title": "Extension range value",
