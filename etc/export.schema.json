@@ -366,7 +366,7 @@
                     "type": "string"
                   },
                   "with_gene_id": {
-                    "type": "string"
+                    "$ref": "#/definitions/nullableString"
                   }
                 },
                 "required": [
