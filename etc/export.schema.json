@@ -249,7 +249,8 @@
                       "email": {
                         "title": "Annotation curator email",
                         "description": "The email address of the curator who created the annotation.",
-                        "type": "string"
+                        "type": "string",
+                        "format": "email"
                       },
                       "name": {
                         "title": "Annotation curator name",
