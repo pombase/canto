@@ -1451,6 +1451,7 @@ implementation_classes:
 
 wildtype_name_template: '@@gene_display_name@@+'
 deletion_name_template: '@@gene_display_name@@delta'
+transformant_name_template: '@@gene_display_name@@ transformant'
 
 allele_type_list:
   - name: wild type
