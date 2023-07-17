@@ -217,6 +217,17 @@ A custom signature line that is displayed at the end of the generic email
 templates. If not set, the signature will default to "The \[database_name\]
 team", where the database name is the value of the `database_name` setting.
 
+### privacy_policy_url
+The URL to the privacy policy for the database that runs the Canto instance.
+If configured, the following message will be shown on the _Curator details_
+page where the curator is asked to enter their personal details:
+
+> Your name, email and ORCID ID will be used under the terms of the
+> \[database_name\] privacy policy. By continuing past this page, you agree
+> to the terms of the policy.
+
+The text 'privacy policy' will be linked to the privacy policy URL.
+
 ### external_links
 Each external link configuration has three possible parameters:
 

@@ -18,5 +18,8 @@ $reassign
 %   }
 % }
     <% $form |n %>
+%   if ($c->config()->{privacy_policy_url}) {
+      <p>Your name, email and ORCID ID will be used under the terms of the <% $c->config()->{database_name} %> <a href="<% $c->config()->{privacy_policy_url} %>">privacy policy</a>. By continuing past this page, you agree to the terms of this policy.
+%   }
   </div>
 </div>
