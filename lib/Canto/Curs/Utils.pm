@@ -1533,7 +1533,14 @@ sub canto_allele_type
   my $chado_type = shift;
   my $allele_description = shift;
 
-  my @canto_allele_types = @{$config->{export_type_to_allele_type}->{$chado_type}};
+  my $chado_type_ref = $config->{export_type_to_allele_type}->{$chado_type};
+
+  if (!defined $chado_type_ref) {
+    warn qq(no allele type found for Chado allele_type "$chado_type"\n);
+    return $chado_type;
+  }
+
+  my @canto_allele_types = @{$chado_type_ref};
 
   if (@canto_allele_types == 0) {
     warn qq(no allele type found for Chado allele_type "$chado_type"\n);
