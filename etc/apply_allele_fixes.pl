@@ -57,6 +57,12 @@ while (my ($export_type, $details) = each %{$config->{export_type_to_allele_type
   $allele_export_type_map{$export_type} = $details->[0]->{name};
 }
 
+my $verbose = 1;
+
+if (@ARGV > 1 && $ARGV[0] eq '--quiet') {
+  shift;
+  $verbose = 0;
+}
 
 
 my $change_file = shift;
@@ -169,10 +175,12 @@ my $proc = sub {
 
           if ($old_description ne $changes->{allele_description} &&
             $old_description ne '' && lc $old_description ne 'unknown') {
-            warn qq|for "$allele_name" description in DB doesn't match file: "$old_description" vs "|,
+            warn qq|$curs_key: for "$allele_name" description in DB doesn't match file: "$old_description" vs "|,
               $changes->{allele_description}, qq|"\n|;
           } else {
-            print qq|$curs_key: $allele_name: changing description "$old_description" to "$new_description"\n|;
+            if ($verbose) {
+              print qq|$curs_key: $allele_name: changing description "$old_description" to "$new_description"\n|;
+            }
             $allele->description($new_description);
             $allele->update();
           }
@@ -190,7 +198,9 @@ my $proc = sub {
           }
 
           my $old_type = $allele->type();
-          print qq|$curs_key: $allele_name: changing type "$old_type" to "$new_type_name"\n|;
+          if ($verbose) {
+            print qq|$curs_key: $allele_name: changing type "$old_type" to "$new_type_name"\n|;
+          }
           $allele->type($new_type);
           $allele->update();
         }
@@ -199,7 +209,9 @@ my $proc = sub {
 
         if ($new_name) {
           my $old_name = $allele_name;
-          print qq|$curs_key: $allele_name: changing name to "$new_name"\n|;
+          if ($verbose) {
+            print qq|$curs_key: $allele_name: changing name to "$new_name"\n|;
+          }
           $allele->name($new_name);
 
           $cursdb->resultset('Allelesynonym')
@@ -213,7 +225,9 @@ my $proc = sub {
       my $add_synonym = $changes->{add_synonym};
 
       if (defined $add_synonym && length($add_synonym) > 0) {
-        print qq|$curs_key: $allele_name: adding synonym "$add_synonym"\n|;
+        if ($verbose) {
+          print qq|$curs_key: $allele_name: adding synonym "$add_synonym"\n|;
+        }
 
         $cursdb->resultset('Allelesynonym')
           ->create({ allele => $allele->allele_id(),
@@ -224,7 +238,9 @@ my $proc = sub {
       my $add_comment = $changes->{add_comment};
 
       if (defined $add_comment && length($add_comment) > 0) {
-        print qq|$curs_key: $allele_name: adding comment "$add_comment"\n|;
+        if ($verbose) {
+          print qq|$curs_key: $allele_name: adding comment "$add_comment"\n|;
+        }
 
         $cursdb->resultset('AlleleNote')
           ->create({ allele => $allele->allele_id(),
