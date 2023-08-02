@@ -98,6 +98,16 @@ $tsv->column_names($tsv->getline($change_fh));
 #           }
 #         ];
 
+sub make_change_map_key {
+  my $gene_systematic_id = shift;
+  my $allele_name = shift;
+  my $allele_description = shift;
+
+  return $gene_systematic_id . '$-$' .
+    ($allele_name // '<ALLELE_NAME_MISSING>') . '$-$' .
+    ($allele_description // '<ALLELE_DESCRIPTION_MISSING>');
+}
+
 my %change_map = ();
 
 while (my $row = $tsv->getline_hr($change_fh)) {
@@ -105,12 +115,15 @@ while (my $row = $tsv->getline_hr($change_fh)) {
     next;
   }
 
-  if (exists $change_map{$row->{allele_name}}) {
+  my $key = make_change_map_key($row->{systematic_id}, $row->{allele_name},
+                                $row->{allele_description});
+
+  if (exists $change_map{$key}) {
     warn "ignoring duplicate allele_name: ", $row->{allele_name}, "\n";
     next;
   }
 
-  $change_map{$row->{allele_name}} = $row;
+  $change_map{$key} = $row;
 }
 
 
@@ -140,20 +153,30 @@ my $proc = sub {
   my $allele_rs = $cursdb->resultset('Allele');
 
   while (defined (my $allele = $allele_rs->next())) {
+    my $gene = $allele->gene();
+    my $gene_systematic_id = $gene->primary_identifier();
     my $allele_name = $allele->name();
+    my $allele_description = $allele->description();
 
-    if ($allele_name) {
-      my $changes = $change_map{$allele_name};
+    my $key = make_change_map_key($gene_systematic_id, $allele_name,
+                                  $allele_description);
 
-      my $gene = $allele->gene();
-      my $gene_uniquename = $gene->primary_identifier();
+      my $changes = $change_map{$key};
 
       if (!defined $changes) {
+        if (!defined $allele_name) {
+          next;
+        }
 
-        my $gene_name = $chado_gene_names{$gene_uniquename} //
-          $gene_uniquename;
+        # there are allele names in Canto that don't have the correct
+        # gene name prefix
+        my $gene_name = $chado_gene_names{$gene_systematic_id} //
+          $gene_systematic_id;
 
         $allele_name = "$gene_name-$allele_name";
+
+        $key = make_change_map_key($gene_systematic_id, $allele_name,
+                                   $allele_description);
 
         $changes = $change_map{$allele_name};
       }
@@ -162,7 +185,7 @@ my $proc = sub {
         next;
       }
 
-      if ($changes->{systematic_id} ne $gene_uniquename) {
+      if ($changes->{systematic_id} ne $gene_systematic_id) {
         die "gene uniquenames don't match for $allele_name ",
           $changes->{systematic_id}, "\n";
       }
@@ -207,7 +230,7 @@ my $proc = sub {
 
         my $new_name = $changes->{change_name_to};
 
-        if ($new_name) {
+        if ($new_name && $new_name ne $changes->{allele_name}) {
           my $old_name = $allele_name;
           if ($verbose) {
             print qq|$curs_key: $allele_name: changing name to "$new_name"\n|;
@@ -247,7 +270,6 @@ my $proc = sub {
                      key => 'comment',
                      value => $add_comment });
       }
-    }
   }
 };
 
