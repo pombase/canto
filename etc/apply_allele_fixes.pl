@@ -119,7 +119,7 @@ while (my $row = $tsv->getline_hr($change_fh)) {
                                 $row->{allele_description});
 
   if (exists $change_map{$key}) {
-    warn "ignoring duplicate allele_name: ", $row->{allele_name}, "\n";
+    warn "ignoring duplicate allele: ", $row->{allele_name}, "\n";
     next;
   }
 
