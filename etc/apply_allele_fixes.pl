@@ -214,18 +214,19 @@ my $proc = sub {
         if ($new_type) {
           $new_type = 'other' if $new_type eq 'amino_acid_other';
           $new_type = 'fusion_or_chimera' if $new_type eq 'chimera';
-          my $new_type_name = $allele_export_type_map{$new_type};
-          if (!defined $new_type_name) {
+          my $new_canto_type = $allele_export_type_map{$new_type};
+          if (!defined $new_canto_type) {
             warn "Unknown allele type: $new_type\n";
             next;
           }
 
-          my $old_type = $allele->type();
-          if ($verbose) {
-            print qq|$curs_key: $allele_name: changing type "$old_type" to "$new_type_name"\n|;
+          if ($old_type ne $new_canto_type) {
+            if ($verbose) {
+              print qq|$curs_key: $allele_name: changing type from "$old_type" to "$new_canto_type"\n|;
+            }
+            $allele->type($new_canto_type);
+            $allele->update();
           }
-          $allele->type($new_type);
-          $allele->update();
         }
 
         my $new_name = $changes->{change_name_to};
