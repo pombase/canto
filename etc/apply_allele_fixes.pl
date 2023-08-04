@@ -194,7 +194,6 @@ my $proc = sub {
 
         if ($new_description) {
           my $old_description = $allele->description() // '';
-          $old_description =~ s/,\s+/,/g;
 
           if ($old_description ne $changes->{allele_description} &&
             $old_description ne '' && lc $old_description ne 'unknown') {
