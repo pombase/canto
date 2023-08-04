@@ -201,7 +201,7 @@ my $proc = sub {
               $changes->{allele_description}, qq|"\n|;
           } else {
             if ($verbose) {
-              print qq|$curs_key: $allele_name: changing description "$old_description" to "$new_description"\n|;
+              print qq|$curs_key: $allele_name: changing description from "$old_description" to "$new_description"\n|;
             }
             $allele->description($new_description);
             $allele->update();
@@ -233,7 +233,7 @@ my $proc = sub {
         if ($new_name && $new_name ne $changes->{allele_name}) {
           my $old_name = $allele_name;
           if ($verbose) {
-            print qq|$curs_key: $allele_name: changing name to "$new_name"\n|;
+            print qq|$curs_key: $allele_name: changing name from "$old_name" to "$new_name"\n|;
           }
           $allele->name($new_name);
 
