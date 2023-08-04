@@ -178,7 +178,7 @@ my $proc = sub {
         $key = make_change_map_key($gene_systematic_id, $allele_name,
                                    $allele_description);
 
-        $changes = $change_map{$allele_name};
+        $changes = $change_map{$key};
       }
 
       if (!defined $changes) {
