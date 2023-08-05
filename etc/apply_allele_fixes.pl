@@ -161,19 +161,35 @@ my $proc = sub {
     my $key = make_change_map_key($gene_systematic_id, $allele_name,
                                   $allele_description);
 
+    my $old_type = $allele->type();
+
       my $changes = $change_map{$key};
 
       if (!defined $changes) {
-        if (!defined $allele_name) {
-          next;
-        }
-
-        # there are allele names in Canto that don't have the correct
-        # gene name prefix
         my $gene_name = $chado_gene_names{$gene_systematic_id} //
           $gene_systematic_id;
 
-        $allele_name = "$gene_name-$allele_name";
+        if (defined $allele_name) {
+          # there are allele names in Canto that don't have the correct
+          # gene name prefix
+
+          if ($allele_name !~ /^$gene_name/) {
+            # try adding the gene name
+            $allele_name = "$gene_name-$allele_name";
+          } else {
+            # give up
+            next;
+          }
+
+        } else {
+
+          if (!defined $allele_description) {
+            next;
+          }
+
+          # create a name for the name
+          $allele_name = "$gene_name-$allele_description";
+        }
 
         $key = make_change_map_key($gene_systematic_id, $allele_name,
                                    $allele_description);
