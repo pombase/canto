@@ -1488,7 +1488,7 @@ allele_type_list:
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: e.g. A858-MKGYP
+    placeholder: e.g. A858AMKGYP (insertion of MKGYP after A858, note A before and after number)
   - name: "amino acid substitution(s)"
     export_type: amino_acid_mutation
     show_description: true
@@ -1504,7 +1504,7 @@ allele_type_list:
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: e.g. A858-MKGYP,F124D
+    placeholder: e.g. A858AMKGYP,F124D
   - name: amino acid insertion and deletion
     export_type: amino_acid_insertion_and_deletion
     show_description: true
@@ -1512,7 +1512,7 @@ allele_type_list:
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: e.g. A858-MKGYP,100-200,P500*
+    placeholder: e.g. A858AMKGYP,100-200,P500*
   - name: partial deletion and amino acid change
     export_type: amino_acid_deletion_and_mutation
     show_description: true
@@ -1536,7 +1536,7 @@ allele_type_list:
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: e.g. C132-AATTT
+    placeholder: e.g. C132CAATTT (insertion of AATTT after C132, note C before and after number))
   - name: "nucleotide substitution(s)"
     export_type: nucleotide_mutation
     show_description: true
@@ -1544,7 +1544,7 @@ allele_type_list:
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: eg. A25G, OR A-25G (for promoter region)
+    placeholder: eg. A25G, OR A(-25)G (for residues upstream of ATG -protein coding- or transcription start -RNA genes-)
   - name: partial deletion, nucleotide
     export_type: partial_nucleotide_deletion
     show_description: true
@@ -1552,7 +1552,7 @@ allele_type_list:
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: "Please specify deleted residues - eg. 100-200 OR (-20)-(-30) (for promoter region)"
+    placeholder: "Specify deleted residues - eg. 100-200 OR (-20)-(-30) (for residues upstream of ATG -protein coding- or transcription start -RNA genes-)"
   - name: partial deletion and nucleotide change
     export_type: nucleotide_deletion_and_mutation
     show_description: true
@@ -1560,7 +1560,7 @@ allele_type_list:
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: e.g. 100-200,A124T,C128G
+    placeholder: e.g. 100-200,A124T,C128G (for residues upstream of ATG -protein coding- or transcription start -RNA genes- use negative numbers in parenthesis)
   - name: nucleotide insertion and substitution
     export_type: nucleotide_insertion_and_mutation
     show_description: true
@@ -1568,7 +1568,7 @@ allele_type_list:
     allele_name_required: false
     allow_expression_change: true
     expression_required: true
-    placeholder: e.g. T858-TTGA,T124A
+    placeholder: e.g. T858TAAGA,T(-124)A (for residues upstream of ATG -protein coding- or transcription start -RNA genes- use negative numbers in parenthesis)
   #   currently replaced by partial aminoacid deletion
   # - name: nonsense mutation
   #   export_type: nonsense_mutation
