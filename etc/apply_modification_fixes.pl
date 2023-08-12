@@ -146,6 +146,11 @@ my $proc = sub {
             next;
           }
 
+          if ($change_sequence_position_to eq '?') {
+            print "skipping change where new position is unknown: $curs_key $systematic_id $modification $sequence_position->$change_sequence_position_to $reference\n";
+            next;
+          }
+
           print "$curs_key: changing $systematic_id $reference $term_ontid $sequence_position to $change_sequence_position_to\n";
 
           $extension_and_part->{rangeValue} = $change_sequence_position_to;
