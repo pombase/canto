@@ -891,6 +891,7 @@ canto.service('CantoGlobals', function ($window) {
   this.geneListData = $window.geneListData;
   this.hostsWithNoGenes = $window.hostsWithNoGenes;
   this.annotationFigureField = $window.annotation_figure_field;
+  this.allele_qc_api_url = $window.allele_qc_api_url;
 });
 
 canto.service('CantoService', function ($http) {
@@ -3967,9 +3968,44 @@ function makeAutopopulateName(template, geneName) {
   return template.replace(/@@gene_display_name@@/, geneName);
 }
 
+function alleleQCCheckAllele($http, alleleQCUrl, geneSystematicId, alleleDescription,
+                             alleleType, alleleName) {
+  return $http.get(alleleQCUrl + '/check_allele',
+                   {
+                     params: {
+                       systematic_id: geneSystematicId,
+                       allele_description: alleleDescription,
+                       allele_type: alleleType,
+                       allele_name: alleleName,
+                     }
+                   })
+    .then(function(response) {
+      const userFriendlyFields = response.data.user_friendly_fields;
+      const needsFixing = userFriendlyFields.needs_fixing;
+      let errors = null;
+
+      if (needsFixing) {
+        let possibleErrors = [['Pattern error', userFriendlyFields.pattern_error],
+                              ['Invalid description', userFriendlyFields.invalid_error],
+                              ['Sequence error', userFriendlyFields.sequence_error],
+                              ['Description fix', userFriendlyFields.change_description_to],
+                              ['Description type', userFriendlyFields.change_type_to]];
+        errors = possibleErrors.filter((err) => err[1] && err[1] !== '');
+
+        if (errors.length == 0) {
+          errors = [['Error', 'Invalid description']];
+        }
+      }
+
+      return {
+        needsFixing,
+        errors,
+      };
+    });
+}
 
 var alleleEditDialogCtrl =
-  function ($scope, $uibModalInstance, toaster, CantoConfig, args, Curs, CantoGlobals) {
+  function ($scope, $uibModal, $uibModalInstance, $http, toaster, CantoConfig, args, Curs, CantoGlobals) {
     $scope.alleleData = {};
     copyObject(args.allele, $scope.alleleData);
     $scope.taxonId = args.taxonId;
@@ -3990,6 +4026,10 @@ var alleleEditDialogCtrl =
 
     $scope.userIsAdmin = CantoGlobals.current_user_is_admin;
     $scope.pathogenHostMode = CantoGlobals.pathogen_host_mode;
+    $scope.allele_qc_api_url = CantoGlobals.allele_qc_api_url;
+    $scope.descriptionNeedsChecking = false;
+    $scope.descriptionState = 'unset';
+    $scope.lastDescriptionError = '';
 
     $scope.showAlleleTypeField = (
       ! $scope.lockedAlleleType && (
@@ -4077,6 +4117,62 @@ var alleleEditDialogCtrl =
       $scope.alleleData.type = alleleData.type;
       $scope.alleleData.synonyms = alleleData.synonyms;
       processSynonyms();
+    };
+
+    $scope.updateAlleleCheckButton = function() {
+      $scope.descriptionNeedsChecking = false;
+      $scope.descriptionState = 'unset';
+
+      const description = $scope.alleleData.description.trim();
+      const alleleName = $scope.alleleData.name.trim();
+
+      if ($scope.allele_qc_api_url && $scope.userIsAdmin &&
+          alleleName.length > 0 &&
+          description.length > 0) {
+        $scope.descriptionNeedsChecking = true;
+      }
+    };
+
+    $scope.$watch('alleleData.name', $scope.updateAlleleCheckButton);
+
+    $scope.checkDescription = function() {
+      const qcUrl = CantoGlobals.allele_qc_api_url;
+
+      const alleleType = $scope.alleleData.type.trim();
+
+      if (!qcUrl || !$scope.current_type_config) {
+        return;
+      }
+
+      const geneSystematicId = $scope.alleleData.gene_systematic_id;
+      const alleleDescription = $scope.alleleData.description.trim();
+      const alleleName = $scope.alleleData.name.trim();
+      const alleleExportType = $scope.current_type_config.export_type;
+
+      $scope.descriptionNeedsChecking = false;
+
+      const promise =
+            alleleQCCheckAllele($http, qcUrl, geneSystematicId, alleleDescription,
+                                alleleExportType, alleleName);
+
+      promise.then((result) => {
+        if (result.needsFixing) {
+          $scope.descriptionState = 'not-ok';
+          const errors = result.errors;
+          $scope.lastDescriptionError =
+            errors.map((err) => err[0] + ':' + err[1]).join("\n");
+          const errorMessage = '<dl>' +
+                errors
+                .map((err) => '<dt>' + err[0] + '</dt> <dd>' + err[1] + '</dd>' + '</dl>')
+                .join("\n");
+
+          openSimpleDialog($uibModal, 'Allele description problems',
+                           'Allele description problems', errorMessage);
+        } else {
+          $scope.descriptionState = 'ok';
+          $scope.lastDescriptionError = '';
+        }
+      });
     };
 
     $scope.isValidType = function () {
@@ -4199,7 +4295,7 @@ var alleleEditDialogCtrl =
   };
 
 canto.controller('AlleleEditDialogCtrl',
-  ['$scope', '$uibModalInstance', 'toaster', 'CantoConfig', 'args', 'Curs', 'CantoGlobals',
+  ['$scope', '$uibModal', '$uibModalInstance', '$http', 'toaster', 'CantoConfig', 'args', 'Curs', 'CantoGlobals',
     alleleEditDialogCtrl
   ]);
 

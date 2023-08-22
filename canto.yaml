@@ -133,6 +133,9 @@ show_message_for_curators_on_front_page: 0
 # For multi allele genotype, only considering the type of the first allele
 sort_genotype_management_page_by_allele_type: 0
 
+# if set, use this end point to check allele descriptions
+allele_qc_api_url: ~
+
 # from_address - used as the "from" field is all outgoing messages
 # admin_address - the contact address of the admin curators, used to
 #                 alert about completed sessions and problems

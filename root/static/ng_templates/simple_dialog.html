@@ -1,11 +1,10 @@
-<div class="curs-extension-builder-dialog modal-content">
+<div class="modal-content">
   <div ng-show="heading" class="modal-header">
     <h4 class="modal-title">
       {{heading}}
     </h4>
   </div>
-  <div class="modal-body">
-    {{message}}
+  <div class="modal-body" ng-bind-html="message | toTrusted">
   </div>
   <div class="modal-footer">
     <button class="btn btn-primary" ng-click="close()"

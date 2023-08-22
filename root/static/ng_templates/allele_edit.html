@@ -109,8 +109,18 @@
           </td>
           <td ng-class="{ 'has-error': !isValidDescription() }">
             <input ng-model="alleleData.description"
+                   ng-change="updateAlleleCheckButton()"
                    name="curs-allele-description-input" type="text" value=""
                    class="form-control" />
+            <span ng-show="descriptionState == 'ok'"
+                  title="Allele description passes checks"
+                  class="glyphicon glyphicon-ok curs-allele-desc-ok"></span>
+            <span ng-show="descriptionState == 'not-ok'"
+                  title="{{lastDescriptionError}}"
+                  class="glyphicon glyphicon-remove curs-allele-desc-not-ok"></span>
+            <span ng-show="descriptionNeedsChecking" class="allele-description-check">
+              <button class="btn btn-warning" ng-click="checkDescription()">Check</button>
+            </span>
             <span ng-show="!isValidDescription()"
                   class="help-block">Required for this allele type</span>
           </td>

@@ -1411,6 +1411,18 @@ form label.error {
   font-size: 80%;
 }
 
+.curs-allele-desc-ok, .curs-allele-desc-not-ok {
+  font-size: 110%;
+}
+
+.curs-allele-desc-ok {
+  color: #090;
+}
+
+.curs-allele-desc-not-ok {
+  color: #900;
+}
+
 a.curs-editable-table-field {
   white-space: nowrap;
 }
@@ -1984,4 +1996,8 @@ button.curs-annotation-edit-suggest {
 
 .curs-annotation-edit-suggest-new-term-button {
   padding-left: 1em;
+}
+
+dd {
+  margin-left: 1em;
 }
