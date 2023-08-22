@@ -4151,11 +4151,14 @@ var alleleEditDialogCtrl =
 
       $scope.descriptionNeedsChecking = false;
 
+      loadingStart();
+
       const promise =
             alleleQCCheckAllele($http, qcUrl, geneSystematicId, alleleDescription,
                                 alleleExportType, alleleName);
 
       promise.then((result) => {
+        loadingEnd();
         if (result.needsFixing) {
           $scope.descriptionState = 'not-ok';
           const errors = result.errors;
@@ -4175,6 +4178,9 @@ var alleleEditDialogCtrl =
           toaster.pop({type: 'info', title: 'Allele description passes checks',
                        timeout: 5000, showCloseButton: true });
         }
+      })
+      .finally(function () {
+        loadingEnd();
       });
     };
 
