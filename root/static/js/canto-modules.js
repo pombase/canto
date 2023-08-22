@@ -4171,6 +4171,9 @@ var alleleEditDialogCtrl =
         } else {
           $scope.descriptionState = 'ok';
           $scope.lastDescriptionError = '';
+
+          toaster.pop({type: 'info', title: 'Allele description passes checks',
+                       timeout: 5000, showCloseButton: true });
         }
       });
     };
