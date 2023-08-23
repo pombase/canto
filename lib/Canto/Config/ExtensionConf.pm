@@ -109,7 +109,18 @@ sub parse {
       my @new_range_bits = ();
       my @new_ontology_range_scope = ();
 
+      my $range_check = undef;
+
       map {
+        if (m|^/allele_qc/.*|) {
+          # nasty special case for now
+          $range_check = {
+            checker => 'allele_qc',
+            url => $_,
+          };
+          $_ = 'Text';
+        }
+
         if (/:/) {
           push @new_ontology_range_scope, $_;
         } elsif (/^Number$/i) {
@@ -178,6 +189,7 @@ sub parse {
         role => $role,
         annotation_type_name => $annotation_type_name,
         feature_type => $feature_type,
+        range_check => $range_check,
       );
 
       if ($domain =~ /(\S+)-(\S+)/) {
