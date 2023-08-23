@@ -37,6 +37,11 @@ __PACKAGE__->table("allele");
   data_type: 'text'
   is_nullable: 0
 
+=head2 external_uniquename
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 type
 
   data_type: 'text'
@@ -85,6 +90,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "primary_identifier",
   { data_type => "text", is_nullable => 0 },
+  "external_uniquename",
+  { data_type => "text", is_nullable => 1 },
   "type",
   { data_type => "text", is_nullable => 0 },
   "description",

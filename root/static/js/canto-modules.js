@@ -3952,13 +3952,13 @@ var alleleNameComplete =
       replace: true,
       template: '<span><input ng-model="alleleName" placeholder="{{placeholder}}" type="text" class="curs-allele-name aform-control" value=""/></span>',
       controller: function ($scope) {
-        $scope.allelePrimaryIdentifier = null;
+        $scope.externalUniquename = null;
         $scope.alleleSynonyms = null;
         $scope.alleleDescription = null;
         $scope.alleleType = null;
 
         $scope.clicked = function () {
-          $scope.merge = $scope.alleleDescription + ' ' + $scope.allelePrimaryIdentifier;
+          $scope.merge = $scope.alleleDescription + ' ' + $scope.externalUniquename;
         };
       },
       link: function (scope, elem) {
@@ -3981,7 +3981,7 @@ var alleleNameComplete =
 
               return {
                 value: el.name,
-                allele_primary_identifier: el.uniquename,
+                external_uniquename: el.uniquename,
                 display_name: el.display_name,
                 description: el.description,
                 synonyms: synonyms,
@@ -4001,10 +4001,10 @@ var alleleNameComplete =
           },
           select: function (event, ui) {
             scope.$apply(function () {
-              if (typeof (ui.item.allele_primary_identifier) === 'undefined') {
-                scope.allelePrimaryIdentifier = '';
+              if (typeof (ui.item.external_uniquename) === 'undefined') {
+                scope.externalUniquename = '';
               } else {
-                scope.allelePrimaryIdentifier = ui.item.allele_primary_identifier;
+                scope.externalUniquename = ui.item.external_uniquename;
               }
               scope.alleleType = ui.item.type;
               if (typeof (ui.item.label) === 'undefined') {
@@ -4021,7 +4021,7 @@ var alleleNameComplete =
 
               scope.nameSelected({
                 alleleData: {
-                  primaryIdentifier: scope.allelePrimaryIdentifier,
+                  external_uniquename: scope.externalUniquename,
                   name: scope.alleleName,
                   synonyms: scope.alleleSynonyms,
                   description: scope.alleleDescription,
@@ -4274,7 +4274,7 @@ var alleleEditDialogCtrl =
     $scope.$watch('alleleData.type', updateAlleleType);
 
     $scope.nameSelectedCallback = function(alleleData) {
-      $scope.alleleData.primary_identifier = alleleData.primaryIdentifier;
+      $scope.alleleData.external_uniquename = alleleData.external_uniquename;
       $scope.alleleData.name = alleleData.name;
       $scope.alleleData.description = alleleData.description;
       $scope.alleleData.type = alleleData.type;
@@ -4530,7 +4530,7 @@ var alleleEditDialogCtrl =
           return;
         }
 
-        if ($scope.alleleData.primary_identifier) {
+        if ($scope.alleleData.external_uniquename) {
           return;
         }
 

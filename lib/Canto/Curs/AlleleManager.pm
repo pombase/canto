@@ -158,6 +158,7 @@ sub allele_from_json
   my $schema = $self->curs_schema();
 
   my $primary_identifier = $json_allele->{primary_identifier};
+  my $external_uniquename = $json_allele->{external_uniquename};
   my $name = $json_allele->{name};
 
   # store deltas as "delta"
@@ -201,38 +202,40 @@ sub allele_from_json
         # fall through and find another allele that matches, or create
         # another
       }
-    } else {
-      # find the Chado allele and add to the CursDB
-      my $lookup = Canto::Track::get_adaptor($config, 'allele');
-
-      my $allele_details = $lookup->lookup_by_uniquename($primary_identifier);
-
-      if (!defined $allele_details) {
-        die qq(internal error - allele "$primary_identifier" is missing);
-      }
-
-      $allele_type = $allele_details->{type};
-      $description = $allele_details->{description};
-      $name = $allele_details->{name};
-
-      my $gene_identifier = $allele_details->{gene_uniquename};
-
-      my $gene_rs = $self->get_ordered_gene_rs($schema);
-      my $curs_gene = $gene_rs->find({
-        primary_identifier => $gene_identifier,
-      });
-
-      if (!defined $curs_gene) {
-        my $gene_lookup = Canto::Track::get_adaptor($config, 'gene');
-        my $lookup_result = $gene_lookup->lookup([$gene_identifier]);
-        my %new_gene_details =
-          $self->gene_manager()->create_genes_from_lookup($lookup_result);
-
-        $curs_gene = $new_gene_details{$gene_identifier};
-      }
-
-      $gene_id = $curs_gene->gene_id();
     }
+  }
+
+  if ($external_uniquename) {
+    # find the Chado allele and add to the CursDB
+    my $lookup = Canto::Track::get_adaptor($config, 'allele');
+
+    my $allele_details = $lookup->lookup_by_uniquename($external_uniquename);
+
+    if (!defined $allele_details) {
+      die qq(internal error - allele "$external_uniquename" is missing);
+    }
+
+    $allele_type = $allele_details->{type};
+    $description = $allele_details->{description};
+    $name = $allele_details->{name};
+
+    my $gene_identifier = $allele_details->{gene_uniquename};
+
+    my $gene_rs = $self->get_ordered_gene_rs($schema);
+    my $curs_gene = $gene_rs->find({
+      primary_identifier => $gene_identifier,
+    });
+
+    if (!defined $curs_gene) {
+      my $gene_lookup = Canto::Track::get_adaptor($config, 'gene');
+      my $lookup_result = $gene_lookup->lookup([$gene_identifier]);
+      my %new_gene_details =
+        $self->gene_manager()->create_genes_from_lookup($lookup_result);
+
+      $curs_gene = $new_gene_details{$gene_identifier};
+    }
+
+    $gene_id = $curs_gene->gene_id();
   }
 
   my @allele_synonyms = @{$json_allele->{synonyms} // []};
@@ -294,6 +297,7 @@ sub allele_from_json
 
   my %create_args = (
     primary_identifier => $new_primary_identifier,
+    external_uniquename => $external_uniquename,
     %search_args,
     name => $name || undef,
     description => $description || undef,
