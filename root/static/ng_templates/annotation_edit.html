@@ -125,7 +125,7 @@
           </extension-display>
           <span ng-show="matchingConfigurations.length > 0 || annotation.extension.length > 0">
             <button class="btn btn-default btn-xs"
-                    ng-click="editExtension(annotation.term_ontid, annotation.feature_display_name)">
+                    ng-click="editExtension()">
               <span ng-show="annotation.extension.length == 0">Add</span>
               <span ng-show="annotation.extension.length > 0">Edit</span> ...
             </button>
