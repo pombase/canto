@@ -811,6 +811,7 @@ sub _allele_details_hash
 
   my $display_name = $allele->display_name($self->config());
   my $long_display_name = $allele->long_identifier($self->config());
+  my $external_uniquename = $allele->external_uniquename();
 
   my @synonyms_list = _make_allelesynonym_hashes($allele);
 
@@ -829,6 +830,7 @@ sub _allele_details_hash
     expression => $allele->expression(),
     display_name => $display_name,
     long_display_name => $long_display_name,
+    external_uniquename => $external_uniquename,
     comment => $allele->comment(),
     allele_id => $allele->allele_id(),
     promoter_gene => $allele->promoter_gene(),
