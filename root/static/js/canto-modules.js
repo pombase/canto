@@ -4092,6 +4092,7 @@ function alleleQCCheckAllele($http, alleleQCUrl, geneSystematicId, alleleDescrip
       const userFriendlyFields = response.data.user_friendly_fields;
       const needsFixing = userFriendlyFields.needs_fixing;
       let errors = null;
+      let summaryParts = [];
 
       if (needsFixing) {
         let possibleErrors = [['Pattern error', userFriendlyFields.pattern_error],
@@ -4104,10 +4105,19 @@ function alleleQCCheckAllele($http, alleleQCUrl, geneSystematicId, alleleDescrip
         if (errors.length == 0) {
           errors = [['Error', 'Invalid description']];
         }
+
+        if (userFriendlyFields.allele_parts) {
+          summaryParts.push(userFriendlyFields.allele_parts);
+        }
+
+        if (userFriendlyFields.rules_applied) {
+          summaryParts.push(userFriendlyFields.rules_applied);
+        }
       }
 
       return {
         needsFixing,
+        summaryParts,
         errors,
       };
     });
@@ -4271,15 +4281,25 @@ var alleleEditDialogCtrl =
         if (result.needsFixing) {
           $scope.descriptionState = 'not-ok';
           const errors = result.errors;
+          const summaryParts = result.summaryParts;
+
           $scope.lastDescriptionError =
             errors.map((err) => err[0] + ':' + err[1]).join("\n");
-          const errorMessage = '<dl>' +
-                errors
-                .map((err) => '<dt>' + err[0] + '</dt> <dd>' + err[1] + '</dd>' + '</dl>')
-                .join("\n");
+          const errorMessages = '<dl>' + errors
+                .map((err) => '<dt>' + err[0] + '</dt> <dd>' + err[1] + '</dd>')
+                .join("\n") + '</dl>';
+
+          let content = '';
+          if (summaryParts.length > 0) {
+            content += '<div class="allele-desc-problem-summ">' +
+              summaryParts.map((part) => '<div>' + part + '</div>').join("\n") +
+              '</div>';
+          }
+
+          content += errorMessages;
 
           openSimpleDialog($uibModal, 'Allele description problems',
-                           'Allele description problems', errorMessage);
+                           'Allele description problems', content);
         } else {
           $scope.descriptionState = 'ok';
           $scope.lastDescriptionError = '';
