@@ -37,6 +37,11 @@ __PACKAGE__->table("allele");
   data_type: 'text'
   is_nullable: 0
 
+=head2 external_uniquename
+
+  data_type: 'text'
+  is_nullable: 1
+
 =head2 type
 
   data_type: 'text'
@@ -75,6 +80,8 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "primary_identifier",
   { data_type => "text", is_nullable => 0 },
+  "external_uniquename",
+  { data_type => "text", is_nullable => 1 },
   "type",
   { data_type => "text", is_nullable => 0 },
   "description",
@@ -183,8 +190,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2019-10-08 11:24:16
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:L8iHcJQfZHkX+adKaRSTGw
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2023-08-23 22:31:16
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6m1hPo6nnyBjR25OuiY+Sw
 
 __PACKAGE__->many_to_many('genotypes' => 'allele_genotypes',
                           'genotype');
