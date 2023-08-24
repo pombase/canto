@@ -823,7 +823,7 @@ sub _allele_details_hash
   } $allele->allele_notes()->all();
 
   my %result = (
-    uniquename => $allele->primary_identifier(),
+    primary_identifier => $allele->primary_identifier(),
     name => $allele->name(),
     description => $allele->description(),
     type => $allele->type(),
@@ -898,6 +898,7 @@ sub _get_alleles
       if (!grep {
         ($_->{name} // 'no_name') eq ($new_res->{name} // 'no_name');
       } @res) {
+        $new_res->{external_uniquename} = $new_res->{uniquename};
         push @res, $new_res;
       }
     }

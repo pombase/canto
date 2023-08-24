@@ -102,11 +102,7 @@
               <td>{{allele.description}}</td>
               <td ng-if="allelesHaveExpression">{{allele.expression}}</td>
               <td class="curs-table-row-remove">
-                <div ng-if="allele.primary_identifier">
-                  <span title="This is a pre-existing allele that can't be edited.  If this isn't the allele you need, please remove it from the genotype and add another"
-                        class="curs-genotype-edit-existing-allele-edit">Edit</span>
-                </div>
-                <div ng-if="!allele.primary_identifier">
+                <div>
                   <a href="" style="white-space: nowrap;"
                      ng-click="openAlleleEditDialog(false, allele)">Edit</a>
                 </div>

@@ -3993,7 +3993,7 @@ var alleleNameComplete =
 
               return {
                 value: el.name,
-                external_uniquename: el.uniquename,
+                external_uniquename: el.external_uniquename,
                 display_name: el.display_name,
                 description: el.description,
                 synonyms: synonyms,
@@ -4933,6 +4933,7 @@ var genotypeEdit =
         $scope.allelesEqual = function (allele1, allele2) {
           return allele1.type === allele2.type &&
             allele1.gene_id === allele2.gene_id &&
+            (allele1.description || '') === (allele2.description) &&
             (allele1.expression || '') === (allele2.expression || '') &&
             (allele1.name || '') === (allele2.name || '');
         };
