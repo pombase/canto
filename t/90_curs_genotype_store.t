@@ -72,7 +72,7 @@ test_psgi $app, sub {
             },
             {
               # allele from Chado
-              primary_identifier => 'SPBC12C2.02c:allele-3',
+              external_uniquename => 'SPBC12C2.02c:allele-3',
               gene_id => $c12c2_gene->gene_id(),
            },
           ]
@@ -146,7 +146,7 @@ test_psgi $app, sub {
       { primary_identifier => $_->primary_identifier() }
     } $curs_schema->resultset('Genotype')
       ->first()->alleles()->all()),
-    { primary_identifier => 'SPAC27D7.13c:allele-2' });
+    { external_uniquename => 'SPAC27D7.13c:allele-2' });
 
   $new_genotype =
     $curs_schema->resultset('Genotype')

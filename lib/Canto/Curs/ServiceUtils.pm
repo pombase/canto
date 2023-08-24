@@ -830,12 +830,15 @@ sub _allele_details_hash
     expression => $allele->expression(),
     display_name => $display_name,
     long_display_name => $long_display_name,
-    external_uniquename => $external_uniquename,
     comment => $allele->comment(),
     allele_id => $allele->allele_id(),
     synonyms => \@synonyms_list,
     notes => \%notes,
   );
+
+  if ($external_uniquename) {
+    $result{external_uniquename} = $external_uniquename;
+  }
 
   if ($allele->type() !~ /^aberration/) {
     $result{gene_id} = $allele->gene()->gene_id();

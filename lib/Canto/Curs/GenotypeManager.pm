@@ -741,7 +741,7 @@ sub _store_chado_genotype
 
   my @alleles_data = map {
     {
-      primary_identifier => $_,
+      external_uniquename => $_,
     };
   } @{$chado_genotype_details->{allele_identifiers}};
 
