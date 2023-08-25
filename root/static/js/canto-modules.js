@@ -3983,6 +3983,7 @@ var alleleNameComplete =
                 value: el.name,
                 external_uniquename: el.external_uniquename,
                 display_name: el.display_name,
+                long_display_name: el.long_display_name,
                 description: el.description,
                 synonyms: synonyms,
                 type: el.type,
@@ -4032,7 +4033,7 @@ var alleleNameComplete =
           }
         }).data("autocomplete")._renderItem = function (ul, item) {
           var inputValue = elem.find('input').val().trim().toLowerCase();
-          var displayName = item.display_name;
+          var displayName = item.long_display_name || item.display_name;
           if (displayName.indexOf(inputValue) == -1) {
             if (item.synonyms) {
               SYN:
