@@ -64,7 +64,7 @@ with 'Canto::Chado::ChadoLookup';
            max_results - maximum matches to return [optional, default 10]
  Return  : [ { description: "some allele description",
                display_name: "a pretty name for the user",
-               uniquename: "database unique identifier for the allele",
+               external_uniquename: "database unique identifier for the allele",
                name: "allele name"
                type: "allele type"
              }, { < next match > }, ... ]
@@ -77,12 +77,12 @@ with 'Canto::Chado::ChadoLookup';
              [{
                "description": "wild type",
                "display_name": "ste20+(wild type)",
-               "uniquename": "SPBC12C2.02c:allele-5",
+               "external_uniquename": "SPBC12C2.02c:allele-5",
                "name": "ste20+",
                "type": "wild type"
              },
              {
-               "uniquename": "SPBC12C2.02c:allele-3",
+               "external_uniquename": "SPBC12C2.02c:allele-3",
                "display_name": "ste20delta(deletion)",
                "description": "deletion",
                "name": "ste20delta",
@@ -141,7 +141,7 @@ sub lookup
    (
      $_->feature_id() => {
        name => $_->name(),
-       uniquename => $_->uniquename(),
+       external_uniquename => $_->uniquename(),
      }
    )
   } $rs->all();
@@ -161,7 +161,7 @@ sub lookup
     map {
       $res{$_->feature_id()} = {
         name => $_->name(),
-        uniquename => $_->uniquename(),
+        external_uniquename => $_->uniquename(),
       };
     } $synonym_rs->all();
   }
@@ -229,7 +229,7 @@ sub lookup
                                 table eg. "SPBC12C2.02c:allele-5"
  Return  : Returns a hash ref in the form:
              {
-               "uniquename": "SPBC12C2.02c:allele-5",
+               "external_uniquename": "SPBC12C2.02c:allele-5",
                "name": "ste20+",
                "description": "wild type",
                "display_name": "ste20+(wild type)",
@@ -285,7 +285,7 @@ sub lookup_by_uniquename
                                             $props{description});
 
     return {
-      uniquename => $uniquename,
+      external_uniquename => $uniquename,
       display_name => $display_name,
       name => $allele->name(),
       description => $props{description},
