@@ -900,7 +900,6 @@ sub _get_alleles
       if (!grep {
         ($_->{name} // 'no_name') eq ($new_res->{name} // 'no_name');
       } @res) {
-        $new_res->{external_uniquename} = $new_res->{uniquename};
         push @res, $new_res;
       }
     }
