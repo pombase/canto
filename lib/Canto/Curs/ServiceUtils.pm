@@ -901,12 +901,8 @@ sub _get_alleles
 
     while (@res < $max_results && @$lookup_res > 0) {
       my $new_res = shift @$lookup_res;
-      # add if there are no alleles with that name
-      if (!grep {
-        ($_->{name} // 'no_name') eq ($new_res->{name} // 'no_name');
-      } @res) {
-        push @res, $new_res;
-      }
+      $new_res->{display_name} = $new_res->{display_name} . ' (existing)';
+      push @res, $new_res;
     }
   }
 
