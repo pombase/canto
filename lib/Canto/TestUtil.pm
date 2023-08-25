@@ -66,7 +66,7 @@ our %shared_test_results = (
       [
         {
           'description' => 'K132A',
-          'display_name' => 'ste20-c1(K132A)',
+          'display_name' => 'ste20-c1(aaK132A) (existing)',
           'external_uniquename' => 'SPBC12C2.02c:allele-2',
           'name' => 'ste20-c1',
           'type' => 'amino acid substitution(s)',
@@ -74,7 +74,7 @@ our %shared_test_results = (
         },
         {
           'description' => 'K132A,K144A',
-          'display_name' => 'ste20-c2(K132A,K144A)',
+          'display_name' => 'ste20-c2(aaK132A,K144A) (existing)',
           'external_uniquename' => 'SPBC12C2.02c:allele-3',
           'name' => 'ste20-c2',
           'type' => 'amino acid substitution(s)',
@@ -82,7 +82,7 @@ our %shared_test_results = (
         },
         {
           'description' => 'del_x1',
-          'display_name' => 'ste20delta(del_x1)',
+          'display_name' => 'ste20delta(del_x1) (existing)',
           'external_uniquename' => 'SPBC12C2.02c:allele-1',
           'name' => 'ste20delta',
           'type' => 'deletion',
