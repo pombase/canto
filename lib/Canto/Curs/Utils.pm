@@ -1616,8 +1616,8 @@ sub make_allele_display_name
     $description = '';
   }
 
-  if ($type =~ /substitution/) {
-    if ($type =~ /amino acid/) {
+  if ($type =~ /substitution|mutation/) {
+    if ($type =~ /amino.acid/) {
       $description =~ s/^/aa/g;
     } else {
       if ($type =~ /nucleotide/) {
