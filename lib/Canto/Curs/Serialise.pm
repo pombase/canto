@@ -584,6 +584,9 @@ sub _get_alleles
     if (defined $allele->primary_identifier()) {
       $allele_data{primary_identifier} = $allele->primary_identifier();
     }
+    if (defined $allele->external_uniquename()) {
+      $allele_data{external_uniquename} = $allele->external_uniquename();
+    }
     if (defined $allele->description()) {
       $allele_data{description} = $allele->description();
     }

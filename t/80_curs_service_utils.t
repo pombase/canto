@@ -1048,7 +1048,7 @@ my $allele_res = $service_utils->list_for_service('allele', 'SPAC27D7.13c', 'ssm
 cmp_deeply($allele_res,
            [
             {
-              'uniquename' => 'SPAC27D7.13c:aaaa0007-1',
+              'primary_identifier' => 'SPAC27D7.13c:aaaa0007-1',
               'description' => 'deletion',
               'expression' => undef,
               'display_name' => 'ssm4delta',
@@ -1067,7 +1067,7 @@ cmp_deeply($allele_res,
               'allele_id' => 3,
               'gene_id' => 2,
               'description' => 'del_100-200',
-              'uniquename' => 'SPAC27D7.13c:aaaa0007-3',
+              'primary_identifier' => 'SPAC27D7.13c:aaaa0007-3',
               'expression' => 'Knockdown',
               'display_name' => 'ssm4-D4(del_100-200)',
               'long_display_name' => 'ssm4-D4(del_100-200)[Knockdown]',
@@ -1082,7 +1082,7 @@ cmp_deeply($allele_res,
               },
             },
             {
-              'uniquename' => 'SPAC27D7.13c:allele-2',
+              'external_uniquename' => 'SPAC27D7.13c:allele-2',
               'type' => 'partial deletion, nucleotide',
               'display_name' => 'ssm4-L1(80-90)',
               'description' => '80-90',
@@ -1093,8 +1093,11 @@ cmp_deeply($allele_res,
 
 $allele_res = $service_utils->list_for_service('allele', 'SPBC12C2.02c', 'ste');
 
-cmp_deeply($allele_res,
-           $Canto::TestUtil::shared_test_results{allele}{ste});
+my $expected_res = $Canto::TestUtil::shared_test_results{allele}{ste};
+
+
+
+cmp_deeply($allele_res, $expected_res);
 
 
 my $expected_genotype_detail_res =
@@ -1119,7 +1122,7 @@ my $expected_genotype_detail_res =
         'gene_id' => 2,
         'name' => 'ssm4delta',
         'type' => 'deletion',
-        'uniquename' => 'SPAC27D7.13c:aaaa0007-1',
+        'primary_identifier' => 'SPAC27D7.13c:aaaa0007-1',
         'gene_display_name' => 'ssm4',
         'gene_systematic_id' => 'SPAC27D7.13c',
         'synonyms' => [],
@@ -1135,7 +1138,7 @@ my $expected_genotype_detail_res =
         'gene_id' => 4,
         'name' => 'SPCC63.05delta',
         'type' => 'deletion',
-        'uniquename' => 'SPCC63.05:aaaa0007-1',
+        'primary_identifier' => 'SPCC63.05:aaaa0007-1',
         'gene_display_name' => 'SPCC63.05',
         'gene_systematic_id' => 'SPCC63.05',
         'synonyms' => [],
