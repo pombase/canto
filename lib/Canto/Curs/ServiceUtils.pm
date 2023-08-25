@@ -54,6 +54,7 @@ use Canto::Curs::MetadataStorer;
 use Canto::Curs::OrganismManager;
 use Canto::Curs::StrainManager;
 use Canto::Curs::GeneProxy;
+use Canto::Util qw(trim);
 
 has curs_schema => (is => 'ro', isa => 'Canto::CursDB', required => 1);
 
@@ -863,6 +864,12 @@ sub _get_alleles
   my $search_string = shift;
   my $curs_schema = $self->curs_schema();
   my $query = {};
+
+  if (!defined $search_string) {
+    return ();
+  }
+
+  $search_string = trim($search_string);
 
   if ($gene_primary_identifier ne ':ALL:') {
     $query = {
