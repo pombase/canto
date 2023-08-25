@@ -1084,10 +1084,18 @@ cmp_deeply($allele_res,
             {
               'external_uniquename' => 'SPAC27D7.13c:allele-2',
               'type' => 'partial deletion, nucleotide',
-              'display_name' => 'ssm4-L1(80-90)',
+              'display_name' => 'ssm4-L1(80-90) (existing)',
               'description' => '80-90',
               'name' => 'ssm4-L1',
               'synonyms' => [],
+            },
+            {
+              'external_uniquename' => 'SPAC27D7.13c:allele-1',
+              'synonyms' => [],
+              'description' => 'deletion',
+              'type' => 'deletion',
+              'name' => 'ssm4delta',
+              'display_name' => 'ssm4delta (existing)'
             },
           ]);
 
@@ -1098,6 +1106,7 @@ my $expected_res = $Canto::TestUtil::shared_test_results{allele}{ste};
 
 
 cmp_deeply($allele_res, $expected_res);
+
 
 
 my $expected_genotype_detail_res =
