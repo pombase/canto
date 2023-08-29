@@ -1488,7 +1488,7 @@ allele_type_list:
     export_type: amino_acid_insertion
     show_description: true
     description_required: true
-    allele_name_required: false
+    allele_name_required: true
     allow_expression_change: true
     expression_required: true
     placeholder: e.g. A858AMKGYP (insertion of MKGYP after A858, note A before and after number)
@@ -1496,7 +1496,7 @@ allele_type_list:
     export_type: amino_acid_mutation
     show_description: true
     description_required: true
-    allele_name_required: false
+    allele_name_required: true
     allow_expression_change: true
     expression_required: true
     placeholder: eg. K132A or F256A,F310A
@@ -1504,7 +1504,7 @@ allele_type_list:
     export_type: amino_acid_insertion_and_mutation
     show_description: true
     description_required: true
-    allele_name_required: false
+    allele_name_required: true
     allow_expression_change: true
     expression_required: true
     placeholder: e.g. A858AMKGYP,F124D
@@ -1512,7 +1512,7 @@ allele_type_list:
     export_type: amino_acid_insertion_and_deletion
     show_description: true
     description_required: true
-    allele_name_required: false
+    allele_name_required: true
     allow_expression_change: true
     expression_required: true
     placeholder: e.g. A858AMKGYP,100-200,P500*
@@ -1520,7 +1520,7 @@ allele_type_list:
     export_type: amino_acid_deletion_and_mutation
     show_description: true
     description_required: true
-    allele_name_required: false
+    allele_name_required: true
     allow_expression_change: true
     expression_required: true
     placeholder: e.g. 100-200,F124D,P500*
@@ -1528,7 +1528,7 @@ allele_type_list:
     export_type: partial_amino_acid_deletion
     show_description: true
     description_required: true
-    allele_name_required: false
+    allele_name_required: true
     allow_expression_change: true
     expression_required: true
     placeholder: "Specify deleted residues - eg. 100-200 OR 10-20,40-50. Use P500* for nonsense mutation"
@@ -1536,7 +1536,7 @@ allele_type_list:
     export_type: nucleotide_insertion
     show_description: true
     description_required: true
-    allele_name_required: false
+    allele_name_required: true
     allow_expression_change: true
     expression_required: true
     placeholder: e.g. C132CAATTT (insertion of AATTT after C132, note C before and after number))
@@ -1544,7 +1544,7 @@ allele_type_list:
     export_type: nucleotide_mutation
     show_description: true
     description_required: true
-    allele_name_required: false
+    allele_name_required: true
     allow_expression_change: true
     expression_required: true
     placeholder: eg. A25G, OR A(-25)G (for residues upstream of ATG -protein coding- or transcription start -RNA genes-)
@@ -1552,7 +1552,7 @@ allele_type_list:
     export_type: partial_nucleotide_deletion
     show_description: true
     description_required: true
-    allele_name_required: false
+    allele_name_required: true
     allow_expression_change: true
     expression_required: true
     placeholder: "Specify deleted residues - eg. 100-200 OR (-20)-(-30) (for residues upstream of ATG -protein coding- or transcription start -RNA genes-)"
@@ -1560,7 +1560,7 @@ allele_type_list:
     export_type: nucleotide_deletion_and_mutation
     show_description: true
     description_required: true
-    allele_name_required: false
+    allele_name_required: true
     allow_expression_change: true
     expression_required: true
     placeholder: e.g. 100-200,A124T,C128G (for residues upstream of ATG -protein coding- or transcription start -RNA genes- use negative numbers in parenthesis)
@@ -1568,7 +1568,7 @@ allele_type_list:
     export_type: nucleotide_insertion_and_mutation
     show_description: true
     description_required: true
-    allele_name_required: false
+    allele_name_required: true
     allow_expression_change: true
     expression_required: true
     placeholder: e.g. T858TAAGA,T(-124)A (for residues upstream of ATG -protein coding- or transcription start -RNA genes- use negative numbers in parenthesis)
@@ -1593,7 +1593,7 @@ allele_type_list:
     export_type: other
     show_description: true
     description_required: true
-    allele_name_required: false
+    allele_name_required: true
     allow_expression_change: true
     expression_required: true
     placeholder: Please provide a description

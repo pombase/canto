@@ -240,14 +240,14 @@ my $config_for_json = $config_with_suffix->for_json('allele_types');
 
 my $description_required =
   $config_for_json->{'nucleotide substitution(s)'}->{description_required};
-my $allele_name_required =
-  $config_for_json->{'nucleotide substitution(s)'}->{allele_name_required};
+my $show_description =
+  $config_for_json->{'deletion'}->{show_description};
 
 ok ($description_required);
-ok (!$allele_name_required);
+ok (!$show_description);
 
 ok ($description_required == JSON::true);
-ok ($allele_name_required == JSON::false);
+ok ($show_description == JSON::false);
 
 # species taxon ID lookup
 is ($config_single->get_species_taxon_of_strain_taxon(1238467), 168172);
