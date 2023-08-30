@@ -4246,7 +4246,6 @@ var alleleEditDialogCtrl =
       const alleleName = $scope.alleleData.name.trim();
 
       if ($scope.allele_qc_api_url && $scope.userIsAdmin &&
-          alleleName.length > 0 &&
           description.length > 0) {
         $scope.descriptionNeedsChecking = true;
       }
