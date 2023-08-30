@@ -133,8 +133,13 @@ sub lookup
   $ua->default_header('Accept', 'text/plain');
   my $res = $ua->get($url);
 
+  if ($res->status_line() =~ /^404\s.*/) {
+    return (0, []);
+  }
+
   if (!$res->is_success && $res->status_line() !~ /^404\s.*/) {
     warn $res->status_line();
+    return (0, []);
   }
 
   my $content = $res->decoded_content();
