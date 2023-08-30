@@ -4149,6 +4149,7 @@ var alleleEditDialogCtrl =
     $scope.descriptionNeedsChecking = false;
     $scope.descriptionState = 'unset';
     $scope.lastDescriptionError = '';
+    $scope.okInProgress = false;
 
     $scope.showAlleleTypeField = (
       ! $scope.lockedAlleleType && (
@@ -4303,13 +4304,15 @@ var alleleEditDialogCtrl =
           $scope.descriptionState = 'ok';
           $scope.lastDescriptionError = '';
 
-          toaster.pop({type: 'info', title: 'Allele description passes checks',
-                       timeout: 5000, showCloseButton: true });
+//          toaster.pop({type: 'info', title: 'Allele description passes checks',
+//                       timeout: 5000, showCloseButton: true });
         }
       })
       .finally(function () {
         loadingEnd();
       });
+
+      return promise;
     };
 
     $scope.isValidType = function () {
@@ -4343,12 +4346,40 @@ var alleleEditDialogCtrl =
       }
     };
 
+    $scope.okTitle = function() {
+      if ($scope.isExistingAllele()) {
+        return 'Finish editing this allele';
+      }
+
+      if ($scope.descriptionState == 'not-ok') {
+        return 'Fix the allele description to continue';
+      }
+
+      if (!$scope.isValidName()) {
+        return 'Set the allele name to continue';
+      }
+
+      if (!$scope.isValidType()) {
+        return 'Set the allele type to continue';
+      }
+
+      if (!$scope.isValidDescription()) {
+        return 'Set the allele description to continue';
+      }
+
+      return 'Finish editing this allele';
+    };
+
     $scope.isValid = function () {
+      if ($scope.descriptionState == 'not-ok') {
+        return false;
+      }
+
       return $scope.isValidExpression() &&
         (
           $scope.isExistingAllele() ||
-          $scope.isValidType() && $scope.isValidName() &&
-          $scope.isValidDescription()
+            $scope.isValidType() && $scope.isValidName() &&
+            $scope.isValidDescription()
         ) &&
         $scope.isValidStrain();
     };
@@ -4377,20 +4408,35 @@ var alleleEditDialogCtrl =
     }
 
     $scope.ok = function () {
-      if ($scope.isValid()) {
-        splitSynonymsForStoring($scope.alleleData, $scope.data.newSynonymsString);
-        copyObject($scope.alleleData, args.allele);
-        var strainName = null;
-        if ($scope.strainData.selectedStrain) {
-          strainName = $scope.strainData.selectedStrain.strain_name;
-        }
-        $uibModalInstance.close({
-          alleleData: args.allele,
-          strainName: strainName
-        });
-      } else {
-        toaster.pop('error', "No changes have been made");
+      if ($scope.descriptionState == 'not-ok') {
+        return;
       }
+
+      const promise = $scope.checkDescription();
+
+      promise.then(() => {
+        if ($scope.descriptionState == 'not-ok') {
+          return;
+        }
+
+        if ($scope.isValid()) {
+          $scope.okInProgress = true;
+          splitSynonymsForStoring($scope.alleleData, $scope.data.newSynonymsString);
+          copyObject($scope.alleleData, args.allele);
+          var strainName = null;
+          if ($scope.strainData.selectedStrain) {
+            strainName = $scope.strainData.selectedStrain.strain_name;
+          }
+          setTimeout(function () {
+            $uibModalInstance.close({
+              alleleData: args.allele,
+              strainName: strainName
+            });
+          }, 400);
+        } else {
+          toaster.pop('error', "No changes have been made");
+        }
+      });
     };
 
     $scope.cancel = function () {
