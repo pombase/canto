@@ -1488,6 +1488,7 @@ allele_type_list:
     export_type: amino_acid_insertion
     show_description: true
     description_required: true
+    check_description_with_api: true
     allele_name_required: true
     allow_expression_change: true
     expression_required: true
@@ -1496,6 +1497,7 @@ allele_type_list:
     export_type: amino_acid_mutation
     show_description: true
     description_required: true
+    check_description_with_api: true
     allele_name_required: true
     allow_expression_change: true
     expression_required: true
@@ -1504,6 +1506,7 @@ allele_type_list:
     export_type: amino_acid_insertion_and_mutation
     show_description: true
     description_required: true
+    check_description_with_api: true
     allele_name_required: true
     allow_expression_change: true
     expression_required: true
@@ -1512,6 +1515,7 @@ allele_type_list:
     export_type: amino_acid_insertion_and_deletion
     show_description: true
     description_required: true
+    check_description_with_api: true
     allele_name_required: true
     allow_expression_change: true
     expression_required: true
@@ -1520,6 +1524,7 @@ allele_type_list:
     export_type: amino_acid_deletion_and_mutation
     show_description: true
     description_required: true
+    check_description_with_api: true
     allele_name_required: true
     allow_expression_change: true
     expression_required: true
@@ -1528,6 +1533,7 @@ allele_type_list:
     export_type: partial_amino_acid_deletion
     show_description: true
     description_required: true
+    check_description_with_api: true
     allele_name_required: true
     allow_expression_change: true
     expression_required: true
@@ -1536,6 +1542,7 @@ allele_type_list:
     export_type: nucleotide_insertion
     show_description: true
     description_required: true
+    check_description_with_api: true
     allele_name_required: true
     allow_expression_change: true
     expression_required: true
@@ -1544,6 +1551,7 @@ allele_type_list:
     export_type: nucleotide_mutation
     show_description: true
     description_required: true
+    check_description_with_api: true
     allele_name_required: true
     allow_expression_change: true
     expression_required: true
@@ -1552,6 +1560,7 @@ allele_type_list:
     export_type: partial_nucleotide_deletion
     show_description: true
     description_required: true
+    check_description_with_api: true
     allele_name_required: true
     allow_expression_change: true
     expression_required: true
@@ -1560,6 +1569,7 @@ allele_type_list:
     export_type: nucleotide_deletion_and_mutation
     show_description: true
     description_required: true
+    check_description_with_api: true
     allele_name_required: true
     allow_expression_change: true
     expression_required: true
@@ -1568,6 +1578,7 @@ allele_type_list:
     export_type: nucleotide_insertion_and_mutation
     show_description: true
     description_required: true
+    check_description_with_api: true
     allele_name_required: true
     allow_expression_change: true
     expression_required: true

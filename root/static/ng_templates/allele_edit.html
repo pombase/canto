@@ -109,7 +109,7 @@
           </td>
           <td ng-class="{ 'has-error': !isValidDescription() }">
             <input ng-model="alleleData.description"
-                   ng-change="updateAlleleCheckButton()"
+                   ng-change="descriptionChanged()"
                    name="curs-allele-description-input" type="text" value=""
                    class="form-control" />
             <span ng-show="descriptionState == 'ok'"

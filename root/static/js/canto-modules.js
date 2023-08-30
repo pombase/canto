@@ -4124,7 +4124,7 @@ function alleleQCCheckAllele($http, alleleQCUrl, geneSystematicId, alleleDescrip
 }
 
 var alleleEditDialogCtrl =
-  function ($scope, $uibModal, $uibModalInstance, $http, toaster, CantoConfig, args, Curs, CantoGlobals) {
+  function ($scope, $uibModal, $uibModalInstance, $http, $q, toaster, CantoConfig, args, Curs, CantoGlobals) {
     $scope.alleleData = {};
     copyObject(args.allele, $scope.alleleData);
     $scope.taxonId = args.taxonId;
@@ -4239,29 +4239,23 @@ var alleleEditDialogCtrl =
       processSynonyms();
     };
 
-    $scope.updateAlleleCheckButton = function() {
+    $scope.descriptionChanged = function() {
       $scope.descriptionNeedsChecking = false;
       $scope.descriptionState = 'unset';
-
-      const description = $scope.alleleData.description.trim();
-      const alleleName = $scope.alleleData.name.trim();
-
-      if ($scope.allele_qc_api_url && $scope.userIsAdmin &&
-          description.length > 0) {
-        $scope.descriptionNeedsChecking = true;
-      }
     };
-
-    $scope.$watch('alleleData.name', $scope.updateAlleleCheckButton);
 
     $scope.checkDescription = function() {
       const qcUrl = CantoGlobals.allele_qc_api_url;
 
       const alleleType = $scope.alleleData.type.trim();
 
-      if (!qcUrl || !$scope.current_type_config) {
-        return;
+      if (!qcUrl || !$scope.current_type_config ||
+          !$scope.current_type_config.check_description_with_api) {
+        $scope.descriptionState = 'ok';
+        return $q.when(null);
       }
+
+      $scope.descriptionState = 'unset';
 
       const geneSystematicId = $scope.alleleData.gene_systematic_id;
       const alleleDescription = $scope.alleleData.description.trim();
@@ -4478,7 +4472,7 @@ var alleleEditDialogCtrl =
   };
 
 canto.controller('AlleleEditDialogCtrl',
-  ['$scope', '$uibModal', '$uibModalInstance', '$http', 'toaster', 'CantoConfig', 'args', 'Curs', 'CantoGlobals',
+  ['$scope', '$uibModal', '$uibModalInstance', '$http', '$q', 'toaster', 'CantoConfig', 'args', 'Curs', 'CantoGlobals',
     alleleEditDialogCtrl
   ]);
 
