@@ -8403,14 +8403,6 @@ var annotationEditDialogCtrl =
       return countKeys(changesToStore) > 0;
     };
 
-    $scope.featureChooserTitle = function() {
-      if ($scope.featureEditable) {
-        return 'Choose a ' + $scope.annotationType.feature_type;
-      } else {
-        return 'This annotation is not editable because it has associated genetic interactions';
-      }
-    };
-
     $scope.okButtonTitleMessage = function () {
       if ($scope.isValid()) {
         if ($scope.annotationChanged()) {

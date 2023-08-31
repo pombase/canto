@@ -35,8 +35,7 @@
           {{displayAnnotationFeatureType}}
         </td>
         <td colspan="2">
-          <div ng-if="filteredFeatures"
-               uib-tooltip="{{featureChooserTitle()}}">
+          <div ng-if="filteredFeatures">
             <feature-chooser feature-type="{{chooseFeatureType}}"
                              features="filteredFeatures"
                              feature-editable="featureEditable"
