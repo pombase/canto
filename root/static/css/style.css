@@ -2009,3 +2009,12 @@ dd {
 .allele-desc-problem-summ {
   margin-bottom: 1em;
 }
+
+/* override Bootstrap */
+summary {
+  display: list-item;
+}
+
+details > div {
+  margin-left: 1em;
+}

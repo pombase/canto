@@ -4284,14 +4284,13 @@ var alleleEditDialogCtrl =
                 .map((err) => '<dt>' + err[0] + '</dt> <dd>' + err[1] + '</dd>')
                 .join("\n") + '</dl>';
 
-          let content = '';
-          if (summaryParts.length > 0) {
-            content += '<div class="allele-desc-problem-summ">' +
-              summaryParts.map((part) => '<div>' + part + '</div>').join("\n") +
-              '</div>';
-          }
+          let content = errorMessages;
 
-          content += errorMessages;
+          if (summaryParts.length > 0) {
+            content += '<details><summary>Details</summary><div class="allele-desc-problem-summ">' +
+              summaryParts.map((part) => '<div>' + part + '</div>').join("\n") +
+              '</div></details>';
+          }
 
           openSimpleDialog($uibModal, 'Allele description problems',
                            'Allele description problems', content);
