@@ -4125,7 +4125,7 @@ function alleleQCCheckAllele($http, alleleQCUrl, geneSystematicId, alleleDescrip
 }
 
 var alleleEditDialogCtrl =
-  function ($scope, $uibModal, $uibModalInstance, $http, toaster, CantoConfig, args, Curs, CantoGlobals) {
+  function ($scope, $uibModal, $uibModalInstance, $http, $q, toaster, CantoConfig, args, Curs, CantoGlobals) {
     $scope.alleleData = {};
     copyObject(args.allele, $scope.alleleData);
     $scope.taxonId = args.taxonId;
@@ -4150,6 +4150,7 @@ var alleleEditDialogCtrl =
     $scope.descriptionNeedsChecking = false;
     $scope.descriptionState = 'unset';
     $scope.lastDescriptionError = '';
+    $scope.okInProgress = false;
 
     $scope.showAlleleTypeField = (
       ! $scope.lockedAlleleType && (
@@ -4239,30 +4240,24 @@ var alleleEditDialogCtrl =
       processSynonyms();
     };
 
-    $scope.updateAlleleCheckButton = function() {
+    $scope.descriptionChanged = function() {
       $scope.descriptionNeedsChecking = false;
       $scope.descriptionState = 'unset';
-
-      const description = $scope.alleleData.description.trim();
-      const alleleName = $scope.alleleData.name.trim();
-
-      if ($scope.allele_qc_api_url && $scope.userIsAdmin &&
-          alleleName.length > 0 &&
-          description.length > 0) {
-        $scope.descriptionNeedsChecking = true;
-      }
     };
-
-    $scope.$watch('alleleData.name', $scope.updateAlleleCheckButton);
 
     $scope.checkDescription = function() {
       const qcUrl = CantoGlobals.allele_qc_api_url;
 
       const alleleType = $scope.alleleData.type.trim();
 
-      if (!qcUrl || !$scope.current_type_config) {
-        return;
+      if (!qcUrl || !$scope.current_type_config ||
+          !$scope.userIsAdmin ||
+          !$scope.current_type_config.check_description_with_api) {
+        $scope.descriptionState = 'ok';
+        return $q.when(null);
       }
+
+      $scope.descriptionState = 'unset';
 
       const geneSystematicId = $scope.alleleData.gene_systematic_id;
       const alleleDescription = $scope.alleleData.description.trim();
@@ -4290,14 +4285,13 @@ var alleleEditDialogCtrl =
                 .map((err) => '<dt>' + err[0] + '</dt> <dd>' + err[1] + '</dd>')
                 .join("\n") + '</dl>';
 
-          let content = '';
-          if (summaryParts.length > 0) {
-            content += '<div class="allele-desc-problem-summ">' +
-              summaryParts.map((part) => '<div>' + part + '</div>').join("\n") +
-              '</div>';
-          }
+          let content = errorMessages;
 
-          content += errorMessages;
+          if (summaryParts.length > 0) {
+            content += '<details><summary>Details</summary><div class="allele-desc-problem-summ">' +
+              summaryParts.map((part) => '<div>' + part + '</div>').join("\n") +
+              '</div></details>';
+          }
 
           openSimpleDialog($uibModal, 'Allele description problems',
                            'Allele description problems', content);
@@ -4305,13 +4299,15 @@ var alleleEditDialogCtrl =
           $scope.descriptionState = 'ok';
           $scope.lastDescriptionError = '';
 
-          toaster.pop({type: 'info', title: 'Allele description passes checks',
-                       timeout: 5000, showCloseButton: true });
+//          toaster.pop({type: 'info', title: 'Allele description passes checks',
+//                       timeout: 5000, showCloseButton: true });
         }
       })
       .finally(function () {
         loadingEnd();
       });
+
+      return promise;
     };
 
     $scope.isValidType = function () {
@@ -4345,12 +4341,40 @@ var alleleEditDialogCtrl =
       }
     };
 
+    $scope.okTitle = function() {
+      if ($scope.isExistingAllele()) {
+        return 'Finish editing this allele';
+      }
+
+      if ($scope.descriptionState == 'not-ok') {
+        return 'Fix the allele description to continue';
+      }
+
+      if (!$scope.isValidName()) {
+        return 'Set the allele name to continue';
+      }
+
+      if (!$scope.isValidType()) {
+        return 'Set the allele type to continue';
+      }
+
+      if (!$scope.isValidDescription()) {
+        return 'Set the allele description to continue';
+      }
+
+      return 'Finish editing this allele';
+    };
+
     $scope.isValid = function () {
+      if ($scope.descriptionState == 'not-ok') {
+        return false;
+      }
+
       return $scope.isValidExpression() &&
         (
           $scope.isExistingAllele() ||
-          $scope.isValidType() && $scope.isValidName() &&
-          $scope.isValidDescription()
+            $scope.isValidType() && $scope.isValidName() &&
+            $scope.isValidDescription()
         ) &&
         $scope.isValidStrain();
     };
@@ -4379,20 +4403,35 @@ var alleleEditDialogCtrl =
     }
 
     $scope.ok = function () {
-      if ($scope.isValid()) {
-        splitSynonymsForStoring($scope.alleleData, $scope.data.newSynonymsString);
-        copyObject($scope.alleleData, args.allele);
-        var strainName = null;
-        if ($scope.strainData.selectedStrain) {
-          strainName = $scope.strainData.selectedStrain.strain_name;
-        }
-        $uibModalInstance.close({
-          alleleData: args.allele,
-          strainName: strainName
-        });
-      } else {
-        toaster.pop('error', "No changes have been made");
+      if ($scope.descriptionState == 'not-ok') {
+        return;
       }
+
+      const promise = $scope.checkDescription();
+
+      promise.then(() => {
+        if ($scope.descriptionState == 'not-ok') {
+          return;
+        }
+
+        if ($scope.isValid()) {
+          $scope.okInProgress = true;
+          splitSynonymsForStoring($scope.alleleData, $scope.data.newSynonymsString);
+          copyObject($scope.alleleData, args.allele);
+          var strainName = null;
+          if ($scope.strainData.selectedStrain) {
+            strainName = $scope.strainData.selectedStrain.strain_name;
+          }
+          setTimeout(function () {
+            $uibModalInstance.close({
+              alleleData: args.allele,
+              strainName: strainName
+            });
+          }, 400);
+        } else {
+          toaster.pop('error', "No changes have been made");
+        }
+      });
     };
 
     $scope.cancel = function () {
@@ -4434,7 +4473,7 @@ var alleleEditDialogCtrl =
   };
 
 canto.controller('AlleleEditDialogCtrl',
-  ['$scope', '$uibModal', '$uibModalInstance', '$http', 'toaster', 'CantoConfig', 'args', 'Curs', 'CantoGlobals',
+  ['$scope', '$uibModal', '$uibModalInstance', '$http', '$q', 'toaster', 'CantoConfig', 'args', 'Curs', 'CantoGlobals',
     alleleEditDialogCtrl
   ]);
 
@@ -8363,14 +8402,6 @@ var annotationEditDialogCtrl =
       copyIfChanged(args.annotation, objectToStore, changesToStore);
       delete changesToStore.feature_type;
       return countKeys(changesToStore) > 0;
-    };
-
-    $scope.featureChooserTitle = function() {
-      if ($scope.featureEditable) {
-        return 'Choose a ' + $scope.annotationType.feature_type;
-      } else {
-        return 'This annotation is not editable because it has associated genetic interactions';
-      }
     };
 
     $scope.okButtonTitleMessage = function () {
