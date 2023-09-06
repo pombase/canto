@@ -37,6 +37,8 @@ the Free Software Foundation, either version 3 of the License, or
 
 =cut
 
+use feature qw(state);
+
 use Moose;
 
 use Canto::Curs::Utils;
@@ -289,6 +291,100 @@ sub lookup_by_uniquename
   }
 
   return undef;
+}
+
+sub _lookup_by_details_helper
+{
+  my $self = shift;
+  my $gene_uniquename = shift;
+
+  state $cache = {};
+
+  if (scalar(keys %$cache) > 0) {
+    if (defined $cache->{$gene_uniquename}) {
+      return @{$cache->{$gene_uniquename}};
+    } else {
+      return ();
+    }
+  }
+
+  warn "_lookup_by_details_helper()\n";
+
+  my $schema = $self->schema();
+
+  my $allele_rs = $schema->resultset('Feature')
+    ->search({ 'type.name' => 'allele',
+               'type_2.name' => 'instance_of',
+               'type_3.name' => 'gene',
+             },
+             { join => ['type',
+                        { feature_relationship_subjects =>
+                          ['type',
+                           { object => 'type' } ] }],
+               prefetch => { feature_relationship_subjects => 'object',
+                             featureprops => 'type' }});
+
+  map {
+    my $allele = $_;
+
+    my @featureprops = $allele->featureprops()->all();
+
+    my $description;
+    my $allele_type;
+
+    map {
+      my $prop_type = $_->type()->name();
+
+      if ($prop_type eq 'description') {
+        $description = $_->value();
+      } else {
+        if ($prop_type eq 'allele_type') {
+          $allele_type = $_->value();
+        }
+      }
+    } @featureprops;
+
+    my $gene_uniquename = $allele->feature_relationship_subjects()->first()->object()->uniquename();
+
+    my $allele_details = {
+      gene_systematic_id => $gene_uniquename,
+      name => $allele->name(),
+      type => $allele_type,
+      description => $description,
+    };
+
+    push @{$cache->{$gene_uniquename}}, $allele_details;
+  } $allele_rs->all();
+
+  return $self->_lookup_by_details_helper($gene_uniquename);
+}
+
+
+=head2 lookup_by_details
+
+ Usage   : @alleles = $lu->lookup_by_details($gene_uniquename, $allele_type,
+                                             $allele_description);
+ Function: lookup alleles matching a given type and description
+
+=cut
+
+sub lookup_by_details
+{
+  my $self = shift;
+
+  my $gene_uniquename = shift;
+  my $allele_type = shift;
+  my $allele_description = shift // 'NO_DESCRIPTION';
+
+  my @alleles = $self->_lookup_by_details_helper($gene_uniquename);
+
+  return grep {
+    my $_test_allele = $_;
+
+    $_test_allele->{type} eq $allele_type &&
+      ($allele_type =~ /^(deletion|wild[ _]type)$/ ||
+       ($_test_allele->{description} // 'NO_DESCRIPTION') eq $allele_description);
+  } @alleles;
 }
 
 1;

@@ -2018,3 +2018,7 @@ summary {
 details > div {
   margin-left: 1em;
 }
+
+.curs-ext-rel-dialog-help-text {
+  margin: 1em 0;
+}

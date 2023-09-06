@@ -2269,6 +2269,7 @@ function extensionConfFilter(allConfigs, subsetIds, userRole, annotationTypeName
       rangeCheck: config.range_check,
       rangeValue: null,
       cardinality: config.cardinality,
+      helpText: config.help_text,
     };
   }
 
