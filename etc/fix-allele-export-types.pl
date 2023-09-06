@@ -63,8 +63,9 @@ my $proc = sub {
 
     my $canto_type = $allele_export_type_map{$allele_type};
 
-    if (defined $canto_type) {
+    if (defined $canto_type && $allele_type ne $canto_type) {
       $allele->type($canto_type);
+      warn "$curs_key: updating $allele_type to $canto_type\n";
       $allele->update();
     }
   }
