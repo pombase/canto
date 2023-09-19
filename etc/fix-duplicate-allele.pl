@@ -133,9 +133,12 @@ sub merge_alleles
 
     print "merging $allele_id into $survivor_allele_id\n";
 
-    if ($allele_detail->{db_allele}->allelesynonyms()->count() > 0) {
-      print "  $allele_id has synonyms but will be removed\n";
-      die;
+    my $allelesynonym_rs = $allele_detail->{db_allele}->allelesynonyms();
+    my $allelesynonym_count = $allelesynonym_rs->count();
+
+    if ($allelesynonym_count > 0) {
+      print "  moving $allelesynonym_count synonyms from $allele_id\n";
+      $allelesynonym_rs->update({ allele => $survivor_allele_id });
     }
 
     my $allele_genotypes_rs = $allele_detail->{db_allele}->allele_genotypes();
