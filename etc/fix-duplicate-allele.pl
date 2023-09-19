@@ -307,10 +307,10 @@ my $proc = sub {
   while (defined (my $allele = $allele_rs->next())) {
     my $gene = $allele->gene();
 
-    my $allele_name = $allele->name() // '[UNNAMED]';
+    my $allele_name = $allele->name() // 'noname';
 
     my $allele_type = $allele->type() // '[NO_TYPE]';
-    my $allele_description = $allele->description() // '[NO_DESCRIPTION]';
+    my $allele_description = $allele->description() // 'unknown';
     my $allele_expression = $allele->expression() // '[NOT_ASSAYED]';
 
     my $gene_uniquename = $gene->primary_identifier();
@@ -399,14 +399,14 @@ my $proc = sub {
         my @allele_genotypes = $db_allele->allele_genotypes()->all();
 
         print "  ", $allele_detail->{allele_id}, " - ",
-          ($allele_name // '[NO_NAME]'), " - ",
+          $allele_name, " - ",
           ($gene_name // '[NO_GENE_NAME]'), " - ",
           $allele_type, " - ",
-          ($allele_detail->{description} // '[NO_DESCRIPTION]'), " - ",
+          ($allele_detail->{description} // 'unknown'), " - ",
           ($allele_detail->{expression} // '[NOT_ASSAYED]'), "\n";
 
         if ($db_allele->allele_notes()->count() > 0) {
-          print "    HAS NOTES\n";
+          die "    HAS NOTES\n";
         }
 
         print "    ", scalar(@allele_genotypes), " genotypes\n";
