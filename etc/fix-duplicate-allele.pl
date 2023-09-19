@@ -182,11 +182,7 @@ sub merge_genotypes
   }
 
   if (@allele_genotypes_to_merge >= 2) {
-    use Data::Dumper;
-    $Data::Dumper::Maxdepth = 2;
-    print 'merging: ', Dumper([$allele_detail]);
-
-    print "  ", scalar(@allele_genotypes_to_merge), " genotypes\n";
+    print "  merging ", scalar(@allele_genotypes_to_merge), " genotypes\n";
 
     my $first_allele_genotype = shift @allele_genotypes_to_merge;
     my $first_genotype = $first_allele_genotype->genotype();
