@@ -241,6 +241,28 @@ sub merge_genotypes
         $genotype_annotation->update();
       }
 
+      my $interaction_a_rs = $other_genotype->genotype_interaction_genotypes_a();
+
+      while (defined (my $interaction = $interaction_a_rs->next())) {
+        $interaction->genotype_a($first_genotype);
+        $interaction->update();
+      }
+
+      my $interaction_b_rs = $other_genotype->genotype_interaction_genotype_bs();
+
+      while (defined (my $interaction = $interaction_b_rs->next())) {
+        $interaction->genotype_b($first_genotype);
+        $interaction->update();
+      }
+
+      my $interaction_with_phenotype_rs =
+        $other_genotype->genotype_interactions_with_phenotype();
+
+      while (defined (my $interaction = $interaction_with_phenotype_rs->next())) {
+        $interaction->genotype_b($first_genotype);
+        $interaction->update();
+      }
+
       $other_genotype->delete();
     }
   }
