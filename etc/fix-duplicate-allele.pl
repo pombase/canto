@@ -45,6 +45,30 @@ my $track_schema = Canto::TrackDB->new(config => $config);
 
 my $chado_schema = Canto::ChadoDB->new(config => $config);
 
+sub safe_str_eq
+{
+  my $undef_str = '____:::UNDEF:::____';
+  my $first = shift // $undef_str;
+  my $second = shift // $undef_str;
+
+  return $first eq $second;
+}
+
+sub safe_num_eq
+{
+  my $first = shift;
+  my $second = shift;
+
+  if (defined $first && defined $second) {
+    return $first == $second;
+  } else {
+    if (!defined $first && !defined $second) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+}
 
 my %all_genes = ();
 
@@ -166,6 +190,36 @@ sub merge_genotypes
 
     for my $other_allele_genotype (@allele_genotypes_to_merge) {
       my $other_genotype = $other_allele_genotype->genotype();
+
+      if (!safe_str_eq($first_genotype->name(),
+                       $other_genotype->name())) {
+        print "  not merging: name\n";
+        next;
+      }
+
+      if (!safe_str_eq($first_genotype->background(),
+                       $other_genotype->background())) {
+        print "  not merging: background\n";
+        next;
+      }
+
+      if (!safe_str_eq($first_genotype->comment(),
+                       $other_genotype->comment())) {
+        print "  not merging: comment\n";
+        next;
+      }
+
+      if (!safe_num_eq($first_genotype->organism_id(),
+                       $other_genotype->organism_id())) {
+        print "  not merging: organism_id\n";
+        next;
+      }
+
+      if (!safe_num_eq($first_genotype->strain_id(),
+                       $other_genotype->strain_id())) {
+        print "  not merging: strain_id\n";
+        next;
+      }
 
       print "    replace allele genotype ",
         $other_allele_genotype->allele_genotype_id(), " with ",
