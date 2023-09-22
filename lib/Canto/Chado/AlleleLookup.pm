@@ -293,22 +293,12 @@ sub lookup_by_uniquename
   return undef;
 }
 
-sub _lookup_by_details_helper
+state $cache_by_gene_uniquename = {};
+state $cache_by_canto_systematic_id = {};
+
+sub _fill_allele_caches
 {
   my $self = shift;
-  my $gene_uniquename = shift;
-
-  state $cache = {};
-
-  if (scalar(keys %$cache) > 0) {
-    if (defined $cache->{$gene_uniquename}) {
-      return @{$cache->{$gene_uniquename}};
-    } else {
-      return ();
-    }
-  }
-
-  warn "_lookup_by_details_helper()\n";
 
   my $schema = $self->schema();
 
@@ -331,6 +321,7 @@ sub _lookup_by_details_helper
 
     my $description;
     my $allele_type;
+    my @canto_allele_systematic_ids = ();
 
     map {
       my $prop_type = $_->type()->name();
@@ -340,6 +331,10 @@ sub _lookup_by_details_helper
       } else {
         if ($prop_type eq 'allele_type') {
           $allele_type = $_->value();
+        } else {
+          if ($prop_type eq 'canto_allele_systematic_id') {
+            push @canto_allele_systematic_ids, $_->value();
+          }
         }
       }
     } @featureprops;
@@ -351,12 +346,16 @@ sub _lookup_by_details_helper
       name => $allele->name(),
       type => $allele_type,
       description => $description,
+      allele_systematic_id => $allele->uniquename(),
+      canto_allele_systematic_ids => \@canto_allele_systematic_ids,
     };
 
-    push @{$cache->{$gene_uniquename}}, $allele_details;
-  } $allele_rs->all();
+    push @{$cache_by_gene_uniquename->{$gene_uniquename}}, $allele_details;
 
-  return $self->_lookup_by_details_helper($gene_uniquename);
+    map {
+      push @{$cache_by_canto_systematic_id->{$_}}, $allele_details;
+    } @canto_allele_systematic_ids;
+  } $allele_rs->all();
 }
 
 
@@ -376,15 +375,46 @@ sub lookup_by_details
   my $allele_type = shift;
   my $allele_description = shift // 'NO_DESCRIPTION';
 
-  my @alleles = $self->_lookup_by_details_helper($gene_uniquename);
+  if (scalar(keys %$cache_by_gene_uniquename) == 0) {
+    $self->_fill_allele_caches();
+  }
 
-  return grep {
-    my $_test_allele = $_;
+  if (defined $cache_by_gene_uniquename->{$gene_uniquename}) {
+    my @alleles =  @{$cache_by_gene_uniquename->{$gene_uniquename}};
 
-    $_test_allele->{type} eq $allele_type &&
-      ($allele_type =~ /^(deletion|wild[ _]type)$/ ||
-       ($_test_allele->{description} // 'NO_DESCRIPTION') eq $allele_description);
-  } @alleles;
+    return grep {
+      my $_test_allele = $_;
+
+      $_test_allele->{type} eq $allele_type &&
+        ($allele_type =~ /^(deletion|wild[ _]type)$/ ||
+         ($_test_allele->{description} // 'NO_DESCRIPTION') eq $allele_description);
+    } @alleles;
+  } else {
+    return ();
+  }
+}
+
+
+=head2 lookup_by_canto_systematic_id
+
+ Usage   : my @alleles = $self->lookup_by_canto_systematic_id($canto_systematic_id);
+
+=cut
+
+sub lookup_by_canto_systematic_id
+{
+  my $self = shift;
+  my $canto_systematic_id = shift;
+
+  if (scalar(keys %$cache_by_canto_systematic_id) == 0) {
+    $self->_fill_allele_caches();
+  }
+
+  if (defined $cache_by_canto_systematic_id->{$canto_systematic_id}) {
+    return @{$cache_by_canto_systematic_id->{$canto_systematic_id}};
+  } else {
+    return ();
+  }
 }
 
 1;
