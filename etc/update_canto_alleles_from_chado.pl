@@ -1,7 +1,8 @@
 #!/usr/bin/env perl
 
 # for each allele in APPROVED sessions, look it up in Chado then use
-# the Chado details to fill in missing Canto allele details
+# the Chado details to fill in missing Canto allele type and/or
+# description
 
 use strict;
 use warnings;
@@ -187,28 +188,24 @@ my $add_proc = sub {
       $allele->update();
     }
 
-    if (1) {
     if (defined $allele_name && $allele_name ne 'noname' &&
         $chado_allele_name ne $allele_name =~ s/[Δ∆]/delta/gr &&
         ($allele_type ne 'deletion' || !$_deletion_name_match->())) {
       warn "$curs_key: allele name in Chado differs from Canto, ",
         qq|"$chado_allele_name" vs "$allele_name" (for $allele_type $allele_primary_identifier / $chado_allele_systematic_id)\n|;
     }
-    }
 
     if (defined $allele_description && $allele_description ne 'unknown') {
-      if (0) {
-      if (defined $chado_allele_description) {
-        if ($chado_allele_description =~ s/, +/,/gr ne $allele_description =~ s/, +/,/gr) {
-          warn "$curs_key: allele description for $printable_allele_name in Chado differs from Canto, ",
-            qq|"$chado_allele_description" vs "$allele_description" (for $allele_primary_identifier / $chado_allele_systematic_id)\n|;
-        }
-      } else {
-        if ($allele_type ne 'deletion' || $allele_description ne 'deletion') {
-          warn "$curs_key: no description in Chado for $printable_allele_name($allele_description) $allele_primary_identifier\n";
-        }
-      }
-      }
+#       if (defined $chado_allele_description) {
+#         if ($chado_allele_description =~ s/, +/,/gr ne $allele_description =~ s/, +/,/gr) {
+#           warn "$curs_key: allele description for $printable_allele_name in Chado differs from Canto, ",
+#             qq|"$chado_allele_description" vs "$allele_description" (for $allele_primary_identifier / $chado_allele_systematic_id)\n|;
+#         }
+#       } else {
+#         if ($allele_type ne 'deletion' || $allele_description ne 'deletion') {
+#           warn "$curs_key: no description in Chado for $printable_allele_name($allele_description) $allele_primary_identifier\n";
+#         }
+#       }
     } else {
       if (defined $chado_allele_description &&
           $chado_allele_description ne 'unknown' &&
@@ -225,35 +222,33 @@ my $add_proc = sub {
       }
     }
 
-    if (0) {
-    if (defined $chado_allele_description) {
-      if (defined $allele_description && $allele_description ne 'unknown') {
-        if ($chado_allele_description ne $allele_description) {
-          warn qq|$curs_key: setting description of $allele_primary_identifier / $chado_allele_systematic_id $allele_type to |,
-            qq|"$chado_allele_description" (was "$printable_allele_description")\n|;
-        }
-      } else {
-#        warn qq|$curs_key: setting description of $allele_primary_identifier / $chado_allele_systematic_id $allele_type to |,
-#          qq|"$chado_allele_description" (was unset)\n|;
-      }
-    } else {
-      if (defined $allele_description && $allele_description ne 'unknown') {
-        die $allele_description;
-      }
-    }
-
-    if (defined $allele_name && $allele_name ne 'noname') {
-      if ($chado_allele_name ne $allele_name) {
-        warn qq|$curs_key: setting name of $allele_primary_identifier / $chado_allele_systematic_id $chado_allele_type|,
-          " to ",
-          qq|"$chado_allele_name" (was "$printable_allele_name")\n|;
-      }
-    } else {
-#      warn qq|$curs_key: setting name of $allele_primary_identifier / $chado_allele_systematic_id $allele_type to |,
-#        qq|"$chado_allele_name" (was unset)\n|;
-    }
-    #my $chado_external_uniquename = $chado_allele->{external_uniquename};
-    }
+#     if (defined $chado_allele_description) {
+#       if (defined $allele_description && $allele_description ne 'unknown') {
+#         if ($chado_allele_description ne $allele_description) {
+#           warn qq|$curs_key: setting description of $allele_primary_identifier / $chado_allele_systematic_id $allele_type to |,
+#             qq|"$chado_allele_description" (was "$printable_allele_description")\n|;
+#         }
+#       } else {
+# #        warn qq|$curs_key: setting description of $allele_primary_identifier / $chado_allele_systematic_id $allele_type to |,
+# #          qq|"$chado_allele_description" (was unset)\n|;
+#       }
+#     } else {
+#       if (defined $allele_description && $allele_description ne 'unknown') {
+#         die $allele_description;
+#       }
+#     }
+#
+#     if (defined $allele_name && $allele_name ne 'noname') {
+#       if ($chado_allele_name ne $allele_name) {
+#         warn qq|$curs_key: setting name of $allele_primary_identifier / $chado_allele_systematic_id $chado_allele_type|,
+#           " to ",
+#           qq|"$chado_allele_name" (was "$printable_allele_name")\n|;
+#       }
+#     } else {
+# #      warn qq|$curs_key: setting name of $allele_primary_identifier / $chado_allele_systematic_id $allele_type to |,
+# #        qq|"$chado_allele_name" (was unset)\n|;
+#     }
+#     #my $chado_external_uniquename = $chado_allele->{external_uniquename};
   }
 };
 
