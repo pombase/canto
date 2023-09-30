@@ -469,6 +469,16 @@ db_initial_data:
               accession: database
               db:
                 name: Canto
+          - name: Bioinformatics
+            dbxref:
+              accession: bioinformatics
+              db:
+                name: Canto
+          - name: Educational Resources
+            dbxref:
+              accession: educational_resources
+              db:
+                name: Canto
           - name: Other
             definition: >
                 Triage status for a publication that will not be curated for
