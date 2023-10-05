@@ -2904,7 +2904,8 @@ canto.directive('extensionBuilder',
 
 
 var extensionRelationDialogCtrl =
-  function ($scope, $uibModalInstance, args, CursGeneList, toaster) {
+  function ($scope, $uibModalInstance, $uibModal, $http, $q,
+            args, CantoGlobals, CursGeneList, toaster) {
     $scope.data = args;
     $scope.extensionRelation = args.extensionRelation;
     $scope.relationConfig = args.relationConfig;
@@ -2912,6 +2913,58 @@ var extensionRelationDialogCtrl =
       rangeType: $scope.relationConfig.range[0].type,
     };
     $scope.extensionRelation.rangeType = $scope.selected.rangeType;
+
+    $scope.rangeState = 'ok';
+    $scope.rangeNeedsChecking = false;
+    $scope.checkerAvailable = $scope.relationConfig.rangeCheck &&
+      CantoGlobals.current_user_is_admin;
+
+    $scope.checkRange = function() {
+      $scope.rangeState = 'ok';
+
+      if (!$scope.checkerAvailable) {
+        return $q.when(null);
+      }
+
+      const rangeValue = $scope.extensionRelation.rangeValue.trim();
+      const checkUrl = $scope.relationConfig.rangeCheck.url;
+
+      $scope.rangeNeedsChecking = false;
+
+      loadingStart();
+
+      const promise =
+            alleleQCCheckExtRange($http, checkUrl, $scope.data.termId,
+                                  $scope.data.geneSystematicId, rangeValue);
+
+      promise.then((result) => {
+        loadingEnd();
+        if (result.needsFixing) {
+          $scope.rangeState = 'not-ok';
+          const errors = result.errors;
+          $scope.lastRangeError =
+            errors.map((err) => err[0] + ':' + err[1]).join("\n");
+          const errorMessage = '<dl>' +
+                errors
+                .map((err) => '<dt>' + err[0] + '</dt> <dd>' + err[1] + '</dd>' + '</dl>')
+                .join("\n");
+
+          openSimpleDialog($uibModal, 'Range problems',
+                           'Range problems', errorMessage);
+        } else {
+          $scope.rangeState = 'ok';
+          $scope.lastRangeError = '';
+
+          toaster.pop({type: 'info', title: 'Range passes checks',
+                       timeout: 5000, showCloseButton: true });
+        }
+      })
+      .finally(function () {
+        loadingEnd();
+      });
+
+      return promise;
+    };
 
     $scope.isValid = function () {
       return !!$scope.data.extensionRelation.rangeValue;
@@ -2937,13 +2990,20 @@ var extensionRelationDialogCtrl =
     });
 
     $scope.ok = function () {
-      if ($scope.extensionRelation.rangeType == '%') {
-        $scope.extensionRelation.rangeValue =
-          $scope.extensionRelation.rangeValue.replace(/%\s*$/, '');
-      }
-      $uibModalInstance.close({
-        extensionRelation: $scope.extensionRelation,
+      const promise = $scope.checkRange();
+
+      promise.then(() => {
+        if ($scope.rangeState === 'ok') {
+          if ($scope.extensionRelation.rangeType == '%') {
+            $scope.extensionRelation.rangeValue =
+              $scope.extensionRelation.rangeValue.replace(/%\s*$/, '');
+          }
+          $uibModalInstance.close({
+            extensionRelation: $scope.extensionRelation,
+          });
+        }
       });
+
     };
 
     $scope.finishedCallback = function () {
@@ -2956,7 +3016,8 @@ var extensionRelationDialogCtrl =
   };
 
 canto.controller('ExtensionRelationDialogCtrl',
-  ['$scope', '$uibModalInstance', 'args', 'CursGeneList', 'toaster',
+                 ['$scope', '$uibModalInstance', '$uibModal', '$http', '$q',
+                  'args', 'CantoGlobals', 'CursGeneList', 'toaster',
     extensionRelationDialogCtrl
   ]);
 
@@ -3020,8 +3081,6 @@ var extensionRelationEdit =
       scope: {
         extensionRelation: '=',
         relationConfig: '=',
-        termId: '@',
-        geneSystematicId: '@',
         rangeConfig: '=',
         disabled: '=',
         finishedCallback: '&',
@@ -3036,73 +3095,6 @@ var extensionRelationEdit =
         $scope.genes = null;
         $scope.metagenotypes = null;
         $scope.organisms = null;
-
-        $scope.rangeNeedsChecking = false;
-        $scope.checkerAvailable = $scope.relationConfig.rangeCheck &&
-          CantoGlobals.current_user_is_admin;
-
-        $scope.updateCheckButton = function() {
-          $scope.rangeNeedsChecking = false;
-          $scope.rangeState = 'unset';
-
-          if (!$scope.checkerAvailable) {
-            return false;
-          }
-
-          if (!$scope.extensionRelation.rangeValue ||
-              $scope.extensionRelation.rangeValue.length == 0) {
-            return;
-          }
-
-          const rangeValue = $scope.extensionRelation.rangeValue.trim();
-
-          if (rangeValue.length > 0) {
-            $scope.rangeNeedsChecking = true;
-          }
-        };
-
-        $scope.checkRange = function() {
-          if (!$scope.checkerAvailable) {
-            return;
-          }
-
-          const rangeValue = $scope.extensionRelation.rangeValue.trim();
-          const checkUrl = $scope.relationConfig.rangeCheck.url;
-
-          $scope.rangeNeedsChecking = false;
-
-          loadingStart();
-
-          const promise =
-                alleleQCCheckExtRange($http, checkUrl, $scope.termId,
-                                      $scope.geneSystematicId, rangeValue);
-
-          promise.then((result) => {
-            loadingEnd();
-            if (result.needsFixing) {
-              $scope.rangeState = 'not-ok';
-              const errors = result.errors;
-              $scope.lastRangeError =
-                errors.map((err) => err[0] + ':' + err[1]).join("\n");
-              const errorMessage = '<dl>' +
-                    errors
-                    .map((err) => '<dt>' + err[0] + '</dt> <dd>' + err[1] + '</dd>' + '</dl>')
-                    .join("\n");
-
-              openSimpleDialog($uibModal, 'Range problems',
-                               'Range problems', errorMessage);
-            } else {
-              $scope.rangeState = 'ok';
-              $scope.lastRangeError = '';
-
-              toaster.pop({type: 'info', title: 'Range passes checks',
-                           timeout: 5000, showCloseButton: true });
-            }
-          })
-          .finally(function () {
-            loadingEnd();
-          });
-        };
 
         $scope.getGenesFromServer = function() {
           return CursGeneList.geneList().then(function (results) {

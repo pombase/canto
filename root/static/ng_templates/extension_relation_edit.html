@@ -28,19 +28,8 @@
   </span>
   <span ng-if="rangeConfig.type == 'Text'">
     <span ng-if="disabled">Value</span>
-    <input ng-if="!disabled" ng-change="updateCheckButton()"
+    <input ng-if="!disabled"
            type="text" required ng-model="extensionRelation.rangeValue"/>
-    <span ng-if="checkerAvailable">
-      <span ng-show="rangeState == 'ok'"
-            title="Range passes checks"
-            class="glyphicon glyphicon-ok curs-allele-desc-ok"></span>
-      <span ng-show="rangeState == 'not-ok'"
-            title="{{lastRangeError}}"
-            class="glyphicon glyphicon-remove curs-allele-desc-not-ok"></span>
-      <span ng-show="rangeNeedsChecking" class="allele-range-check">
-        <button class="btn btn-warning" ng-click="checkRange()">Check</button>
-      </span>
-    </span>
   </span>
   <span ng-if="rangeConfig.type == '%'">
     <span ng-if="disabled">Quantitative value (e.g. 45%):</span>
