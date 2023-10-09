@@ -5751,7 +5751,7 @@ var genotypeBackgroundEditDialogCtrl =
             $scope.data.background);
         storePromise.then(function (result) {
           if (result && result.status && result.status === 'existing') {
-            toaster.pop('warning', 'could not modify background: genotype "' +
+            toaster.pop('warning', 'Action failed: genotype "' +
                         args.genotype.display_name +
                         '" already exists with the same background');
           }
