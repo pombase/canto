@@ -8,12 +8,10 @@
         <div class="col-md-8">
           <h1>Welcome to Canto</h1>
           <p>
-Canto is an online annotation tool which has been developed to allow
-researchers to curate the genetic and molecular data from
-their publications for inclusion in public biological databases. Originally
-created for the fission yeast community, Canto is a generic
-tool that can be readily configured for use with other organisms and other
-databases.
+Canto is an online Curation tool to enable researchers to curate genetic and
+molecular data from their publications for data sharing. Originally created
+for the fission yeast community, Canto is configurable for use with other
+species.
 <span class="curs-contact-page-link"><& contact.mhtml, link_text => 'Questions? Contact the Canto team...' &></span>
           </p>
         </div>
@@ -28,33 +26,32 @@ databases.
     <div class="row">
       <div class="col-md-6">
         <h3>Canto in Use</h3>
-        Canto is currently deployed for:
         <ul class="canto-other-instances">
           <li>
   <a href="https://curation.pombase.org/pombe" class="btn btn-primary visit">Visit...</a>
+  <a href="http://www.pombase.org">PomBase</a>: Curate GO, phenotypes,
+  interactions, protein modifications for
   <span class="organism-name">Schizosaccharomyces pombe</span> (fission yeast)
-  at PomBase.
-  Curate GO, phenotypes, interactions, protein modifications for inclusion in
-  <a href="http://www.pombase.org">PomBase</a>
           </li>
           <li>
   <a href="https://demo-canto.phi-base.org/" class="btn btn-primary visit">Visit ...</a>
-  <span>In collaboration with Rothamsted Research (<a href="http://www.phi-base.org">PHI-base</a>), we have
-  extended Canto to enable the curation of multiple strains in a
-  single Canto instance, and to curate pathogen-host interaction
-  (multispecies) phenotypes and genotypes.</span>
+
+  <a href="http://www.phi-base.org">PHI-base</a>: Extended version
+  (<a href="https://elifesciences.org/articles/84658">PHI-Canto</a>) to enable the curation of 
+  multiple strains, and multispecies genotypes (metagenotypes) and phenotypes.
           </li>
           <li>
-  <a href="https://www.flybase.org">FlyBase</a> uses a Canto instance extended and
-  configured to support <i>Drosophila</i> phenotype and genetic interaction annotation
+  <a href="https://www.flybase.org">FlyBase</a>: Extended and configured to
+  support <i>Drosophila</i> phenotype and genetic interactions. 
           </li>
           <li>
   <a href="https://curation.pombase.org/japonicus" class="btn btn-primary visit">Visit...</a>
-  We have implemented Canto to support community curation of the emerging model
-  <i>Schizosaccharomyces japonicus</i>
+  <a href="https://www.japonicusdb.org/">JaponicusDB</a>: Curate GO,
+  phenotypes, interactions, protein modifications for
+  <i>Schizosaccharomyces japonicus</i> (a fission yeast)
           </li>
           <li>
-  <a href="https://seaphages.org/">SEA-PHAGES</a> use Canto as part of a
+  <a href="https://seaphages.org/">SEA-PHAGES</a>: use Canto as part of a
   discovery-based undergraduate research course (Ivan Erril, UMBC)
           </li>
           <li>
