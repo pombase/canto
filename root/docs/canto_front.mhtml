@@ -60,10 +60,6 @@ species.
   <span>Generic Gene Ontology Implementation: Curate GO annotations for proteins,
   using UniProtKB identifiers</span>
           </li>
-          <li>
-  <a href="https://curation.pombase.org/kpas" class="btn btn-primary visit">Visit...</a>
-  <span class="organism-name">Komagataella pastoris</span> (formerly known as Pichia pastoris)
-          </li>
         </ul>
       </div>
 
