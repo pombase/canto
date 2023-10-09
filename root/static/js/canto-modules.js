@@ -5749,7 +5749,12 @@ var genotypeBackgroundEditDialogCtrl =
         var storePromise =
           CursGenotypeList.setGenotypeBackground(toaster, $http, args.genotype,
             $scope.data.background);
-        storePromise.then(function () {
+        storePromise.then(function (result) {
+          if (result && result.status && result.status === 'existing') {
+            toaster.pop('warning', 'could not modify background: genotype "' +
+                        args.genotype.display_name +
+                        '" already exists with the same background');
+          }
           $uibModalInstance.close();
         });
       }
