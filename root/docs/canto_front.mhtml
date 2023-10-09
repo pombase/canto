@@ -34,7 +34,8 @@ species.
   <span class="organism-name">Schizosaccharomyces pombe</span> (fission yeast)
           </li>
           <li>
-  <a href="https://demo-canto.phi-base.org/" class="btn btn-primary visit">Visit ...</a>
+
+  <a href="https://canto.phi-base.org/" class="btn btn-primary visit">Visit ...</a>
 
   <a href="http://www.phi-base.org">PHI-base</a>: Extended version
   (<a href="https://elifesciences.org/articles/84658">PHI-Canto</a>) to enable the curation of 
