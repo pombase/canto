@@ -70,6 +70,10 @@ species.
 Instructions for using Canto are available from
 the <a href="<% $c->uri_for('/docs/index/') %>">documentation
 pages</a>, or via the "Help" link at the top right of every Canto instance
+
+        <p>
+          NEW: <a href="https://pombase.github.io/canto_tutorial/">Canto video tutorials</a>
+
         <h3>Demo</h3>
           <a href="<% $demo_url %>" class="btn btn-primary visit">Demo...</a>
         <p>
