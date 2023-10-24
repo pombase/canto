@@ -75,6 +75,8 @@ sub _get_metadata
 
   my $curator_name_re = qr/(curator|approver|initial_curator|first_contact)_name$/;
 
+  my $approver_orcid = undef;
+
   my %ret = map {
     my $key = $_->key();
     $key = "canto_session" if $key eq "curs_key";
@@ -82,10 +84,27 @@ sub _get_metadata
     ($key, _get_metadata_value($curs_schema, $_->key(), $_->value() ))
   } grep {
     my $key = $_->key();
+    if ($key eq 'approver_email' && $options->{export_curator_names}) {
+      my $approver_email = $_->value();
+
+      my $orcid_rs = $track_schema->resultset('Person')
+        ->search({ email_address => $approver_email });
+
+      my $person = $orcid_rs->next();
+
+      if (defined $person && $person->orcid()) {
+        $approver_orcid = $person->orcid();
+      }
+    }
+
     $key !~ /email$/ &&
       ($options->{export_curator_names} ||
        $key !~ /$curator_name_re/)
   } @results;
+
+  if (defined $approver_orcid) {
+    $ret{approver_orcid} = $approver_orcid;
+  }
 
   if (!$ret{canto_session}) {
     warn "can't for curs_key in CursDB metadata\n";
