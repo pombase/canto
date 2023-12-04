@@ -4514,6 +4514,22 @@ canto.controller('TermSuggestDialogCtrl',
   ]);
 
 
+// from: https://stackoverflow.com/a/73800554
+class AsyncQueue {
+  constructor() {
+    this.promise = Promise.resolve();
+  }
+
+  push(task) {
+    this.promise = this.promise.then(task);
+    return this.promise;
+  }
+}
+
+
+// see https://github.com/pombase/canto/issues/2682
+let storeQueue = new AsyncQueue();
+
 function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotype_background, alleles, taxonid, strain_name, comment) {
 
   var url = curs_root_uri + '/feature/genotype';
@@ -4533,25 +4549,27 @@ function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotyp
     strain_name: strain_name,
   };
 
-  loadingStart();
+  return storeQueue.push(() => {
+    loadingStart();
 
-  var result = $http.post(url, data);
+    var result = $http.post(url, data);
 
-  result.catch(function (data) {
-    if (data.message) {
-      toaster.error("Storing genotype failed, message from server: " + data.message);
-    } else {
-      toaster.error("Storing genotype failed, please reload and try again.  If that fails " +
-        "please contact the curators.");
-    }
-  });
-
-  result.finally(loadingEnd);
-
-  return result
-    .then(function(response) {
-      return response.data;
+    result.catch(function (data) {
+      if (data.message) {
+        toaster.error("Storing genotype failed, message from server: " + data.message);
+      } else {
+        toaster.error("Storing genotype failed, please reload and try again.  If that fails " +
+                      "please contact the curators.");
+      }
     });
+
+    result.finally(loadingEnd);
+
+    return result
+      .then(function(response) {
+        return response.data;
+      });
+  });
 }
 
 function makeAlleleEditInstance($uibModal, allele, taxonId, isCopied, lockedAlleleType) {
