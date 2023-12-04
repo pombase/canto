@@ -4274,14 +4274,17 @@ var alleleEditDialogCtrl =
           $scope.lastDescriptionError =
             errors.map((err) => err[0] + ':' + err[1]).join("\n");
           const errorMessages = '<dl>' + errors
-                .map((err) => '<dt>' + err[0] + '</dt> <dd>' + err[1] + '</dd>')
+                .map((err) => {
+                  let message = err[1].replace(/_/g, ' ');
+                  return '<dt>' + err[0] + '</dt> <dd>' + message + '</dd>';
+                })
                 .join("\n") + '</dl>';
 
           let content = errorMessages;
 
           if (summaryParts.length > 0) {
             content += '<details><summary>Details</summary><div class="allele-desc-problem-summ">' +
-              summaryParts.map((part) => '<div>' + part + '</div>').join("\n") +
+              summaryParts.map((part) => '<div>' + part.replace(/_/g, ' ') + '</div>').join("\n") +
               '</div></details>';
           }
 
