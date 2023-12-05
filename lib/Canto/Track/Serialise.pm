@@ -260,12 +260,21 @@ sub _get_people
   my %ret = ();
 
   while (defined (my $person = $rs->next())) {
+    my $orcid = $person->orcid();
+
+    if (defined $orcid) {
+      if ($orcid =~ m|.*?(\d\d\d\d-\d\d\d\d-\d\d\d\d-\d\d\d[\dX]$)|) {
+        $orcid = $1;
+      } else {
+        $orcid = undef;
+      }
+    }
+
     $ret{$person->email_address()} = {
       name => $person->name(),
       role => $person->role()->name(),
-      orcid => $person->orcid(),
+      orcid => $orcid,
       lab => defined $person->lab() ? $person->lab()->name() : undef,
-      orcid => $person->orcid(),
     };
   }
 
