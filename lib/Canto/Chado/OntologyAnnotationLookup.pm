@@ -230,6 +230,8 @@ sub lookup
     my $constraint_and_bits = {
       -and => {
         pub_id => $pub->pub_id(),
+        'feature_cvtermprops.value' => { '!=' => 'high throughput' },
+        'type.name' => 'annotation_throughput_type',
         -or => {
           'cvterm.cv_id' => $cv->cv_id(),
            -and => {
@@ -261,9 +263,9 @@ sub lookup
 
     my $constraint = { -and => [%$constraint_and_bits] };
 
-    my $options = { prefetch => [ { feature => ['organism', 'type'] },
+    my $options = { prefetch => [ { feature => ['organism'] },
                                   { cvterm => [ 'cv', { dbxref => 'db' } ] } ],
-                    join => ['cvterm', 'feature'] };
+                    join => ['cvterm', 'feature', { 'feature_cvtermprops' => 'type' } ] };
     my $rs = $schema->resultset('FeatureCvterm')->search($constraint, $options);
 
     my $all_annotations_count = $rs->count();
