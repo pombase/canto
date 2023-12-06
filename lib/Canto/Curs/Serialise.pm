@@ -49,6 +49,8 @@ use Data::Rmap ':all';
 use Canto::Track::CuratorManager;
 use Canto::Track;
 
+our $ORCID_RE = qr/\d\d\d\d-\d\d\d\d-\d\d\d\d-\d\d\d[\dX]/;
+
 sub _get_metadata_value
 {
   my $schema = shift;
@@ -335,6 +337,14 @@ sub _get_annotations
         die "community_curated not set for annotation ",
           $annotation->annotation_id(), " in session ",
           $metadata->{canto_session};
+      }
+      my $curator_orcid = $data{curator}->{curator_orcid};
+
+      if (defined $curator_orcid && $curator_orcid =~ m|.*?($ORCID_RE)$|) {
+        # remove any prefixes
+        $data{curator}->{curator_orcid} = $1;
+      } else {
+        delete $data{curator}->{curator_orcid};
       }
     } else {
       my $metadata = _get_metadata($config, $track_schema, $schema, $options);
@@ -825,20 +835,17 @@ sub _get_curators_from_annotations
 
         my $curator_orcid = $curator->{curator_orcid};
 
-        if (!defined $curator_orcid) {
+        if (!defined $curator_orcid && defined $curator_email) {
+          $curator_orcid =
+            ($curator_manager->curator_details_by_email($curator_email))[3];
+        }
 
-          if (defined $curator_email) {
-            my ($curator_email, $curator_name, $curator_known_as, $curator_orcid) =
-              $curator_manager->curator_details_by_email($curator_email);
-
-            if (defined $curator_orcid) {
-              if ($curator_orcid =~ m|.*?(\d\d\d\d-\d\d\d\d-\d\d\d\d-\d\d\d[\dX]$)|) {
-                # remove any prefixes
-                $annotation_curators{$name}->{curator_orcid} = $1;
-              } else {
-                delete $annotation_curators{$name}->{curator_orcid};
-              }
-            }
+        if (defined $curator_orcid) {
+          if ($curator_orcid =~ m|.*?($ORCID_RE)$|) {
+            # remove any prefixes
+            $annotation_curators{$name}->{curator_orcid} = $1;
+          } else {
+            delete $annotation_curators{$name}->{curator_orcid};
           }
         }
       }
