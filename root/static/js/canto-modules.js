@@ -4276,7 +4276,10 @@ var alleleEditDialogCtrl =
           const errorMessages = '<dl>' + errors
                 .map((err) => {
                   let message = err[1].replace(/_/g, ' ');
-                  return '<dt>' + err[0] + '</dt> <dd>' + message + '</dd>';
+                  const messageParts = message.split(/: /, 2);
+                  const messageStart = messageParts[0];
+                  const messageRest = messageParts[1];
+                  return '<dt>' + err[0] + '</dt> <dd>' + messageStart + ': <span>' + messageRest + '</span></dd>';
                 })
                 .join("\n") + '</dl>';
 
@@ -4284,7 +4287,13 @@ var alleleEditDialogCtrl =
 
           if (summaryParts.length > 0) {
             content += '<details><summary>Details</summary><div class="allele-desc-problem-summ">' +
-              summaryParts.map((part) => '<div>' + part.replace(/_/g, ' ') + '</div>').join("\n") +
+              summaryParts.map((part) => {
+                const detailMessage = part.replace(/_/g, ' ');
+                const messageParts = detailMessage.split(/: /, 2);
+                const messageStart = messageParts[0];
+                const messageRest = messageParts[1];
+                return '<div>' + messageStart + ': <span>' + messageRest + '</span></div>';
+              }).join("\n") +
               '</div></details>';
           }
 
