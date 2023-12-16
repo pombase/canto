@@ -232,7 +232,7 @@ my $proc = sub {
 
     my $role = $load_util->find_cvterm(cv_name => 'Canto user types',
                                        name => $role_name);
-    $load_util->get_person($name, $email_address, $orcid, $role);
+    $load_util->get_person($name, $email_address, $orcid, '', $role);
   }
 
   if ($add_session) {
