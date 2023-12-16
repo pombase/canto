@@ -81,9 +81,8 @@ sub usage
   Remove all strains that are not used in any session
 
   $0 --update-annotation-curators
-  Use the curs_curator table to set missing fields in the curator field in
-  data column of annotations.  If the annotation was made after approval
-  started, use the approver's name, email and orcid instead.
+  Set the curator_orcid field of the annotations if available in the
+  person table
 
 |;
 }

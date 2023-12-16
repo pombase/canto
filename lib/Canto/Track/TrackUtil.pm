@@ -373,10 +373,8 @@ sub _get_curs_metadata
 =head2 update_annotation_curators
 
  Usage   : $self->update_annotation_curators();
- Function: Use the curs_curator table to set missing fields in the
-           curator field in data column of annotations.  If the
-           annotation was made after approval started, use the
-           approver's name, email and orcid instead.
+ Function: Set the curator_orcid field of the annotations
+           if available in the person table
 
 =cut
 
