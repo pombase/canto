@@ -10505,8 +10505,12 @@ var annotationTableRow =
 
         $scope.duplicate = function () {
           var newAnnotation = makeNewAnnotation($scope.annotation);
-          newAnnotation.interaction_annotations = [];
-          newAnnotation.interaction_annotations_with_phenotypes = [];
+          if (newAnnotation.interaction_annotations) {
+            newAnnotation.interaction_annotations = [];
+          }
+          if (newAnnotation.interaction_annotations_with_phenotypes) {
+            newAnnotation.interaction_annotations_with_phenotypes = [];
+          }
           startEditing($uibModal, annotation.annotation_type,
             newAnnotation, $scope.featureFilterDisplayName,
             true, true);
