@@ -4208,7 +4208,13 @@ var alleleEditDialogCtrl =
                 });
         }
 
-
+        if ($scope.data.promoterGeneId) {
+          $scope.promoterSelect = 'gene';
+        } else {
+          if ($scope.alleleData.exogenous_promoter) {
+            $scope.promoterSelect = 'exogenous';
+          }
+        }
       }).catch(function (err) {
         toaster.pop('note', "couldn't read the gene list from the server");
       });
@@ -4465,7 +4471,14 @@ var alleleEditDialogCtrl =
                 });
         }
 
-        if (!$scope.showPromoterOpts()) {
+        if ($scope.showPromoterOpts()) {
+          if ($scope.promoterSelect != 'gene') {
+            delete args.allele.promoter_gene;
+          }
+          if ($scope.promoterSelect != 'exogenous') {
+            delete args.allele.exogenous_promoter;
+          }
+        } else {
           delete args.allele.promoter_gene;
           delete args.allele.exogenous_promoter;
         }
