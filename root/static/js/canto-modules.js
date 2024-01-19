@@ -891,6 +891,7 @@ canto.service('CantoGlobals', function ($window) {
   this.geneListData = $window.geneListData;
   this.hostsWithNoGenes = $window.hostsWithNoGenes;
   this.annotationFigureField = $window.annotation_figure_field;
+  this.allele_qc_api_url = $window.allele_qc_api_url;
 });
 
 canto.service('CantoService', function ($http) {
@@ -2215,7 +2216,8 @@ canto.directive('ontologyTermCommentTransfer',
                 ['CantoGlobals', ontologyTermCommentTransfer]);
 
 
-function openExtensionRelationDialog($uibModal, extensionRelation, relationConfig) {
+function openExtensionRelationDialog($uibModal, extensionRelation, relationConfig,
+                                     termId, geneSystematicId) {
   return $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/extension_relation_dialog.html',
     controller: 'ExtensionRelationDialogCtrl',
@@ -2227,6 +2229,8 @@ function openExtensionRelationDialog($uibModal, extensionRelation, relationConfi
         return {
           extensionRelation: extensionRelation,
           relationConfig: relationConfig,
+          termId: termId,
+          geneSystematicId: geneSystematicId,
         };
       },
     },
@@ -2262,8 +2266,10 @@ function extensionConfFilter(allConfigs, subsetIds, userRole, annotationTypeName
       domain: config.domain,
       role: config.role,
       range: config.range,
+      rangeCheck: config.range_check,
       rangeValue: null,
       cardinality: config.cardinality,
+      helpText: config.help_text,
     };
   }
 
@@ -2333,7 +2339,8 @@ canto.controller('ExtensionBuilderDialogCtrl',
   ]);
 
 
-function openExtensionBuilderDialog($uibModal, extension, termId, featureDisplayName, annotationTypeName, featureType) {
+function openExtensionBuilderDialog($uibModal, extension, termId, featureDisplayName,
+                                    geneSystematicId, annotationTypeName, featureType) {
   return $uibModal.open({
     templateUrl: app_static_path + 'ng_templates/extension_builder_dialog.html',
     controller: 'ExtensionBuilderDialogCtrl',
@@ -2346,6 +2353,7 @@ function openExtensionBuilderDialog($uibModal, extension, termId, featureDisplay
           extension: angular.copy(extension),
           termId: termId,
           featureDisplayName: featureDisplayName,
+          geneSystematicId: geneSystematicId,
           annotationTypeName: annotationTypeName,
           featureType: featureType,
         };
@@ -2561,6 +2569,8 @@ var extensionOrGroupBuilder =
     return {
       scope: {
         orGroup: '=',
+        termId: '@',
+        geneSystematicId: '@',
         matchingConfigurations: '=',
         isValid: '=',
       },
@@ -2756,7 +2766,8 @@ var extensionOrGroupBuilder =
           };
 
           var editPromise =
-            openExtensionRelationDialog($uibModal, editExtensionRelation, relationConfig);
+              openExtensionRelationDialog($uibModal, editExtensionRelation, relationConfig,
+                                          $scope.termId, $scope.geneSystematicId);
 
           editPromise.then(function (result) {
             $scope.orGroup.push(result.extensionRelation);
@@ -2791,6 +2802,7 @@ var extensionBuilder =
         extension: '=',
         termId: '@',
         featureDisplayName: '@',
+        geneSystematicId: '@',
         isValid: '=',
         annotationTypeName: '@',
         featureType: '<',
@@ -2892,7 +2904,8 @@ canto.directive('extensionBuilder',
 
 
 var extensionRelationDialogCtrl =
-  function ($scope, $uibModalInstance, args, CursGeneList, toaster) {
+  function ($scope, $uibModalInstance, $uibModal, $http, $q,
+            args, CantoGlobals, CursGeneList, toaster) {
     $scope.data = args;
     $scope.extensionRelation = args.extensionRelation;
     $scope.relationConfig = args.relationConfig;
@@ -2900,6 +2913,58 @@ var extensionRelationDialogCtrl =
       rangeType: $scope.relationConfig.range[0].type,
     };
     $scope.extensionRelation.rangeType = $scope.selected.rangeType;
+
+    $scope.rangeState = 'ok';
+    $scope.rangeNeedsChecking = false;
+    $scope.checkerAvailable = $scope.relationConfig.rangeCheck &&
+      CantoGlobals.current_user_is_admin;
+
+    $scope.checkRange = function() {
+      $scope.rangeState = 'ok';
+
+      if (!$scope.checkerAvailable) {
+        return $q.when(null);
+      }
+
+      const rangeValue = $scope.extensionRelation.rangeValue.trim();
+      const checkUrl = $scope.relationConfig.rangeCheck.url;
+
+      $scope.rangeNeedsChecking = false;
+
+      loadingStart();
+
+      const promise =
+            alleleQCCheckExtRange($http, checkUrl, $scope.data.termId,
+                                  $scope.data.geneSystematicId, rangeValue);
+
+      promise.then((result) => {
+        loadingEnd();
+        if (result.needsFixing) {
+          $scope.rangeState = 'not-ok';
+          const errors = result.errors;
+          $scope.lastRangeError =
+            errors.map((err) => err[0] + ':' + err[1]).join("\n");
+          const errorMessage = '<dl>' +
+                errors
+                .map((err) => '<dt>' + err[0] + '</dt> <dd>' + err[1] + '</dd>' + '</dl>')
+                .join("\n");
+
+          openSimpleDialog($uibModal, 'Range problems',
+                           'Range problems', errorMessage);
+        } else {
+          $scope.rangeState = 'ok';
+          $scope.lastRangeError = '';
+
+          toaster.pop({type: 'info', title: 'Range passes checks',
+                       timeout: 5000, showCloseButton: true });
+        }
+      })
+      .finally(function () {
+        loadingEnd();
+      });
+
+      return promise;
+    };
 
     $scope.isValid = function () {
       return !!$scope.data.extensionRelation.rangeValue;
@@ -2925,13 +2990,20 @@ var extensionRelationDialogCtrl =
     });
 
     $scope.ok = function () {
-      if ($scope.extensionRelation.rangeType == '%') {
-        $scope.extensionRelation.rangeValue =
-          $scope.extensionRelation.rangeValue.replace(/%\s*$/, '');
-      }
-      $uibModalInstance.close({
-        extensionRelation: $scope.extensionRelation,
+      const promise = $scope.checkRange();
+
+      promise.then(() => {
+        if ($scope.rangeState === 'ok') {
+          if ($scope.extensionRelation.rangeType == '%') {
+            $scope.extensionRelation.rangeValue =
+              $scope.extensionRelation.rangeValue.replace(/%\s*$/, '');
+          }
+          $uibModalInstance.close({
+            extensionRelation: $scope.extensionRelation,
+          });
+        }
       });
+
     };
 
     $scope.finishedCallback = function () {
@@ -2944,7 +3016,8 @@ var extensionRelationDialogCtrl =
   };
 
 canto.controller('ExtensionRelationDialogCtrl',
-  ['$scope', '$uibModalInstance', 'args', 'CursGeneList', 'toaster',
+                 ['$scope', '$uibModalInstance', '$uibModal', '$http', '$q',
+                  'args', 'CantoGlobals', 'CursGeneList', 'toaster',
     extensionRelationDialogCtrl
   ]);
 
@@ -2970,9 +3043,40 @@ function openTermConfirmDialog($uibModal, termId, initialState, featureType, isE
   });
 }
 
+function alleleQCCheckExtRange($http, checkUrl, termId, geneSystematicId, rangeValue) {
+  return $http.get(checkUrl,
+                   {
+                     params: {
+                       mod_code: termId,
+                       systematic_id: geneSystematicId,
+                       sequence_position: rangeValue,
+                     }
+                   })
+    .then(function(response) {
+      const userFriendlyFields = response.data.user_friendly_fields;
+      const needsFixing = userFriendlyFields.needs_fixing;
+      let errors = null;
+
+      if (needsFixing) {
+        let possibleErrors = [['Sequence error', userFriendlyFields.sequence_error],
+                              ['Sequence position fix',
+                               userFriendlyFields.change_sequence_position_to]];
+        errors = possibleErrors.filter((err) => err[1] && err[1] !== '');
+
+        if (errors.length == 0) {
+          errors = [['Error', 'Invalid range']];
+        }
+      }
+
+      return {
+        needsFixing,
+        errors,
+      };
+    });
+}
 
 var extensionRelationEdit =
-  function (CantoService, Curs, CursGeneList, toaster, $uibModal) {
+  function (CantoGlobals, CantoService, Curs, CursGeneList, toaster, $uibModal, $http) {
     return {
       scope: {
         extensionRelation: '=',
@@ -3159,9 +3263,8 @@ var extensionRelationEdit =
   };
 
 canto.directive('extensionRelationEdit',
-                ['CantoService', 'Curs', 'CursGeneList', 'toaster', '$uibModal',
-    extensionRelationEdit
-  ]);
+                ['CantoGlobals', 'CantoService', 'Curs', 'CursGeneList', 'toaster',
+                 '$uibModal', '$http', extensionRelationEdit]);
 
 
 var extensionDisplay =
@@ -3967,9 +4070,54 @@ function makeAutopopulateName(template, geneName) {
   return template.replace(/@@gene_display_name@@/, geneName);
 }
 
+function alleleQCCheckAllele($http, alleleQCUrl, geneSystematicId, alleleDescription,
+                             alleleType, alleleName) {
+  return $http.get(alleleQCUrl + '/check_allele',
+                   {
+                     params: {
+                       systematic_id: geneSystematicId,
+                       allele_description: alleleDescription,
+                       allele_type: alleleType,
+                       allele_name: alleleName,
+                     }
+                   })
+    .then(function(response) {
+      const userFriendlyFields = response.data.user_friendly_fields;
+      const needsFixing = userFriendlyFields.needs_fixing;
+      let errors = null;
+      let summaryParts = [];
+
+      if (needsFixing) {
+        let possibleErrors = [['Pattern error', userFriendlyFields.pattern_error],
+                              ['Invalid description', userFriendlyFields.invalid_error],
+                              ['Sequence error', userFriendlyFields.sequence_error],
+                              ['Description fix', userFriendlyFields.change_description_to],
+                              ['Description type', userFriendlyFields.change_type_to]];
+        errors = possibleErrors.filter((err) => err[1] && err[1] !== '');
+
+        if (errors.length == 0) {
+          errors = [['Error', 'Invalid description']];
+        }
+
+        if (userFriendlyFields.allele_parts) {
+          summaryParts.push(userFriendlyFields.allele_parts);
+        }
+
+        if (userFriendlyFields.rules_applied) {
+          summaryParts.push(userFriendlyFields.rules_applied);
+        }
+      }
+
+      return {
+        needsFixing,
+        summaryParts,
+        errors,
+      };
+    });
+}
 
 var alleleEditDialogCtrl =
-  function ($scope, $uibModal, $uibModalInstance, toaster, CantoConfig, args, Curs, CursGeneList, CantoGlobals) {
+  function ($scope, $uibModal, $uibModalInstance, $http, $q, toaster, CantoConfig, args, Curs, CursGeneList, CantoGlobals) {
     $scope.alleleData = {};
     copyObject(args.allele, $scope.alleleData);
     $scope.taxonId = args.taxonId;
@@ -3994,6 +4142,11 @@ var alleleEditDialogCtrl =
 
     $scope.userIsAdmin = CantoGlobals.current_user_is_admin;
     $scope.pathogenHostMode = CantoGlobals.pathogen_host_mode;
+    $scope.allele_qc_api_url = CantoGlobals.allele_qc_api_url;
+    $scope.descriptionNeedsChecking = false;
+    $scope.descriptionState = 'unset';
+    $scope.lastDescriptionError = '';
+    $scope.okInProgress = false;
 
     $scope.showAlleleTypeField = (
       ! $scope.lockedAlleleType && (
@@ -4119,6 +4272,88 @@ var alleleEditDialogCtrl =
       processSynonyms();
     };
 
+    $scope.descriptionChanged = function() {
+      $scope.descriptionNeedsChecking = false;
+      $scope.descriptionState = 'unset';
+    };
+
+    $scope.checkDescription = function() {
+      const qcUrl = CantoGlobals.allele_qc_api_url;
+
+      const alleleType = $scope.alleleData.type.trim();
+
+      if (!qcUrl || !$scope.current_type_config ||
+          !$scope.userIsAdmin ||
+          !$scope.current_type_config.check_description_with_api) {
+        $scope.descriptionState = 'ok';
+        return $q.when(null);
+      }
+
+      $scope.descriptionState = 'unset';
+
+      const geneSystematicId = $scope.alleleData.gene_systematic_id;
+      const alleleDescription = $scope.alleleData.description.trim();
+      const alleleName = $scope.alleleData.name.trim();
+      const alleleExportType = $scope.current_type_config.export_type;
+
+      $scope.descriptionNeedsChecking = false;
+
+      loadingStart();
+
+      const promise =
+            alleleQCCheckAllele($http, qcUrl, geneSystematicId, alleleDescription,
+                                alleleExportType, alleleName);
+
+      promise.then((result) => {
+        loadingEnd();
+        if (result.needsFixing) {
+          $scope.descriptionState = 'not-ok';
+          const errors = result.errors;
+          const summaryParts = result.summaryParts;
+
+          $scope.lastDescriptionError =
+            errors.map((err) => err[0] + ':' + err[1]).join("\n");
+          const errorMessages = '<dl>' + errors
+                .map((err) => {
+                  let message = err[1].replace(/_/g, ' ');
+                  const messageParts = message.split(/: /, 2);
+                  const messageStart = messageParts[0];
+                  const messageRest = messageParts[1];
+                  return '<dt>' + err[0] + '</dt> <dd>' + messageStart + ': <span>' + messageRest + '</span></dd>';
+                })
+                .join("\n") + '</dl>';
+
+          let content = errorMessages;
+
+          if (summaryParts.length > 0) {
+            content += '<details><summary>Details</summary><div class="allele-desc-problem-summ">' +
+              summaryParts.map((part) => {
+                const detailMessage = part.replace(/_/g, ' ');
+                const messageParts = detailMessage.split(/: /, 2);
+                const messageStart = messageParts[0];
+                const messageRest = messageParts[1];
+                return '<div>' + messageStart + ': <span>' + messageRest + '</span></div>';
+              }).join("\n") +
+              '</div></details>';
+          }
+
+          openSimpleDialog($uibModal, 'Allele description problems',
+                           'Allele description problems', content);
+        } else {
+          $scope.descriptionState = 'ok';
+          $scope.lastDescriptionError = '';
+
+//          toaster.pop({type: 'info', title: 'Allele description passes checks',
+//                       timeout: 5000, showCloseButton: true });
+        }
+      })
+      .finally(function () {
+        loadingEnd();
+      });
+
+      return promise;
+    };
+
     $scope.isValidType = function () {
       return !!$scope.alleleData.type;
     };
@@ -4150,12 +4385,40 @@ var alleleEditDialogCtrl =
       }
     };
 
+    $scope.okTitle = function() {
+      if ($scope.isExistingAllele()) {
+        return 'Finish editing this allele';
+      }
+
+      if ($scope.descriptionState == 'not-ok') {
+        return 'Fix the allele description to continue';
+      }
+
+      if (!$scope.isValidName()) {
+        return 'Set the allele name to continue';
+      }
+
+      if (!$scope.isValidType()) {
+        return 'Set the allele type to continue';
+      }
+
+      if (!$scope.isValidDescription()) {
+        return 'Set the allele description to continue';
+      }
+
+      return 'Finish editing this allele';
+    };
+
     $scope.isValid = function () {
+      if ($scope.descriptionState == 'not-ok') {
+        return false;
+      }
+
       return $scope.isValidExpression() &&
         (
           $scope.isExistingAllele() ||
-          $scope.isValidType() && $scope.isValidName() &&
-          $scope.isValidDescription()
+            $scope.isValidType() && $scope.isValidName() &&
+            $scope.isValidDescription()
         ) &&
         $scope.isValidStrain();
     };
@@ -4184,6 +4447,10 @@ var alleleEditDialogCtrl =
     }
 
     $scope.ok = function () {
+      if ($scope.descriptionState == 'not-ok') {
+        return;
+      }
+
       if ($scope.isValid()) {
         splitSynonymsForStoring($scope.alleleData, $scope.data.newSynonymsString);
         copyObject($scope.alleleData, args.allele);
@@ -4214,6 +4481,32 @@ var alleleEditDialogCtrl =
       } else {
         toaster.pop('error', "No changes have been made");
       }
+
+      const promise = $scope.checkDescription();
+
+      promise.then(() => {
+        if ($scope.descriptionState == 'not-ok') {
+          return;
+        }
+
+        if ($scope.isValid()) {
+          $scope.okInProgress = true;
+          splitSynonymsForStoring($scope.alleleData, $scope.data.newSynonymsString);
+          copyObject($scope.alleleData, args.allele);
+          var strainName = null;
+          if ($scope.strainData.selectedStrain) {
+            strainName = $scope.strainData.selectedStrain.strain_name;
+          }
+          setTimeout(function () {
+            $uibModalInstance.close({
+              alleleData: args.allele,
+              strainName: strainName
+            });
+          }, 400);
+        } else {
+          toaster.pop('error', "No changes have been made");
+        }
+      });
     };
 
     $scope.cancel = function () {
@@ -4255,9 +4548,10 @@ var alleleEditDialogCtrl =
   };
 
 canto.controller('AlleleEditDialogCtrl',
-                 ['$scope', '$uibModal', '$uibModalInstance', 'toaster', 'CantoConfig', 'args',
+                 ['$scope', '$uibModal', '$uibModalInstance', '$http', '$q',
+                  'toaster', 'CantoConfig', 'args',
                   'Curs', 'CursGeneList', 'CantoGlobals',
-    alleleEditDialogCtrl
+                  alleleEditDialogCtrl
   ]);
 
 var termSuggestDialogCtrl =
@@ -4302,6 +4596,22 @@ canto.controller('TermSuggestDialogCtrl',
   ]);
 
 
+// from: https://stackoverflow.com/a/73800554
+class AsyncQueue {
+  constructor() {
+    this.promise = Promise.resolve();
+  }
+
+  push(task) {
+    this.promise = this.promise.then(task);
+    return this.promise;
+  }
+}
+
+
+// see https://github.com/pombase/canto/issues/2682
+let storeQueue = new AsyncQueue();
+
 function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotype_background, alleles, taxonid, strain_name, comment) {
 
   var url = curs_root_uri + '/feature/genotype';
@@ -4321,25 +4631,27 @@ function storeGenotypeHelper(toaster, $http, genotype_id, genotype_name, genotyp
     strain_name: strain_name,
   };
 
-  loadingStart();
+  return storeQueue.push(() => {
+    loadingStart();
 
-  var result = $http.post(url, data);
+    var result = $http.post(url, data);
 
-  result.catch(function (data) {
-    if (data.message) {
-      toaster.error("Storing genotype failed, message from server: " + data.message);
-    } else {
-      toaster.error("Storing genotype failed, please reload and try again.  If that fails " +
-        "please contact the curators.");
-    }
-  });
-
-  result.finally(loadingEnd);
-
-  return result
-    .then(function(response) {
-      return response.data;
+    result.catch(function (data) {
+      if (data.message) {
+        toaster.error("Storing genotype failed, message from server: " + data.message);
+      } else {
+        toaster.error("Storing genotype failed, please reload and try again.  If that fails " +
+                      "please contact the curators.");
+      }
     });
+
+    result.finally(loadingEnd);
+
+    return result
+      .then(function(response) {
+        return response.data;
+      });
+  });
 }
 
 function makeAlleleEditInstance($uibModal, allele, taxonId, isCopied, lockedAlleleType) {
@@ -5542,7 +5854,12 @@ var genotypeBackgroundEditDialogCtrl =
         var storePromise =
           CursGenotypeList.setGenotypeBackground(toaster, $http, args.genotype,
             $scope.data.background);
-        storePromise.then(function () {
+        storePromise.then(function (result) {
+          if (result && result.status && result.status === 'existing') {
+            toaster.pop('warning', 'Action failed: genotype "' +
+                        args.genotype.display_name +
+                        '" already exists with the same background');
+          }
           $uibModalInstance.close();
         });
       }
@@ -7680,6 +7997,7 @@ var annotationEditDialogCtrl =
     $scope.annotationTypeName = args.annotationTypeName;
     $scope.annotationType = null;
     $scope.currentFeatureDisplayName = args.currentFeatureDisplayName;
+    $scope.currentSelectedFeature = null;
     $scope.newlyAdded = args.newlyAdded;
     $scope.featureEditable = args.featureEditable;
     $scope.matchingConfigurations = [];
@@ -8187,14 +8505,6 @@ var annotationEditDialogCtrl =
       return countKeys(changesToStore) > 0;
     };
 
-    $scope.featureChooserTitle = function() {
-      if ($scope.featureEditable) {
-        return 'Choose a ' + $scope.annotationType.feature_type;
-      } else {
-        return 'This annotation is not editable because it has associated genetic interactions';
-      }
-    };
-
     $scope.okButtonTitleMessage = function () {
       if ($scope.isValid()) {
         if ($scope.annotationChanged()) {
@@ -8313,6 +8623,14 @@ var annotationEditDialogCtrl =
           setGenotypeInteractionData(featureId, annotationType);
 
           if (featureId) {
+            if ($scope.annotation.feature_type === 'gene') {
+              let currentFeature =
+                  $.grep($scope.filteredFeatures,
+                         function(testFeature) {
+                           return testFeature.feature_id == featureId;
+                         })[0];
+              $scope.currentSelectedFeature = currentFeature;
+            }
 
             if (annotationType.term_suggestions_annotation_type) {
               updateTermSuggestions(featureId);
@@ -8450,11 +8768,16 @@ var annotationEditDialogCtrl =
 
     $scope.editExtension = function () {
       var featureType = $scope.featureSubtype || $scope.annotation.feature_type;
+      let currentFeatureSystematicId = null
+      if ($scope.currentSelectedFeature) {
+        currentFeatureSystematicId = $scope.currentSelectedFeature.primary_identifier;
+      }
       var editPromise = openExtensionBuilderDialog(
         $uibModal,
         $scope.annotation.extension,
         $scope.annotation.term_ontid,
         $scope.currentFeatureDisplayName,
+        currentFeatureSystematicId,
         $scope.annotationTypeName,
         featureType
       );
@@ -8476,6 +8799,9 @@ var annotationEditDialogCtrl =
     $scope.getObjectToStore = function(annotation) {
       var objectToStore = {};
       copyObject($scope.annotation, objectToStore);
+
+      // needed only for the extension editor
+      delete $scope.annotation.gene_identifier;
 
       if ($scope.annotationType.category === 'interaction') {
         if ($scope.annotationType.feature_type === 'gene') {
@@ -10254,8 +10580,12 @@ var annotationTableRow =
 
         $scope.duplicate = function () {
           var newAnnotation = makeNewAnnotation($scope.annotation);
-          newAnnotation.interaction_annotations = [];
-          newAnnotation.interaction_annotations_with_phenotypes = [];
+          if (newAnnotation.interaction_annotations) {
+            newAnnotation.interaction_annotations = [];
+          }
+          if (newAnnotation.interaction_annotations_with_phenotypes) {
+            newAnnotation.interaction_annotations_with_phenotypes = [];
+          }
           startEditing($uibModal, annotation.annotation_type,
             newAnnotation, $scope.featureFilterDisplayName,
             true, true);

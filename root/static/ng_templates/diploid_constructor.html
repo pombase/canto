@@ -15,7 +15,7 @@
           <span ng-bind-html="startAllele.long_display_name | encodeAlleleSymbols | toTrusted"></span>
         </label>
       </div>
-      <div ng-if="!isWTAndWTExpression(startAllele)" class="curs-diploid-constructor-choices">
+      <div ng-hide="isWTAndWTExpression(startAllele)" class="curs-diploid-constructor-choices">
         <input type="radio" value="wild type" id="wild-type" name="wild-type" ng-model="diploidType"/>
         <label for="wild-type">
           <span ng-bind-html="startAllele.long_display_name | encodeAlleleSymbols | toTrusted"></span> / wild type</label>

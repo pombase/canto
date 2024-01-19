@@ -108,7 +108,7 @@
     },
     "metagenotypeId": {
       "title": "Metagenotype identifier",
-      "description": "A unique identifer for a metagenotype, consisting of 1) the curation session identifier, 2) the string '-metagenotype-', and 3) a sequentially incremented integer.",
+      "description": "A unique identifier for a metagenotype, consisting of 1) the curation session identifier, 2) the string '-metagenotype-', and 3) a sequentially incremented integer.",
       "type": "string",
       "pattern": "^[a-f0-9]{8,16}-metagenotype-\\d+$",
       "examples": [
@@ -234,10 +234,23 @@
                         "description": "`true` if the curator who created the annotation was a community curator (not a member of the admin curation team), otherwise `false`.",
                         "type": "boolean"
                       },
+                      "curator_orcid": {
+                        "title": "Curator ORCID identifier",
+                        "description": "The ORCID identifier of the curator who made the annotation. May be `null` if the curator did not provide an ORCID identifier.",
+                        "oneOf": [
+                          {
+                            "$ref": "#/definitions/orcid"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
                       "email": {
                         "title": "Annotation curator email",
                         "description": "The email address of the curator who created the annotation.",
-                        "type": "string"
+                        "type": "string",
+                        "format": "email"
                       },
                       "name": {
                         "title": "Annotation curator name",
@@ -277,7 +290,15 @@
                           "title": "Extension range type",
                           "description": "The type of the range of the annotation extension relation. Note that this may be absent in the case that an admin curator has entered the relation as text.",
                           "type": "string",
-                          "enum": ["Gene", "Ontology", "%", "Text"]
+                          "enum": [
+                            "Gene",
+                            "Ontology",
+                            "%",
+                            "Text",
+                            "HostTaxonID",
+                            "PathogenTaxonID",
+                            "Metagenotype"
+                          ]
                         },
                         "rangeValue": {
                           "title": "Extension range value",
@@ -366,7 +387,9 @@
                     "type": "string"
                   },
                   "with_gene_id": {
-                    "type": "string"
+                    "title": "With gene ID",
+                    "description": "The gene identifier for Gene Ontology annotations that use the Inferred from Physical Interaction or Inferred from Genetic Interaction evidence codes. This provides the value for the With/From column in a GO Annotation File.",
+                    "$ref": "#/definitions/nullableString"
                   }
                 },
                 "required": [
@@ -529,7 +552,13 @@
                           }
                         ]
                       }
-                    }
+                    },
+                    "required": [
+                      "annotation_count",
+                      "community_curator",
+                      "name",
+                      "orcid"
+                    ]
                   }
                 },
                 "annotation_mode": {
@@ -652,7 +681,10 @@
                   "description": "The number of experimental conditions in the session that are not found in the experimental conditions ontology.",
                   "$ref": "#/definitions/stringInteger"
                 }
-              }
+              },
+              "required": [
+                "has_community_curation"
+              ]
             },
             "metagenotypes": {
               "title": "Metagenotypes",

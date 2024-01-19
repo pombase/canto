@@ -38,6 +38,8 @@ under the same terms as Perl itself.
 use Carp;
 use Moose;
 
+use List::MoreUtils qw(uniq);
+
 with 'Canto::Role::Configurable';
 with 'Canto::Role::Exporter';
 
@@ -163,11 +165,11 @@ sub export
       $data->{allele_description},
       $data->{gene_name},
       $data->{allele_name},
-      (join "|", @{$data->{allele_synonyms}}),
+      (join "|", uniq(@{$data->{allele_synonyms}})),
       $data->{allele_type},
-      (join ",", @{$data->{references}}),
+      (join ",", uniq(@{$data->{references}})),
       $data->{annotation_count},
-      (join ",", @{$data->{sessions}});
+      (join ",", uniq(@{$data->{sessions}}));
 
     $result_table .= "\n";
 

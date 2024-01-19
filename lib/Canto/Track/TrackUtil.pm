@@ -328,4 +328,102 @@ sub delete_unused_strains
   return $count;
 }
 
+sub _get_track_people_map
+{
+  my $self = shift;
+
+  my $track_schema = $self->schema();
+
+  my %people = ();
+
+  my $people_rs = $track_schema->resultset('Person');
+
+  while (defined (my $person = $people_rs->next())) {
+    $people{$person->email_address()} = {
+      name => $person->name(),
+      orcid => $person->orcid(),
+    };
+  }
+
+  return %people;
+}
+
+
+sub _get_curs_metadata
+{
+  my $self = shift;
+
+  my $cursdb = shift;
+
+  my %metadata = ();
+
+  my $metadata_rs = $cursdb->resultset('Metadata');
+
+  while (defined (my $md_row = $metadata_rs->next())) {
+    my $key = $md_row->key();
+    my $value = $md_row->value();
+
+    $metadata{$key} = $value;
+  }
+
+  return %metadata;
+}
+
+
+=head2 update_annotation_curators
+
+ Usage   : $self->update_annotation_curators();
+ Function: Set the curator_orcid field of the annotations
+           if available in the person table
+
+=cut
+
+sub update_annotation_curators
+{
+  my $self = shift;
+
+  my $track_schema = $self->schema();
+
+  my %people_map = $self->_get_track_people_map();
+
+  my $proc = sub {
+    my $curs = shift;
+    my $cursdb = shift;
+
+    my $annotation_rs = $cursdb->resultset('Annotation');
+
+    my $updated_count = 0;
+
+    while (defined (my $annotation = $annotation_rs->next())) {
+      my $data = $annotation->data();
+
+      my $curator = $data->{curator};
+      my $curator_email = $curator->{email};
+
+      my $curator_orcid = $people_map{$curator_email}->{orcid};
+
+      if (!defined $curator->{curator_orcid} &&
+          defined $curator_orcid ||
+          defined $curator_orcid &&
+          defined $curator->{curator_orcid} &&
+          $curator_orcid ne $curator->{curator_orcid}) {
+        $curator->{curator_orcid} = $curator_orcid;
+
+        $annotation->data($data);
+        $annotation->update();
+
+        $updated_count++;
+      }
+    }
+
+    if ($updated_count > 0) {
+      my $curs_key = $curs->curs_key();
+
+      warn "$curs_key: updated $updated_count\n";
+    }
+  };
+
+  Canto::Track::curs_map($self->config(), $track_schema, $proc);
+}
+
 1;

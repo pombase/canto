@@ -38,6 +38,8 @@ my $rename_strain = undef;
 my $merge_strains = undef;
 my $change_taxonid = undef;
 my $delete_unused_strains = undef;
+my $update_annotation_curators = undef;
+
 my $dry_run = 0;
 my $do_help = 0;
 
@@ -46,6 +48,7 @@ my $result = GetOptions ("refresh-gene-cache" => \$refresh_gene_cache,
                          "merge-strains" => \$merge_strains,
                          "change-taxonid" => \$change_taxonid,
                          "delete-unused-strains" => \$delete_unused_strains,
+                         "update-annotation-curators" => \$update_annotation_curators,
                          "dry-run|d" => \$dry_run,
                          "help|h" => \$do_help);
 
@@ -76,6 +79,10 @@ sub usage
 
   $0 --delete-unused-strains
   Remove all strains that are not used in any session
+
+  $0 --update-annotation-curators
+  Set the curator_orcid field of the annotations if available in the
+  person table
 
 |;
 }
@@ -112,6 +119,11 @@ if ($change_taxonid && @ARGV != 2) {
 
 if ($delete_unused_strains && @ARGV > 0) {
   warn "Error: too many arguments for --delete-unused-strains\n\n";
+  usage();
+}
+
+if ($update_annotation_curators && @ARGV > 0) {
+  warn "Error: too many arguments for --update-annotation-curators\n\n";
   usage();
 }
 
@@ -168,6 +180,15 @@ my $proc = sub {
       print "$0: deleted $count strains from the TrackDB\n";
     } catch {
       warn "failed to delete unused strains: $_\n";
+    };
+  }
+
+  if (defined $update_annotation_curators) {
+    try {
+      $util->update_annotation_curators();
+      $exit_flag = 0;
+    } catch {
+      warn "failing to update annotation curator field: $_\n";
     };
   }
 };

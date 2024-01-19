@@ -7,7 +7,7 @@ function trim(a) {
   a=a.replace(/^\s+/,''); return a.replace(/\s+$/,'');
 }
 
-var loadingDiv = $('<div id="loading"><img src="' + application_root +
+var loadingDiv = $('<div id="loading" style="z-index: 2000;"><img src="' + application_root +
                    '/static/images/spinner.gif"/></div>');
 
 function loadingStart() {

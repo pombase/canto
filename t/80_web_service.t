@@ -230,11 +230,11 @@ test_psgi $app, sub {
       die "$@\n", $res->content();
     }
 
-    like($res->content(), qr/"allele_name_required"\s*:\s*false/);
+    like($res->content(), qr/"description_required"\s*:\s*false/);
     like($res->content(), qr/"allele_name_required"\s*:\s*true/);
 
     ok ($obj->{'partial deletion, nucleotide'}->{allow_expression_change});
-    ok (!$obj->{'partial deletion, nucleotide'}->{allele_name_required});
+    ok (!$obj->{'unknown'}->{description_required});
   }
 
   {

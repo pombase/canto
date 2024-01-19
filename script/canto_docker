@@ -47,9 +47,17 @@ then
     INTERACTIVE_ARGS="$INTERACTIVE_ARGS --name $CONTAINER_NAME"
 fi
 
-CANTO_DOCKER_RUN_ARGS="$EXTRA_ARGS --rm $INTERACTIVE_ARGS --mount type=bind,source=$(pwd)/logs,target=/logs --mount type=bind,source=$(pwd)/data,target=/data --mount type=bind,source=$(pwd)/import_export,target=/import_export --mount type=bind,source=$(pwd)/canto,target=/canto -w=/canto pombase/canto-base:v15"
+DOCKER_COMMAND="docker"
+
+if [ $1 = '--use-podman' ]
+then
+    shift
+    DOCKER_COMMAND="podman"
+fi
+
+CANTO_DOCKER_RUN_ARGS="$EXTRA_ARGS --rm $INTERACTIVE_ARGS --mount type=bind,source=$(pwd)/logs,target=/logs --mount type=bind,source=$(pwd)/data,target=/data --mount type=bind,source=$(pwd)/import_export,target=/import_export --mount type=bind,source=$(pwd)/canto,target=/canto -w=/canto docker.io/pombase/canto-base:v15"
 
 cd canto
 
-exec docker run $CANTO_DOCKER_RUN_ARGS "$@"
+exec $DOCKER_COMMAND run $CANTO_DOCKER_RUN_ARGS "$@"
 

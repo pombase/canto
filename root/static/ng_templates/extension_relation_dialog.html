@@ -1,6 +1,6 @@
 <div class="modal-content">
   <div class="modal-body">
-    <div>{{relationConfig.displayText}}</span>
+    <div>{{relationConfig.displayText}}</div>
     <div ng-if="relationConfig.range.length == 1">
       <extension-relation-edit extension-relation="extensionRelation"
                                relation-config="relationConfig"
@@ -21,6 +21,9 @@
                                  finished-callback="finishedCallback()"></extension-relation-edit>
         <div ng-if="!$last">OR</div>
       </div>
+    </div>
+    <div ng-show="relationConfig.helpText" class="curs-ext-rel-dialog-help-text">
+      Hint: {{relationConfig.helpText}}
     </div>
   </div>
   <div class="modal-footer">

@@ -95,6 +95,7 @@ cmp_deeply(
       'subset_rel' => ['is_a'],
       'allowed_relation' => 'has_substrate',
       'range' => [{ 'type' => 'Gene' }],
+      'range_check' => undef,
       'display_text' => 'kinase substrate',
       'help_text' => '',
       'cardinality' => ['0', '1'],
@@ -112,6 +113,7 @@ cmp_deeply(
           'scope' => ['GO:0005215']
         }
       ],
+      'range_check' => undef,
       'display_text' => 'Something that happens during',
       'help_text' => '',
       'cardinality' => ['*'],
@@ -124,6 +126,7 @@ cmp_deeply(
       'subset_rel' => ['is_a'],
       'allowed_relation' => 'localizes',
       'range' => [{'type' => 'Gene'}],
+      'range_check' => undef,
       'display_text' => 'localizes',
       'help_text' => '',
       'cardinality' => ['0', '1'],
@@ -141,6 +144,7 @@ cmp_deeply(
           'type' => 'Ontology'
         }
       ],
+      'range_check' => undef,
       'display_text' => 'occurs at',
       'help_text' => '',
       'cardinality' => ['0', '1'],
@@ -158,6 +162,7 @@ cmp_deeply(
           'input_type' => 'text'
         }
       ],
+      'range_check' => undef,
       'display_text' => 'occurs at',
       'help_text' => '',
       'cardinality' => ['0', '1'],
@@ -171,6 +176,7 @@ cmp_deeply(
       'subset_rel' => ['is_a'],
       'allowed_relation' => 'localizes',
       'range' => [{'type' => 'Gene'}],
+      'range_check' => undef,
       'display_text' => 'localizes',
       'help_text' => '',
       'cardinality' => ['0', '1'],
@@ -183,6 +189,7 @@ cmp_deeply(
       'subset_rel' => ['is_a'],
       'allowed_relation' => 'occurs_at',
       'range' => [{'type' => 'Gene'}],
+      'range_check' => undef,
       'display_text' => 'occurs at',
       'help_text' => '',
       'cardinality' => ['0', '1'],
@@ -195,6 +202,7 @@ cmp_deeply(
       'subset_rel' => ['is_a'],
       'allowed_relation' => 'assayed_using',
       'range' => [{'type' => 'Gene'}],
+      'range_check' => undef,
       'display_text' => 'assayed using',
       'help_text' => '',
       'cardinality' => ['0', '2'],
@@ -215,6 +223,7 @@ cmp_deeply(
           'type' => 'Ontology'
         },
       ],
+      'range_check' => undef,
       'display_text' => 'penetrance',
       'help_text' => '',
       'cardinality' => ['0', '1'],
@@ -231,14 +240,14 @@ my $config_for_json = $config_with_suffix->for_json('allele_types');
 
 my $description_required =
   $config_for_json->{'nucleotide substitution(s)'}->{description_required};
-my $allele_name_required =
-  $config_for_json->{'nucleotide substitution(s)'}->{allele_name_required};
+my $show_description =
+  $config_for_json->{'deletion'}->{show_description};
 
 ok ($description_required);
-ok (!$allele_name_required);
+ok (!$show_description);
 
 ok ($description_required == JSON::true);
-ok ($allele_name_required == JSON::false);
+ok ($show_description == JSON::false);
 
 # species taxon ID lookup
 is ($config_single->get_species_taxon_of_strain_taxon(1238467), 168172);

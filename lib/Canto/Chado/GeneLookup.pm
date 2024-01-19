@@ -102,7 +102,7 @@ sub gene_search_options
   my %args = @_;
   my $feature_alias = $args{feature_alias};
 
-  return (where => \"$feature_alias.type_id in (select cvterm_id from cvterm where name = 'gene')");
+  return (where => \"$feature_alias.type_id in (select cvterm_id from cvterm where name = 'gene' or name = 'pseudogene')");
 }
 
 sub lookup_by_synonym_rs

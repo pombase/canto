@@ -1417,6 +1417,18 @@ form label.error {
   font-size: 80%;
 }
 
+.curs-allele-desc-ok, .curs-allele-desc-not-ok {
+  font-size: 110%;
+}
+
+.curs-allele-desc-ok {
+  color: #090;
+}
+
+.curs-allele-desc-not-ok {
+  color: #900;
+}
+
 a.curs-editable-table-field {
   white-space: nowrap;
 }
@@ -1990,4 +2002,29 @@ button.curs-annotation-edit-suggest {
 
 .curs-annotation-edit-suggest-new-term-button {
   padding-left: 1em;
+}
+
+dd {
+  margin-left: 1em;
+}
+
+.allele-desc-problem-summ div {
+  margin-bottom: 0.5em;
+}
+
+.allele-desc-problem-summ {
+  margin-bottom: 1em;
+}
+
+/* override Bootstrap */
+summary {
+  display: list-item;
+}
+
+details > div {
+  margin-left: 1em;
+}
+
+.curs-ext-rel-dialog-help-text {
+  margin: 1em 0;
 }

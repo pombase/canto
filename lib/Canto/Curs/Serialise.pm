@@ -49,6 +49,8 @@ use Data::Rmap ':all';
 use Canto::Track::CuratorManager;
 use Canto::Track;
 
+our $ORCID_RE = qr/\d\d\d\d-\d\d\d\d-\d\d\d\d-\d\d\d[\dX]/;
+
 sub _get_metadata_value
 {
   my $schema = shift;
@@ -75,6 +77,8 @@ sub _get_metadata
 
   my $curator_name_re = qr/(curator|approver|initial_curator|first_contact)_name$/;
 
+  my $approver_orcid = undef;
+
   my %ret = map {
     my $key = $_->key();
     $key = "canto_session" if $key eq "curs_key";
@@ -82,10 +86,27 @@ sub _get_metadata
     ($key, _get_metadata_value($curs_schema, $_->key(), $_->value() ))
   } grep {
     my $key = $_->key();
+    if ($key eq 'approver_email' && $options->{export_curator_names}) {
+      my $approver_email = $_->value();
+
+      my $orcid_rs = $track_schema->resultset('Person')
+        ->search({ email_address => $approver_email });
+
+      my $person = $orcid_rs->next();
+
+      if (defined $person && $person->orcid()) {
+        $approver_orcid = $person->orcid();
+      }
+    }
+
     $key !~ /email$/ &&
       ($options->{export_curator_names} ||
        $key !~ /$curator_name_re/)
   } @results;
+
+  if (defined $approver_orcid) {
+    $ret{approver_orcid} = $approver_orcid;
+  }
 
   if (!$ret{canto_session}) {
     warn "can't for curs_key in CursDB metadata\n";
@@ -316,6 +337,14 @@ sub _get_annotations
         die "community_curated not set for annotation ",
           $annotation->annotation_id(), " in session ",
           $metadata->{canto_session};
+      }
+      my $curator_orcid = $data{curator}->{curator_orcid};
+
+      if (defined $curator_orcid && $curator_orcid =~ m|.*?($ORCID_RE)$|) {
+        # remove any prefixes
+        $data{curator}->{curator_orcid} = $1;
+      } else {
+        delete $data{curator}->{curator_orcid};
       }
     } else {
       my $metadata = _get_metadata($config, $track_schema, $schema, $options);
@@ -812,16 +841,17 @@ sub _get_curators_from_annotations
 
         my $curator_orcid = $curator->{curator_orcid};
 
-        if (!defined $curator_orcid) {
+        if (!defined $curator_orcid && defined $curator_email) {
+          $curator_orcid =
+            ($curator_manager->curator_details_by_email($curator_email))[3];
+        }
 
-          if (defined $curator_email) {
-            my ($curator_email, $curator_name, $curator_known_as, $curator_orcid) =
-              $curator_manager->curator_details_by_email($curator_email);
-
-            if (defined $curator_orcid && $curator_orcid =~ m|.*?(\d\d\d\d-\d\d\d\d-\d\d\d\d-\d\d\d[\dX]$)|) {
-              # remove any prefixes
-              $annotation_curators{$name}->{curator_orcid} = $1;
-            }
+        if (defined $curator_orcid) {
+          if ($curator_orcid =~ m|.*?($ORCID_RE)$|) {
+            # remove any prefixes
+            $annotation_curators{$name}->{curator_orcid} = $1;
+          } else {
+            delete $annotation_curators{$name}->{curator_orcid};
           }
         }
       }

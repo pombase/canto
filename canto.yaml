@@ -25,7 +25,7 @@ header_image: logos/curation_tool.png
 
 canto_url: https://curation.pombase.org/
 
-app_version: v1747
+app_version: v1789
 
 schema_version: 35
 
@@ -132,6 +132,9 @@ show_message_for_curators_on_front_page: 0
 # the allele_type_list
 # For multi allele genotype, only considering the type of the first allele
 sort_genotype_management_page_by_allele_type: 0
+
+# if set, use this end point to check allele descriptions
+allele_qc_api_url: ~
 
 # from_address - used as the "from" field is all outgoing messages
 # admin_address - the contact address of the admin curators, used to
@@ -436,6 +439,11 @@ db_initial_data:
               accession: structure
               db:
                 name: Canto
+          - name: Bioarchive
+            dbxref:
+              accession: bioarchive
+              db:
+                name: Canto
           - name: Retracted
             dbxref:
               accession: retracted
@@ -459,6 +467,16 @@ db_initial_data:
           - name: Database
             dbxref:
               accession: database
+              db:
+                name: Canto
+          - name: Bioinformatics
+            dbxref:
+              accession: bioinformatics
+              db:
+                name: Canto
+          - name: Educational Resources
+            dbxref:
+              accession: educational_resources
               db:
                 name: Canto
           - name: Other
@@ -1077,6 +1095,10 @@ class_info:
       class_display_name: Duplicated in PubMed
       extends: pub
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Duplicated in PubMed')"
+    triage_bioarchive_publications:
+      class_display_name: Bioarchive
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Bioarchive')"
     curatable_publications_with_sessions:
       extends: pub
       constraint: "pub_id in (select pub from curs) and triage_status_id in (select cvterm_id from cvterm where name = 'Curatable')"
@@ -1343,6 +1365,7 @@ reports:
                 - report: triage_biotech_publications
                 - report: triage_database_publications
                 - report: triage_loaded_in_error_publications
+                - report: triage_bioarchive_publications
                 - report: triage_duplicated_in_pubmed_publications
                 - report: triage_other_publications
             - report: curated_publications
@@ -1441,6 +1464,7 @@ implementation_classes:
 
 wildtype_name_template: '@@gene_display_name@@+'
 deletion_name_template: '@@gene_display_name@@delta'
+transformant_name_template: '@@gene_display_name@@ transformant'
 
 allele_type_list:
   - name: wild type
@@ -1474,15 +1498,17 @@ allele_type_list:
     export_type: amino_acid_insertion
     show_description: true
     description_required: true
-    allele_name_required: false
+    check_description_with_api: true
+    allele_name_required: true
     allow_expression_change: true
     expression_required: true
-    placeholder: e.g. A858-MKGYP
+    placeholder: e.g. A858AMKGYP (insertion of MKGYP after A858, note A before and after number)
   - name: "amino acid substitution(s)"
     export_type: amino_acid_mutation
     show_description: true
     description_required: true
-    allele_name_required: false
+    check_description_with_api: true
+    allele_name_required: true
     allow_expression_change: true
     expression_required: true
     placeholder: eg. K132A or F256A,F310A
@@ -1490,23 +1516,26 @@ allele_type_list:
     export_type: amino_acid_insertion_and_mutation
     show_description: true
     description_required: true
-    allele_name_required: false
+    check_description_with_api: true
+    allele_name_required: true
     allow_expression_change: true
     expression_required: true
-    placeholder: e.g. A858-MKGYP,F124D
+    placeholder: e.g. A858AMKGYP,F124D
   - name: amino acid insertion and deletion
     export_type: amino_acid_insertion_and_deletion
     show_description: true
     description_required: true
-    allele_name_required: false
+    check_description_with_api: true
+    allele_name_required: true
     allow_expression_change: true
     expression_required: true
-    placeholder: e.g. A858-MKGYP,100-200,P500*
+    placeholder: e.g. A858AMKGYP,100-200,P500*
   - name: partial deletion and amino acid change
     export_type: amino_acid_deletion_and_mutation
     show_description: true
     description_required: true
-    allele_name_required: false
+    check_description_with_api: true
+    allele_name_required: true
     allow_expression_change: true
     expression_required: true
     placeholder: e.g. 100-200,F124D,P500*
@@ -1514,7 +1543,8 @@ allele_type_list:
     export_type: partial_amino_acid_deletion
     show_description: true
     description_required: true
-    allele_name_required: false
+    check_description_with_api: true
+    allele_name_required: true
     allow_expression_change: true
     expression_required: true
     placeholder: "Specify deleted residues - eg. 100-200 OR 10-20,40-50. Use P500* for nonsense mutation"
@@ -1522,42 +1552,47 @@ allele_type_list:
     export_type: nucleotide_insertion
     show_description: true
     description_required: true
-    allele_name_required: false
+    check_description_with_api: true
+    allele_name_required: true
     allow_expression_change: true
     expression_required: true
-    placeholder: e.g. C132-AATTT
+    placeholder: e.g. C132CAATTT (insertion of AATTT after C132, note C before and after number))
   - name: "nucleotide substitution(s)"
     export_type: nucleotide_mutation
     show_description: true
     description_required: true
-    allele_name_required: false
+    check_description_with_api: true
+    allele_name_required: true
     allow_expression_change: true
     expression_required: true
-    placeholder: eg. A25G, OR A-25G (for promoter region)
+    placeholder: eg. A25G, OR A(-25)G (for residues upstream of ATG -protein coding- or transcription start -RNA genes-)
   - name: partial deletion, nucleotide
     export_type: partial_nucleotide_deletion
     show_description: true
     description_required: true
-    allele_name_required: false
+    check_description_with_api: true
+    allele_name_required: true
     allow_expression_change: true
     expression_required: true
-    placeholder: "Please specify deleted residues - eg. 100-200 OR (-20)-(-30) (for promoter region)"
+    placeholder: "Specify deleted residues - eg. 100-200 OR (-20)-(-30) (for residues upstream of ATG -protein coding- or transcription start -RNA genes-)"
   - name: partial deletion and nucleotide change
     export_type: nucleotide_deletion_and_mutation
     show_description: true
     description_required: true
-    allele_name_required: false
+    check_description_with_api: true
+    allele_name_required: true
     allow_expression_change: true
     expression_required: true
-    placeholder: e.g. 100-200,A124T,C128G
+    placeholder: e.g. 100-200,A124T,C128G (for residues upstream of ATG -protein coding- or transcription start -RNA genes- use negative numbers in parenthesis)
   - name: nucleotide insertion and substitution
     export_type: nucleotide_insertion_and_mutation
     show_description: true
     description_required: true
-    allele_name_required: false
+    check_description_with_api: true
+    allele_name_required: true
     allow_expression_change: true
     expression_required: true
-    placeholder: e.g. T858-TTGA,T124A
+    placeholder: e.g. T858TAAGA,T(-124)A (for residues upstream of ATG -protein coding- or transcription start -RNA genes- use negative numbers in parenthesis)
   #   currently replaced by partial aminoacid deletion
   # - name: nonsense mutation
   #   export_type: nonsense_mutation
@@ -1579,7 +1614,7 @@ allele_type_list:
     export_type: other
     show_description: true
     description_required: true
-    allele_name_required: false
+    allele_name_required: true
     allow_expression_change: true
     expression_required: true
     placeholder: Please provide a description
@@ -1854,6 +1889,7 @@ ontology_namespace_config:
     - "FYPO:0002057"
     - "FYPO:0002058"
     - "FYPO:0002059"
+    - "SO:0001527"
 
 # Namespace used for the phenotype condition ontology. If you
 # use an ontology other than FYECO for your phenotype conditions, then

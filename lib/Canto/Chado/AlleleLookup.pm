@@ -37,6 +37,8 @@ the Free Software Foundation, either version 3 of the License, or
 
 =cut
 
+use feature qw(state);
+
 use Moose;
 
 use Canto::Curs::Utils;
@@ -289,6 +291,130 @@ sub lookup_by_uniquename
   }
 
   return undef;
+}
+
+state $cache_by_gene_uniquename = {};
+state $cache_by_canto_systematic_id = {};
+
+sub _fill_allele_caches
+{
+  my $self = shift;
+
+  my $schema = $self->schema();
+
+  my $allele_rs = $schema->resultset('Feature')
+    ->search({ 'type.name' => 'allele',
+               'type_2.name' => 'instance_of',
+               'type_3.name' => 'gene',
+             },
+             { join => ['type',
+                        { feature_relationship_subjects =>
+                          ['type',
+                           { object => 'type' } ] }],
+               prefetch => { feature_relationship_subjects => 'object',
+                             featureprops => 'type' }});
+
+  map {
+    my $allele = $_;
+
+    my @featureprops = $allele->featureprops()->all();
+
+    my $description;
+    my $allele_type;
+    my @canto_allele_systematic_ids = ();
+
+    map {
+      my $prop_type = $_->type()->name();
+
+      if ($prop_type eq 'description') {
+        $description = $_->value();
+      } else {
+        if ($prop_type eq 'allele_type') {
+          $allele_type = $_->value();
+        } else {
+          if ($prop_type eq 'canto_allele_systematic_id') {
+            push @canto_allele_systematic_ids, $_->value();
+          }
+        }
+      }
+    } @featureprops;
+
+    my $gene_uniquename = $allele->feature_relationship_subjects()->first()->object()->uniquename();
+
+    my $allele_details = {
+      gene_systematic_id => $gene_uniquename,
+      name => $allele->name(),
+      type => $allele_type,
+      description => $description,
+      allele_systematic_id => $allele->uniquename(),
+      canto_allele_systematic_ids => \@canto_allele_systematic_ids,
+    };
+
+    push @{$cache_by_gene_uniquename->{$gene_uniquename}}, $allele_details;
+
+    map {
+      push @{$cache_by_canto_systematic_id->{$_}}, $allele_details;
+    } @canto_allele_systematic_ids;
+  } $allele_rs->all();
+}
+
+
+=head2 lookup_by_details
+
+ Usage   : @alleles = $lu->lookup_by_details($gene_uniquename, $allele_type,
+                                             $allele_description);
+ Function: lookup alleles matching a given type and description
+
+=cut
+
+sub lookup_by_details
+{
+  my $self = shift;
+
+  my $gene_uniquename = shift;
+  my $allele_type = shift;
+  my $allele_description = shift // 'NO_DESCRIPTION';
+
+  if (scalar(keys %$cache_by_gene_uniquename) == 0) {
+    $self->_fill_allele_caches();
+  }
+
+  if (defined $cache_by_gene_uniquename->{$gene_uniquename}) {
+    my @alleles =  @{$cache_by_gene_uniquename->{$gene_uniquename}};
+
+    return grep {
+      my $_test_allele = $_;
+
+      $_test_allele->{type} eq $allele_type &&
+        ($allele_type =~ /^(deletion|wild[ _]type)$/ ||
+         ($_test_allele->{description} // 'NO_DESCRIPTION') eq $allele_description);
+    } @alleles;
+  } else {
+    return ();
+  }
+}
+
+
+=head2 lookup_by_canto_systematic_id
+
+ Usage   : my @alleles = $self->lookup_by_canto_systematic_id($canto_systematic_id);
+
+=cut
+
+sub lookup_by_canto_systematic_id
+{
+  my $self = shift;
+  my $canto_systematic_id = shift;
+
+  if (scalar(keys %$cache_by_canto_systematic_id) == 0) {
+    $self->_fill_allele_caches();
+  }
+
+  if (defined $cache_by_canto_systematic_id->{$canto_systematic_id}) {
+    return @{$cache_by_canto_systematic_id->{$canto_systematic_id}};
+  } else {
+    return ();
+  }
 }
 
 1;

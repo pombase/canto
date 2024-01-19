@@ -45,6 +45,30 @@ my $track_schema = Canto::TrackDB->new(config => $config);
 
 my $chado_schema = Canto::ChadoDB->new(config => $config);
 
+sub safe_str_eq
+{
+  my $undef_str = '____:::UNDEF:::____';
+  my $first = shift // $undef_str;
+  my $second = shift // $undef_str;
+
+  return $first eq $second;
+}
+
+sub safe_num_eq
+{
+  my $first = shift;
+  my $second = shift;
+
+  if (defined $first && defined $second) {
+    return $first == $second;
+  } else {
+    if (!defined $first && !defined $second) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+}
 
 my %all_genes = ();
 
@@ -109,9 +133,12 @@ sub merge_alleles
 
     print "merging $allele_id into $survivor_allele_id\n";
 
-    if ($allele_detail->{db_allele}->allelesynonyms()->count() > 0) {
-      print "  $allele_id has synonyms but will be removed\n";
-      die;
+    my $allelesynonym_rs = $allele_detail->{db_allele}->allelesynonyms();
+    my $allelesynonym_count = $allelesynonym_rs->count();
+
+    if ($allelesynonym_count > 0) {
+      print "  moving $allelesynonym_count synonyms from $allele_id\n";
+      $allelesynonym_rs->update({ allele => $survivor_allele_id });
     }
 
     my $allele_genotypes_rs = $allele_detail->{db_allele}->allele_genotypes();
@@ -155,17 +182,43 @@ sub merge_genotypes
   }
 
   if (@allele_genotypes_to_merge >= 2) {
-    use Data::Dumper;
-    $Data::Dumper::Maxdepth = 2;
-    print 'merging: ', Dumper([$allele_detail]);
-
-    print "  ", scalar(@allele_genotypes_to_merge), " genotypes\n";
+    print "  merging ", scalar(@allele_genotypes_to_merge), " genotypes\n";
 
     my $first_allele_genotype = shift @allele_genotypes_to_merge;
     my $first_genotype = $first_allele_genotype->genotype();
 
     for my $other_allele_genotype (@allele_genotypes_to_merge) {
       my $other_genotype = $other_allele_genotype->genotype();
+
+      if (!safe_str_eq($first_genotype->name(),
+                       $other_genotype->name())) {
+        print "  not merging: name\n";
+        next;
+      }
+
+      if (!safe_str_eq($first_genotype->background(),
+                       $other_genotype->background())) {
+        print "  not merging: background\n";
+        next;
+      }
+
+      if (!safe_str_eq($first_genotype->comment(),
+                       $other_genotype->comment())) {
+        print "  not merging: comment\n";
+        next;
+      }
+
+      if (!safe_num_eq($first_genotype->organism_id(),
+                       $other_genotype->organism_id())) {
+        print "  not merging: organism_id\n";
+        next;
+      }
+
+      if (!safe_num_eq($first_genotype->strain_id(),
+                       $other_genotype->strain_id())) {
+        print "  not merging: strain_id\n";
+        next;
+      }
 
       print "    replace allele genotype ",
         $other_allele_genotype->allele_genotype_id(), " with ",
@@ -182,6 +235,28 @@ sub merge_genotypes
       while (defined (my $genotype_annotation = $genotype_annotations_rs->next())) {
         $genotype_annotation->genotype($first_genotype);
         $genotype_annotation->update();
+      }
+
+      my $interaction_a_rs = $other_genotype->genotype_interaction_genotypes_a();
+
+      while (defined (my $interaction = $interaction_a_rs->next())) {
+        $interaction->genotype_a($first_genotype);
+        $interaction->update();
+      }
+
+      my $interaction_b_rs = $other_genotype->genotype_interaction_genotype_bs();
+
+      while (defined (my $interaction = $interaction_b_rs->next())) {
+        $interaction->genotype_b($first_genotype);
+        $interaction->update();
+      }
+
+      my $interaction_with_phenotype_rs =
+        $other_genotype->genotype_interactions_with_phenotype();
+
+      while (defined (my $interaction = $interaction_with_phenotype_rs->next())) {
+        $interaction->genotype_b($first_genotype);
+        $interaction->update();
       }
 
       $other_genotype->delete();
@@ -232,10 +307,10 @@ my $proc = sub {
   while (defined (my $allele = $allele_rs->next())) {
     my $gene = $allele->gene();
 
-    my $allele_name = $allele->name() // '[UNNAMED]';
+    my $allele_name = $allele->name() // 'noname';
 
     my $allele_type = $allele->type() // '[NO_TYPE]';
-    my $allele_description = $allele->description() // '[NO_DESCRIPTION]';
+    my $allele_description = $allele->description() // 'unknown';
     my $allele_expression = $allele->expression() // '[NOT_ASSAYED]';
 
     my $gene_uniquename = $gene->primary_identifier();
@@ -324,14 +399,14 @@ my $proc = sub {
         my @allele_genotypes = $db_allele->allele_genotypes()->all();
 
         print "  ", $allele_detail->{allele_id}, " - ",
-          ($allele_name // '[NO_NAME]'), " - ",
+          $allele_name, " - ",
           ($gene_name // '[NO_GENE_NAME]'), " - ",
           $allele_type, " - ",
-          ($allele_detail->{description} // '[NO_DESCRIPTION]'), " - ",
+          ($allele_detail->{description} // 'unknown'), " - ",
           ($allele_detail->{expression} // '[NOT_ASSAYED]'), "\n";
 
         if ($db_allele->allele_notes()->count() > 0) {
-          print "    HAS NOTES\n";
+          die "    HAS NOTES\n";
         }
 
         print "    ", scalar(@allele_genotypes), " genotypes\n";
