@@ -547,6 +547,12 @@ sub _get_genotype_loci
     if ($allele->expression()) {
       $ret_hash{expression} = $allele->expression();
     }
+    if ($allele->promoter_gene()) {
+      $ret_hash{promoter_gene} = $allele->promoter_gene();
+    }
+    if ($allele->exogenous_promoter()) {
+      $ret_hash{exogenous_promoter} = $allele->exogenous_promoter();
+    }
 
     my $locus = $allele_genotype->diploid();
 
@@ -615,12 +621,6 @@ sub _get_alleles
     }
     if (defined $allele->description()) {
       $allele_data{description} = $allele->description();
-    }
-    if (defined $allele->promoter_gene()) {
-      $allele_data{promoter_gene} = $allele->promoter_gene();
-    }
-    if (defined $allele->exogenous_promoter()) {
-      $allele_data{exogenous_promoter} = $allele->exogenous_promoter();
     }
     if ($allele->type() eq 'deletion') {
       my $gene_proxy = Canto::Curs::GeneProxy->new(config => $config,
