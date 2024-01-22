@@ -134,15 +134,19 @@ sub allele_hashes_in_config_order
       my $a_description = $a->{description};
       my $a_type = $a->{type};
       my $a_expression = $a->{expression};
+      my $a_promoter_gene = $a->{promoter_gene};
+      my $a_exogenous_promoter = $a->{exogenous_promoter};
 
       my $b_name = $b->{name};
       my $b_description = $b->{description};
       my $b_type = $b->{type};
       my $b_expression = $b->{expression};
+      my $b_promoter_gene = $b->{promoter_gene};
+      my $b_exogenous_promoter = $b->{exogenous_promoter};
 
-      "$a_name-$a_description-$a_type-$a_expression"
+      "$a_name-$a_description-$a_type-$a_expression-$a_promoter_gene-$a_exogenous_promoter"
         cmp
-      "$b_name-$b_description-$b_type-$b_expression"
+      "$b_name-$b_description-$b_type-$b_expression-$b_promoter_gene-$b_exogenous_promoter"
     } else {
       $res;
     }
@@ -169,6 +173,8 @@ sub _allele_string_from_json
     $ret{description} = $allele->description() // 'UNKNOWN';
     $ret{type} = $allele->type() // 'UNKNOWN';
     $ret{expression} = $allele->expression() // 'UNKNOWN';
+    $ret{promoter_gene} = $allele->promoter_gene() // 'UNKNOWN';
+    $ret{exogenous_promoter} = $allele->exogenous_promoter() // 'UNKNOWN';
 
     $ret{allele} = $allele;
 
