@@ -240,13 +240,17 @@ sub long_identifier
 
   my $ret = $self->display_name($config);
 
-  my $expression = '';
-
   if ($self->expression()) {
-    $expression = '[' . ($self->expression() =~ s/^wild type product level.*/WT level/ir) . ']';
+    $ret .= '[' . ($self->expression() =~ s/^wild type product level.*/WT level/ir) . ']';
   }
 
-  $ret .= $expression;
+  if ($self->promoter_gene()) {
+    $ret .= '{promoter:' . $self->promoter_gene() . '}';
+  }
+
+  if ($self->exogenous_promoter()) {
+    $ret .= '{exogenous_promoter:' . $self->exogenous_promoter() . '}';
+  }
 
   return $ret;
 }
