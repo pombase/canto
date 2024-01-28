@@ -243,7 +243,7 @@
         </div>
         <div>
           <input id="promoter-gene" type="radio" value="gene" ng-model="promoterSelect">
-          <label for="promoter-gene">Gene</label>
+          <label for="promoter-gene">Endogenous gene promoter</label>
           <feature-chooser
             ng-if="genes && promoterSelect == 'gene'"
             feature-type="gene" features="genes"
@@ -253,7 +253,7 @@
         </div>
         <div>
           <input id="promoter-exogenous" type="radio" value="exogenous" ng-model="promoterSelect">
-          <label for="promoter-exogenous">Exogenous</label>
+          <label for="promoter-exogenous">Exogenous gene promoter</label>
           <input type="text" ng-if="promoterSelect == 'exogenous'" ng-model="alleleData.exogenous_promoter"/>
         </div>
       </div>
