@@ -4243,7 +4243,6 @@ var alleleEditDialogCtrl =
       const alleleType = $scope.alleleData.type.trim();
 
       if (!qcUrl || !$scope.current_type_config ||
-          !$scope.userIsAdmin ||
           !$scope.current_type_config.check_description_with_api) {
         $scope.descriptionState = 'ok';
         return $q.when(null);
