@@ -1048,20 +1048,20 @@ my $allele_res = $service_utils->list_for_service('allele', 'SPAC27D7.13c', 'ssm
 cmp_deeply($allele_res,
            [
             {
-              'primary_identifier' => 'SPAC27D7.13c:aaaa0007-1',
-              'description' => 'deletion',
-              'expression' => undef,
-              'display_name' => 'ssm4delta',
-              'long_display_name' => 'ssm4delta',
-              'name' => 'ssm4delta',
-              'type' => 'deletion',
-              'allele_id' => 1,
-              'comment' => undef,
-              'gene_id' => 2,
-              'gene_display_name' => 'ssm4',
-              'gene_systematic_id' => 'SPAC27D7.13c',
+              'external_uniquename' => 'SPAC27D7.13c:allele-2',
+              'type' => 'partial deletion, nucleotide',
+              'display_name' => 'ssm4-L1(80-90) (existing)',
+              'description' => '80-90',
+              'name' => 'ssm4-L1',
               'synonyms' => [],
-              'notes' => {},
+            },
+            {
+              'external_uniquename' => 'SPAC27D7.13c:allele-1',
+              'synonyms' => [],
+              'description' => 'deletion',
+              'type' => 'deletion',
+              'name' => 'ssm4delta',
+              'display_name' => 'ssm4delta (existing)'
             },
             {
               'allele_id' => 3,
@@ -1080,22 +1080,6 @@ cmp_deeply($allele_res,
               'notes' => {
                 'note_test_key' => 'note_test_value',
               },
-            },
-            {
-              'external_uniquename' => 'SPAC27D7.13c:allele-2',
-              'type' => 'partial deletion, nucleotide',
-              'display_name' => 'ssm4-L1(80-90) (existing)',
-              'description' => '80-90',
-              'name' => 'ssm4-L1',
-              'synonyms' => [],
-            },
-            {
-              'external_uniquename' => 'SPAC27D7.13c:allele-1',
-              'synonyms' => [],
-              'description' => 'deletion',
-              'type' => 'deletion',
-              'name' => 'ssm4delta',
-              'display_name' => 'ssm4delta (existing)'
             },
           ]);
 
