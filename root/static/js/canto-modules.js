@@ -830,6 +830,22 @@ canto.service('CursAlleleList', function ($q, Curs) {
 
     return q.promise;
   };
+
+  this.alleleLookupByDetails = function (genePrimaryIdentifier, alleleType, alleleDescription) {
+    var q = $q.defer();
+
+    Curs.list('allele', [':lookup_by_details:', genePrimaryIdentifier,
+                         alleleType, alleleDescription])
+      .then(function (alleles) {
+        q.resolve(alleles);
+      })
+      .catch(function () {
+        q.reject();
+      });
+
+    return q.promise;
+  };
+
 });
 
 canto.service('CursConditionList', function ($q, Curs) {
