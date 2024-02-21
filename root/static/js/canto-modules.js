@@ -5333,7 +5333,7 @@ function GenotypeGeneList() {
 canto.directive('genotypeGeneList', [GenotypeGeneList]);
 
 function GenotypeGeneListCtrl(
-  $scope, $uibModal, $http, Curs, CursGenotypeList, CantoGlobals, CantoConfig, toaster
+  $scope, $uibModal, $http, Curs, CursGenotypeList, CursAlleleList, CantoGlobals, CantoConfig, toaster
 ) {
   $scope.curs_root_uri = CantoGlobals.curs_root_uri;
   $scope.read_only_curs = CantoGlobals.read_only_curs;
@@ -5443,6 +5443,17 @@ function GenotypeGeneListCtrl(
       return;
     }
 
+    var lookupPromise =
+        CursAlleleList.alleleLookupByDetails(gene.primary_identifier,
+                                             'deletion', 'deletion');
+
+    lookupPromise.then(existingAlleles => {
+      var externalUniquename;
+
+      if (existingAlleles.length > 0) {
+        externalUniquename = existingAlleles[0]['allele_uniquename'];
+      }
+
     var displayName = gene.primary_name || gene.primary_identifier;
 
     var deletionAllele = {
@@ -5454,6 +5465,7 @@ function GenotypeGeneListCtrl(
       name: displayName + "delta",
       primary_identifier: "",
       type: "deletion",
+      external_uniquename: externalUniquename,
     };
 
     var taxonId = gene.organism.taxonid;
@@ -5479,7 +5491,8 @@ function GenotypeGeneListCtrl(
           data.genotype_id;
       }
     });
-  };
+    });
+  }
 
   function makeHasDeletionHash() {
     hasDeletionHash = {};
@@ -5507,6 +5520,7 @@ function GenotypeGeneListCtrl(
 
 canto.controller('genotypeGeneListCtrl', [
   '$scope', '$uibModal', '$http', 'Curs', 'CursGenotypeList',
+  'CursAlleleList',
   'CantoGlobals', 'CantoConfig', 'toaster', GenotypeGeneListCtrl
 ]);
 
