@@ -302,60 +302,59 @@ sub _lookup_by_details_helper
 
   if (scalar(keys %$cache) > 0) {
     if (defined $cache->{$gene_uniquename}) {
-      return @{$cache->{$gene_uniquename}};
+      return map {
+        my ($gene_uniquename, $allele_uniquename, $allele_name,
+         $allele_type, $allele_description) = @$_;
+
+        my $allele_details = {
+          gene_systematic_id => $gene_uniquename,
+          allele_uniquename => $allele_uniquename,
+          name => $allele_name,
+          type => $allele_type,
+          description => $allele_description,
+        };
+
+        $allele_details;
+      } @{$cache->{$gene_uniquename}};
     } else {
       return ();
     }
   }
 
-  warn "_lookup_by_details_helper()\n";
-
   my $schema = $self->schema();
 
-  my $allele_rs = $schema->resultset('Feature')
-    ->search({ 'type.name' => 'allele',
-               'type_2.name' => 'instance_of',
-               'type_3.name' => 'gene',
-             },
-             { join => ['type',
-                        { feature_relationship_subjects =>
-                          ['type',
-                           { object => 'type' } ] }],
-               prefetch => { feature_relationship_subjects => 'object',
-                             featureprops => 'type' }});
+  my $chado_dbh = $schema->storage()->dbh();
 
-  map {
-    my $allele = $_;
+  my $query = <<"EOF";
+SELECT gene.uniquename AS gene_uniquename,
+       allele.uniquename AS allele_uniquename,
+       allele.name AS allele_name,
+       allele_type_prop.value AS allele_type,
+       allele_desc_prop.value AS allele_description
+FROM feature allele
+JOIN cvterm allele_type ON allele.type_id = allele_type.cvterm_id
+JOIN feature_relationship rel ON allele.feature_id = rel.subject_id
+JOIN cvterm rel_type ON rel_type.cvterm_id = rel.type_id
+JOIN feature gene ON rel.object_id = gene.feature_id
+JOIN cvterm gene_type ON gene_type.cvterm_id = gene.type_id
+LEFT OUTER JOIN featureprop allele_type_prop ON allele_type_prop.feature_id = allele.feature_id
+AND allele_type_prop.type_id in (SELECT cvterm_id FROM cvterm WHERE name = 'allele_type')
+LEFT OUTER JOIN featureprop allele_desc_prop ON allele_desc_prop.feature_id = allele.feature_id
+AND allele_desc_prop.type_id in (SELECT cvterm_id FROM cvterm WHERE name = 'description')
+WHERE gene_type.name = 'gene'
+  AND allele_type.name = 'allele'
+  AND rel_type.name = 'instance_of';
+EOF
 
-    my @featureprops = $allele->featureprops()->all();
+  my $sth = $chado_dbh->prepare($query);
+  $sth->execute() or die "Couldn't execute: " . $sth->errstr;
 
-    my $description;
-    my $allele_type;
+  while (my @row = $sth->fetchrow_array()) {
+    my $gene_uniquename = $row[0];
+    push @{$cache->{$gene_uniquename}}, \@row;
+  }
 
-    map {
-      my $prop_type = $_->type()->name();
-
-      if ($prop_type eq 'description') {
-        $description = $_->value();
-      } else {
-        if ($prop_type eq 'allele_type') {
-          $allele_type = $_->value();
-        }
-      }
-    } @featureprops;
-
-    my $gene_uniquename = $allele->feature_relationship_subjects()->first()->object()->uniquename();
-
-    my $allele_details = {
-      gene_systematic_id => $gene_uniquename,
-      name => $allele->name(),
-      type => $allele_type,
-      description => $description,
-    };
-
-    push @{$cache->{$gene_uniquename}}, $allele_details;
-  } $allele_rs->all();
-
+  # call again and retrieve from the cache
   return $self->_lookup_by_details_helper($gene_uniquename);
 }
 
