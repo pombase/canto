@@ -896,22 +896,13 @@ sub _get_alleles_name_complete
     $query->{name} = { -like => $search_string . '%' };
   }
 
-  my $allele_rs = $curs_schema->resultset('Allele')
-    ->search($query,
-             {
-               join => 'gene',
-               # only return alleles that are part of a genotype
-               where => \"me.allele_id IN (SELECT allele FROM allele_genotype)",
-             });
-  my @res = map {
-    $self->_allele_details_hash($_);
-  } $allele_rs->all();
+  my $max_results = 15;
 
   my $allele_lookup = $self->allele_lookup();
 
-  my $max_results = 15;
+  my @res = ();
 
-  if (@res < $max_results && $allele_lookup) {
+  if ($allele_lookup) {
     my $lookup_res = $allele_lookup->lookup(gene_primary_identifier =>
                                               $gene_primary_identifier,
                                             search_string => $search_string);
@@ -920,6 +911,28 @@ sub _get_alleles_name_complete
       my $new_res = shift @$lookup_res;
       $new_res->{display_name} = $new_res->{display_name} . ' (existing)';
       push @res, $new_res;
+    }
+  }
+
+  my $allele_rs = $curs_schema->resultset('Allele')
+    ->search($query,
+             {
+               join => 'gene',
+               # only return alleles that are part of a genotype
+               where => \"me.allele_id IN (SELECT allele FROM allele_genotype)",
+             });
+  my @local_res =
+    map {
+      $self->_allele_details_hash($_);
+    } $allele_rs->all();
+
+  for my $local_allele (@local_res) {
+    if (!grep {
+      safe_equals($local_allele->{name}, $_->{name}) &&
+        safe_equals($local_allele->{type}, $_->{type}) &&
+        safe_equals($local_allele->{description}, $_->{description});
+    } @res) {
+      push @res, $local_allele;
     }
   }
 
