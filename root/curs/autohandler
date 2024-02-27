@@ -6,6 +6,7 @@ $current_user_is_admin
 
 <script language="javascript" type="text/javascript">
 var canto_root_uri = application_root;
+var database_name = '<% $database_name %>';
 var curs_root_uri = '<% $curs_root_uri %>';
 var read_only_curs = <% $read_only_curs ? 'true' : 'false' %>;
 var is_admin_session = <% $is_admin_session ? 'true' : 'false' %>;
@@ -61,6 +62,8 @@ my $st = $c->stash();
 my $curs_key = $st->{curs_key};
 my $read_only_curs = $st->{read_only_curs} // 0;
 my $curs_session_state = $st->{state} || 'UNKNOWN';
+
+my $database_name = $c->config()->{database_name};
 
 my $annotation_id = 'undefined';
 
