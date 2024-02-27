@@ -872,6 +872,7 @@ canto.service('CursSessionDetails', function (Curs) {
 
 canto.service('CantoGlobals', function ($window) {
   this.app_static_path = $window.app_static_path;
+  this.database_name = $window.database_name;
   this.application_root = $window.application_root;
   this.curs_root_uri = $window.curs_root_uri;
   this.ferret_choose = $window.ferret_choose;
