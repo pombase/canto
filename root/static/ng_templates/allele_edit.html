@@ -135,10 +135,12 @@
 
       <div ng-switch-when="true" class="curs-box">
         <div class="curs-box-title">
-          This is an existing allele, click "OK" to use this allele or
-          "Cancel" to create a new allele
+          Click "OK" to use this allele or "Cancel" to create a new allele
         </div>
         <div class="curs-box-body">
+          <div class="curs-allele-edit-sub-heading">
+            Note: this allele cannot be edited because it is already used in {{databaseName}}
+          </div>
           <table class="curs-definition-table">
             <tr>
               <td class="title">

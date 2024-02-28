@@ -1371,6 +1371,11 @@ input[readonly="1"] {
   margin-left: auto;
 }
 
+.curs-allele-edit-sub-heading {
+  font-size: 95%;
+  margin-bottom: 1em;
+}
+
 .curs-allele-evidence-select {
   width: 22em;
 }
