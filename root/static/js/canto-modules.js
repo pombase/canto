@@ -4162,6 +4162,7 @@ var alleleEditDialogCtrl =
       newSynonymsString: '',
     };
 
+    $scope.databaseName = CantoGlobals.database_name;
     $scope.userIsAdmin = CantoGlobals.current_user_is_admin;
     $scope.pathogenHostMode = CantoGlobals.pathogen_host_mode;
     $scope.allele_qc_api_url = CantoGlobals.allele_qc_api_url;
@@ -4256,6 +4257,16 @@ var alleleEditDialogCtrl =
       $scope.alleleData.type = alleleData.type;
       $scope.alleleData.synonyms = alleleData.synonyms;
       processSynonyms();
+    };
+
+    $scope.clearExisting = function() {
+      $scope.alleleData.external_uniquename = undefined;
+      $scope.alleleData.existingSynonyms = [];
+      $scope.alleleData.newSynonyms = [];
+      $scope.alleleData.description = undefined;
+      $scope.alleleData.type = undefined;
+      $scope.alleleData.name = '';
+      $scope.alleleData.display_name = undefined;
     };
 
     $scope.descriptionChanged = function() {
