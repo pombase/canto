@@ -1362,6 +1362,15 @@ input[readonly="1"] {
   padding: 1em 0;
 }
 
+.curs-allele-edit .modal-footer {
+  text-align: unset;
+  display: flex;
+}
+
+.curs-allele-edit .modal-footer .curs-allele-edit-cancel {
+  margin-left: auto;
+}
+
 .curs-allele-evidence-select {
   width: 22em;
 }
