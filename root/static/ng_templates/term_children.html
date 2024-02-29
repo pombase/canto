@@ -11,7 +11,8 @@
   <div class="curs-box-body">
     <ul>
       <li ng-repeat="child in termDetails.children">
-        <a href="#" ng-click="gotoChild(child.id)">{{child.name}}
+        <a href="#" ng-click="gotoChild(child.id)"
+           title="{{child.definition}}">{{child.name}}
           <img ng-src="{{CantoGlobals.application_root}}/static/images/right_arrow.png"></img>
         </a>
       </li>
