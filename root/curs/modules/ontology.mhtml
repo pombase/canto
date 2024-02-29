@@ -59,6 +59,7 @@ Annotation extensions
                          term-id="{{currentTerm()}}"
                          is-valid="extensionBuilderIsValid"
                          annotation-type-name="<% $annotation_type_name %>"
+                         gene-systematic-id="<% $gene_systematic_id %>"
                          feature-type="finalFeatureType"></extension-builder>
     </div>
   </div>
@@ -95,8 +96,10 @@ Annotation extensions
 
 <%init>
 my $feature_display_name;
+my $gene_systematic_id = '';
 if ($feature_type eq 'gene') {
   $feature_display_name = $feature->display_name();
+  $gene_systematic_id = $feature->primary_identifier();
 } else {
   $feature_display_name = $feature->display_name($c->config());
 }
