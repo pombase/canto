@@ -216,8 +216,8 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   $st->{submitter_email} = $submitter_email;
   $st->{submitter_name} = $submitter_name;
 
-  $st->{message_to_curators} =
-    $self->get_metadata($schema, MESSAGE_FOR_CURATORS_KEY);
+  my $message_to_curators = $self->get_metadata($schema, MESSAGE_FOR_CURATORS_KEY);
+  $st->{message_to_curators} = $message_to_curators;
 
   my $external_notes = $self->get_metadata($schema, Canto::Curs->EXTERNAL_NOTES_KEY);
 
@@ -256,6 +256,12 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     }
   } else {
     $st->{current_user_is_admin} = 0;
+  }
+
+  if ($st->{current_user_is_admin} &&
+      ($state eq NEEDS_APPROVAL || $state eq APPROVAL_IN_PROGRESS || $state eq APPROVED) &&
+      defined $message_to_curators && $message_to_curators !~ /^\s*$/) {
+    push @{$st->{notice}}, qq|This session has a message to curators|;
   }
 
   if ($config->{canto_offline} && !$st->{read_only_curs} &&
