@@ -4259,16 +4259,6 @@ var alleleEditDialogCtrl =
       processSynonyms();
     };
 
-    $scope.clearExisting = function() {
-      $scope.alleleData.external_uniquename = undefined;
-      $scope.alleleData.existingSynonyms = [];
-      $scope.alleleData.newSynonyms = [];
-      $scope.alleleData.description = undefined;
-      $scope.alleleData.type = undefined;
-      $scope.alleleData.name = '';
-      $scope.alleleData.display_name = undefined;
-    };
-
     $scope.descriptionChanged = function() {
       $scope.descriptionNeedsChecking = false;
       $scope.descriptionState = 'unset';
