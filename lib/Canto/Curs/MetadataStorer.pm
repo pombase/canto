@@ -51,6 +51,12 @@ has state => (is => 'ro', init_arg => undef,
               isa => 'Canto::Curs::State',
               lazy_build => 1);
 
+use constant {
+  # the session was pre-populated with genes from Chado associated with
+  # the publication
+  SESSION_HAS_EXISTING_GENES => "session_has_existing_genes",
+};
+
 sub _build_state
 {
   my $self = shift;

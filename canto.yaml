@@ -1462,6 +1462,10 @@ implementation_classes:
   organism_adaptor: Canto::Track::OrganismLookup
   strain_adaptor: Canto::Track::StrainLookup
 
+# Possible values for "feature_pub_source" in Chado when pre-populating
+# sessions.  Ignored if the feature_pub_lookup adaptor isn't configured.
+feature_pub_sources: []
+
 wildtype_name_template: '@@gene_display_name@@+'
 deletion_name_template: '@@gene_display_name@@delta'
 transformant_name_template: '@@gene_display_name@@ transformant'

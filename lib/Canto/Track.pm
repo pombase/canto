@@ -96,6 +96,69 @@ sub create_curs
   return ($curs, $curs_db);
 }
 
+=head2
+
+ Usage   : lookup_and_store_chado_genes($config, $curs_schema, $pub);
+ Function: If Chado is configured, lookup any genes that are known from
+           PMID keywords or other source (see feature_pub_sources in
+           config.yaml)
+ Args    :
+ Returns :
+
+=cut
+
+sub lookup_and_store_chado_genes
+{
+  my ($config, $state, $curs_schema, $pub_uniquename) = @_;
+
+  my $feature_pub_lookup = Canto::Track::get_adaptor($config, 'feature_pub');
+
+  if (!defined $feature_pub_lookup) {
+    return;
+  }
+
+  my $taxonid;
+
+  my $instance_organism = $config->{instance_organism};
+
+  if (defined $instance_organism) {
+    $taxonid = $instance_organism->{taxonid};
+  } else {
+    return;
+  }
+
+  my @results = $feature_pub_lookup->lookup(publication_uniquename => $pub_uniquename,
+                                            feature_type => 'gene');
+
+  if (@results == 0) {
+    return;
+  }
+
+  my @feature_pub_sources = @{$config->{feature_pub_sources}};
+
+  my %genes_to_add = ();
+
+  map {
+    my $row = $_;
+
+    if (grep { $row->{feature_pub_source} eq $_ } @feature_pub_sources) {
+      $genes_to_add{$row->{gene_uniquename}} = 1;
+    }
+  } @results;
+
+  my $organism =
+    Canto::CursDB::Organism::get_organism($curs_schema, $taxonid);
+
+  for my $gene_uniquename (keys %genes_to_add) {
+    $curs_schema->create_with_type('Gene', {
+      primary_identifier => $gene_uniquename,
+      organism => $organism,
+    });
+  }
+
+  $state->set_metadata($curs_schema, Canto::Curs::MetadataStorer::SESSION_HAS_EXISTING_GENES, scalar(keys %genes_to_add));
+}
+
 =head2 create_curs_db
 
  Usage   : Canto::Track::create_curs_db($config, $curs_object, );
@@ -178,6 +241,8 @@ sub create_curs_db
 
   my $state = Canto::Curs::State->new(config => $config);
   $state->store_statuses($curs_schema);
+
+  lookup_and_store_chado_genes($config, $state, $curs_schema, $pub->uniquename());
 
   if (wantarray) {
     return ($curs_schema, $db_file_name);

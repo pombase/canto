@@ -347,6 +347,19 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     $use_dispatch = 0;
   }
 
+  if ($state eq CURATION_IN_PROGRESS) {
+    my $existing_genes =
+      $self->get_metadata($schema, Canto::Curs::MetadataStorer::SESSION_HAS_EXISTING_GENES);
+
+    if (defined $existing_genes) {
+      $self->unset_metadata($schema, Canto::Curs::MetadataStorer::SESSION_HAS_EXISTING_GENES);
+      my $pub_uniquename = $st->{pub}->uniquename();
+      push @{$st->{message}}, qq|Warning: this session has been populated with $pub_uniquename genes known from other sources.  Use the "Add more genes from $pub_uniquename" link to add missing genes|;
+      $c->detach('edit_genes');
+      $use_dispatch = 0;
+    }
+  }
+
   if ($use_dispatch) {
     my $dispatch_dest = $state_dispatch{$state};
     if (defined $dispatch_dest) {
