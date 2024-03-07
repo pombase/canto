@@ -58,7 +58,7 @@ sub
   my $self = shift;
 
   if (@_ < 3) {
-    croak "not enough arguments to get_metadata()";
+    croak "not enough arguments to set_metadata()";
   }
 
   my $schema = shift;
