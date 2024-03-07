@@ -354,7 +354,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
     if (defined $existing_genes) {
       $self->unset_metadata($schema, Canto::Curs::MetadataStorer::SESSION_HAS_EXISTING_GENES);
       my $pub_uniquename = $st->{pub}->uniquename();
-      push @{$st->{message}}, qq|Warning: this session has been populated with $pub_uniquename genes known from other sources.  Use the "Add more genes from $pub_uniquename" link to add missing genes|;
+      push @{$st->{message}}, qq|Note: This session has been populated with genes from the $pub_uniquename abstract, PubMed keywords and other sources. Use the "Add more genes" link to add missing genes. You can also add, or remove, genes at any time during curation.|;
       $c->detach('edit_genes');
       $use_dispatch = 0;
     }
