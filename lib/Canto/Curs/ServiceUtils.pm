@@ -831,6 +831,7 @@ sub _allele_details_hash
     long_display_name => $long_display_name,
     comment => $allele->comment(),
     allele_id => $allele->allele_id(),
+    promoter_gene => $allele->promoter_gene(),
     synonyms => \@synonyms_list,
     notes => \%notes,
   );

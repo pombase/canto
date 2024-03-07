@@ -19,6 +19,7 @@ CREATE TABLE allele (
        expression text,
        name text,
        comment text,
+       promoter_gene text,
        gene integer REFERENCES gene(gene_id)
 );
 

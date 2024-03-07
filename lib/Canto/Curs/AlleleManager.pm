@@ -180,6 +180,7 @@ sub allele_from_json
   my $gene_id = $json_allele->{gene_id};
   my $comment = $json_allele->{comment};
   my $notes = $json_allele->{notes};
+  my $promoter_gene = $json_allele->{promoter_gene};
 
   if ($primary_identifier) {
     # lookup existing allele
@@ -293,6 +294,7 @@ sub allele_from_json
     description => $description || undef,
     comment => $comment || undef,
     expression => $expression || undef,
+    promoter_gene => $promoter_gene || undef,
   );
 
   if ($allele_type =~ /_/) {
@@ -335,6 +337,7 @@ sub create_simple_allele
   my $allele_type = shift;
   my $name = shift;
   my $description = shift;
+  my $promoter_gene = shift;
   my $gene = shift;
   my $synonyms = shift;
 
@@ -343,6 +346,7 @@ sub create_simple_allele
     type => $allele_type,
     name => $name || undef,
     description => $description || undef,
+    promoter_gene => $promoter_gene || undef,
   );
 
   if ($allele_type !~ /^aberration/) {
