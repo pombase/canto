@@ -146,7 +146,7 @@ test_psgi $app, sub {
 
     my $perl_res = decode_json $res->content();
 
-    is($perl_res->{annotation_mode}, undef);
+    is($perl_res->{annotation_mode}, 'advanced');
   }
 
   my $post_header = ['Content-Type' => 'application/json; charset=UTF-8'];

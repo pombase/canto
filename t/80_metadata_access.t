@@ -44,6 +44,7 @@ sub test_metadata
                            curs_key => 'aaaa0001',
                            term_suggestion_count => 0,
                            unknown_conditions_count => 0,
+                           annotation_mode => 'advanced',
                            session_created_timestamp => '2012-02-15 13:45:00',
                          });
 }

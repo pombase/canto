@@ -312,6 +312,7 @@ my $full_expected_curation_session =
       curator_role => 'community',
       has_community_curation => JSON::XS::true,
       curation_accepted_date => '2012-02-15 13:45:00',
+      annotation_mode => 'advanced',
       %extra_curs_statuses,
     },
     organisms => {
@@ -598,6 +599,7 @@ my $full_expected_curation_session_with_names =
         }
       ],
       curator_role => 'community',
+      annotation_mode => 'advanced',
       curation_accepted_date => '2012-02-15 13:45:00',
       %extra_curs_statuses,
     },
