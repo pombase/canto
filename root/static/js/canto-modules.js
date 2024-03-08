@@ -4138,6 +4138,8 @@ var alleleEditDialogCtrl =
     $scope.data = {
       promoterGeneId: null,
       newSynonymsString: '',
+      alleleGene: null,
+      organismShortDisplayName: null,
     };
 
     $scope.userIsAdmin = CantoGlobals.current_user_is_admin;
@@ -4199,14 +4201,21 @@ var alleleEditDialogCtrl =
       CursGeneList.geneList().then(function (results) {
         $scope.genes = results;
 
-        if (typeof($scope.alleleData.promoter_gene) != 'undefined') {
-          $.map($scope.genes,
-                (gene) => {
+        $.map($scope.genes,
+              (gene) => {
+                if (typeof($scope.alleleData.promoter_gene) != 'undefined') {
                   if (gene.primary_identifier == $scope.alleleData.promoter_gene) {
                     $scope.data.promoterGeneId = gene.gene_id;
                   }
-                });
-        }
+                }
+                if (gene.primary_identifier == $scope.alleleData.gene_systematic_id) {
+                  $scope.data.alleleGene = gene;
+                  if (gene && gene.organism && gene.organism.full_name) {
+                    $scope.data.organismShortDisplayName =
+                      gene.organism.full_name.replace(/^(.)\w+\s+(.*)/, "$1. $2");
+                  }
+                }
+              });
 
         if ($scope.data.promoterGeneId) {
           $scope.promoterSelect = 'gene';

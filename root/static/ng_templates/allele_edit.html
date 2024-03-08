@@ -243,7 +243,8 @@
         </div>
         <div>
           <input id="promoter-gene" type="radio" value="gene" ng-model="promoterSelect">
-          <label for="promoter-gene">Endogenous gene promoter</label>
+          <label for="promoter-gene">Promoter swap
+            <span ng-if="data.organismShortDisplayName">({{data.organismShortDisplayName}})</span></label>
           <feature-chooser
             ng-if="genes && promoterSelect == 'gene'"
             feature-type="gene" features="genes"
