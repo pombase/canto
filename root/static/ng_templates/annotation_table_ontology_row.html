@@ -156,20 +156,29 @@
         <a title="View metagenotype for this annotation"
            href="{{featureLink('metagenotype', annotation.metagenotype_id)}}">View metagenotype</a>
       </div>
-      <div>
-        <a title="Edit this annotation" ng-if="showEditLink" ng-click="edit()">Edit</a>
+      <div ng-if="showEditLink">
+        <a title="Edit this annotation"
+           ng-if="!disableEditing(annotation)"
+           ng-click="edit()">Edit</a>
+        <span style="color: #c0c0c0"
+              title='Annotation cannot be edited because it is part of an interaction.  Remove the interaction or try "Copy and edit"';
+              ng-if="disableEditing(annotation)">Edit</span>
       </div>
       <div ng-if="showTransferLink">
         <a title="{{'Copy this annotation to other ' + annotationType.feature_type + 's'}}"
            ng-click="transferAnnotation()">Transfer</a>
       </div>
-      <div>
+      <div ng-if="showEditLink">
         <a title="Make copy of this annotation and then edit the details"
-           ng-if="showEditLink"
            ng-click="duplicate()">Copy and edit</a>
       </div>
       <div>
-        <a title="Delete this annotation" ng-click="confirmDelete()">Delete</a>
+        <a title="Delete this annotation"
+           ng-if="!disableEditing(annotation)"
+           ng-click="confirmDelete()">Delete</a>
+        <span style="color: #c0c0c0"
+              title="Annotation cannot be deleted because it is part of an interaction"
+              ng-if="disableEditing(annotation)">Delete</span>
       </div>
       <div ng-if="sessionState == 'APPROVAL_IN_PROGRESS'">
         <a ng-if="checked == 'no'" href="#" ng-click="setChecked($event)">Checked</a>

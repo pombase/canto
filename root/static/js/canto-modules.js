@@ -10293,6 +10293,10 @@ var annotationTableRow =
           $scope.annotation.feature_type === 'metagenotype'
         );
 
+        $scope.disableEditing = function(annotation) {
+          return annotation.used_in_interactions_count > 0;
+        };
+
         $scope.$watchCollection('annotation.alleles',
                                 function(newAlleles) {
                                   if (newAlleles) {
