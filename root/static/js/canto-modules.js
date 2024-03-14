@@ -111,12 +111,7 @@ function copyObject(src, dest, keysFilter) {
     }
 
     if (src[key] instanceof Array) {
-      dest[key] = [];
-      var len = src[key].length;
-      var i;
-      for (i = 0; i < len; i++) {
-        dest[key][i] = src[key][i];
-      }
+      dest[key] = $.extend(true, [], src[key]);
       return;
     }
 
