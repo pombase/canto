@@ -8612,10 +8612,34 @@ var annotationEditDialogCtrl =
 
     }
 
-    function featureIdWatcher(featureId) {
+    function featureIdWatcher(featureId, prevFeatureId) {
       $q.all([$scope.annotationTypePromise, $scope.filteredFeaturesPromise])
         .then(function (data) {
           var annotationType = data[0];
+
+          if (annotationType.clear_extensions_on_feature_change &&
+              $scope.annotation.extension &&
+              prevFeatureId !== undefined && featureId !== undefined &&
+              prevFeatureId !== featureId) {
+            $.map($scope.annotation.extension,
+                  (orPart) => {
+                    orPart.removeIf((ext) => {
+                      if ($.grep(annotationType.clear_extensions_on_feature_change,
+                                 (rel) => rel == ext.relation)) {
+                        toaster.pop({
+                          type: 'warning',
+                          title: 'The ' + ext.relation + '('  + ext.rangeValue +
+                                    ') extension has been removed because the gene changed',
+                          timeout: 10000,
+                          showCloseButton: true
+                        });
+                        return true;
+                      } else {
+                        return false;
+                      }
+                    });
+                  });
+          }
 
           if (annotationType.second_feature_organism_selector) {
             return;

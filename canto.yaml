@@ -2220,6 +2220,8 @@ available_annotation_type_list:
     evidence_codes:
       - IDA
     detailed_help_path: /docs/modification_annotation
+    clear_extensions_on_feature_change:
+      - residue
   - name: wt_rna_expression
     category: ontology
     ontology_size: small
