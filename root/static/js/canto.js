@@ -7,14 +7,14 @@ function trim(a) {
   a=a.replace(/^\s+/,''); return a.replace(/\s+$/,'');
 }
 
-Array.prototype.removeIf = function(callback) {
-    var i = this.length;
+function removeIf(arr, callback) {
+    var i = arr.length;
     while (i--) {
-        if (callback(this[i], i)) {
-            this.splice(i, 1);
+        if (callback(arr[i], i)) {
+            arr.splice(i, 1);
         }
     }
-};
+}
 
 var loadingDiv = $('<div id="loading" style="z-index: 2000;"><img src="' + application_root +
                    '/static/images/spinner.gif"/></div>');

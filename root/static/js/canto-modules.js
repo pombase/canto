@@ -3,7 +3,7 @@
 "use strict";
 
 /*global history,curs_root_uri,angular,$,make_ontology_complete_url,
-  ferret_choose,application_root,window,curs_key,
+  ferret_choose,application_root,window,curs_key,removeIf,
   app_static_path,loadingStart,loadingEnd,alert,trim,read_only_curs */
 
 var canto = angular.module('cantoApp', ['ui.bootstrap', 'angular-confirm', 'toaster',
@@ -8618,9 +8618,8 @@ var annotationEditDialogCtrl =
               prevFeatureId !== featureId) {
             $.map($scope.annotation.extension,
                   (orPart) => {
-                    orPart.removeIf((ext) => {
-                      if ($.grep(annotationType.clear_extensions_on_feature_change,
-                                 (rel) => rel == ext.relation)) {
+                    removeIf(orPart, (ext) => {
+                      if (annotationType.clear_extensions_on_feature_change.includes(ext.relation)) {
                         toaster.pop({
                           type: 'warning',
                           title: 'The ' + ext.relation + '('  + ext.rangeValue +
