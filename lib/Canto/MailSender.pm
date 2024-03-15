@@ -44,6 +44,7 @@ use Email::Sender::Simple qw(sendmail);
 use Email::MIME;
 use Email::Sender::Transport::Sendmail qw();
 use Try::Tiny;
+use Encode qw(encode);
 
 with 'Canto::Role::Configurable';
 
@@ -80,6 +81,8 @@ sub send
     return;
   }
 
+  $body = encode('UTF-8', $body);
+
   my $email = Email::MIME->create(
     header=>[To=>$to, From=>$from,
              Subject=>$subject],
@@ -97,11 +100,13 @@ sub send
   }
 
   try {
-    sendmail($email,
+    my $result = sendmail($email,
              {
                from => $from,
                transport => Email::Sender::Transport::Sendmail->new()
              });
+
+    warn 'Error from sendmail(): ', Dumper([$result]), "\n";
   } catch {
     warn qq|Cannot send mail to "$to" with subject "$subject": $_|;
   }
