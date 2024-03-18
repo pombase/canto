@@ -4129,6 +4129,7 @@ function alleleQCCheckAllele($http, alleleQCUrl, geneSystematicId, alleleDescrip
     });
 }
 
+var alleleEditDialogCtrl =
   function ($scope, $uibModal, $uibModalInstance, $http, $q, toaster, CantoConfig, args, Curs, CursGeneList, CursAlleleList, CantoGlobals) {
     $scope.alleleData = {};
     copyObject(args.allele, $scope.alleleData);
