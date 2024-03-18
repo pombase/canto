@@ -301,61 +301,44 @@ sub _fill_allele_caches
   my $self = shift;
 
   my $schema = $self->schema();
+  my $chado_dbh = $schema->storage()->dbh();
 
-  my $allele_rs = $schema->resultset('Feature')
-    ->search({ 'type.name' => 'allele',
-               'type_2.name' => 'instance_of',
-               'type_3.name' => 'gene',
-             },
-             { join => ['type',
-                        { feature_relationship_subjects =>
-                          ['type',
-                           { object => 'type' } ] }],
-               prefetch => { feature_relationship_subjects => 'object',
-                             featureprops => 'type' }});
+  my $query = <<"EOF";
+SELECT gene.uniquename AS gene_uniquename,
+       allele.uniquename AS allele_uniquename,
+       allele.name AS allele_name,
+       allele_type_prop.value AS allele_type,
+       allele_desc_prop.value AS allele_description,
+       allele_sys_id_prop.value AS canto_allele_systematic_id
+FROM feature allele
+JOIN cvterm allele_type ON allele.type_id = allele_type.cvterm_id
+JOIN feature_relationship rel ON allele.feature_id = rel.subject_id
+JOIN cvterm rel_type ON rel_type.cvterm_id = rel.type_id
+JOIN feature gene ON rel.object_id = gene.feature_id
+JOIN cvterm gene_type ON gene_type.cvterm_id = gene.type_id
+LEFT OUTER JOIN featureprop allele_type_prop ON allele_type_prop.feature_id = allele.feature_id
+AND allele_type_prop.type_id in (SELECT cvterm_id FROM cvterm WHERE name = 'allele_type')
+LEFT OUTER JOIN featureprop allele_desc_prop ON allele_desc_prop.feature_id = allele.feature_id
+AND allele_desc_prop.type_id in (SELECT cvterm_id FROM cvterm WHERE name = 'description')
+LEFT OUTER JOIN featureprop allele_sys_id_prop ON allele_sys_id_prop.feature_id = allele.feature_id
+AND allele_sys_id_prop.type_id in (SELECT cvterm_id FROM cvterm WHERE name = 'canto_allele_systematic_id')
+WHERE gene_type.name = 'gene'
+  AND allele_type.name = 'allele'
+  AND rel_type.name = 'instance_of';
+EOF
 
-  map {
-    my $allele = $_;
+  my $sth = $chado_dbh->prepare($query);
+  $sth->execute() or die "Couldn't execute: " . $sth->errstr;
 
-    my @featureprops = $allele->featureprops()->all();
+  while (my @row = $sth->fetchrow_array()) {
+    my $gene_uniquename = $row[0];
+    push @{$cache_by_gene_uniquename->{$gene_uniquename}}, \@row;
 
-    my $description;
-    my $allele_type;
-    my @canto_allele_systematic_ids = ();
-
-    map {
-      my $prop_type = $_->type()->name();
-
-      if ($prop_type eq 'description') {
-        $description = $_->value();
-      } else {
-        if ($prop_type eq 'allele_type') {
-          $allele_type = $_->value();
-        } else {
-          if ($prop_type eq 'canto_allele_systematic_id') {
-            push @canto_allele_systematic_ids, $_->value();
-          }
-        }
-      }
-    } @featureprops;
-
-    my $gene_uniquename = $allele->feature_relationship_subjects()->first()->object()->uniquename();
-
-    my $allele_details = {
-      gene_systematic_id => $gene_uniquename,
-      name => $allele->name(),
-      type => $allele_type,
-      description => $description,
-      allele_systematic_id => $allele->uniquename(),
-      canto_allele_systematic_ids => \@canto_allele_systematic_ids,
-    };
-
-    push @{$cache_by_gene_uniquename->{$gene_uniquename}}, $allele_details;
-
-    map {
-      push @{$cache_by_canto_systematic_id->{$_}}, $allele_details;
-    } @canto_allele_systematic_ids;
-  } $allele_rs->all();
+    my $canto_allele_systematic_id = $row[5];
+    if ($canto_allele_systematic_id) {
+      push @{$cache_by_canto_systematic_id->{$canto_allele_systematic_id}}, \@row;
+    }
+  }
 }
 
 
@@ -382,12 +365,26 @@ sub lookup_by_details
   if (defined $cache_by_gene_uniquename->{$gene_uniquename}) {
     my @alleles =  @{$cache_by_gene_uniquename->{$gene_uniquename}};
 
-    return grep {
-      my $_test_allele = $_;
+    return map {
+      my ($db_gene_uniquename, $db_allele_uniquename, $db_allele_name,
+          $db_allele_type, $db_allele_description) = @$_;
 
-      $_test_allele->{type} eq $allele_type &&
+      if ($db_allele_type eq $allele_type &&
         ($allele_type =~ /^(deletion|wild[ _]type)$/ ||
-         ($_test_allele->{description} // 'NO_DESCRIPTION') eq $allele_description);
+         ($db_allele_description // 'NO_DESCRIPTION') eq $allele_description)) {
+
+        my $allele_details = {
+          gene_systematic_id => $gene_uniquename,
+          allele_uniquename => $db_allele_uniquename,
+          name => $db_allele_name,
+          type => $db_allele_type,
+          description => $db_allele_description,
+        };
+
+        $allele_details;
+      } else {
+        ();
+      }
     } @alleles;
   } else {
     return ();
@@ -411,7 +408,20 @@ sub lookup_by_canto_systematic_id
   }
 
   if (defined $cache_by_canto_systematic_id->{$canto_systematic_id}) {
-    return @{$cache_by_canto_systematic_id->{$canto_systematic_id}};
+    return map {
+      my ($db_gene_uniquename, $db_allele_uniquename, $db_allele_name,
+          $db_allele_type, $db_allele_description) = @$_;
+
+      my $allele_details = {
+        gene_systematic_id => $db_gene_uniquename,
+        allele_uniquename => $db_allele_uniquename,
+        name => $db_allele_name,
+        type => $db_allele_type,
+        description => $db_allele_description,
+      };
+
+      $allele_details;
+    } @{$cache_by_canto_systematic_id->{$canto_systematic_id}};
   } else {
     return ();
   }

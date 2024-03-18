@@ -857,7 +857,22 @@ sub _allele_details_hash
   return \%result;
 }
 
-sub _get_alleles
+sub _get_alleles_by_details
+{
+  my $self = shift;
+  my $gene_primary_identifier = shift;
+  my $allele_type = shift;
+  my $allele_description = shift;
+
+  my $allele_lookup = $self->allele_lookup();
+
+  my @res = $allele_lookup->lookup_by_details($gene_primary_identifier,
+                                              $allele_type, $allele_description);
+
+  return @res;
+}
+
+sub _get_alleles_name_complete
 {
   my $self = shift;
   my $gene_primary_identifier = shift;
@@ -909,6 +924,18 @@ sub _get_alleles
   }
 
   return @res;
+}
+
+sub _get_alleles
+{
+  my $self = shift;
+
+  if ($_[0] eq ':lookup_by_details:') {
+    shift;
+    return $self->_get_alleles_by_details(@_);
+  } else {
+    return $self->_get_alleles_name_complete(@_);
+  }
 }
 
 my %list_for_service_subs =
