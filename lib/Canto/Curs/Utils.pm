@@ -328,15 +328,10 @@ sub _make_genotype_details
 
   my $genotype_display_name = $genotype->display_name($config);
 
-  my $used_in_interactions_count =
-    $genotype->genotype_interactions_with_phenotype()->count() +
-    $genotype->genotype_interaction_genotype_bs()->count() +
-    $genotype->genotype_interaction_genotypes_a()->count();
-
   my $annotations_rs = $genotype->genotype_annotations()
     ->search_related('genotype_interactions_with_phenotype_genotype_annotation_a');
 
-  $used_in_interactions_count += $annotations_rs->count();
+  my $used_in_interactions_count += $annotations_rs->count();
 
   my @res = (
     genotype_id => $genotype->genotype_id(),
