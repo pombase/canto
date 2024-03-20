@@ -2928,8 +2928,7 @@ var extensionRelationDialogCtrl =
 
     $scope.rangeState = 'ok';
     $scope.rangeNeedsChecking = false;
-    $scope.checkerAvailable = $scope.relationConfig.rangeCheck &&
-      CantoGlobals.current_user_is_admin;
+    $scope.checkerAvailable = $scope.relationConfig.rangeCheck;
 
     $scope.checkRange = function() {
       $scope.rangeState = 'ok';
