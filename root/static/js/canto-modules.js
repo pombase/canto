@@ -4207,7 +4207,8 @@ var alleleEditDialogCtrl =
         $scope.alleleData.expression && 
         ($scope.alleleData.expression == 'Overexpression' ||
          $scope.alleleData.expression == 'Knockdown' ||
-         $scope.alleleData.expression == 'Ectopic');
+         $scope.alleleData.expression == 'Ectopic' ||
+         $scope.alleleData.expression == 'Not assayed');
     };
 
     $scope.getGenesFromServer = function() {
