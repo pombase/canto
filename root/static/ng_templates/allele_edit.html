@@ -202,14 +202,14 @@
             <div ng-show="!isValidExpression()"
                  class="help-block">Required for this allele type</div>
             <div>
-              <input ng-model="alleleData.expression" name="curs-allele-expression" id="allele-edit-overexpression"
-                     type="radio" value="Overexpression" />
-              <label for="allele-edit-overexpression">Overexpression</label>
-            </div>
-            <div>
               <input ng-model="alleleData.expression" name="curs-allele-expression" id="allele-edit-wild-type-level"
                      type="radio" value="Wild type product level" />
               <label for="allele-edit-wild-type-level">Wild type product level</label>
+            </div>
+            <div>
+              <input ng-model="alleleData.expression" name="curs-allele-expression" id="allele-edit-overexpression"
+                     type="radio" value="Overexpression" />
+              <label for="allele-edit-overexpression">Overexpression</label>
             </div>
             <div>
               <input ng-model="alleleData.expression" name="curs-allele-expression" id="allele-edit-knockdown"
