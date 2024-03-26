@@ -158,11 +158,7 @@
       </div>
       <div ng-if="showEditLink">
         <a title="Edit this annotation"
-           ng-if="!disableEditing(annotation)"
            ng-click="edit()">Edit</a>
-        <span style="color: #c0c0c0"
-              title='Annotation cannot be edited because it is part of an interaction.  Remove the interaction or try "Copy and edit"';
-              ng-if="disableEditing(annotation)">Edit</span>
       </div>
       <div ng-if="showTransferLink">
         <a title="{{'Copy this annotation to other ' + annotationType.feature_type + 's'}}"
@@ -174,11 +170,11 @@
       </div>
       <div>
         <a title="Delete this annotation"
-           ng-if="!disableEditing(annotation)"
+           ng-if="!disableDeletion(annotation)"
            ng-click="confirmDelete()">Delete</a>
         <span style="color: #c0c0c0"
-              title="Annotation cannot be deleted because it is part of an interaction"
-              ng-if="disableEditing(annotation)">Delete</span>
+              title="Annotation cannot be deleted because it is part of one or more interactions"
+              ng-if="disableDeletion(annotation)">Delete</span>
       </div>
       <div ng-if="sessionState == 'APPROVAL_IN_PROGRESS'">
         <a ng-if="checked == 'no'" href="#" ng-click="setChecked($event)">Checked</a>
