@@ -328,11 +328,6 @@ sub _make_genotype_details
 
   my $genotype_display_name = $genotype->display_name($config);
 
-  my $annotations_rs = $genotype->genotype_annotations()
-    ->search_related('genotype_interactions_with_phenotype_genotype_annotation_a');
-
-  my $used_in_interactions_count += $annotations_rs->count();
-
   my @res = (
     genotype_id => $genotype->genotype_id(),
     genotype_identifier => $genotype->identifier(),
@@ -345,7 +340,6 @@ sub _make_genotype_details
     feature_display_name => $genotype_display_name,
     feature_id => $genotype->genotype_id(),
     alleles => [@allele_hashes],
-    used_in_interactions_count => $used_in_interactions_count,
   );
 
   return @res;
@@ -616,6 +610,10 @@ sub make_ontology_annotation
                                   $ontology_lookup, $organism_lookup,
                                   $data->{extension});
 
+  my $used_in_interactions_count = $annotation->genotype_annotations()
+    ->search_related('genotype_interactions_with_phenotype_genotype_annotation_a')
+    ->count();
+
   my $ret = {
     %gene_details,
     %genotype_details,
@@ -648,6 +646,7 @@ sub make_ontology_annotation
     status => $annotation->status(),
     is_not => JSON::false,
     checked => $data->{checked} || 'no',
+    used_in_interactions_count => $used_in_interactions_count,
   };
 
   if ($include_associated_interaction_details &&
