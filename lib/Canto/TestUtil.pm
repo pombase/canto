@@ -176,6 +176,7 @@ our %shared_test_results = (
     'with_or_from_identifier' => undef,
     'curator' => 'Another Testperson <a.n.other.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org>',
     'qualifiers' => [],
+    used_in_interactions_count => 0,
   },
 );
 
