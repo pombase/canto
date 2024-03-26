@@ -1441,7 +1441,7 @@ var simpleDialogCtrl =
     $scope.message = args.message;
 
     $scope.close = function () {
-      $uibModalInstance.dismiss('close');
+      $uibModalInstance.close('closed');
     };
   };
 
@@ -10311,7 +10311,7 @@ var annotationTableRow =
           $scope.annotation.feature_type === 'metagenotype'
         );
 
-        $scope.disableEditing = function(annotation) {
+        $scope.disableDeletion = function(annotation) {
           return annotation.used_in_interactions_count > 0;
         };
 
@@ -10459,17 +10459,38 @@ var annotationTableRow =
 
         $scope.edit = function () {
           // FIXME: featureFilterDisplayName is from the parent scope
-          var editPromise =
-            startEditing($uibModal, annotation.annotation_type, $scope.annotation,
-              $scope.featureFilterDisplayName, false, true);
 
-          editPromise.then(function (editedAnnotation) {
-            $scope.annotation = editedAnnotation;
-            $scope.updateInteractionInitialData();
-            if (typeof ($scope.annotation.conditions) !== 'undefined') {
-              $scope.annotation.conditionsString =
-                conditionsToStringHighlightNew($scope.annotation.conditions);
+          var warningPromise;
+          if (annotation.used_in_interactions_count > 0) {
+            var message;
+            if (annotation.used_in_interactions_count > 1) {
+              message = 'Note: Edits to this annotation will also change ' +
+                annotation.used_in_interactions_count + ' interactions';
+            } else {
+              message = 'Note: Edits to this annotation will also change an interaction';
             }
+            warningPromise =
+              openSimpleDialog($uibModal, 'Annotation edit warning',
+                               'Annotation edit warning', message)
+            .result;
+          } else {
+            // immediately resolve
+            warningPromise = $q.when(null);
+          }
+
+          warningPromise.then(() => {
+            var editPromise =
+                startEditing($uibModal, annotation.annotation_type, $scope.annotation,
+                             $scope.featureFilterDisplayName, false, true);
+
+            editPromise.then(function (editedAnnotation) {
+              $scope.annotation = editedAnnotation;
+              $scope.updateInteractionInitialData();
+              if (typeof ($scope.annotation.conditions) !== 'undefined') {
+                $scope.annotation.conditionsString =
+                  conditionsToStringHighlightNew($scope.annotation.conditions);
+              }
+            });
           });
         };
 
