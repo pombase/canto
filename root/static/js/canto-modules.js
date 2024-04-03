@@ -4869,6 +4869,7 @@ var genotypeEdit =
         $scope.app_static_path = CantoGlobals.app_static_path;
         $scope.multi_organism_mode = CantoGlobals.multi_organism_mode;
         $scope.strains_mode = CantoGlobals.strains_mode;
+        $scope.is_admin_user = CantoGlobals.is_admin_user;
         $scope.allow_single_wildtype_allele = CantoGlobals.allow_single_wildtype_allele;
         $scope.allelesHaveExpression = CantoGlobals.alleles_have_expression;
 
@@ -5171,7 +5172,8 @@ var genotypeEdit =
         };
 
         $scope.isValid = function () {
-          return $scope.data.alleles.length > 0 && $scope.wildTypeCheckPasses;
+          return $scope.data.alleles.length > 0 &&
+            ($scope.is_adminmin_user || $scope.wildTypeCheckPasses);
         };
       }
     };
