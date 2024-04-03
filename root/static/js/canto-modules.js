@@ -8829,7 +8829,7 @@ var annotationEditDialogCtrl =
         $scope.annotation.term_ontid = termId;
         $scope.annotation.term_name = termName;
 
-        if (!termId) {
+        if (!termId && $scope.flyBaseMode) {
           // user has cleared the input field, so we clear the term_ontid and continue
           $scope.annotation.conditions = [];
           $scope.annotation.extension = [];
