@@ -5173,7 +5173,7 @@ var genotypeEdit =
 
         $scope.isValid = function () {
           return $scope.data.alleles.length > 0 &&
-            ($scope.is_adminmin_user || $scope.wildTypeCheckPasses);
+            ($scope.is_admin_user || $scope.wildTypeCheckPasses);
         };
       }
     };
