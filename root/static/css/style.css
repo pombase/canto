@@ -2028,3 +2028,18 @@ details > div {
 .curs-ext-rel-dialog-help-text {
   margin: 1em 0;
 }
+
+.warning-box {
+  text-indent: -0.75em;
+  padding-left: 2em;
+}
+
+.warning-box span.glyphicon {
+  padding-right: 0.2em;
+  color: orange;
+}
+
+.modal-header .warning-box {
+  width: 85%;
+}
+

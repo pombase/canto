@@ -8033,6 +8033,8 @@ var annotationEditDialogCtrl =
 
     $scope.termNameConstraint = undefined;
 
+    $scope.warningText = undefined;
+
     if (args.annotation.feature_a_taxonid) {
       $scope.initialSelectedOrganismId = args.annotation.feature_a_taxonid;
     }
@@ -8114,6 +8116,8 @@ var annotationEditDialogCtrl =
 
     $scope.annotationTypePromise
       .then(annotationType => {
+        $scope.warningText = annotationType.warning_text;
+
         if (annotationType.associated_interaction_annotation_type) {
           if (!$scope.annotation.interaction_annotations) {
             $scope.annotation.interaction_annotations = [];
