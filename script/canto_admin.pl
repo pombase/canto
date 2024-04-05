@@ -39,6 +39,7 @@ my $merge_strains = undef;
 my $change_taxonid = undef;
 my $delete_unused_strains = undef;
 my $update_annotation_curators = undef;
+my $change_gene_id = undef;
 
 my $dry_run = 0;
 my $do_help = 0;
@@ -49,6 +50,7 @@ my $result = GetOptions ("refresh-gene-cache" => \$refresh_gene_cache,
                          "change-taxonid" => \$change_taxonid,
                          "delete-unused-strains" => \$delete_unused_strains,
                          "update-annotation-curators" => \$update_annotation_curators,
+                         "change-gene-id" => \$change_gene_id,
                          "dry-run|d" => \$dry_run,
                          "help|h" => \$do_help);
 
@@ -84,6 +86,8 @@ sub usage
   Set the curator_orcid field of the annotations if available in the
   person table
 
+  $0 --change-gene-id <from_id> <to_id>
+  Change <from_id> to <to_id> for all genes and alleles in every session
 |;
 }
 
@@ -190,6 +194,15 @@ my $proc = sub {
     } catch {
       warn "failing to update annotation curator field: $_\n";
     };
+  }
+
+  if (defined $change_gene_id) {
+    my $from_id = shift @ARGV;
+    my $to_id = shift @ARGV;
+
+    $util->change_gene_id($from_id, $to_id);
+
+    $exit_flag = 0;
   }
 };
 
