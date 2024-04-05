@@ -426,4 +426,42 @@ sub update_annotation_curators
   Canto::Track::curs_map($self->config(), $track_schema, $proc);
 }
 
+=head2 change_gene_id
+
+ Usage   : $util->change_gene_id($from_id, $to_id)
+ Function: Change a gene ID (primary_identifier) in every session.
+           Also change allele IDs containing the $from_id.
+ Args    : $from_id - an existing primary_identifier
+           $to_id
+ Returns : nothing - dies on failures
+
+=cut
+
+sub change_gene_id
+{
+  my $self = shift;
+
+  my $from_id = shift;
+  my $to_id = shift;
+
+  my $track_schema = $self->schema();
+
+  my $proc = sub {
+    my $curs = shift;
+    my $cursdb = shift;
+
+    my $gene_rs = $cursdb->resultset('Gene');
+
+    while (defined (my $gene = $gene_rs->next())) {
+      if ($gene->primary_identifier() eq $from_id) {
+        print $curs->curs_key(), "\n";
+        $gene->primary_identifier($to_id);
+        $gene->update();
+      }
+    }
+  };
+
+  Canto::Track::curs_map($self->config(), $track_schema, $proc);
+}
+
 1;
