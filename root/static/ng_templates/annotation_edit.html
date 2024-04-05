@@ -6,8 +6,12 @@
     <h4 ng-hide="newlyAdded" class="modal-title">
       Edit {{annotationType.display_name}} annotation <span ng-show="annotation.feature_display_name">for {{annotation.feature_display_name}}</span>
     </h4>
+    <h5 ng-if="warningText" class="warning-box">
+      <span class="glyphicon glyphicon-alert"></span>
+      Note:
+      <span ng-bind-html="warningText | encodeAlleleSymbols | toTrusted"></span>
+    </h5>
   </div>
-
   <div class="modal-body">
     <div class="curs-dialog-body-contents">
     <table class="curs-definition-table">

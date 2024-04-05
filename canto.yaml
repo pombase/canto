@@ -2230,6 +2230,13 @@ available_annotation_type_list:
     feature_type: 'gene'
     broad_term_suggestions: ~
     specific_term_examples: ~
+    warning_text: >
+        This datatype represents
+        <span style="font-weight: bold">only normal</span>
+        protein and RNA levels. To report phenotypes affecting levels
+        of gene expression, use the corresponding altered protein/RNA
+        level phenotype terms.
+
     help_text: Qualitative descriptions of presence, absence, increase, decrease, etc. of the RNA transcribed from a gene.
     more_help_text: ~
     annotation_table_columns_to_hide: [term_ontid]
