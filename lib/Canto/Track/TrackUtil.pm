@@ -444,6 +444,20 @@ sub change_gene_id
   my $from_id = shift;
   my $to_id = shift;
 
+  my $gene_lookup = Canto::Track::get_adaptor($self->config(), 'gene');
+
+  my $from_id_lookup_result = $gene_lookup->lookup([$from_id]);
+
+  if (@{$from_id_lookup_result->{found}} == 0) {
+    die qq|no gene found in the database for "from" ID $from_id\n|;
+  }
+
+  my $to_id_lookup_result = $gene_lookup->lookup([$to_id]);
+
+  if (@{$to_id_lookup_result->{found}} == 0) {
+    die qq|no gene found in the database for "to" ID $to_id\n|;
+  }
+
   my $track_schema = $self->schema();
 
   my $proc = sub {
