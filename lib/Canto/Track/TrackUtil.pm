@@ -459,6 +459,17 @@ sub change_gene_id
         $gene->update();
       }
     }
+
+    my $allele_rs = $cursdb->resultset('Allele');
+
+    while (defined (my $allele = $allele_rs->next())) {
+      my $primary_identifier = $allele->primary_identifier();
+      if ($primary_identifier =~ /^$from_id:/) {
+        $primary_identifier =~ s/^$from_id:/$to_id:/;
+        $allele->primary_identifier($primary_identifier);
+        $allele->update();
+      }
+    }
   };
 
   Canto::Track::curs_map($self->config(), $track_schema, $proc);
