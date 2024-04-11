@@ -1,11 +1,6 @@
 <%args>
 @curation_response_rate
-@annotation_types_by_year
 @annotation_stats
-@per_pub_stats_table
-@per_pub_5_year_stats
-@htp_per_pub_stats_table
-@htp_per_pub_5_year_stats
 @curated_stats
 @new_curator_stats
 $db_creation_datetime
@@ -53,89 +48,6 @@ $db_creation_datetime
 
 </div>
 
-<div class="curs-box">
-  <div class="curs-box-title" id="cumulative">Cumulative annotations by type and year</div>
-<div class="curs-box-body row">
-<div class="col-sm-6 col-md-6">
-  <p>
-    Cumulative totals of manually curated annotations over
-    time. Totals include annotations made by PomBase curators and
-    community contributors in Canto and via batch phenotype and
-    modification data submission, but exclude interaction annotations
-    imported from BioGRID and GO annotations based on computational
-    methods (IEA evidence). "Other" includes taxon distribution,
-    complementation, DNA and protein sequence features, genome
-    organization, and miscellaneous data types. All annotation types
-    are described in the <a
-    href="http://www.pombase.org/documentation">PomBase
-    documentation</a>.
-  </p>
-</div>
-<div class="ng-cloak" ng-if="!isVisible('cumulative-annotations-by-type-and-year')">
-  <a href="#" ng-click="show($event, 'cumulative-annotations-by-type-and-year')">View data table ...</a>
-</div>
-<div class="ng-cloak" ng-if="isVisible('cumulative-annotations-by-type-and-year')">
-<div class="col-sm-6 col-md-6">
-  <table class="list">
-    <thead>
-      <tr>
-        <th>
-          Publication year
-        </th>
-        <th>
-          GO annotations
-        </th>
-        <th>
-          Phenotypes
-        </th>
-        <th>
-          Protein modifications
-        </th>
-        <th>
-          Gene expression
-        </th>
-        <th>
-          Genetic interactions
-        </th>
-        <th>
-          Physical interactions
-        </th>
-        <th>
-          Other
-        </th>
-        <th style="font-weight: bold">
-          Total
-        </th>
-      </tr>
-    </thead>
-% for my $row (@cumulative_annotation_types_by_year) {
-    <tr>
-%   for (my $i = 0; $i < @$row; $i++) {
-%     my $elem = $row->[$i];
-%     if ($i + 1 == scalar(@$row)) {
-      <td style="font-weight: bold">
-%     } else {
-      <td>
-%     }
-        <% $elem %>
-      </td>
-%   }
-    </tr>
-% }
-  </table>
-</div>
-</div>
-</div>
-<div>
-  <script language="javascript" type="text/javascript">
-    var cumulativeAnnotationTypeCounts = <% $cumulative_annotation_type_counts_js |n %>;
-  </script>
-  <stacked-graph chart-labels="cumulativeAnnotationTypeCountsLabels" chart-data="cumulativeAnnotationTypeCountsData"
-                 chart-colors="defaultStackedChartColors"
-                 chart-series="GO|Phenotype|Modification|Gene Expression|Genetic interaction|Physical interaction|Other">
-  </stacked-graph>
-</div>
-</div>
 
 <div class="curs-box">
   <div class="curs-box-title" id="cursum">Canto curator summary</div>
@@ -358,193 +270,12 @@ This table shows the number of first time community curators per year.
 </div>
 </div>
 </div>
-
-<div class="curs-box">
-  <div class="curs-box-title" id="gpp5year">Annotations/genes for low throughput publication in 5-year intervals</div>
-  <div class="curs-box-body">
-    <div class="row">
-<div class="col-sm-6 col-md-6">
-    Mean number of manually curated annotations and genes annotated in PomBase
-    per peer-reviewed paper in 5-year intervals.  Annotations are split
-    into separate graphs for annotations from low-throughput
-    experiments and high-throughput experiments.
-</div>
-<div class="ng-cloak col-sm-6 col-md-6" ng-if="!isVisible('annotations+genes-per-publication-in-5-year-intervals')">
-  <a href="#" ng-click="show($event, 'annotations+genes-per-publication-in-5-year-intervals')">View data table ...</a>
-</div>
-  <div ng-if="isVisible('annotations+genes-per-publication-in-5-year-intervals')"
-       class="col-sm-6 col-md-6">
-  <table class="list">
-    <thead>
-      <tr>
-        <th>
-          Publication year
-        </th>
-        <th>
-          Avg. genes per pub.
-        </th>
-        <th>
-          Avg. annotations per pub.
-        </th>
-      </tr>
-    </thead>
-% for my $row (@per_pub_5_year_stats) {
-    <tr>
-% my $range_start = shift @$row;
-% my $range_end = $range_start + 4;
-% $range_end = $current_year if $current_year < $range_end;
-% my $year_range;
-% if ($range_start eq $range_end) {
-%   $year_range = $range_start;
-% } else {
-%   $year_range = "$range_start-$range_end";
-% }
-      <td>
-        <% $year_range %>
-      </td>
-%   for my $column (@$row) {
-      <td><% $column %></td>
-%   }
-    </tr>
-% }
-  </table>
-</div>
-</div>
-
-<div  style="margin-top: 1em" class="row">
-  <script language="javascript" type="text/javascript">
-    var perPub5YearStatsData = <% $per_pub_5_year_stats_js |n %>;
-  </script>
-  <div class="col-sm-6 col-md-6">
-    <div>
-      Average genes from low throughput experiments/per publication
-    </div>
-    <bar-chart chart-labels="perPub5YearStatsLabels" chart-data="perPub5YearStatsData[0]"
-               chart-series="Avg. genes per pub">
-    </bar-chart>
-  </div>
-</div>
-<div  style="margin-top: 1em" class="row">
-  <script language="javascript" type="text/javascript">
-    var htpPerPub5YearStatsData = <% $htp_per_pub_5_year_stats_js |n %>;
-  </script>
-  <div class="col-sm-6 col-md-6">
-    <div>
-      Average low-throughput annotations per publication:
-    </div>
-    <bar-chart chart-labels="perPub5YearStatsLabels" chart-data="perPub5YearStatsData[1]"
-               chart-series="Avg. annotations per pub">
-    </bar-chart>
-  </div>
-  <div class="col-sm-6 col-md-6">
-    <div>
-      Average high-throughput annotations per publication:
-    </div>
-    <bar-chart chart-labels="htpPerPub5YearStatsLabels" chart-data="htpPerPub5YearStatsData[1]"
-               chart-series="Avg. annotations per pub">
-    </bar-chart>
-  </div>
-</div>
-<div class="row">
-  <div class="ng-cloak" ng-if="!isVisible('annotation+genes-per-pub-per-year')">
-    <a href="#" ng-click="show($event, 'annotation+genes-per-pub-per-year')">View annotation per publication data ...</a>
-  </div>
-<div class="ng-cloak curs-box" ng-if="isVisible('annotation+genes-per-pub-per-year')">
-  <div class="curs-box-title" id="gppannual">Annotations/genes per publication per year</div>
-  <div class="curs-box-body row">
-  <div class="col-sm-6 col-md-6">
-    Mean number of manually curated annotations and genes annotated in PomBase
-    per peer-reviewed paper per year. Counts exclude high-throughput
-    experiments and use the same criteria for all years
-  </div>
-  <div class="col-sm-6 col-md-6">
-  <table class="list">
-    <thead>
-      <tr>
-        <th>
-          Publication year
-        </th>
-        <th>
-          Avg. genes per pub.
-        </th>
-        <th>
-          Avg. annotations per pub.
-        </th>
-      </tr>
-    </thead>
-% for my $row (@per_pub_stats_table) {
-    <tr>
-%   for my $column (@$row) {
-      <td><% $column %></td>
-%   }
-    </tr>
-% }
-  </table>
-</div>
-  </div>
-</div>
-</div>
 </div>
 </div>
 
 <%init>
 use List::MoreUtils 'pairwise';
 use Data::JavaScript::Anon;
-
-my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
-my $current_year = $year + 1900;
-
-my @zeros = (0,0,0,0,0,0,0,0);
-
-my @cumulative_annotation_types_by_year = ();
-my @cumulative_annotation_type_counts = @zeros;
-
-for my $row (@annotation_types_by_year) {
-  my $year = shift @$row;
-  if (!defined $row->[0]) {
-    # no data for that year
-    $row = [{}];
-  }
-  my %data = %{$row->[0]};
-  my $go_count = ($data{molecular_function} // 0) +
-    ($data{biological_process} // 0) + ($data{cellular_component} // 0);
-  my $phenotype_count = $data{fission_yeast_phenotype} // 0;
-  my $modification_count = $data{'PSI-MOD'} // 0;
-  my $gene_ex_count = $data{gene_ex} // 0;
-  my $genetic_interactions_count = $data{'interacts_genetically'} // 0;
-  my $physical_interactions_count = $data{'interacts_physically'} // 0;
-  my $total = 0;
-  map {
-    $total += $_ if defined $_;
-  } values %data;
-  my $other_count = $total - $go_count - $phenotype_count - $modification_count -
-    $gene_ex_count - $genetic_interactions_count - $physical_interactions_count;
-
-  $cumulative_annotation_type_counts[0] += $go_count;
-  $cumulative_annotation_type_counts[1] += $phenotype_count;
-  $cumulative_annotation_type_counts[2] += $modification_count;
-  $cumulative_annotation_type_counts[3] += $gene_ex_count;
-  $cumulative_annotation_type_counts[4] += $genetic_interactions_count;
-  $cumulative_annotation_type_counts[5] += $physical_interactions_count;
-  $cumulative_annotation_type_counts[6] += $other_count;
-  $cumulative_annotation_type_counts[7] += $total;
-
-  push @cumulative_annotation_types_by_year,
-    [$year, @cumulative_annotation_type_counts];
-}
-
-my @transposed_cumulative_annotation_types_by_year = ();
-
-map {
-  my @row = @$_;
-
-  for (my $i = 0; $i < scalar(@row) - 1; $i++) {
-    push @{$transposed_cumulative_annotation_types_by_year[$i]}, $row[$i];
-  }
-} @cumulative_annotation_types_by_year;
-
-my $cumulative_annotation_type_counts_js = Data::JavaScript::Anon->anon_dump(\@transposed_cumulative_annotation_types_by_year);
-
 
 my @transposed_curated_stats = ();
 
@@ -558,28 +289,10 @@ map {
 
 my $curation_status_js = Data::JavaScript::Anon->anon_dump(\@transposed_curated_stats);
 
-my @transposed_per_pub_5_year_stats = ();
+use Data::Dumper;
+$Data::Dumper::Maxdepth = 3;
+warn Dumper([$curation_status_js]);
 
-map {
-  my @row = @$_;
-
-  for (my $i = 0; $i < scalar(@row); $i++) {
-    push @{$transposed_per_pub_5_year_stats[$i]}, $row[$i];
-  }
-} @per_pub_5_year_stats;
-
-my @transposed_htp_per_pub_5_year_stats = ();
-
-map {
-  my @row = @$_;
-
-  for (my $i = 0; $i < scalar(@row); $i++) {
-    push @{$transposed_htp_per_pub_5_year_stats[$i]}, $row[$i];
-  }
-} @htp_per_pub_5_year_stats;
-
-my $per_pub_5_year_stats_js = Data::JavaScript::Anon->anon_dump(\@transposed_per_pub_5_year_stats);
-my $htp_per_pub_5_year_stats_js = Data::JavaScript::Anon->anon_dump(\@transposed_htp_per_pub_5_year_stats);
 
 my ($completed_sessions, $all_community_sessions) = @curation_response_rate;
 my $response_rate = int(1000.0 * $completed_sessions / $all_community_sessions) / 10.0;
