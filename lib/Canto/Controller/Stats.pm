@@ -67,29 +67,9 @@ sub annotation : Local {
 
   Canto::Chado::Utils::stats_init($chado_schema, $track_schema);
 
-  my @annotation_types_by_year =
-    Canto::Chado::Utils::annotation_types_by_year($chado_schema);
-  $st->{annotation_types_by_year} = \@annotation_types_by_year;
-
   my @curation_response_rate =
     Canto::Chado::Utils::curation_response_rate($track_schema);
   $st->{curation_response_rate} = \@curation_response_rate;
-
-  my @per_pub_stats =
-    Canto::Chado::Utils::per_publication_stats($chado_schema, 0, 'low');
-  $st->{per_pub_stats_table} = \@per_pub_stats;
-
-  my @per_pub_5_year_stats =
-    Canto::Chado::Utils::per_publication_stats($chado_schema, 1, 'low');
-  $st->{per_pub_5_year_stats} = \@per_pub_5_year_stats;
-
-  my @htp_per_pub_stats =
-    Canto::Chado::Utils::per_publication_stats($chado_schema, 0, 'high');
-  $st->{htp_per_pub_stats_table} = \@htp_per_pub_stats;
-
-  my @htp_per_pub_5_year_stats =
-    Canto::Chado::Utils::per_publication_stats($chado_schema, 1, 'high');
-  $st->{htp_per_pub_5_year_stats} = \@htp_per_pub_5_year_stats;
 
   my @annotation_stats = Canto::Chado::Utils::annotation_stats_table($chado_schema, $track_schema);
   $st->{annotation_stats} = \@annotation_stats;

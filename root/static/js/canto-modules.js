@@ -882,7 +882,6 @@ canto.service('CantoGlobals', function ($window) {
   this.is_admin_user = $window.is_admin_user;
   this.current_user_is_admin = $window.current_user_is_admin;
   this.curationStatusData = $window.curationStatusData;
-  this.cumulativeAnnotationTypeCounts = $window.cumulativeAnnotationTypeCounts;
   this.perPub5YearStatsData = $window.perPub5YearStatsData;
   this.htpPerPub5YearStatsData = $window.htpPerPub5YearStatsData;
   this.multi_organism_mode = $window.multi_organism_mode;
@@ -11365,41 +11364,8 @@ var AnnotationStatsCtrl =
     $scope.visibleMap = {};
     $scope.curationStatusLabels = CantoGlobals.curationStatusData[0];
     $scope.curationStatusData = CantoGlobals.curationStatusData.slice(1);
-    $scope.cumulativeAnnotationTypeCountsLabels = CantoGlobals.cumulativeAnnotationTypeCounts[0];
-    $scope.cumulativeAnnotationTypeCountsData = CantoGlobals.cumulativeAnnotationTypeCounts.slice(1);
 
     $scope.defaultStackedChartColors = defaultStackedChartColors;
-
-    var currentYear = (new Date()).getFullYear();
-    $scope.perPub5YearStatsLabels =
-      $.map(CantoGlobals.perPub5YearStatsData[0],
-        function (year) {
-          if (year == currentYear) {
-            return year;
-          } else {
-            var rangeEnd = (year + 4);
-            if (rangeEnd > currentYear) {
-              rangeEnd = currentYear;
-            }
-            return year + "-" + rangeEnd;
-          }
-        });
-    $scope.perPub5YearStatsData = CantoGlobals.perPub5YearStatsData.slice(1);
-
-    $scope.htpPerPub5YearStatsLabels =
-      $.map(CantoGlobals.htpPerPub5YearStatsData[0],
-        function (year) {
-          if (year == currentYear) {
-            return year;
-          } else {
-            var rangeEnd = (year + 4);
-            if (rangeEnd > currentYear) {
-              rangeEnd = currentYear;
-            }
-            return year + "-" + rangeEnd;
-          }
-        });
-    $scope.htpPerPub5YearStatsData = CantoGlobals.htpPerPub5YearStatsData.slice(1);
 
     $scope.show = function ($event, key) {
       $scope.visibleMap[key] = true;
