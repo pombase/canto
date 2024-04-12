@@ -452,11 +452,22 @@ sub change_gene_id
     die qq|no gene found in the database for "from" ID $from_id\n|;
   }
 
+  if (@{$from_id_lookup_result->{found}} > 1) {
+    die qq|more than one result for $from_id\n|;
+  }
+
   my $to_id_lookup_result = $gene_lookup->lookup([$to_id]);
 
   if (@{$to_id_lookup_result->{found}} == 0) {
     die qq|no gene found in the database for "to" ID $to_id\n|;
   }
+
+  if (@{$to_id_lookup_result->{found}} > 1) {
+    die qq|more than one result for $to_id\n|;
+  }
+
+  my $old_name = $from_id_lookup_result->{found}->[0]->{primary_name};
+  my $new_name = $to_id_lookup_result->{found}->[0]->{primary_name};
 
   my $track_schema = $self->schema();
 
@@ -478,9 +489,12 @@ sub change_gene_id
 
     while (defined (my $allele = $allele_rs->next())) {
       my $primary_identifier = $allele->primary_identifier();
+      my $allele_name = $allele->name();
       if ($primary_identifier =~ /^$from_id:/) {
         $primary_identifier =~ s/^$from_id:/$to_id:/;
         $allele->primary_identifier($primary_identifier);
+        $allele_name =~ s/$old_name/$new_name/;
+        $allele->name($allele_name);
         $allele->update();
       }
     }
