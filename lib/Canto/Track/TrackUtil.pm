@@ -498,6 +498,36 @@ sub change_gene_id
         $allele->update();
       }
     }
+    
+    my $annotation_rs = $cursdb->resultset('Annotation');
+
+    while (defined (my $annotation = $annotation_rs->next())) {
+      my $data = $annotation->data();
+      my $changed = 0;
+      
+      my $extension = $data->{extension};
+      
+      if (defined $extension) {
+        map {
+          my $orPart = $_;
+          map {
+            my $andPart = $_;
+            if ($andPart->{rangeType} && $andPart->{rangeType} eq 'Gene') {
+              if ($andPart->{rangeValue} eq $from_id) {
+                $andPart->{rangeValue} = $to_id;
+                $andPart->{rangeDisplayName} = $new_name;
+                $changed = 1;
+              }
+            }
+          } @$orPart;
+        } @$extension;
+      }
+      
+      if ($changed) {
+        $annotation->data($data);
+        $annotation->update();
+      }
+    }
   };
 
   Canto::Track::curs_map($self->config(), $track_schema, $proc);
