@@ -289,11 +289,6 @@ map {
 
 my $curation_status_js = Data::JavaScript::Anon->anon_dump(\@transposed_curated_stats);
 
-use Data::Dumper;
-$Data::Dumper::Maxdepth = 3;
-warn Dumper([$curation_status_js]);
-
-
 my ($completed_sessions, $all_community_sessions) = @curation_response_rate;
 my $response_rate = int(1000.0 * $completed_sessions / $all_community_sessions) / 10.0;
 
