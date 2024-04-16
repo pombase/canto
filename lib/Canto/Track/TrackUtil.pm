@@ -426,4 +426,111 @@ sub update_annotation_curators
   Canto::Track::curs_map($self->config(), $track_schema, $proc);
 }
 
+=head2 change_gene_id
+
+ Usage   : $util->change_gene_id($from_id, $to_id)
+ Function: Change a gene ID (primary_identifier) in every session.
+           Also change allele IDs containing the $from_id.
+ Args    : $from_id - an existing primary_identifier
+           $to_id
+ Returns : nothing - dies on failures
+
+=cut
+
+sub change_gene_id
+{
+  my $self = shift;
+
+  my $from_id = shift;
+  my $to_id = shift;
+
+  my $gene_lookup = Canto::Track::get_adaptor($self->config(), 'gene');
+
+  my $from_id_lookup_result = $gene_lookup->lookup([$from_id]);
+
+  if (@{$from_id_lookup_result->{found}} == 0) {
+    die qq|no gene found in the database for "from" ID $from_id\n|;
+  }
+
+  if (@{$from_id_lookup_result->{found}} > 1) {
+    die qq|more than one result for $from_id\n|;
+  }
+
+  my $to_id_lookup_result = $gene_lookup->lookup([$to_id]);
+
+  if (@{$to_id_lookup_result->{found}} == 0) {
+    die qq|no gene found in the database for "to" ID $to_id\n|;
+  }
+
+  if (@{$to_id_lookup_result->{found}} > 1) {
+    die qq|more than one result for $to_id\n|;
+  }
+
+  my $old_name = $from_id_lookup_result->{found}->[0]->{primary_name};
+  my $new_name = $to_id_lookup_result->{found}->[0]->{primary_name};
+
+  my $track_schema = $self->schema();
+
+  my $proc = sub {
+    my $curs = shift;
+    my $cursdb = shift;
+
+    my $gene_rs = $cursdb->resultset('Gene');
+
+    while (defined (my $gene = $gene_rs->next())) {
+      if ($gene->primary_identifier() eq $from_id) {
+        print $curs->curs_key(), "\n";
+        $gene->primary_identifier($to_id);
+        $gene->update();
+      }
+    }
+
+    my $allele_rs = $cursdb->resultset('Allele');
+
+    while (defined (my $allele = $allele_rs->next())) {
+      my $primary_identifier = $allele->primary_identifier();
+      my $allele_name = $allele->name();
+      if ($primary_identifier =~ /^$from_id:/) {
+        $primary_identifier =~ s/^$from_id:/$to_id:/;
+        $allele->primary_identifier($primary_identifier);
+        $allele_name =~ s/$old_name/$new_name/;
+        $allele->name($allele_name);
+        $allele->update();
+      }
+    }
+    
+    my $annotation_rs = $cursdb->resultset('Annotation');
+
+    while (defined (my $annotation = $annotation_rs->next())) {
+      my $data = $annotation->data();
+      my $changed = 0;
+      
+      my $extension = $data->{extension};
+      
+      if (defined $extension) {
+        map {
+          my $orPart = $_;
+          map {
+            my $andPart = $_;
+            if ($andPart->{rangeType} && $andPart->{rangeType} eq 'Gene') {
+              if ($andPart->{rangeValue} eq $from_id) {
+                $andPart->{rangeValue} = $to_id;
+                $andPart->{rangeDisplayName} = $new_name;
+                $changed = 1;
+              }
+            }
+          } @$orPart;
+        } @$extension;
+      }
+      
+      if ($changed) {
+        $annotation->data($data);
+        $annotation->update();
+      }
+    }
+  };
+
+  Canto::Track::curs_map($self->config(), $track_schema, $proc);
+}
+
 1;
