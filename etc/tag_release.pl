@@ -126,10 +126,6 @@ if (@ARGV > 0 && $ARGV[0] eq '-a') {
   print "pushing to Bitbucket\n";
   system "git push --tags bitb master";
   print "done\n\n";
-
-  print "pushing to GitLab\n";
-  system "git push --tags gitlab master";
-  print "done\n\n";
 }
 
 END {
