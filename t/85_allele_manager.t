@@ -91,7 +91,7 @@ is ($no_name_allele_check->allele_id(), $no_name_allele->allele_id());
 
 
 $allele_manager->create_simple_allele('test_uniquename', 'unknown', 'some_name',
-                                      'some_description', undef, undef,
+                                      'some_description', undef,
                                       $SPBC1826_01c, []);
 
 my $new_simple_allele = $curs_schema->resultset('Allele')
@@ -105,7 +105,7 @@ is ($new_simple_allele->gene()->primary_identifier(), 'SPBC1826.01c');
 
 $allele_manager->create_simple_allele('test_aberration_uniquename', 'aberration',
                                       'some_aberration_name',
-                                      'some_aberration_description',  undef, undef,
+                                      'some_aberration_description',  undef,
                                       undef, []);
 
 my $new_aberration = $curs_schema->resultset('Allele')

@@ -4139,15 +4139,14 @@ var alleleEditDialogCtrl =
     $scope.alleleData.description = $scope.alleleData.description || '';
     $scope.alleleData.type = $scope.alleleData.type || '';
     $scope.alleleData.expression = $scope.alleleData.expression || '';
+    $scope.alleleData.promoter_gene = $scope.alleleData.promoter_gene || '';
     $scope.alleleData.evidence = $scope.alleleData.evidence || '';
     $scope.alleleData.synonyms = $scope.alleleData.synonyms || [];
     $scope.alleleData.existingSynonyms = [];
     $scope.alleleData.newSynonyms = [];
     $scope.genes = null;
-    $scope.promoterSelect = 'none';
 
     $scope.data = {
-      promoterGeneId: null,
       newSynonymsString: '',
       alleleGene: null,
       organismShortDisplayName: null,
@@ -4216,11 +4215,6 @@ var alleleEditDialogCtrl =
 
         $.map($scope.genes,
               (gene) => {
-                if (typeof($scope.alleleData.promoter_gene) != 'undefined') {
-                  if (gene.primary_identifier == $scope.alleleData.promoter_gene) {
-                    $scope.data.promoterGeneId = gene.gene_id;
-                  }
-                }
                 if (gene.primary_identifier == $scope.alleleData.gene_systematic_id) {
                   $scope.data.alleleGene = gene;
                   if (gene && gene.organism && gene.organism.full_name) {
@@ -4230,13 +4224,6 @@ var alleleEditDialogCtrl =
                 }
               });
 
-        if ($scope.data.promoterGeneId) {
-          $scope.promoterSelect = 'gene';
-        } else {
-          if ($scope.alleleData.exogenous_promoter) {
-            $scope.promoterSelect = 'exogenous';
-          }
-        }
       }).catch(function (err) {
         toaster.pop('note', "couldn't read the gene list from the server");
       });
@@ -4489,28 +4476,6 @@ var alleleEditDialogCtrl =
           $scope.okInProgress = true;
           splitSynonymsForStoring($scope.alleleData, $scope.data.newSynonymsString);
           copyObject($scope.alleleData, args.allele);
-          if ($scope.data.promoterGeneId == null) {
-            args.allele.promoter_gene = null;
-          } else {
-            $.map($scope.genes,
-                  (gene) => {
-                    if (gene.gene_id == $scope.data.promoterGeneId) {
-                      args.allele.promoter_gene = gene.primary_identifier;
-                    }
-                  });
-          }
-
-          if ($scope.showPromoterOpts()) {
-            if ($scope.promoterSelect != 'gene') {
-              delete args.allele.promoter_gene;
-            }
-            if ($scope.promoterSelect != 'exogenous') {
-              delete args.allele.exogenous_promoter;
-            }
-          } else {
-            delete args.allele.promoter_gene;
-            delete args.allele.exogenous_promoter;
-          }
 
           var strainName = null;
           if ($scope.strainData.selectedStrain) {
@@ -5114,8 +5079,7 @@ var genotypeEdit =
             (allele1.description || '') === (allele2.description) &&
             (allele1.expression || '') === (allele2.expression || '') &&
             (allele1.name || '') === (allele2.name || '') &&
-            (allele1.promoter_gene || '') === (allele2.promoter_gene || '') &&
-            (allele1.exogenous_promoter || '') === (allele2.exogenous_promoter || '');
+            (allele1.promoter_gene || '') === (allele2.promoter_gene || '');
         };
 
         $scope.findExistingAllele = function (alleleData) {

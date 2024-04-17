@@ -1066,7 +1066,7 @@ cmp_deeply($allele_res,
               'description' => 'deletion',
               'type' => 'deletion',
               'name' => 'ssm4delta',
-              'display_name' => 'ssm4delta (existing)'
+              'display_name' => 'ssm4delta (existing)',
             },
             {
               'allele_id' => 3,
@@ -1085,7 +1085,6 @@ cmp_deeply($allele_res,
               'notes' => {
                 'note_test_key' => 'note_test_value',
               },
-              'exogenous_promoter' => undef,
               'promoter_gene' => undef,
             },
           ]);
@@ -1128,7 +1127,6 @@ my $expected_genotype_detail_res =
         'synonyms' => [],
         'comment' => undef,
         'notes' => {},
-        'exogenous_promoter' => undef,
         'promoter_gene' => undef,
       },
       {
@@ -1146,7 +1144,6 @@ my $expected_genotype_detail_res =
         'synonyms' => [],
         'comment' => undef,
         'notes' => {},
-        'exogenous_promoter' => undef,
         'promoter_gene' => undef,
       },
     ],

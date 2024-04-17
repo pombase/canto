@@ -97,7 +97,6 @@ test_psgi $app, sub {
                    'comment' => undef,
                    'synonyms' => [],
                    'notes' => {},
-                   'exogenous_promoter' => undef,
                    'promoter_gene' => undef,
                 },
                  {
@@ -115,7 +114,6 @@ test_psgi $app, sub {
                    'comment' => undef,
                    'synonyms' => [],
                    'notes' => {},
-                   'exogenous_promoter' => undef,
                    'promoter_gene' => undef,
                  }
                ],
