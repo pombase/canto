@@ -1067,7 +1067,6 @@ cmp_deeply($allele_res,
               'gene_systematic_id' => 'SPAC27D7.13c',
               'synonyms' => [],
               'notes' => {},
-              'exogenous_promoter' => undef,
               'promoter_gene' => undef,
             },
             {
@@ -1087,7 +1086,6 @@ cmp_deeply($allele_res,
               'notes' => {
                 'note_test_key' => 'note_test_value',
               },
-              'exogenous_promoter' => undef,
               'promoter_gene' => undef,
             },
             {
@@ -1134,7 +1132,6 @@ my $expected_genotype_detail_res =
         'synonyms' => [],
         'comment' => undef,
         'notes' => {},
-        'exogenous_promoter' => undef,
         'promoter_gene' => undef,
       },
       {
@@ -1152,7 +1149,6 @@ my $expected_genotype_detail_res =
         'synonyms' => [],
         'comment' => undef,
         'notes' => {},
-        'exogenous_promoter' => undef,
         'promoter_gene' => undef,
       },
     ],

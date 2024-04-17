@@ -67,11 +67,6 @@ __PACKAGE__->table("allele");
   data_type: 'text'
   is_nullable: 1
 
-=head2 exogenous_promoter
-
-  data_type: 'text'
-  is_nullable: 1
-
 =head2 gene
 
   data_type: 'integer'
@@ -96,8 +91,6 @@ __PACKAGE__->add_columns(
   "comment",
   { data_type => "text", is_nullable => 1 },
   "promoter_gene",
-  { data_type => "text", is_nullable => 1 },
-  "exogenous_promoter",
   { data_type => "text", is_nullable => 1 },
   "gene",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
@@ -197,8 +190,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2023-06-14 20:50:03
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:tiJPC9Xx1sQThu4sXAHr4w
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2024-04-17 18:07:24
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:gIvlsUbVFK03pbSUaAW5MQ
 
 __PACKAGE__->many_to_many('genotypes' => 'allele_genotypes',
                           'genotype');
@@ -246,10 +239,6 @@ sub long_identifier
 
   if ($self->promoter_gene()) {
     $ret .= '{promoter:' . $self->promoter_gene() . '}';
-  }
-
-  if ($self->exogenous_promoter()) {
-    $ret .= '{exogenous_promoter:' . $self->exogenous_promoter() . '}';
   }
 
   return $ret;

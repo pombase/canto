@@ -177,7 +177,6 @@ sub allele_from_json
   my $description = $json_allele->{description};
   my $expression = $json_allele->{expression};
   my $promoter_gene = $json_allele->{promoter_gene};
-  my $exogenous_promoter = $json_allele->{exogenous_promoter};
   my $allele_type = $json_allele->{type};
   my $gene_id = $json_allele->{gene_id};
   my $comment = $json_allele->{comment};
@@ -194,8 +193,7 @@ sub allele_from_json
 
     if ($allele) {
       if (($expression // '') eq ($allele->expression() // '') and
-          ($promoter_gene // '') eq ($allele->promoter_gene() // '') and
-          ($exogenous_promoter // '') eq ($allele->exogenous_promoter() // '')) {
+          ($promoter_gene // '') eq ($allele->promoter_gene() // '')) {
         return $allele;
       } else {
         # fall through and find another allele that matches, or create
@@ -254,8 +252,7 @@ sub allele_from_json
     if (($allele->name() // '') eq ($name // '') &&
         ($allele->description() // '') eq ($description // '') &&
         ($allele->expression() // '') eq ($expression // '') &&
-        ($allele->promoter_gene() // '') eq ($promoter_gene // '') &&
-        ($allele->exogenous_promoter() // '') eq ($exogenous_promoter // '')) {
+        ($allele->promoter_gene() // '') eq ($promoter_gene // '')) {
       set_allele_synonyms($schema, $allele, \@allele_synonyms);
 
       return $allele;
@@ -300,7 +297,6 @@ sub allele_from_json
     comment => $comment || undef,
     expression => $expression || undef,
     promoter_gene => $promoter_gene || undef,
-    exogenous_promoter => $exogenous_promoter || undef,
   );
 
   if ($allele_type =~ /_/) {
@@ -344,7 +340,6 @@ sub create_simple_allele
   my $name = shift;
   my $description = shift;
   my $promoter_gene = shift;
-  my $exogenous_promoter = shift;
   my $gene = shift;
   my $synonyms = shift;
 
@@ -354,7 +349,6 @@ sub create_simple_allele
     name => $name || undef,
     description => $description || undef,
     promoter_gene => $promoter_gene || undef,
-    exogenous_promoter => $exogenous_promoter || undef,
   );
 
   if ($allele_type !~ /^aberration/) {

@@ -550,9 +550,6 @@ sub _get_genotype_loci
     if ($allele->promoter_gene()) {
       $ret_hash{promoter_gene} = $allele->promoter_gene();
     }
-    if ($allele->exogenous_promoter()) {
-      $ret_hash{exogenous_promoter} = $allele->exogenous_promoter();
-    }
 
     my $locus = $allele_genotype->diploid();
 

@@ -832,7 +832,6 @@ sub _allele_details_hash
     comment => $allele->comment(),
     allele_id => $allele->allele_id(),
     promoter_gene => $allele->promoter_gene(),
-    exogenous_promoter => $allele->exogenous_promoter(),
     synonyms => \@synonyms_list,
     notes => \%notes,
   );
