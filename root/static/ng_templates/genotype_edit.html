@@ -100,7 +100,9 @@
               <td>{{allele.name}}</td>
               <td>{{allele.type}}</td>
               <td>{{allele.description}}</td>
-              <td ng-if="allelesHaveExpression">{{allele.expression}}</td>
+              <td ng-if="allelesHaveExpression">{{allele.expression}}
+                <div ng-if="allele.promoter_gene" class="curs-promoter-display">Promoter: {{allele.promoter_gene}}</div>
+              </td>
               <td class="curs-table-row-remove">
                 <div ng-if="allele.primary_identifier">
                   <span title="This is a pre-existing allele that can't be edited.  If this isn't the allele you need, please remove it from the genotype and add another"
