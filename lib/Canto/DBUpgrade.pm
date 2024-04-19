@@ -789,11 +789,48 @@ CREATE TABLE genotype_interaction_with_phenotype (
 
     my $dbh = $track_schema->storage()->dbh();
 
+    my $gene_lookup = Canto::Track::get_adaptor($config, 'gene');
+
     my $update_proc = sub {
       my $curs = shift;
       my $curs_schema = shift;
 
       my $curs_dbh = $curs_schema->storage()->dbh();
+
+      my $allele_rs = $curs_schema->resultset('Allele')->search({ promoter_gene => { '!=', undef }});
+
+      my %promoters_to_delete = ();
+
+      while (defined (my $allele = $allele_rs->next())) {
+        my $allele_promoter_gene = $allele->promoter_gene();
+
+        $promoters_to_delete{$allele_promoter_gene} = 1;
+
+        my $gene_result = $gene_lookup->lookup([$allele_promoter_gene]);
+
+        my $found = $gene_result->{found};
+
+        if ($found && @$found == 1 && $found->[0]->{primary_name}) {
+          $allele->promoter_gene($found->[0]->{primary_name});
+          $allele->update();
+        }
+      }
+
+      for my $promoter_gene (keys %promoters_to_delete) {
+        my $gene = $curs_schema->resultset('Gene')
+          ->find({ primary_identifier => $promoter_gene });
+
+        if (defined $gene) {
+          if ($gene->alleles()->count() == 0 &&
+              $gene->gene_annotations()->count() == 0) {
+            $gene->delete();
+          }
+        } else {
+          warn $curs->curs_key(), ": no gene for promoter: $promoter_gene\n";
+        }
+      }
+
+      warn $curs->curs_key(), "\n";
 
       $curs_dbh->do("UPDATE allele SET promoter_gene = exogenous_promoter, exogenous_promoter = NULL WHERE exogenous_promoter IS NOT NULL;");
       $curs_dbh->do("ALTER TABLE allele DROP COLUMN exogenous_promoter;");
