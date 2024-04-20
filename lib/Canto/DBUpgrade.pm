@@ -801,6 +801,7 @@ CREATE TABLE genotype_interaction_with_phenotype (
 
       my %promoters_to_delete = ();
 
+      # change promoter systematic IDs to gene names
       while (defined (my $allele = $allele_rs->next())) {
         my $allele_promoter_gene = $allele->promoter_gene();
 
@@ -816,6 +817,7 @@ CREATE TABLE genotype_interaction_with_phenotype (
         }
       }
 
+      # remove un-annotated promoters from the session
       for my $promoter_gene (keys %promoters_to_delete) {
         my $gene = $curs_schema->resultset('Gene')
           ->find({ primary_identifier => $promoter_gene });
