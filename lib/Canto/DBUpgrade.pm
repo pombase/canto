@@ -829,8 +829,6 @@ CREATE TABLE genotype_interaction_with_phenotype (
         }
       }
 
-      warn $curs->curs_key(), "\n";
-
       $curs_dbh->do("UPDATE allele SET promoter_gene = exogenous_promoter, exogenous_promoter = NULL WHERE exogenous_promoter IS NOT NULL;");
       $curs_dbh->do("ALTER TABLE allele DROP COLUMN exogenous_promoter;");
     };
