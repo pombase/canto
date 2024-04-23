@@ -8067,7 +8067,7 @@ var annotationEditDialogCtrl =
     };
 
     $scope.termEditable = function() {
-      return !$scope.annotation.term_ontid || !$scope.hasInteractions();
+      return !$scope.annotation.term_ontid || !$scope.hasInteractions() || CantoGlobals.is_admin_user;
     };
 
     $scope.showStrainName = (

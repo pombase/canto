@@ -87,6 +87,11 @@
                                 found-callback="termFoundCallback(termId, termName, searchString, matchingSynonym)"
                                 annotation-type-name="{{termNameConstraint}}">
             </term-name-complete>
+            <div ng-if="hasInteractions()" class="warning-box">
+              <span class="glyphicon glyphicon-alert"></span>
+              Warning: this phenotype annotation is referenced by
+              one or more interactions
+            </div>
             <span ng-show="!isValidTerm()"
                   class="help-block">Start typing to choose a term</span>
             <a href="#" ng-show="isValidTerm() && suggestionFieldsPossible() && !termSuggestionVisible"

@@ -2032,6 +2032,8 @@ details > div {
 .warning-box {
   text-indent: -0.75em;
   padding-left: 2em;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
 }
 
 .warning-box span.glyphicon {
