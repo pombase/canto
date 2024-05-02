@@ -131,6 +131,11 @@ if ($update_annotation_curators && @ARGV > 0) {
   usage();
 }
 
+if ($change_gene_id && @ARGV != 2) {
+  warn "Error: --change-gene-id needs two arguments\n\n";
+  usage();
+}
+
 my $config = Canto::Config::get_config();
 my $schema = Canto::TrackDB->new(config => $config);
 
