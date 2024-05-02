@@ -432,7 +432,8 @@ sub update_annotation_curators
  Function: Change a gene ID (primary_identifier) in every session.
            Also change allele IDs containing the $from_id.
  Args    : $from_id - an existing primary_identifier
-           $to_id
+           $to_id - the primary_identifier that will replace $from_id
+           $no_rename - if true, do not rename alleles
  Returns : nothing - dies on failures
 
 =cut
@@ -443,6 +444,7 @@ sub change_gene_id
 
   my $from_id = shift;
   my $to_id = shift;
+  my $no_rename = shift;
 
   my $gene_lookup = Canto::Track::get_adaptor($self->config(), 'gene');
 
@@ -493,8 +495,10 @@ sub change_gene_id
       if ($primary_identifier =~ /^$from_id:/) {
         $primary_identifier =~ s/^$from_id:/$to_id:/;
         $allele->primary_identifier($primary_identifier);
-        $allele_name =~ s/$old_name/$new_name/;
-        $allele->name($allele_name);
+        if (!$no_rename) {
+          $allele_name =~ s/$old_name/$new_name/;
+          $allele->name($allele_name);
+        }
         $allele->update();
       }
     }

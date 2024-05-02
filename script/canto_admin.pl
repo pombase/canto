@@ -40,6 +40,7 @@ my $change_taxonid = undef;
 my $delete_unused_strains = undef;
 my $update_annotation_curators = undef;
 my $change_gene_id = undef;
+my $no_rename = 0;
 
 my $dry_run = 0;
 my $do_help = 0;
@@ -52,7 +53,8 @@ my $result = GetOptions ("refresh-gene-cache" => \$refresh_gene_cache,
                          "update-annotation-curators" => \$update_annotation_curators,
                          "change-gene-id" => \$change_gene_id,
                          "dry-run|d" => \$dry_run,
-                         "help|h" => \$do_help);
+                         "help|h" => \$do_help,
+                         "no-rename" => \$no_rename);
 
 sub usage
 {
@@ -86,8 +88,9 @@ sub usage
   Set the curator_orcid field of the annotations if available in the
   person table
 
-  $0 --change-gene-id <from_id> <to_id>
-  Change <from_id> to <to_id> for all genes and alleles in every session
+  $0 --change-gene-id [--no-rename] <from_id> <to_id>
+  Change <from_id> to <to_id> for all genes and alleles in every session.
+  If --no-rename is set, skip renaming alleles.
 |;
 }
 
@@ -133,6 +136,11 @@ if ($update_annotation_curators && @ARGV > 0) {
 
 if ($change_gene_id && @ARGV != 2) {
   warn "Error: --change-gene-id needs two arguments\n\n";
+  usage();
+}
+
+if ($no_rename && !defined $change_gene_id) {
+  warn "Error: --no-rename is only allowed with --change-gene-id\n\n";
   usage();
 }
 
@@ -205,7 +213,7 @@ my $proc = sub {
     my $from_id = shift @ARGV;
     my $to_id = shift @ARGV;
 
-    $util->change_gene_id($from_id, $to_id);
+    $util->change_gene_id($from_id, $to_id, $no_rename);
 
     $exit_flag = 0;
   }
