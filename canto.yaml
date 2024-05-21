@@ -1420,8 +1420,9 @@ load:
   ontology:
     synonym_boosts:
       name: 1.5
-      exact: 1.0
-      broad: 0.2
+      exact: 1.4
+      narrow: 1.0
+      broad: 0.3
       related: 0.2
     term_boosts: ~
 # artificially boost these terms in the results:
