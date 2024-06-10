@@ -102,7 +102,28 @@ my $proc = sub {
       $gene->update();
     }
   }
+
+  # Remove unused organisms
+  $organism_rs = $curs_schema->resultset('Organism');
+
+  while (defined (my $organism = $organism_rs->next())) {
+    if ($organism->genes()->count() == 0 &&
+        $organism->genotypes()->count() == 0) {
+      my $strain_rs = $organism->strains();
+
+      while (defined (my $strain = $strain_rs->next())) {
+        if ($strain->genotypes()->count() == 0) {
+          $strain->delete();
+        }
+      }
+
+      if ($strain_rs->count() == 0) {
+        $organism->delete();
+      }
+    }
+  }
 };
+
 
 my $load_util = Canto::Track::LoadUtil->new(schema => $schema);
 
