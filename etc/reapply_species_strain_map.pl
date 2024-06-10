@@ -61,6 +61,7 @@ my %genes_to_update = ();
 
 my $proc = sub {
   my $curs = shift;
+  my $curs_key = $curs->curs_key();
   my $curs_schema = shift;
   my $track_schema = shift;
 
@@ -95,8 +96,8 @@ my $proc = sub {
     if (defined $new_org) {
       $genes_to_update{$gene->primary_identifier()} = 1;
 
-      print "updating ", $gene->primary_identifier(), " in CursDB\n";
-      print "  $gene_taxonid -> ", $new_org->taxonid(), "\n";
+      print "updating ", $gene->primary_identifier(), " in $curs_key\n";
+      print "  taxon ID $gene_taxonid -> ", $new_org->taxonid(), "\n";
       $gene->organism($new_org);
       $gene->update();
     }
