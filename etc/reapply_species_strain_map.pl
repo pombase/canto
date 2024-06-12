@@ -58,6 +58,12 @@ my $track_schema = Canto::TrackDB->new(config => $config);
 # the CursDBs
 my %genes_to_update = ();
 
+sub make_strain_key
+{
+  my $strain = shift;
+
+  return $strain->organism_id() . '-' . $strain->strain_name();
+}
 
 my $proc = sub {
   my $curs = shift;
@@ -101,6 +107,69 @@ my $proc = sub {
       $gene->organism($new_org);
       $gene->update();
     }
+  }
+
+  my $strain_rs = $curs_schema->resultset('Strain')
+    ->search({}, { prefetch => 'organism' });
+
+  my %updated_strains = ();
+  my %non_updated_strains = ();
+
+  while (defined (my $strain = $strain_rs->next())) {
+    my $strain_taxonid = $strain->organism()->taxonid();
+
+    my $new_org = $taxon_map{$strain_taxonid};
+
+    if (defined $new_org) {
+      $strain->organism($new_org);
+      $strain->update();
+
+      $updated_strains{make_strain_key($strain)} = $strain;
+    } else {
+      $non_updated_strains{make_strain_key($strain)} = $strain;
+    }
+  }
+
+  my %strain_id_update_map = ();
+
+  # After mapping, if we now have multiple Strain rows with the
+  # same strain_name and organism, make a map of the strains to
+  # remove/replace if they are duplicates
+  while (my ($updated_key, $updated_strain) = each %updated_strains) {
+    my $non_updated_strain = $non_updated_strains{$updated_key};
+
+    if (defined $non_updated_strain) {
+      $strain_id_update_map{$updated_strain->strain_id()} =
+        $non_updated_strain->strain_id();
+    }
+  }
+
+  my $genotype_rs = $curs_schema->resultset('Genotype')
+    ->search({}, { prefetch => 'organism' });
+
+  while (defined (my $genotype = $genotype_rs->next())) {
+    my $genotype_taxonid = $genotype->organism()->taxonid();
+
+    my $new_org = $taxon_map{$genotype_taxonid};
+
+    if (defined $new_org) {
+      $genotype->organism($new_org);
+      $genotype->update();
+    }
+
+    my $updated_strain_id =
+      $strain_id_update_map{$genotype->strain_id()};
+
+    if (defined $updated_strain_id) {
+      $genotype->strain_id($updated_strain_id);
+      $genotype->update();
+    }
+  }
+
+  # delete one copy of strains that are now duplicated
+  for my $strain_to_remove_id (keys %strain_id_update_map) {
+    $curs_schema->resultset('Strain')->find($strain_to_remove_id)
+      ->delete();
   }
 
   # Remove unused organisms
