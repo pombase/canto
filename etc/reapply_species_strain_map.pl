@@ -62,7 +62,8 @@ sub make_strain_key
 {
   my $strain = shift;
 
-  return $strain->organism_id() . '-' . $strain->strain_name();
+  return $strain->organism_id() . '-' .
+    ($strain->track_strain_id() // $strain->strain_name());
 }
 
 my $proc = sub {
