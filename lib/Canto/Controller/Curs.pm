@@ -261,7 +261,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   if ($st->{current_user_is_admin} &&
       ($state eq NEEDS_APPROVAL || $state eq APPROVAL_IN_PROGRESS || $state eq APPROVED) &&
       defined $message_to_curators && $message_to_curators !~ /^\s*$/) {
-    push @{$st->{notice}}, qq|This session has a message to curators|;
+    push @{$st->{notice}}, qq|This session has a message to curators: $message_to_curators|;
   }
 
   if ($config->{canto_offline} && !$st->{read_only_curs} &&
