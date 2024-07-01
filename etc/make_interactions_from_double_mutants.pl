@@ -62,10 +62,9 @@ sub is_pop {
     for my $single_allele_genotype_annotation ($single_allele_genotype->annotations()) {
 
       my $term_ontid = $single_allele_genotype_annotation->data()->{term_ontid};
-      my $res = $lookup->lookup_by_id(id => $term_ontid,
-                                      include_subset_ids => 1);
-      if (grep { $_ eq 'is_a(FYPO:0002057)' } @{$res->{subset_ids}}
-) {
+      my $res = $lookup->lookup_by_id(id => $term_ontid, include_subset_ids => 1);
+
+      if (grep { $_ eq 'is_a(FYPO:0002057)' } @{$res->{subset_ids}}) {
         return $single_allele_genotype;
       }
     }
@@ -76,6 +75,28 @@ sub is_pop {
   return undef;
 };
 
+
+sub make_key
+{
+  my $evidence = shift;
+  my $genotype_annotation = shift;
+  my $allele_1_genotype = shift;
+  my $allele_2_genotype = shift;
+
+  my $data = $genotype_annotation->annotation->data();
+
+  my $annotation_key =
+    join ('---',
+          $genotype_annotation->genotype->display_name($config),
+          $genotype_annotation->annotation->type(),
+          $data->{term_ontid});
+
+  return join (':-:',$evidence,
+               $annotation_key,
+               $allele_1_genotype->display_name($config),
+               $allele_2_genotype->display_name($config));
+}
+
 sub make_interaction {
   my ($curs_schema, $interaction_type,
       $double_mutant_genotype_annotation, $allele_1_genotype,
@@ -84,15 +105,15 @@ sub make_interaction {
   my %create_args = (
     interaction_type => $interaction_type,
     primary_genotype_annotation_id =>
-    $double_mutant_genotype_annotation->genotype_annotation_id(),
+      $double_mutant_genotype_annotation->genotype_annotation_id(),
     genotype_a_id => $allele_1_genotype->genotype_id(),
     genotype_b_id => $allele_2_genotype->genotype_id(),
   );
 
-  print "created interaction\n";
-
   $curs_schema->create_with_type('GenotypeInteraction', \%create_args);
 }
+
+my %created_interactions = ();
 
 my $proc = sub {
   my $curs = shift;
@@ -123,6 +144,16 @@ my $proc = sub {
     next unless $allele_2->type() eq "deletion";
     my $allele_2_genotype = is_pop($allele_2);
     next unless defined $allele_2_genotype;
+
+    my $seen_key = make_key('Synthetic Growth Defect',
+                            $genotype_annotation, $allele_1_genotype,
+                            $allele_2_genotype);
+
+    if ($created_interactions{$seen_key}) {
+      next;
+    } else {
+      $created_interactions{$seen_key} = 1;
+    }
 
     print $curs->curs_key(), "\n";
     make_interaction($curs_schema, 'Synthetic Growth Defect',
