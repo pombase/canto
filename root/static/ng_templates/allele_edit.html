@@ -118,7 +118,10 @@
             <span ng-show="descriptionState == 'not-ok'"
                   title="{{lastDescriptionError}}"
                   class="glyphicon glyphicon-remove curs-allele-desc-not-ok"></span>
-            <span ng-show="!isValidDescription()"
+            <span ng-show="!isValidDescription() && descriptionIsDuplicate" class="help-block">
+              Duplicate description: {{descriptionIsDuplicate}}
+            </span>
+            <span ng-show="!isValidDescription() && !descriptionIsDuplicate"
                   class="help-block">Description required for this allele type</span>
           </td>
         </tr>

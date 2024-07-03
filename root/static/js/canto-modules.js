@@ -813,7 +813,7 @@ canto.service('CursAlleleList', function ($q, Curs) {
     return this.alleleNameComplete(':ALL:', ':ALL:');
   };
 
-  this.alleleList = function (genePrimaryIdentifier) {
+  this.allAllelesOfGene = function (genePrimaryIdentifier) {
     return this.alleleNameComplete(genePrimaryIdentifier, ':ALL:');
   };
 
@@ -4110,7 +4110,7 @@ function alleleQCCheckAllele($http, alleleQCUrl, geneSystematicId, alleleDescrip
 }
 
 var alleleEditDialogCtrl =
-  function ($scope, $uibModal, $uibModalInstance, $http, $q, toaster, CantoConfig, args, Curs, CursGeneList, CantoGlobals) {
+  function ($scope, $uibModal, $uibModalInstance, $http, $q, toaster, CantoConfig, args, Curs, CursGeneList, CantoGlobals, CursAlleleList) {
     $scope.alleleData = {};
     copyObject(args.allele, $scope.alleleData);
     $scope.taxonId = args.taxonId;
@@ -4132,6 +4132,7 @@ var alleleEditDialogCtrl =
       newSynonymsString: '',
       alleleGene: null,
       organismShortDisplayName: null,
+      existingDescriptions: {},
     };
 
     $scope.userIsAdmin = CantoGlobals.current_user_is_admin;
@@ -4148,6 +4149,23 @@ var alleleEditDialogCtrl =
         $scope.alleleData.type != 'aberration wild type'
       )
     );
+
+    CursAlleleList.allAllelesOfGene($scope.alleleData.gene_systematic_id)
+      .then(function (res) {
+        $.map(res, function(allele) {
+          const desc = allele.description;
+          const alleleType = allele.type;
+          if (alleleType != "deletion" && alleleType != "disruption" &&
+              alleleType != "wild type" &&
+              !$scope.data.existingDescriptions[desc]) {
+            $scope.data.existingDescriptions[desc] = allele;
+          }
+        });
+      })
+      .catch(function () {
+        toaster.pop("failed to lookup alleles for: " +
+                    $scope.alleleData.gene_systematic_id);
+      });
 
     function processSynonyms() {
       $.map($scope.alleleData.synonyms || [],
@@ -4267,6 +4285,18 @@ var alleleEditDialogCtrl =
     $scope.descriptionChanged = function() {
       $scope.descriptionNeedsChecking = false;
       $scope.descriptionState = 'unset';
+
+      $scope.descriptionIsDuplicate = undefined;
+
+      let description = $scope.alleleData.description;
+
+      if (description) {
+        description = description.trim();
+        const duplicate = $scope.data.existingDescriptions[description];
+        if (duplicate) {
+          $scope.descriptionIsDuplicate = duplicate.display_name;
+        }
+      }
     };
 
     $scope.checkDescription = function() {
@@ -4354,6 +4384,10 @@ var alleleEditDialogCtrl =
     };
 
     $scope.isValidDescription = function () {
+      if ($scope.descriptionIsDuplicate) {
+        return false;
+      }
+
       return !$scope.current_type_config || !$scope.current_type_config.description_required || $scope.alleleData.description;
     };
 
@@ -4391,6 +4425,10 @@ var alleleEditDialogCtrl =
 
       if (!$scope.isValidType()) {
         return 'Set the allele type to continue';
+      }
+
+      if ($scope.descriptionIsDuplicate) {
+        return 'Fix the duplicate description to continue';
       }
 
       if (!$scope.isValidDescription()) {
@@ -4510,7 +4548,7 @@ var alleleEditDialogCtrl =
 
 canto.controller('AlleleEditDialogCtrl',
   ['$scope', '$uibModal', '$uibModalInstance', '$http', '$q', 'toaster', 'CantoConfig', 'args',
-   'Curs', 'CursGeneList', 'CantoGlobals',
+   'Curs', 'CursGeneList', 'CantoGlobals', 'CursAlleleList',
     alleleEditDialogCtrl
   ]);
 

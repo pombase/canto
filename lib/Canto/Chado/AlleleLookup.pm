@@ -121,6 +121,11 @@ sub lookup
 
   my @search_args = ('lower(features.name)', { -like => '%' . lc $search_string . '%' });
 
+  if ($search_string eq ':ALL:') {
+    $max_results = 999999;
+    @search_args = ();
+  }
+
   my $rs = $schema->resultset('Cv')
     ->search({ 'me.name' => 'sequence' })
     ->search_related('cvterms', { 'cvterms.name' => 'allele' })
