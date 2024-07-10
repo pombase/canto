@@ -2009,6 +2009,21 @@ sub find_existing_annotation
 
     my $existing_data = $existing_annotation->data();
 
+    my $existing_term_suggestion_name = undef;
+    my $existing_term_suggestion_def = undef;
+
+    if ($existing_data->{term_suggestion}) {
+      $existing_term_suggestion_name = $existing_data->{term_suggestion}->{name};
+      $existing_term_suggestion_def = $existing_data->{term_suggestion}->{definition};
+    }
+
+    if (!safe_equals($existing_term_suggestion_name, $details->{term_suggestion_name})) {
+      next;
+    }
+    if (!safe_equals($existing_term_suggestion_def, $details->{term_suggestion_definition})) {
+      next;
+    }
+
     if ($existing_data->{term_ontid} ne $term_ontid) {
       next;
     }
