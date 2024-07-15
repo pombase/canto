@@ -1296,7 +1296,9 @@ var helpIcon = function (CantoGlobals, CantoConfig) {
             if (results[$scope.key].url) {
               $scope.url = results[$scope.key].url;
             } else {
-              $scope.url = CantoGlobals.application_root + '/docs/' + results[$scope.key].docs_path;
+              if (results[$scope.key].docs_path) {
+                $scope.url = CantoGlobals.application_root + '/docs/' + results[$scope.key].docs_path;
+              }
             }
           } else {
             if (results[$scope.key].docs_path) {
