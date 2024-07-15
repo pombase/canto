@@ -29,6 +29,7 @@ var flybase_mode = <% $flybase_mode ? 'true' : 'false' %>;
 var max_term_name_select_count = <% $max_term_name_select_count %>;
 var show_quick_deletion_buttons = <% $show_quick_deletion_buttons %>;
 var show_quick_wild_type_buttons = <% $show_quick_wild_type_buttons %>;
+var use_external_help = <% $use_external_help ? 'true' : 'false' %>;
 </script>
 
 <div id="disabled-overlay"></div>
@@ -88,4 +89,5 @@ my $flybase_mode = $c->config()->{flybase_mode} || 0;
 my $max_term_name_select_count = $c->config()->{max_term_name_select_count} || 20;
 my $show_quick_deletion_buttons = $c->config()->{show_quick_deletion_buttons} || 0;
 my $show_quick_wild_type_buttons = $c->config()->{show_quick_wild_type_buttons} || 0;
+my $use_external_help = $c->config()->{use_external_help};
 </%init>

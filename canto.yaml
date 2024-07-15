@@ -48,6 +48,9 @@ strains_mode: 0
 instance_front_path: /docs/instance_front
 canto_front_path: /docs/canto_front
 help_path: /docs/index
+external_help_url: 'https://pombase.github.io/canto_tutorial/'
+
+use_external_help: 0
 
 base_docs_path: docs
 
@@ -1935,6 +1938,7 @@ available_annotation_type_list:
       complexes). As a general rule, molecular functions correspond to
       single step activities performed by individual gene products.
     detailed_help_path: /docs/go_annotation
+    external_help_url: 'https://pombase.github.io/canto_tutorial/go_MF/'
   - name: biological_process
     category: ontology
     abbreviation: P
@@ -1973,6 +1977,7 @@ available_annotation_type_list:
       term request because there is no translation machinery specifically for
       histone H2A.
     detailed_help_path: /docs/go_annotation
+    external_help_url: 'https://pombase.github.io/canto_tutorial/go_BP/'
   - name: cellular_component
     category: ontology
     abbreviation: C
@@ -2004,6 +2009,7 @@ available_annotation_type_list:
       proteins or nucleic acids. Cellular component also does not include
       multicellular anatomical terms.
     detailed_help_path: /docs/go_annotation
+    external_help_url: 'https://pombase.github.io/canto_tutorial/go_CC/'
   - name: host_phenotype
     category: ontology
     namespace: 'host_phenotype'
@@ -2204,6 +2210,7 @@ available_annotation_type_list:
       Alleles may be annotated with multiple phenotype terms,
       including both normal and abnormal phenotypes for one allele.
     detailed_help_path: /docs/fypo_annotation
+    external_help_url: 'https://pombase.github.io/canto_tutorial/phenotypes/'
   - name: post_translational_modification
     category: ontology
     namespace: PSI-MOD
@@ -2221,6 +2228,7 @@ available_annotation_type_list:
     evidence_codes:
       - IDA
     detailed_help_path: /docs/modification_annotation
+    external_help_url: 'https://pombase.github.io/canto_tutorial/protein_modification/'
     clear_extensions_on_feature_change:
       - residue
   - name: wt_rna_expression
@@ -2250,6 +2258,7 @@ available_annotation_type_list:
       - Reporter gene assay
       - RNA-sequencing evidence
     detailed_help_path: /docs/gene_expression
+    external_help_url: 'https://pombase.github.io/canto_tutorial/rna_protein_level/'
   - name: wt_protein_expression
     category: ontology
     ontology_size: small
@@ -2266,6 +2275,7 @@ available_annotation_type_list:
       - Reporter gene assay
       - Western blot
     detailed_help_path: /docs/gene_expression
+    external_help_url: 'https://pombase.github.io/canto_tutorial/rna_protein_level/'
   - name: genotype_interaction
     category: genotype_interaction
     feature_type: genotype
@@ -2306,6 +2316,7 @@ available_annotation_type_list:
         - Synthetic Growth Defect
         - Synthetic Lethality
         - Synthetic Rescue
+    external_help_url: 'https://pombase.github.io/canto_tutorial/genetic_interaction/'
   - name: genetic_interaction
     category: interaction
     display_name: 'legacy genetic interaction'
@@ -2322,6 +2333,7 @@ available_annotation_type_list:
       - Synthetic Lethality
       - Synthetic Rescue
     detailed_help_path: /docs/genetic_interaction_annotation
+    external_help_url: 'https://pombase.github.io/canto_tutorial/genetic_interaction/'
   - name: physical_interaction
     category: interaction
     display_name: 'physical interaction'
@@ -2344,6 +2356,7 @@ available_annotation_type_list:
       - Reconstituted Complex
       - Two-hybrid
     detailed_help_path: /docs/physical_interaction_annotation
+    external_help_url: 'https://pombase.github.io/canto_tutorial/physical_interaction/'
   - name: protein_sequence_feature_or_motif
     category: ontology
     ontology_size: small
@@ -2359,6 +2372,7 @@ available_annotation_type_list:
       peptide_localization_signal
     help_text: >
       A Protein localization signal is a peptide sub-sequence used to target the protein to a specific organelle.
+    external_help_url: 'https://pombase.github.io/canto_tutorial/protein_sequence_feature/'
 
 # restrict the list of annotation types
 enabled_annotation_type_list:
@@ -2438,27 +2452,35 @@ help_text:
   biological_process_definition:
     inline: Annotate a gene product's role in a process.
     docs_path: "go_annotation#process"
+    url: "https://pombase.github.io/canto_tutorial/go_BP/"
   cellular_component_definition:
     inline: Annotate the location in a cell where a gene product acts.
     docs_path: "go_annotation#component"
+    url: 'https://pombase.github.io/canto_tutorial/go_CC/'
   molecular_function_definition:
     inline: Annotate a gene product's molecular activity.
     docs_path: "go_annotation#function"
+    url: 'https://pombase.github.io/canto_tutorial/go_MF/'
   post_translational_modification_definition:
     inline: Annotate the type, position, timing, etc. of covalent protein modifications.
     docs_path: "modification_annotation"
+    url: 'https://pombase.github.io/canto_tutorial/protein_modification/'
   wt_rna_expression_definition:
     inline: Annotate qualitative descriptions for the normal level and timing of RNA expression from a gene.
     docs_path: "gene_expression"
+    url: 'https://pombase.github.io/canto_tutorial/rna_protein_level/'
   wt_protein_expression_definition:
     inline: Annotate qualitative descriptions for the normal level and timing of protein expression from a gene.
     docs_path: "gene_expression"
+    url: 'https://pombase.github.io/canto_tutorial/rna_protein_level/'
   physical_interaction_definition:
     inline: Annotate interacting gene products and supporting evidence.
     docs_path: "physical_interaction_annotation"
+    url: 'https://pombase.github.io/canto_tutorial/protein_sequence_feature/'
   genetic_interaction_definition:
     inline: Annotate interaction type and interacting genes.
     docs_path: "genetic_interaction_annotation"
+    url: 'https://pombase.github.io/canto_tutorial/genetic_interaction/'
   experimental_conditions_definition:
     inline: >
       Conditions are the aspects of the experimental setup that are independent

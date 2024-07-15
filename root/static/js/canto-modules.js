@@ -886,6 +886,7 @@ canto.service('CantoGlobals', function ($window) {
   this.hostsWithNoGenes = $window.hostsWithNoGenes;
   this.annotationFigureField = $window.annotation_figure_field;
   this.allele_qc_api_url = $window.allele_qc_api_url;
+  this.use_external_help = $window.use_external_help;
 });
 
 canto.service('CantoService', function ($http) {
@@ -1291,8 +1292,18 @@ var helpIcon = function (CantoGlobals, CantoConfig) {
 
       CantoConfig.get('help_text').then(function (results) {
         if (results[$scope.key]) {
-          if (results[$scope.key].docs_path) {
-            $scope.url = CantoGlobals.application_root + '/docs/' + results[$scope.key].docs_path;
+          if (CantoGlobals.use_external_help) {
+            if (results[$scope.key].url) {
+              $scope.url = results[$scope.key].url;
+            } else {
+              $scope.url = CantoGlobals.application_root + '/docs/' + results[$scope.key].docs_path;
+            }
+          } else {
+            if (results[$scope.key].docs_path) {
+              $scope.url = CantoGlobals.application_root + '/docs/' + results[$scope.key].docs_path;
+            } else {
+              $scope.url = results[$scope.key].url;
+            }
           }
           if (results[$scope.key].inline) {
             $scope.helpText = results[$scope.key].inline;

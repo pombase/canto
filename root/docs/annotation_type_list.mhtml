@@ -1,10 +1,9 @@
 <ul class="canto-type-list">
 % for my $an_type (@annotation_type_list) {
   <li>
-%   my $annotation_doc_path = $an_type->{detailed_help_path};
-%   if (defined $annotation_doc_path) {
-%     my $an_doc_uri = $c->uri_for($annotation_doc_path);
-    <span class="canto-type-list-name"><a href="<% $an_doc_uri %>"><% $an_type->{display_name} %></a></span>:
+%   my $annotation_doc_url = get_doc_uri($an_type);
+%   if (defined $annotation_doc_url) {
+    <span class="canto-type-list-name"><a href="<% $annotation_doc_url %>"><% $an_type->{display_name} %></a></span>:
 %   } else {
     <span class="canto-type-list-name"><% $an_type->{display_name} %></span>:
 %   }
@@ -16,4 +15,19 @@
 <%init>
 my $config = $c->config();
 my @annotation_type_list = @{$config->{annotation_type_list}};
+
+sub get_doc_uri
+{
+  my $an_type = shift;
+
+  if ($c->config()->{use_external_help}) {
+    my $external_help_url = $an_type->{external_help_url};
+    if (defined $external_help_url) {
+      return $external_help_url;
+    }
+  }
+
+  return $an_type->{detailed_help_path};
+}
+
 </%init>
