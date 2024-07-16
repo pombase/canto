@@ -27,6 +27,7 @@ canto_url: https://curation.pombase.org/
 
 app_version: v1833
 
+# needs to match the schema_version in the metadata table of the TrackDB
 schema_version: 36
 
 ## Set this to create a Canto instance for a particular organism.  If not set,
@@ -50,6 +51,7 @@ canto_front_path: /docs/canto_front
 help_path: /docs/index
 external_help_url: 'https://pombase.github.io/canto_tutorial/'
 
+# if 1, the documentation links will be to the URL in set by external_help_url
 use_external_help: 0
 
 base_docs_path: docs
