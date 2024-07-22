@@ -4166,6 +4166,9 @@ var alleleEditDialogCtrl =
     CursAlleleList.allAllelesOfGene($scope.alleleData.gene_systematic_id)
       .then(function (res) {
         $.map(res, function(allele) {
+          if (allele.allele_id == $scope.alleleData.allele_id) {
+            return;
+          }
           const desc = allele.description;
           const alleleType = allele.type;
           if (alleleType != "deletion" && alleleType != "disruption" &&
