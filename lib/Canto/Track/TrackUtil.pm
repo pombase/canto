@@ -502,15 +502,15 @@ sub change_gene_id
         $allele->update();
       }
     }
-    
+
     my $annotation_rs = $cursdb->resultset('Annotation');
 
     while (defined (my $annotation = $annotation_rs->next())) {
       my $data = $annotation->data();
       my $changed = 0;
-      
+
       my $extension = $data->{extension};
-      
+
       if (defined $extension) {
         map {
           my $orPart = $_;
@@ -526,7 +526,7 @@ sub change_gene_id
           } @$orPart;
         } @$extension;
       }
-      
+
       if ($changed) {
         $annotation->data($data);
         $annotation->update();
