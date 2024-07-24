@@ -40,6 +40,7 @@ my $change_taxonid = undef;
 my $delete_unused_strains = undef;
 my $update_annotation_curators = undef;
 my $change_gene_id = undef;
+my $find_alleles_by_name = undef;
 my $no_rename = 0;
 
 my $dry_run = 0;
@@ -52,6 +53,7 @@ my $result = GetOptions ("refresh-gene-cache" => \$refresh_gene_cache,
                          "delete-unused-strains" => \$delete_unused_strains,
                          "update-annotation-curators" => \$update_annotation_curators,
                          "change-gene-id" => \$change_gene_id,
+                         "find-alleles-by-name" => \$find_alleles_by_name,
                          "dry-run|d" => \$dry_run,
                          "help|h" => \$do_help,
                          "no-rename" => \$no_rename);
@@ -91,6 +93,10 @@ sub usage
   $0 --change-gene-id [--no-rename] <from_id> <to_id>
   Change <from_id> to <to_id> for all genes and alleles in every session.
   If --no-rename is set, skip renaming alleles.
+
+  $0 --find-alleles-by-name <allele_name>
+  Search all sessions and display details of all alleles with the given
+  allele name
 |;
 }
 
@@ -136,6 +142,11 @@ if ($update_annotation_curators && @ARGV > 0) {
 
 if ($change_gene_id && @ARGV != 2) {
   warn "Error: --change-gene-id needs two arguments\n\n";
+  usage();
+}
+
+if ($find_alleles_by_name && @ARGV != 1) {
+  warn "Error: --find-alleles-by-name needs one argument\n\n";
   usage();
 }
 
@@ -225,6 +236,12 @@ if (defined $refresh_gene_cache) {
   $exit_flag = 0;
 } else {
   $schema->txn_do($proc);
+}
+
+if ($find_alleles_by_name) {
+  my $allele_name = shift @ARGV;
+
+  $util->find_alleles_by_name($allele_name);
 }
 
 exit $exit_flag;

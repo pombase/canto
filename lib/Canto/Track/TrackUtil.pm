@@ -537,4 +537,58 @@ sub change_gene_id
   Canto::Track::curs_map($self->config(), $track_schema, $proc);
 }
 
+=head2 find_alleles_by_name
+
+ Usage   : $self->find_alleles_by_name($config, $track_schema, $allele_name);
+ Function: Search all sessions and display details of all alleles with the
+           given allele name
+
+ Args    : $config - a Canto::Config object
+           $track_schema - A TrackDB
+           $allele_name - the allele name to search for
+ Returns :
+
+=cut
+
+sub find_alleles_by_name
+{
+  my $self = shift;
+  my $allele_name = shift;
+
+  my $proc = sub {
+    my $curs = shift;
+    my $curs_key = $curs->curs_key();
+    my $curs_schema = shift;
+
+    my $allele_rs = $curs_schema->resultset('Allele')
+      ->search({ name => $allele_name });
+
+    for my $allele ($allele_rs->all()) {
+      print "$curs_key: ", $allele->primary_identifier(), "\n";
+      print "   name: $allele_name\n";
+      if ($allele->type()) {
+        print "   type: ", $allele->type(), "\n";
+      }
+      if ($allele->description()) {
+        print "   description: ", $allele->description(), "\n";
+      }
+
+      my @synonyms = grep {
+        $_->edit_status() eq 'new';
+      } $allele->allelesynonyms()->all();
+
+      if (@synonyms) {
+        print "   synonyms:\n";
+        for my $synonym (@synonyms) {
+          print "      ", $synonym->synonym(), "\n";
+        }
+      }
+    }
+  };
+
+  my $track_schema = $self->schema();
+
+  Canto::Track::curs_map($self->config(), $track_schema, $proc);
+}
+
 1;
