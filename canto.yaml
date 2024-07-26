@@ -2583,9 +2583,8 @@ chado:
     phenotype: fission_yeast_phenotype
     annotation_extension: PomBase annotation extension terms
   annotation_lookup:
-# feature_cvterms with these evidence code will be ignored
-    evidence_codes_to_ignore:
-      - TAS
+# feature_cvterms with these evidence codes will be ignored
+    evidence_codes_to_ignore: []
 
 gene_lookup:
 # in Chado and TrackDB lookups, query by name as well as ID if this is 1/true:
