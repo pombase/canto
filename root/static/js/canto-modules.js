@@ -4172,7 +4172,7 @@ var alleleEditDialogCtrl =
           const desc = allele.description;
           const alleleType = allele.type;
           if (alleleType != "deletion" && alleleType != "disruption" &&
-              alleleType != "wild type" &&
+              alleleType != "wild type" && alleleType != "unknown" &&
               !$scope.data.existingDescriptions[desc]) {
             $scope.data.existingDescriptions[desc] = allele;
           }
