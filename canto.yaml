@@ -1419,6 +1419,8 @@ export:
       - Mitochondrial sequence related
       - Sequence feature or region
       - Structure
+      - Not English
+      - Phenotype screen publications
       - Other
 
 load:
