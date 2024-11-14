@@ -4297,6 +4297,8 @@ var alleleEditDialogCtrl =
       $scope.alleleData.description = alleleData.description;
       $scope.alleleData.type = alleleData.type;
       $scope.alleleData.synonyms = alleleData.synonyms;
+      $scope.alleleData.existingSynonyms = [];
+      $scope.alleleData.newSynonyms = [];
       processSynonyms();
     };
 
