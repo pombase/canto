@@ -577,7 +577,7 @@ sub make_ontology_annotation
   my $is_obsolete_term = $term_lookup_result->{is_obsolete};
   my $curator = undef;
   if (defined $data->{curator}) {
-    $curator = $data->{curator}->{name} . ' <' . $data->{curator}->{email} . '>';
+    $curator = $data->{curator}->{name};
   }
 
   my $needs_with;
@@ -729,7 +729,7 @@ sub make_gene_interaction_annotation
   my $pub_uniquename = $annotation->pub()->uniquename();
   my $curator = undef;
   if (defined $data->{curator}) {
-    $curator = $data->{curator}->{name} . ' <' . $data->{curator}->{email} . '>';
+    $curator = $data->{curator}->{name};
   }
 
   my @interacting_genes = @{$data->{interacting_genes}};
