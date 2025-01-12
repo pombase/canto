@@ -1,4 +1,4 @@
-# build with: docker build --squash -f etc/Dockerfile-base -t=pombase/canto-base:v18 .
+# build with: docker build --squash -f etc/Dockerfile-base -t=pombase/canto-base:v19 .
 
 FROM bitnami/minideb:bookworm
 MAINTAINER Kim Rutherford <kim@pombase.org>
