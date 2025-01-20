@@ -1,0 +1,17 @@
+# Canto service configuration file for SysVinit
+
+# Move this file to /etc/default/canto. Set values for the variables below and 
+# uncomment them to override the default configuration in the init script. The 
+# file will be sourced by /etc/init.d/canto.
+
+# Port number for Canto's web server.
+#PORT=
+
+# Number of workers for Server::Starter.
+#WORKERS=
+
+# Directory for Canto's source files.
+#CANTO_SPACE=
+
+# Path to the process ID file for the Server::Starter process.
+#PID_PATH=
