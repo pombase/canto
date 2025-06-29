@@ -126,6 +126,13 @@ my $proc = sub {
 
       my $key = "$curs_key " . $annotation->annotation_id();
 
+      if (grep {
+        $key eq $_;
+      } ("53e97b95347633ef 1", "53e97b95347633ef 2", "53e97b95347633ef 22", "53e97b95347633ef 30", "53e97b95347633ef 32", "53e97b95347633ef 36", "684efd3d317a735a 10")) {
+        warn "skipping $key";
+        next;
+      }
+
       my $orig_comment = $orig_comments{$key};
       if ($orig_comment) {
         $orig_comment->{comment} =~ s/\s+/ /g;
