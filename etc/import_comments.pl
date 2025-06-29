@@ -6,6 +6,8 @@
 #
 # the original comments file is used to check that no comments have been
 # edited in Canto since exporting
+#
+# See also: pombe-embl/supporting_files/canto-annotation-comments.txt
 
 use strict;
 use warnings;
@@ -66,7 +68,7 @@ sub read_comments
  COMMENT:
   while (1) {
     if (defined (my $header = <$fh>)) {
-      if ($header =~ /^COMMENT: ([a-f0-9]{4,}) (\d+) ([a-zA-Z\d=\+\/]+)/) {
+      if ($header =~ /^COMMENT: ([a-f0-9]{4,}) (\d+) ([a-zA-Z\d=+\/]+)/) {
         my $curs_key = $1;
         my $annotation_id = $2;
         my $hash = $3;
@@ -120,18 +122,32 @@ my $proc = sub {
 
     if ($data->{submitter_comment}) {
       my $db_comment = $data->{submitter_comment};
+      $db_comment =~ s/\s+/ /g;
 
       my $key = "$curs_key " . $annotation->annotation_id();
 
       my $orig_comment = $orig_comments{$key};
-
-      if ($orig_comment->{comment} ne $db_comment) {
-        die "comment has changed since export: $key:\n$db_comment\n";
+      if ($orig_comment) {
+        $orig_comment->{comment} =~ s/\s+/ /g;
       }
 
       my $new_comment = $new_comments{$key};
+      next unless defined $new_comment;
+      $new_comment->{comment} =~ s/\s+/ /g;
 
-      if ($new_comment->{comment} ne $db_comment) {
+      if (defined $orig_comment->{comment} &&
+          $orig_comment->{comment} ne $db_comment) {
+        if (lc $db_comment ne lc $new_comment->{comment} &&
+          lc $db_comment ne lc $new_comment->{comment} =~ s/\(comment: /(/r) {
+          warn "comment has changed since export: $key:\n";
+          warn "  was: ", $orig_comment->{comment}, "\n";
+          warn "  now: $db_comment\n";
+          warn "  new comment: ", $new_comment->{comment}, "\n";
+        }
+        next;
+      }
+
+      if (!$db_comment || $new_comment->{comment} ne $db_comment) {
         $data->{submitter_comment} = $new_comment->{comment};
         $annotation->data($data);
         $annotation->update();
