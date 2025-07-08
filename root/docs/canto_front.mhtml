@@ -65,14 +65,11 @@ species.
 
       <div class="col-md-6">
         <h3>Documentation</h3>
-        <a href="<% $c->uri_for('/docs/index/') %>" class="btn btn-primary visit">View...</a>
+        <a href="<% $external_help_url %>" class="btn btn-primary visit">View...</a>
         <p>
 Instructions for using Canto are available from
-the <a href="<% $c->uri_for('/docs/index/') %>">documentation
+the <a href="<% $external_help_url %>">documentation
 pages</a>, or via the "Help" link at the top right of every Canto instance
-
-        <p>
-          NEW: <a href="https://pombase.github.io/canto_tutorial/">Canto video tutorials</a>
 
         <h3>Demo</h3>
           <a href="<% $demo_url %>" class="btn btn-primary visit">Demo...</a>
@@ -135,4 +132,5 @@ and hosted by the <a href="https://www.babraham.ac.uk/">Babraham Institute</a>.
 
 <%init>
 my $demo_url = $c->config()->{canto_demo_url};
+my $external_help_url = $c->config()->{external_help_url};
 </%init>
