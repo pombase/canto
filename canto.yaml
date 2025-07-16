@@ -1398,6 +1398,8 @@ export:
     db: "PomBase"
     assigned_by: "PomBase"
   canto_json:
+    # if non-zero, always set the deletion name to be the gene name + "delta":
+    set_deletion_names_from_gene: 1
     pub_triage_status_to_export:
       - Curatable
       - Browser datasets, to host
