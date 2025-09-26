@@ -2251,6 +2251,30 @@ sub _metagenotype_store
     return;
   }
 
+  if (!$pathogen_genotype_id && !$pathogen_taxonid) {
+    $c->stash->{json_data} = {
+      status => "error",
+      message => "Storing new metagenotype failed: internal error - " .
+        "metagenotype call must have 'pathogen_genotype_id' or 'pathogen_taxonid' param",
+    };
+
+    $c->forward('View::JSON');
+
+    return;
+  }
+
+  if ($pathogen_genotype_id && $pathogen_taxonid) {
+    $c->stash->{json_data} = {
+      status => "error",
+      message => "Storing new metagenotype failed: internal error - " .
+        "metagenotype call has both 'pathogen_genotype_id' and 'pathogen_taxonid' params",
+    };
+
+    $c->forward('View::JSON');
+
+    return;
+  }
+
   my @alleles = ();
 
   try {
