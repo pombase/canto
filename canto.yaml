@@ -1441,6 +1441,9 @@ export:
       - Other
   pub_triage_mapping:
     Curatable: "Curatable, gene-specific functional data"
+    Phenotype screen: "Curatable, gene-specific functional data"
+    Structure: "Curatable, gene-specific functional data"
+    Curatable, low priority: "Curatable, gene-specific functional data"
     Sequence feature or region: "Curatable, sequence features and regions"
     Browser datasets, to host: "Curatable, sequence features and regions"
     Browser datasets, hosted: "Curatable, sequence features and regions"
