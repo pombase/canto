@@ -1450,6 +1450,7 @@ export:
     3D genome organization: "Curatable, sequence features and regions"
     Transposon related: "Curatable, sequence features and regions"
     Mating-type related: "Curatable, sequence features and regions"
+    New: ~
 
 load:
   ontology:

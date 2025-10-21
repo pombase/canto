@@ -78,7 +78,7 @@ sub export
 
   while (my ($pmid, $triage_status) = $sth->fetchrow_array()) {
     $count++;
-    if (exists $pub_triage_mapping->{$triage_status}) {
+    if ($pub_triage_mapping->{$triage_status}) {
       $triage_status = $pub_triage_mapping->{$triage_status};
     }
     $results .= "$pmid\t$triage_status\n";
