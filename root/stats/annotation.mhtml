@@ -149,7 +149,7 @@ $db_creation_datetime
   <div class="curs-box-body row">
   <div class="col-sm-6 col-md-6">
     <div>
-Publications containing gene-specific data per year, with curation status as
+Publications curation status counts as
 of <% $db_creation_datetime %>. Admin curated: papers curated exclusively
 by <% $c->config()->{database_name} %> staff; Community curated: papers with
 annotations contributed by authors.
