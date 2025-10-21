@@ -479,6 +479,11 @@ db_initial_data:
               accession: bioinformatics
               db:
                 name: Canto
+          - name: Transcription motifs
+            dbxref:
+              accession: transcription_motifs
+              db:
+                name: Canto
           - name: Educational Resources
             dbxref:
               accession: educational_resources
@@ -1096,6 +1101,14 @@ class_info:
       class_display_name: Loaded in error
       extends: pub
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Loaded in error')"
+    triage_bioinformatics_publications:
+      class_display_name: Bioinformatics 
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Bioinformatics')"
+    triage_transcription_motifs_publications:
+      class_display_name: Transcription motifs
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Transcription motifs')"
     triage_duplicated_in_pubmed_publications:
       class_display_name: Duplicated in PubMed
       extends: pub
@@ -1372,6 +1385,8 @@ reports:
                 - report: triage_loaded_in_error_publications
                 - report: triage_bioarchive_publications
                 - report: triage_duplicated_in_pubmed_publications
+                - report: triage_bioinformatics_publications
+                - report: triage_transcription_motifs_publications
                 - report: triage_other_publications
             - report: curated_publications
               children:
