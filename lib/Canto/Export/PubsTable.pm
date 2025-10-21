@@ -69,6 +69,8 @@ sub export
   my $sth =
     $track_dbh->prepare("select uniquename, t.name from pub join cvterm t on t.cvterm_id = pub.triage_status_id;");
 
+  my $pub_triage_mapping = $config->{export}->{pub_triage_mapping};
+
   $sth->execute();
 
   my $count = 0;
@@ -76,6 +78,9 @@ sub export
 
   while (my ($pmid, $triage_status) = $sth->fetchrow_array()) {
     $count++;
+    if (exists $pub_triage_mapping->{$triage_status}) {
+      $triage_status = $pub_triage_mapping->{$triage_status};
+    }
     $results .= "$pmid\t$triage_status\n";
   }
 

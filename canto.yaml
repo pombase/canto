@@ -1439,6 +1439,17 @@ export:
       - Not English
       - Phenotype screen publications
       - Other
+  pub_triage_mapping:
+    Curatable: "Curatable, gene-specific functional data"
+    Sequence feature or region: "Curatable, sequence features and regions"
+    Browser datasets, to host: "Curatable, sequence features and regions"
+    Browser datasets, hosted: "Curatable, sequence features and regions"
+    DNA replication related: "Curatable, sequence features and regions"
+    DNA recombination: "Curatable, sequence features and regions"
+    Mitochondrial sequence related: "Curatable, sequence features and regions"
+    3D genome organization: "Curatable, sequence features and regions"
+    Transposon related: "Curatable, sequence features and regions"
+    Mating-type related: "Curatable, sequence features and regions"
 
 load:
   ontology:
