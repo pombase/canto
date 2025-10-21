@@ -74,7 +74,12 @@ sub export
   $sth->execute();
 
   my $count = 0;
-  my $results = '';
+
+  my $results = join "\t", qw(
+    pubmed_id
+    triage_status);
+
+  $results .= "\n";
 
   while (my ($pmid, $triage_status) = $sth->fetchrow_array()) {
     $count++;
