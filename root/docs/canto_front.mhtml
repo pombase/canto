@@ -55,11 +55,6 @@ species.
   <a href="https://seaphages.org/">SEA-PHAGES</a>: use Canto as part of a
   discovery-based undergraduate research course (Ivan Erril, UMBC)
           </li>
-          <li>
-  <a href="https://curation.pombase.org/uniprot" class="btn btn-primary visit">Visit...</a>
-  <span>Generic Gene Ontology Implementation: Curate GO annotations for proteins,
-  using UniProtKB identifiers</span>
-          </li>
         </ul>
       </div>
 
