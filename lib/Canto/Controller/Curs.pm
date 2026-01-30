@@ -131,6 +131,8 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
   $st->{schema} = $schema;
 
+  my $guard = $schema->txn_scope_guard();
+
   my $path = $c->req->uri()->path();
   $st->{current_path_uri} = $path;
 
@@ -267,12 +269,14 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   if ($config->{canto_offline} && !$st->{read_only_curs} &&
         (!defined $current_user || !$current_user->is_admin()) &&
         $path !~ m:/(ws/\w+/list):) {
+    $guard->commit();
     $c->detach('offline_message');
     $use_dispatch = 0;
   }
 
   if ($st->{pathogen_host_mode} && !$st->{edit_organism_page_valid} &&
         $state eq CURATION_IN_PROGRESS && $path !~ m:(/ws/|/gene_upload/):) {
+    $guard->commit();
     $c->detach('edit_genes');
   }
 
@@ -299,6 +303,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
       }
     } else {
       if ($path !~ m!/ro/?$|ws/\w+/list!) {
+        $guard->commit();
         $c->detach('finished_publication');
       }
     }
@@ -306,6 +311,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
   if ($state ne SESSION_CREATED && $state ne SESSION_ACCEPTED &&
       $path =~ m|/view_genes_and_strains(?:/(?:ro)?)?$|) {
+    $guard->commit();
     if ($st->{pathogen_host_mode}) {
       $c->detach('view_genes_and_strains');
     } else {
@@ -355,6 +361,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
       $self->unset_metadata($schema, Canto::Curs::MetadataStorer::SESSION_HAS_EXISTING_GENES);
       my $pub_uniquename = $st->{pub}->uniquename();
       push @{$st->{message}}, qq|Note: This session has been populated with genes from the $pub_uniquename abstract, PubMed keywords and other sources. Use the "Add more genes" link to add missing genes. You can also add, or remove, genes at any time during curation.|;
+      $guard->commit();
       $c->detach('edit_genes');
       $use_dispatch = 0;
     }
@@ -363,9 +370,12 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   if ($use_dispatch) {
     my $dispatch_dest = $state_dispatch{$state};
     if (defined $dispatch_dest) {
+      $guard->commit();
       $c->detach($dispatch_dest);
     }
   }
+
+  $guard->commit();
 }
 
 sub _unused_genotype_count
@@ -2222,7 +2232,7 @@ sub _metagenotype_store
   my $pathogen_genotype_id = $body_data->{pathogen_genotype_id};
   my $pathogen_taxonid = $body_data->{pathogen_taxon_id};
   my $pathogen_strain_name = $body_data->{pathogen_strain_name};
-  
+
   my $host_genotype_id = $body_data->{host_genotype_id};
   my $host_taxonid = $body_data->{host_taxon_id};
   my $host_strain_name = $body_data->{host_strain_name};
@@ -2282,7 +2292,7 @@ sub _metagenotype_store
       Canto::Curs::GenotypeManager->new(config => $c->config(), curs_schema => $schema);
 
     my $pathogen_genotype;
-    
+
     if ($pathogen_genotype_id) {
       $pathogen_genotype = $schema->find_with_type('Genotype', $pathogen_genotype_id);
     } else {
