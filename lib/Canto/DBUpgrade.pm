@@ -797,6 +797,24 @@ CREATE TABLE genotype_interaction_with_phenotype (
 
       my $curs_dbh = $curs_schema->storage()->dbh();
 
+      $curs_dbh->do("UPDATE allele SET promoter_gene = exogenous_promoter, exogenous_promoter = NULL WHERE exogenous_promoter IS NOT NULL;");
+      $curs_dbh->do("ALTER TABLE allele DROP COLUMN exogenous_promoter;");
+    };
+
+    Canto::Track::curs_map($config, $track_schema, $update_proc);
+  },
+
+  37 => sub {
+    my $config = shift;
+    my $track_schema = shift;
+>>>>>>> a5402980c (Remove the exogenous_promoter field)
+
+    my $update_proc = sub {
+      my $curs = shift;
+      my $curs_schema = shift;
+
+      my $curs_dbh = $curs_schema->storage()->dbh();
+
       my $allele_rs = $curs_schema->resultset('Allele')->search({ promoter_gene => { '!=', undef }});
 
       my %promoters_to_delete = ();
