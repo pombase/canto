@@ -363,6 +363,8 @@ sub lookup_by_details
   my $allele_type = shift;
   my $allele_description = shift // 'NO_DESCRIPTION';
 
+  $allele_type = 'wild_type' if $allele_type eq 'wild type';
+
   if (scalar(keys %$cache_by_gene_uniquename) == 0) {
     $self->_fill_allele_caches();
   }
