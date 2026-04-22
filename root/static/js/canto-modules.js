@@ -4438,7 +4438,7 @@ var alleleEditDialogCtrl =
     };
 
     $scope.isExistingAllele = function () {
-      return !!$scope.alleleData.primary_identifier;
+      return !!$scope.alleleData.external_uniquename;
     };
 
     $scope.isValidStrain = function () {
