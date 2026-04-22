@@ -4576,7 +4576,7 @@ var alleleEditDialogCtrl =
         if (newType === 'deletion' || newType === 'wild type') {
           var lookupPromise =
               CursAlleleList.alleleLookupByDetails($scope.alleleData.gene_systematic_id,
-                                                   'deletion', 'deletion');
+                                                   newType, newType);
 
           promise = lookupPromise.then(existingAlleles => {
             var externalUniquename;
