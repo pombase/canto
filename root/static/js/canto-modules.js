@@ -4561,6 +4561,10 @@ var alleleEditDialogCtrl =
 
     function updateAlleleType(newType, oldType) {
       $scope.env.allele_types_promise.then(function (data) {
+        if (newType === 'wild_type') {
+          newType = 'wild type';
+        }
+
         $scope.current_type_config = data[newType];
 
         if (newType === oldType) {
