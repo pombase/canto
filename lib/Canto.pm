@@ -191,4 +191,11 @@ around 'uri_for' => sub {
 Canto::DBUtil::check_schema_version($config, schema(__PACKAGE__, 'track'));
 Canto::DBUtil::check_db_organism($config, schema(__PACKAGE__, 'track'));
 
+my $allele_lookup = Canto::Track::get_adaptor($config, 'allele');
+
+if ($allele_lookup) {
+  # fill the allele details cache
+  $allele_lookup->lookup_by_details("DUMMY", "DUMMY", "DUMMY");
+}
+
 1;
