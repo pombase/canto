@@ -4569,16 +4569,40 @@ var alleleEditDialogCtrl =
           return;
         }
 
-        if ($scope.name_autopopulated) {
-          if ($scope.name_autopopulated == $scope.alleleData.name) {
-            $scope.alleleData.name = '';
-          }
-          $scope.name_autopopulated = '';
+        var promise;
+
+        if (newType === 'deletion' || newType === 'wild type') {
+          var lookupPromise =
+              CursAlleleList.alleleLookupByDetails($scope.alleleData.gene_systematic_id,
+                                                   'deletion', 'deletion');
+
+          promise = lookupPromise.then(existingAlleles => {
+            var externalUniquename;
+            if (existingAlleles.length > 0) {
+              var alleleFromLookup = existingAlleles[0];
+              $scope.alleleData.external_uniquename = alleleFromLookup.allele_uniquename;
+              $scope.alleleData.name = alleleFromLookup.name;
+              $scope.alleleData.description = alleleFromLookup.description;
+              $scope.alleleData.type = alleleFromLookup.type;
+              $scope.alleleData.synonyms = alleleFromLookup.synonyms;
+            }
+          });
+        } else {
+          promise = $q.when(null);
         }
 
-        $scope.name_autopopulated = $scope.maybe_autopopulate();
-        $scope.alleleData.description = '';
-        $scope.alleleData.expression = '';
+        promise.then(function() {
+          if ($scope.name_autopopulated) {
+            if ($scope.name_autopopulated == $scope.alleleData.name) {
+              $scope.alleleData.name = '';
+            }
+            $scope.name_autopopulated = '';
+          }
+
+          $scope.name_autopopulated = $scope.maybe_autopopulate();
+          $scope.alleleData.description = '';
+          $scope.alleleData.expression = '';
+        });
       });
     }
   };
