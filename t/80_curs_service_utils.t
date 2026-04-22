@@ -1053,14 +1053,20 @@ my $allele_res = $service_utils->list_for_service('allele', 'SPAC27D7.13c', 'ssm
 cmp_deeply($allele_res,
            [
             {
+              'description' => '80-90',
+              'synonyms' => [],
+              'name' => 'ssm4-L1',
               'external_uniquename' => 'SPAC27D7.13c:allele-2',
               'type' => 'partial deletion, nucleotide',
-              'display_name' => 'ssm4-L1(80-90) (existing)',
-              'description' => '80-90',
-              'name' => 'ssm4-L1',
+              'display_name' => 'ssm4-L1(80-90) (existing)'
+            },
+            {
+              'description' => 'deletion',
+              'display_name' => 'ssm4delta (existing)',
+              'external_uniquename' => 'SPAC27D7.13c:allele-1',
+              'name' => 'ssm4delta',
               'synonyms' => [],
-              'notes' => {},
-              'promoter_gene' => undef,
+              'type' => 'deletion'
             },
             {
               'allele_id' => 3,
