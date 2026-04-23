@@ -1,5 +1,11 @@
 #!/usr/bin/env perl
 
+# Use allele name, description and type to find matching Chado
+# alleles.  Then set the allele external_uniquename to be the Chado
+# uniquename.
+#
+# Usage: ./etc/set_ids_from_chado.pl
+
 use strict;
 use warnings;
 use Carp;
