@@ -364,7 +364,7 @@ sub alleles_in_config_order
     my $b = shift->allele();
 
     if (!defined $a->type() && !defined $b->type()) {
-      return $_secondary_sort($a, $b);
+      return $_secondary_sort->($a, $b);
     }
 
     if (!defined $a->type()) {
