@@ -66,6 +66,8 @@ my $add_uniquenames = sub {
     my $gene_primary_identifier = $allele->gene()->primary_identifier();
 
     my $allele_name = ($allele->name() // '*NO_NAME*');
+    $allele_name =~ s/^\s+//;
+    $allele_name =~ s/\s+$//;
     $allele_name =~ s/Δ|∆/delta/g;
     my $allele_type = $allele->type();
     my $allele_description = $allele->description() // '*NO_DESCRIPTION*';
