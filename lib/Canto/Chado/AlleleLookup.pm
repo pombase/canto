@@ -409,6 +409,51 @@ sub lookup_by_details
 }
 
 
+=head2 lookup_by_exact_name
+
+ Usage   : @alleles = $lu->lookup_by_exact_name($gene_uniquename, $allele_name);
+ Function: return alleles with the given $allele_name
+
+=cut
+
+sub lookup_by_exact_name
+{
+  my $self = shift;
+
+  my $gene_uniquename = shift;
+  my $search_allele_name = shift;
+
+  if (scalar(keys %$cache_by_gene_uniquename) == 0) {
+    $self->_fill_allele_caches();
+  }
+
+  if (defined $cache_by_gene_uniquename->{$gene_uniquename}) {
+    my @cache_alleles =  @{$cache_by_gene_uniquename->{$gene_uniquename}};
+
+    return map {
+      my ($db_gene_uniquename, $db_allele_uniquename,
+          $db_allele_name,
+          $db_allele_type, $db_allele_description) = @$_;
+
+      if ($db_allele_name eq $search_allele_name) {
+        my $allele_details = {
+          gene_systematic_id => $gene_uniquename,
+          allele_uniquename => $db_allele_uniquename,
+          name => $db_allele_name,
+          type => $db_allele_type,
+          description => $db_allele_description,
+        };
+
+        $allele_details;
+      } else {
+        ();
+      }
+    } @cache_alleles;
+  } else {
+    return ();
+  }
+}
+
 =head2 lookup_by_canto_systematic_id
 
  Usage   : my @alleles = $self->lookup_by_canto_systematic_id($canto_systematic_id);
