@@ -77,7 +77,9 @@ my $add_uniquenames = sub {
       $allele_description = 'wild type';
     }
 
-    my $allele_export_type = $allele_config->{$allele_type}->{export_type};
+    my $allele_export_type =
+      $allele_config->{$allele_type}->{export_type} //
+      $allele_config->{$allele_type =~ s/ /_/gr}->{export_type};
 
     if (!defined $allele_export_type) {
       if (defined $config->{export_type_to_allele_type}->{$allele_type}) {
