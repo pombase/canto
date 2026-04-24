@@ -122,7 +122,7 @@ my $add_uniquenames = sub {
       $chado_allele_name = 'wild_type';
     }
 
-    my $chado_external_uniquename = $chado_allele->{external_uniquename};
+    my $chado_external_uniquename = $chado_allele->{allele_uniquename};
 
 #    warn "$curs_key: found allele for: $gene_primary_identifier $allele_type $allele_description - $chado_external_uniquename\n";
 
