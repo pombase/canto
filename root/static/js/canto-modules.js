@@ -4185,7 +4185,8 @@ var alleleEditDialogCtrl =
     CursAlleleList.allAllelesOfGene($scope.alleleData.gene_systematic_id)
       .then(function (res) {
         $.map(res, function(allele) {
-          if (!$scope.isCopied && allele.allele_id == $scope.alleleData.allele_id) {
+          if (!$scope.isCopied && typeof(allele.allele_id) !== 'undefined' &&
+              allele.allele_id == $scope.alleleData.allele_id) {
             return;
           }
           const desc = allele.description;
