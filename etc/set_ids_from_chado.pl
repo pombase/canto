@@ -91,9 +91,22 @@ my $add_uniquenames = sub {
       }
     }
 
-    my @alleles = $allele_lookup->lookup_by_details($gene_primary_identifier,
-                                                    $allele_export_type,
-                                                    $allele_description);
+    my @alleles;
+
+    if ($allele_type eq 'unknown' || $allele_type eq 'disruption') {
+      @alleles = $allele_lookup->lookup_by_exact_name($gene_primary_identifier,
+                                                      $allele_name);
+    } else {
+      @alleles = $allele_lookup->lookup_by_details($gene_primary_identifier,
+                                                   $allele_export_type,
+                                                   $allele_description);
+
+      if (!@alleles) {
+        @alleles = $allele_lookup->lookup_by_details($gene_primary_identifier,
+                                                     $allele_export_type,
+                                                     $allele_description =~ s/, /,/gr);
+      }
+    }
 
     if (@alleles > 1) {
       for my $chado_allele (@alleles) {
