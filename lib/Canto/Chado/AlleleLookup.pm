@@ -335,7 +335,7 @@ LEFT OUTER JOIN featureprop allele_desc_prop ON allele_desc_prop.feature_id = al
 AND allele_desc_prop.type_id in (SELECT cvterm_id FROM cvterm WHERE name = 'description')
 LEFT OUTER JOIN featureprop allele_sys_id_prop ON allele_sys_id_prop.feature_id = allele.feature_id
 AND allele_sys_id_prop.type_id in (SELECT cvterm_id FROM cvterm WHERE name = 'canto_allele_systematic_id')
-WHERE gene_type.name = 'gene'
+WHERE (gene_type.name = 'gene' OR gene_type.name = 'pseudogene')
   AND allele_type.name = 'allele'
   AND rel_type.name = 'instance_of' group by gene.uniquename, allele.uniquename, allele.name, allele_type_prop.value, allele_desc_prop.value;
 EOF
