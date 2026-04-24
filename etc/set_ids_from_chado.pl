@@ -10,6 +10,7 @@ use strict;
 use warnings;
 use Carp;
 
+use open ':std', ':encoding(UTF-8)';
 use utf8;
 
 use File::Basename;
