@@ -127,7 +127,7 @@ my $add_uniquenames = sub {
     }
 
     if (@alleles == 0) {
-      warn "$curs_key: no alleles for: $gene_primary_identifier ",
+      warn "$curs_key: no alleles found for: $gene_primary_identifier ",
         $allele_name, " $allele_type $allele_description\n";
       next ALLELE;
     }
@@ -142,13 +142,14 @@ my $add_uniquenames = sub {
 
     my $chado_external_uniquename = $chado_allele->{allele_uniquename};
 
-#    warn "$curs_key: found allele for: $gene_primary_identifier $allele_type $allele_description - $chado_external_uniquename\n";
+#    warn "$curs_key: found allele for: $gene_primary_identifier ", ($allele_name // "*NO_NAME*"),
+#      " $allele_type $allele_description - $chado_external_uniquename\n";
 
     if ($allele_type ne 'deletion' &&
         $chado_allele_name ne $allele_name) {
 
       warn $curs_key, q|: Chado allele name doesn't match Canto DB: |,
-        "$allele_name ", $allele->type(), " $allele_description ",
+        "$gene_primary_identifier  allele name: $allele_name  type: ", $allele->type(), "  description: $allele_description -- Chado name: ",
         $chado_allele_name, "\n";
     }
 
