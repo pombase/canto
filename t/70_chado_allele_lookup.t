@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 7;
+use Test::More tests => 10;
 use Test::Deep;
 
 use Canto::Chado::AlleleLookup;
@@ -47,6 +47,24 @@ my @details_res = $lookup->lookup_by_details('SPBC12C2.02c', 'amino_acid_mutatio
                                              'K132A,K144A');
 
 is(@details_res, 1);
+
+my $SPBC12C2_02c_expected = {
+  'description' => 'K132A,K144A',
+  'name' => 'ste20-c2',
+  'type' => 'amino_acid_mutation',
+  'gene_systematic_id' => 'SPBC12C2.02c',
+  'allele_uniquename' => 'SPBC12C2.02c:allele-3'
+};
+
+cmp_deeply($details_res[0], $SPBC12C2_02c_expected);
+
+
+my @name_details_res = $lookup->lookup_by_exact_name('SPBC12C2.02c', 'ste20-c2');
+
+is(@details_res, 1);
+
+cmp_deeply($name_details_res[0], $SPBC12C2_02c_expected);
+
 
 cmp_deeply($details_res[0],
            {
