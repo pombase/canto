@@ -308,13 +308,21 @@ sub _fill_allele_caches
   my $schema = $self->schema();
   my $chado_dbh = $schema->storage()->dbh();
 
+  my $string_agg = 'string_agg';
+
+  my $is_sqlite = $schema->storage()->connect_info()->[0] =~ /sqlite/i;
+
+  if ($is_sqlite) {
+    $string_agg = 'group_concat';
+  }
+
   my $query = <<"EOF";
 SELECT gene.uniquename AS gene_uniquename,
        allele.uniquename AS allele_uniquename,
        allele.name AS allele_name,
        allele_type_prop.value AS allele_type,
        allele_desc_prop.value AS allele_description,
-       array_to_string(array (select value from featureprop p join cvterm t on t.cvterm_id = p.type_id where t.name = 'canto_allele_systematic_id' and p.feature_id = allele.feature_id), ',') AS canto_allele_systematic_ids
+       $string_agg(allele_sys_id_prop.value, ',') AS canto_allele_systematic_ids
 FROM feature allele
 JOIN cvterm allele_type ON allele.type_id = allele_type.cvterm_id
 JOIN feature_relationship rel ON allele.feature_id = rel.subject_id
@@ -325,9 +333,11 @@ LEFT OUTER JOIN featureprop allele_type_prop ON allele_type_prop.feature_id = al
 AND allele_type_prop.type_id in (SELECT cvterm_id FROM cvterm WHERE name = 'allele_type')
 LEFT OUTER JOIN featureprop allele_desc_prop ON allele_desc_prop.feature_id = allele.feature_id
 AND allele_desc_prop.type_id in (SELECT cvterm_id FROM cvterm WHERE name = 'description')
+LEFT OUTER JOIN featureprop allele_sys_id_prop ON allele_sys_id_prop.feature_id = allele.feature_id
+AND allele_sys_id_prop.type_id in (SELECT cvterm_id FROM cvterm WHERE name = 'canto_allele_systematic_id')
 WHERE gene_type.name = 'gene'
   AND allele_type.name = 'allele'
-  AND rel_type.name = 'instance_of';
+  AND rel_type.name = 'instance_of' group by gene.uniquename, allele.uniquename, allele.name, allele_type_prop.value, allele_desc_prop.value;
 EOF
 
   my $sth = $chado_dbh->prepare($query);
