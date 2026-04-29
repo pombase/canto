@@ -49,9 +49,13 @@ my $allele_lookup = Canto::Track::get_adaptor($config, 'allele');
 
 my $allele_config = $config->{allele_types};
 
+my $update_count = 0;
+my $total_alleles = 0;
+
 my $add_uniquenames = sub {
   my $curs = shift;
   my $curs_key = $curs->curs_key();
+
   my $curs_schema = shift;
   my $track_schema = shift;
 
@@ -63,6 +67,7 @@ my $add_uniquenames = sub {
     ->search({ external_uniquename => undef });
 
   ALLELE: while (defined (my $allele = $allele_rs->next())) {
+    $total_alleles++;
     my $gene_primary_identifier = $allele->gene()->primary_identifier();
 
     my $allele_name = ($allele->name() // '*NO_NAME*');
@@ -153,6 +158,7 @@ my $add_uniquenames = sub {
         $chado_allele_name, "\n";
     }
 
+    $update_count++;
 #    $allele->external_uniquename($chado_external_uniquename);
 #    $allele->update();
   }
