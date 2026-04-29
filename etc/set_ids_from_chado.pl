@@ -75,6 +75,8 @@ my $add_uniquenames = sub {
     my $allele_type = $allele->type();
     my $allele_description = $allele->description() // '*NO_DESCRIPTION*';
 
+    $allele_description =~ s/, /,/g;
+
     if ($allele_type =~ /^wild[ _]type$/) {
       $allele_name = 'wild_type';
       $allele_description = 'wild type';
@@ -88,7 +90,7 @@ my $add_uniquenames = sub {
       if (defined $config->{export_type_to_allele_type}->{$allele_type}) {
         $allele_export_type = $allele_type;
       } else {
-        warn "$curs_key: type not found: $gene_primary_identifier ",
+        warn "$curs_key ($status): type not configured for Chado allele: $gene_primary_identifier ",
           ($allele->{name} // '*NO_NAME*'), " $allele_type $allele_description\n" ;
         next ALLELE;
       }
@@ -103,39 +105,33 @@ my $add_uniquenames = sub {
       @alleles = $allele_lookup->lookup_by_details($gene_primary_identifier,
                                                    $allele_export_type,
                                                    $allele_description);
-
-      if (!@alleles) {
-        @alleles = $allele_lookup->lookup_by_details($gene_primary_identifier,
-                                                     $allele_export_type,
-                                                     $allele_description =~ s/, /,/gr);
-      }
     }
 
     if (@alleles > 1) {
-      for my $chado_allele (@alleles) {
-        if (($chado_allele->{name} // '*NO_NAME*') =~ s/Δ|∆/delta/gr eq $allele_name) {
-          my $chado_external_uniquename = $chado_allele->{external_uniquename};
-#          warn "$curs_key: found allele for: $gene_primary_identifier ", $allele_name,
-#            " $allele_type $allele_description - $chado_external_uniquename\n";
-
-          #    $allele->external_uniquename($chado_external_uniquename);
-          #    $allele->update();
-          next ALLELE;
-        }
-      }
-
-      warn "$curs_key: multiple alleles (", scalar(@alleles), ") for: $gene_primary_identifier ",
+      warn "$curs_key ($status): multiple alleles (", scalar(@alleles),
+        ") from Chado for: $gene_primary_identifier ",
         $allele_name, " $allele_type $allele_description\n";
+      for my $chado_allele (@alleles) {
+        print STDERR "  name: ", ($chado_allele->{name} // '*NO_NAME*');
+        if ($chado_allele->{sessions}) {
+          print STDERR "  sessions: ", (join " ", @{$chado_allele->{sessions}});
+        }
+        print STDERR "\n";
+      }
       next ALLELE;
     }
 
     if (@alleles == 0) {
-      warn "$curs_key: no alleles found for: $gene_primary_identifier ",
-        $allele_name, " $allele_type $allele_description\n";
+      if ($status eq 'APPROVED') {
+        warn "$curs_key ($status): no alleles found for: $gene_primary_identifier ",
+          $allele_name, " $allele_type $allele_description\n";
+      }
       next ALLELE;
     }
 
     my $chado_allele = $alleles[0];
+    my $chado_external_uniquename = $chado_allele->{allele_uniquename};
+
     my $chado_allele_name = $chado_allele->{name} // '*NO_NAME*';
     $chado_allele_name =~ s/Δ|∆/delta/g;
 
@@ -143,17 +139,18 @@ my $add_uniquenames = sub {
       $chado_allele_name = 'wild_type';
     }
 
-    my $chado_external_uniquename = $chado_allele->{allele_uniquename};
-
-#    warn "$curs_key: found allele for: $gene_primary_identifier ", ($allele_name // "*NO_NAME*"),
+#    warn "$curs_key ($status): found allele for: $gene_primary_identifier ", ($allele_name // "*NO_NAME*"),
 #      " $allele_type $allele_description - $chado_external_uniquename\n";
 
     if ($allele_type ne 'deletion' &&
         $chado_allele_name ne $allele_name) {
-
-      warn $curs_key, q|: Chado allele name doesn't match Canto DB: |,
-        "$gene_primary_identifier  allele name: $allele_name  type: ", $allele->type(), "  description: $allele_description -- Chado name: ",
-        $chado_allele_name, "\n";
+      if ($status eq 'APPROVED') {
+        warn "$curs_key ($status)", q|: Chado allele name doesn't match Canto, skipping: |,
+          "$gene_primary_identifier  allele name: $allele_name  type: ",
+          $allele->type(), "  description: $allele_description -- Chado name: ",
+          $chado_allele_name, "\n";
+        next ALLELE;
+      }
     }
 
     $update_count++;
@@ -168,4 +165,4 @@ my $proc = sub {
 
 $track_schema->txn_do($proc);
 
-
+print "Updated $update_count (of $total_alleles) alleles\n";
