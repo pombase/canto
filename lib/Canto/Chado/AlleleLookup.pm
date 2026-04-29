@@ -317,27 +317,43 @@ sub _fill_allele_caches
   }
 
   my $query = <<"EOF";
+CREATE TEMP TABLE allele_prop_values AS
+SELECT distinct allele.feature_id, t.name AS prop_name, p.value AS prop_value
+ FROM feature allele
+ JOIN featureprop p ON allele.feature_id = p.feature_id
+ JOIN cvterm t ON t.cvterm_id = p.type_id
+ JOIN cvterm allele_type ON allele.type_id = allele_type.cvterm_id
+WHERE allele_type.name = 'allele';
+
+CREATE INDEX allele_props_idx ON allele_prop_values(feature_id);
+
+ANALYZE allele_prop_values;
+
 SELECT gene.uniquename AS gene_uniquename,
        allele.uniquename AS allele_uniquename,
        allele.name AS allele_name,
-       allele_type_prop.value AS allele_type,
-       allele_desc_prop.value AS allele_description,
-       $string_agg(allele_sys_id_prop.value, ',') AS canto_allele_systematic_ids
+       type_prop.prop_value AS allele_type,
+       desc_prop.prop_value AS allele_description,
+       $string_agg(distinct session_prop.prop_value, ',') AS canto_session,
+       $string_agg(systematic_id_prop.prop_value, ',') AS canto_allele_systematic_ids
 FROM feature allele
 JOIN cvterm allele_type ON allele.type_id = allele_type.cvterm_id
 JOIN feature_relationship rel ON allele.feature_id = rel.subject_id
 JOIN cvterm rel_type ON rel_type.cvterm_id = rel.type_id
 JOIN feature gene ON rel.object_id = gene.feature_id
 JOIN cvterm gene_type ON gene_type.cvterm_id = gene.type_id
-LEFT OUTER JOIN featureprop allele_type_prop ON allele_type_prop.feature_id = allele.feature_id
-AND allele_type_prop.type_id in (SELECT cvterm_id FROM cvterm WHERE name = 'allele_type')
-LEFT OUTER JOIN featureprop allele_desc_prop ON allele_desc_prop.feature_id = allele.feature_id
-AND allele_desc_prop.type_id in (SELECT cvterm_id FROM cvterm WHERE name = 'description')
-LEFT OUTER JOIN featureprop allele_sys_id_prop ON allele_sys_id_prop.feature_id = allele.feature_id
-AND allele_sys_id_prop.type_id in (SELECT cvterm_id FROM cvterm WHERE name = 'canto_allele_systematic_id')
+LEFT OUTER JOIN allele_prop_values type_prop ON type_prop.feature_id = allele.feature_id
+ AND type_prop.prop_name = 'allele_type'
+LEFT OUTER JOIN allele_prop_values desc_prop ON desc_prop.feature_id = allele.feature_id
+ AND desc_prop.prop_name = 'description'
+LEFT OUTER JOIN allele_prop_values session_prop ON session_prop.feature_id = allele.feature_id
+ AND session_prop.prop_name = 'canto_session'
+LEFT OUTER JOIN allele_prop_values systematic_id_prop ON systematic_id_prop.feature_id = allele.feature_id
+ AND systematic_id_prop.prop_name = 'canto_allele_systematic_id'
 WHERE (gene_type.name = 'gene' OR gene_type.name = 'pseudogene')
-  AND allele_type.name = 'allele'
-  AND rel_type.name = 'instance_of' group by gene.uniquename, allele.uniquename, allele.name, allele_type_prop.value, allele_desc_prop.value;
+AND allele_type.name = 'allele'
+AND rel_type.name = 'instance_of'
+group by gene.uniquename, allele.uniquename, allele.name, type_prop.prop_value, desc_prop.prop_value;
 EOF
 
   my $sth = $chado_dbh->prepare($query);
@@ -384,18 +400,23 @@ sub lookup_by_details
 
     return map {
       my ($db_gene_uniquename, $db_allele_uniquename, $db_allele_name,
-          $db_allele_type, $db_allele_description) = @$_;
+          $db_allele_type, $db_allele_description, $sessions) = @$_;
 
       if ($db_allele_type eq $allele_type &&
         ($allele_type =~ /^(deletion|wild[ _]type)$/ ||
          ($db_allele_description // 'NO_DESCRIPTION') eq $allele_description)) {
 
+        my @sessions = ();
+        if (defined $sessions) {
+          @sessions = split /,/, $sessions;
+        }
         my $allele_details = {
           gene_systematic_id => $gene_uniquename,
           allele_uniquename => $db_allele_uniquename,
           name => $db_allele_name,
           type => $db_allele_type,
           description => $db_allele_description,
+          sessions => \@sessions,
         };
 
         $allele_details;
@@ -463,6 +484,7 @@ sub lookup_by_exact_name
 sub lookup_by_canto_systematic_id
 {
   my $self = shift;
+
   my $canto_systematic_id = shift;
 
   if (scalar(keys %$cache_by_canto_systematic_id) == 0) {
