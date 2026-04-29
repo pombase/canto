@@ -316,7 +316,7 @@ sub _fill_allele_caches
     $string_agg = 'group_concat';
   }
 
-  my $query = <<"EOF";
+  my $query = <<'EOF';
 CREATE TEMP TABLE allele_prop_values AS
 SELECT distinct allele.feature_id, t.name AS prop_name, p.value AS prop_value
  FROM feature allele
@@ -324,17 +324,29 @@ SELECT distinct allele.feature_id, t.name AS prop_name, p.value AS prop_value
  JOIN cvterm t ON t.cvterm_id = p.type_id
  JOIN cvterm allele_type ON allele.type_id = allele_type.cvterm_id
 WHERE allele_type.name = 'allele';
+EOF
+  my $sth = $chado_dbh->prepare($query);
+  $sth->execute() or die "Couldn't execute: " . $sth->errstr;
 
-CREATE INDEX allele_props_idx ON allele_prop_values(feature_id);
+  $sth = $chado_dbh->prepare('CREATE INDEX allele_props_idx ON allele_prop_values(feature_id);');
+  $sth->execute() or die "Couldn't execute: " . $sth->errstr;
 
-ANALYZE allele_prop_values;
+  my $pg_distinct = '';
 
+  if (!$is_sqlite) {
+    $sth = $chado_dbh->prepare('ANALYZE allele_prop_values;');
+    $sth->execute() or die "Couldn't execute: " . $sth->errstr;
+
+    $pg_distinct = 'distinct';
+  }
+
+  $query = <<"EOF";
 SELECT gene.uniquename AS gene_uniquename,
        allele.uniquename AS allele_uniquename,
        allele.name AS allele_name,
        type_prop.prop_value AS allele_type,
        desc_prop.prop_value AS allele_description,
-       $string_agg(distinct session_prop.prop_value, ',') AS canto_session,
+       $string_agg($pg_distinct session_prop.prop_value, ',') AS canto_session,
        $string_agg(systematic_id_prop.prop_value, ',') AS canto_allele_systematic_ids
 FROM feature allele
 JOIN cvterm allele_type ON allele.type_id = allele_type.cvterm_id
@@ -356,7 +368,7 @@ AND rel_type.name = 'instance_of'
 group by gene.uniquename, allele.uniquename, allele.name, type_prop.prop_value, desc_prop.prop_value;
 EOF
 
-  my $sth = $chado_dbh->prepare($query);
+  $sth = $chado_dbh->prepare($query);
   $sth->execute() or die "Couldn't execute: " . $sth->errstr;
 
   while (my @row = $sth->fetchrow_array()) {
@@ -370,6 +382,12 @@ EOF
       }
     }
   }
+
+  my $drop_query = <<"EOF";
+DROP TABLE allele_prop_values;
+EOF
+  my $drop_sth = $chado_dbh->prepare($drop_query);
+  $drop_sth->execute() or die "Couldn't execute: " . $drop_sth->errstr;
 }
 
 
@@ -454,15 +472,20 @@ sub lookup_by_exact_name
     return map {
       my ($db_gene_uniquename, $db_allele_uniquename,
           $db_allele_name,
-          $db_allele_type, $db_allele_description) = @$_;
+          $db_allele_type, $db_allele_description, $sessions) = @$_;
 
       if ($db_allele_name eq $search_allele_name) {
+        my @sessions = ();
+        if (defined $sessions) {
+          @sessions = split /,/, $sessions;
+        }
         my $allele_details = {
           gene_systematic_id => $gene_uniquename,
           allele_uniquename => $db_allele_uniquename,
           name => $db_allele_name,
           type => $db_allele_type,
           description => $db_allele_description,
+          sessions => \@sessions,
         };
 
         $allele_details;
