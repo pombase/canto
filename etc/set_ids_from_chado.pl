@@ -61,8 +61,6 @@ my $add_uniquenames = sub {
 
   my $status = $curs->prop_value('annotation_status') // 'UNKNOWN_STATUS';
 
-  return if $status ne 'APPROVED';
-
   my $allele_rs = $curs_schema->resultset('Allele')
     ->search({ external_uniquename => undef });
 
