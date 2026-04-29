@@ -53,7 +53,8 @@ my $SPBC12C2_02c_expected = {
   'name' => 'ste20-c2',
   'type' => 'amino_acid_mutation',
   'gene_systematic_id' => 'SPBC12C2.02c',
-  'allele_uniquename' => 'SPBC12C2.02c:allele-3'
+  'allele_uniquename' => 'SPBC12C2.02c:allele-3',
+  'sessions' => [],
 };
 
 cmp_deeply($details_res[0], $SPBC12C2_02c_expected);
@@ -61,7 +62,7 @@ cmp_deeply($details_res[0], $SPBC12C2_02c_expected);
 
 my @name_details_res = $lookup->lookup_by_exact_name('SPBC12C2.02c', 'ste20-c2');
 
-is(@details_res, 1);
+is(@name_details_res, 1);
 
 cmp_deeply($name_details_res[0], $SPBC12C2_02c_expected);
 
@@ -72,7 +73,8 @@ cmp_deeply($details_res[0],
             'name' => 'ste20-c2',
             'type' => 'amino_acid_mutation',
             'gene_systematic_id' => 'SPBC12C2.02c',
-            'allele_uniquename' => 'SPBC12C2.02c:allele-3'
+            'allele_uniquename' => 'SPBC12C2.02c:allele-3',
+            'sessions' => [],
           });
 
 
