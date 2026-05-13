@@ -122,7 +122,7 @@ sub lookup_by_synonym_rs
 
   return $self->schema()->resultset('Synonym')
     ->search([@synonym_constraint])
-    ->search_related('feature_synonyms', { is_obsolete => 0 })
+    ->search_related('feature_synonyms', { is_current => 1 })
     ->search_related('feature', {}, { prefetch => 'organism' });
 }
 
