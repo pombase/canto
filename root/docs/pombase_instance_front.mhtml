@@ -14,8 +14,22 @@ Find out more on the Fission Yeast Community Curation page at
     |
     <a href="https://curation.pombase.org/pombe/stats/annotation">Curation statistics</a> 
     |
-    <a href="https://curation.pombase.org/pombe/docs/index">Documentation</a>
+    <a href="<% $help_url %>">Documentation</a>
     |
     <& /contact.mhtml, link_text => "Contact" &>
     </div>
 </div>
+
+<%init>
+
+my $config = $c->config();
+
+my $help_url;
+
+if ($config->{use_external_help}) {
+  $help_url = $config->{external_help_url};
+} else {
+  $help_url = $c->uri_for($c->config()->{help_path})
+}
+
+</%init>
