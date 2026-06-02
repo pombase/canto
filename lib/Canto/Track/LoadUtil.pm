@@ -56,7 +56,7 @@ use Canto::Curs::Utils;
 
 use Canto::Track;
 
-use Canto::Curs 'EXTERNAL_NOTES_KEY';
+use constant EXTERNAL_NOTES_KEY => 'external_notes';
 
 has 'schema' => (
   is => 'ro',
