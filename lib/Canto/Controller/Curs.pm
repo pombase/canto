@@ -65,9 +65,8 @@ use Canto::Curs::State;
 use Canto::Curs::ServiceUtils;
 use Canto::Util qw(trim);
 
-use Canto::Curs 'EXTERNAL_NOTES_KEY';
-
 use constant {
+  EXTERNAL_NOTES_KEY => 'external_notes',
   MESSAGE_FOR_CURATORS_KEY => 'message_for_curators',
 };
 
@@ -130,6 +129,8 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   }
 
   $st->{schema} = $schema;
+
+  my $guard = $schema->txn_scope_guard();
 
   my $path = $c->req->uri()->path();
   $st->{current_path_uri} = $path;
@@ -219,7 +220,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   my $message_to_curators = $self->get_metadata($schema, MESSAGE_FOR_CURATORS_KEY);
   $st->{message_to_curators} = $message_to_curators;
 
-  my $external_notes = $self->get_metadata($schema, Canto::Curs->EXTERNAL_NOTES_KEY);
+  my $external_notes = $self->get_metadata($schema, EXTERNAL_NOTES_KEY);
 
   # enabled by default and disabled on /session_reassigned page
   $st->{show_curator_in_title} = 1;
@@ -267,12 +268,14 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   if ($config->{canto_offline} && !$st->{read_only_curs} &&
         (!defined $current_user || !$current_user->is_admin()) &&
         $path !~ m:/(ws/\w+/list):) {
+    $guard->commit();
     $c->detach('offline_message');
     $use_dispatch = 0;
   }
 
   if ($st->{pathogen_host_mode} && !$st->{edit_organism_page_valid} &&
         $state eq CURATION_IN_PROGRESS && $path !~ m:(/ws/|/gene_upload/):) {
+    $guard->commit();
     $c->detach('edit_genes');
   }
 
@@ -299,6 +302,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
       }
     } else {
       if ($path !~ m!/ro/?$|ws/\w+/list!) {
+        $guard->commit();
         $c->detach('finished_publication');
       }
     }
@@ -306,6 +310,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
 
   if ($state ne SESSION_CREATED && $state ne SESSION_ACCEPTED &&
       $path =~ m|/view_genes_and_strains(?:/(?:ro)?)?$|) {
+    $guard->commit();
     if ($st->{pathogen_host_mode}) {
       $c->detach('view_genes_and_strains');
     } else {
@@ -355,6 +360,7 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
       $self->unset_metadata($schema, Canto::Curs::MetadataStorer::SESSION_HAS_EXISTING_GENES);
       my $pub_uniquename = $st->{pub}->uniquename();
       push @{$st->{message}}, qq|Note: This session has been populated with genes from the $pub_uniquename abstract, PubMed keywords and other sources. Use the "Add more genes" link to add missing genes. You can also add, or remove, genes at any time during curation.|;
+      $guard->commit();
       $c->detach('edit_genes');
       $use_dispatch = 0;
     }
@@ -363,9 +369,12 @@ sub top : Chained('/') PathPart('curs') CaptureArgs(1)
   if ($use_dispatch) {
     my $dispatch_dest = $state_dispatch{$state};
     if (defined $dispatch_dest) {
+      $guard->commit();
       $c->detach($dispatch_dest);
     }
   }
+
+  $guard->commit();
 }
 
 sub _unused_genotype_count
@@ -2220,6 +2229,9 @@ sub _metagenotype_store
   my $body_data = _decode_json_content($c);
 
   my $pathogen_genotype_id = $body_data->{pathogen_genotype_id};
+  my $pathogen_taxonid = $body_data->{pathogen_taxon_id};
+  my $pathogen_strain_name = $body_data->{pathogen_strain_name};
+
   my $host_genotype_id = $body_data->{host_genotype_id};
   my $host_taxonid = $body_data->{host_taxon_id};
   my $host_strain_name = $body_data->{host_strain_name};
@@ -2248,13 +2260,43 @@ sub _metagenotype_store
     return;
   }
 
+  if (!$pathogen_genotype_id && !$pathogen_taxonid) {
+    $c->stash->{json_data} = {
+      status => "error",
+      message => "Storing new metagenotype failed: internal error - " .
+        "metagenotype call must have 'pathogen_genotype_id' or 'pathogen_taxonid' param",
+    };
+
+    $c->forward('View::JSON');
+
+    return;
+  }
+
+  if ($pathogen_genotype_id && $pathogen_taxonid) {
+    $c->stash->{json_data} = {
+      status => "error",
+      message => "Storing new metagenotype failed: internal error - " .
+        "metagenotype call has both 'pathogen_genotype_id' and 'pathogen_taxonid' params",
+    };
+
+    $c->forward('View::JSON');
+
+    return;
+  }
+
   my @alleles = ();
 
   try {
-    my $pathogen_genotype = $schema->find_with_type('Genotype', $pathogen_genotype_id);
-
     my $genotype_manager =
       Canto::Curs::GenotypeManager->new(config => $c->config(), curs_schema => $schema);
+
+    my $pathogen_genotype;
+
+    if ($pathogen_genotype_id) {
+      $pathogen_genotype = $schema->find_with_type('Genotype', $pathogen_genotype_id);
+    } else {
+      $pathogen_genotype = $genotype_manager->get_wildtype_genotype($pathogen_taxonid, $pathogen_strain_name);
+    }
 
     my $host_genotype;
 

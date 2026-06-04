@@ -56,7 +56,7 @@ use Canto::Curs::Utils;
 
 use Canto::Track;
 
-use Canto::Curs 'EXTERNAL_NOTES_KEY';
+use constant EXTERNAL_NOTES_KEY => 'external_notes';
 
 has 'schema' => (
   is => 'ro',
@@ -1322,7 +1322,7 @@ sub create_sessions_from_json
 
     if ($external_notes) {
       my $curs_metadata_rs = $cursdb->resultset('Metadata');
-      $curs_metadata_rs->update_or_create({ key => Canto::Curs->EXTERNAL_NOTES_KEY,
+      $curs_metadata_rs->update_or_create({ key => EXTERNAL_NOTES_KEY,
                                             value => $external_notes });
     }
   } continue {

@@ -115,7 +115,7 @@ sub check_new_annotations
                  'term_suggestion_name' => undef,
                  'term_suggestion_definition' => undef,
                  'with_gene_id' => undef,
-                 'curator' => 'Some Testperson <some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org>',
+                 'curator' => 'Some Testperson',
                  'genotype_identifier' => 'aaaa0007-genotype-test-1',
                  'taxonid' => undef,
                  'organism' => {
@@ -235,7 +235,7 @@ sub check_new_annotations
                  'term_suggestion_name' => undef,
                  'term_suggestion_definition' => undef,
                  'with_gene_id' => undef,
-                 'curator' => 'Some Testperson <some.testperson@3926fef56bb23eb871ee91dc2e3fdd7c46ef1385.org>',
+                 'curator' => 'Some Testperson',
                  'genotype_identifier' => 'aaaa0007-genotype-test-2',
                  'alleles' => [
                    {

@@ -619,7 +619,15 @@ sub _get_alleles
     if (defined $allele->description()) {
       $allele_data{description} = $allele->description();
     }
-    if ($allele->type() eq 'deletion') {
+
+    my $set_deletion_names_from_gene = 1;
+    if ($config->{export} && $config->{export}->{canto_json} &&
+        $config->{export}->{canto_json}) {
+      $set_deletion_names_from_gene =
+        $config->{export}->{canto_json}->{set_deletion_names_from_gene} // 1;
+    }
+
+    if ($allele->type() eq 'deletion' && $set_deletion_names_from_gene) {
       my $gene_proxy = Canto::Curs::GeneProxy->new(config => $config,
                                                    cursdb_gene => $gene);
 

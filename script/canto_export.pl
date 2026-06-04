@@ -37,6 +37,7 @@ my %export_modules = (
   'gaf' => 'Canto::Export::GeneAssociationFile',
   'tab-zip' => 'Canto::Export::TabZip',
   'allele-table' => 'Canto::Export::AlleleTable',
+  'pubs-table' => 'Canto::Export::PubsTable',
 );
 
 sub usage

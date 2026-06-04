@@ -122,7 +122,7 @@ sub lookup_by_synonym_rs
 
   return $self->schema()->resultset('Synonym')
     ->search([@synonym_constraint])
-    ->search_related('feature_synonyms')
+    ->search_related('feature_synonyms', { is_current => 1 })
     ->search_related('feature', {}, { prefetch => 'organism' });
 }
 
@@ -143,7 +143,8 @@ sub synonyms_of_gene_rs
   my $self = shift;
   my $gene = shift;
 
-  return $gene->synonyms()->search({}, { columns => [ 'name' ], distinct => 1 });
+  return $gene->synonyms()->search({ is_current => 1 },
+                                   { columns => [ 'name' ], distinct => 1 });
 }
 
 with 'Canto::Role::TaxonIDLookup';

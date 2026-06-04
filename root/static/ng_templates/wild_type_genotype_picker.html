@@ -4,7 +4,7 @@
       <input
         id="wild-type-strain-{{$index}}"
         type="radio"
-        name="host_genotype"
+        name="{{organismType}}_genotype"
         ng-model="selectedStrain"
         ng-click="onStrainSelect({strain: strain})"
         value="{{strain}}"

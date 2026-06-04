@@ -98,10 +98,43 @@ JOIN cvterm fcpt ON fcp.type_id = fcpt.cvterm_id
 WHERE pub.uniquename = ?
   AND t.name = ?
   AND fcpt.name = 'feature_pub_source'
+UNION
+SELECT f.uniquename AS gene_uniquename,
+       f.name AS gene_name,
+       fcp.value AS feature_pub_source
+FROM feature f
+JOIN cvterm ft ON ft.cvterm_id = f.type_id
+JOIN feature_cvterm fc ON fc.feature_id = f.feature_id
+JOIN pub ON pub.pub_id = fc.pub_id
+JOIN feature_cvtermprop fcp ON fcp.feature_cvterm_id = fc.feature_cvterm_id
+JOIN cvterm fcpt ON fcpt.cvterm_id = fcp.type_id
+WHERE fcpt.name = 'source_file'
+  AND pub.uniquename = ?
+  AND ft.name = ?
+UNION
+SELECT DISTINCT gene.uniquename AS gene_uniquename,
+                gene.name AS gene_name,
+                fcp.value AS feature_pub_source
+FROM feature f
+JOIN feature_relationship rel ON rel.subject_id = f.feature_id
+JOIN cvterm rel_type ON rel_type.cvterm_id = rel.type_id
+JOIN feature gene ON gene.feature_id = rel.object_id
+JOIN cvterm gene_type ON gene_type.cvterm_id = gene.type_id
+JOIN cvterm ft ON ft.cvterm_id = f.type_id
+JOIN feature_cvterm fc ON fc.feature_id = f.feature_id
+JOIN pub ON pub.pub_id = fc.pub_id
+JOIN feature_cvtermprop fcp ON fcp.feature_cvterm_id = fc.feature_cvterm_id
+JOIN cvterm fcpt ON fcpt.cvterm_id = fcp.type_id
+WHERE fcpt.name = 'source_file'
+  AND rel_type.name = 'part_of'
+  AND pub.uniquename = ?
+  AND gene_type.name = ?
 EOQ
 
   my $sth = $chado_dbh->prepare($query);
-  $sth->execute($publication_uniquename, $feature_type)
+  $sth->execute($publication_uniquename, $feature_type,
+                $publication_uniquename, $feature_type,
+                $publication_uniquename, $feature_type)
     or die "Couldn't execute: " . $sth->errstr;
 
   my @rows = ();

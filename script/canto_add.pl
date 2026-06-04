@@ -32,6 +32,7 @@ my $add_session = 0;
 my $add_sessions_from_json = 0;
 my $add_organism = 0;
 my $add_genotype_interaction = 0;
+my $add_genotype_interaction_with_phenotype = 0;
 my $dry_run = 0;
 my $do_help = 0;
 
@@ -66,6 +67,9 @@ my %dispatch = (
   },
   '--genotype-interaction' => sub {
     $add_genotype_interaction = 1;
+  },
+  '--genotype-interaction-with-phenotype' => sub {
+    $add_genotype_interaction_with_phenotype = 1;
   },
   '--help' => sub {
     $do_help = 1;
@@ -112,6 +116,8 @@ or:
   $0 --organism "<genus> <species>" <taxon_id> [<common_name>]
 or:
   $0 --genotype-interaction <session_id> <interaction_type> <double_mutant_annotation_id> <genotype_a_identifier> <genotype_b_identifier>
+or:
+  $0 --genotype-interaction-with-phenotype <session_id> <interaction_type> <double_mutant_annotation_id> <genotype_annotation_a_id> <genotype_b_identifier>
 
 Options:
   --cvterm  - add a cvterm to the database
@@ -341,4 +347,30 @@ if ($add_genotype_interaction) {
   );
 
   $curs_schema->create_with_type('GenotypeInteraction', \%create_args);
+}
+
+if ($add_genotype_interaction_with_phenotype) {
+  if (@ARGV != 5) {
+    usage (qq{"$opt" needs five arguments});
+  }
+  my $session_id = shift;
+  my $interaction_type = shift;
+  my $double_mutant_annotation_id = shift;
+  my $genotype_annotation_a_id = shift;
+  my $genotype_b_identifier = shift;
+
+  my $curs_schema = Canto::Curs::get_schema_for_key($config, $session_id);
+
+  my $genotype_b = $curs_schema->find_with_type('Genotype', {
+    identifier => $genotype_b_identifier,
+  });
+
+  my %create_args = (
+    interaction_type => $interaction_type,
+    primary_genotype_annotation_id => $double_mutant_annotation_id,
+    genotype_annotation_a_id => $genotype_annotation_a_id,
+    genotype_b_id => $genotype_b->genotype_id(),
+  );
+
+  $curs_schema->create_with_type('GenotypeInteractionWithPhenotype', \%create_args);
 }

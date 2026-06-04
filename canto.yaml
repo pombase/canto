@@ -25,7 +25,7 @@ header_image: logos/curation_tool.png
 
 canto_url: https://curation.pombase.org/
 
-app_version: v1837
+app_version: v1869
 
 # needs to match the schema_version in the metadata table of the TrackDB
 schema_version: 36
@@ -477,6 +477,11 @@ db_initial_data:
           - name: Bioinformatics
             dbxref:
               accession: bioinformatics
+              db:
+                name: Canto
+          - name: Transcription motifs
+            dbxref:
+              accession: transcription_motifs
               db:
                 name: Canto
           - name: Educational Resources
@@ -1096,6 +1101,14 @@ class_info:
       class_display_name: Loaded in error
       extends: pub
       constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Loaded in error')"
+    triage_bioinformatics_publications:
+      class_display_name: Bioinformatics 
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Bioinformatics')"
+    triage_transcription_motifs_publications:
+      class_display_name: Transcription motifs
+      extends: pub
+      constraint: "triage_status_id in (select cvterm_id from cvterm where name = 'Transcription motifs')"
     triage_duplicated_in_pubmed_publications:
       class_display_name: Duplicated in PubMed
       extends: pub
@@ -1372,6 +1385,8 @@ reports:
                 - report: triage_loaded_in_error_publications
                 - report: triage_bioarchive_publications
                 - report: triage_duplicated_in_pubmed_publications
+                - report: triage_bioinformatics_publications
+                - report: triage_transcription_motifs_publications
                 - report: triage_other_publications
             - report: curated_publications
               children:
@@ -1398,6 +1413,8 @@ export:
     db: "PomBase"
     assigned_by: "PomBase"
   canto_json:
+    # if non-zero, always set the deletion name to be the gene name + "delta":
+    set_deletion_names_from_gene: 1
     pub_triage_status_to_export:
       - Curatable
       - Browser datasets, to host
@@ -1419,7 +1436,24 @@ export:
       - Mitochondrial sequence related
       - Sequence feature or region
       - Structure
+      - Not English
+      - Phenotype screen publications
       - Other
+  pub_triage_mapping:
+    Curatable: "Curatable, gene-specific functional data"
+    Phenotype screen: "Curatable, gene-specific functional data"
+    Structure: "Curatable, gene-specific functional data"
+    Curatable, low priority: "Curatable, gene-specific functional data"
+    Sequence feature or region: "Curatable, sequence features and regions"
+    Browser datasets, to host: "Curatable, sequence features and regions"
+    Browser datasets, hosted: "Curatable, sequence features and regions"
+    DNA replication related: "Curatable, sequence features and regions"
+    DNA recombination: "Curatable, sequence features and regions"
+    Mitochondrial sequence related: "Curatable, sequence features and regions"
+    3D genome organization: "Curatable, sequence features and regions"
+    Transposon related: "Curatable, sequence features and regions"
+    Mating-type related: "Curatable, sequence features and regions"
+    New: ~
 
 load:
   ontology:

@@ -55,7 +55,7 @@ Annotation extensions
     </div>
     <div class="curs-box-body">
       <extension-builder extension="data.extension"
-                         feature-display-name='<% $feature_display_name %>'
+                         feature-display-name='<% $feature_display_name | h%>'
                          term-id="{{currentTerm()}}"
                          is-valid="extensionBuilderIsValid"
                          annotation-type-name="<% $annotation_type_name %>"
@@ -67,7 +67,7 @@ Annotation extensions
   <div ng-if="annotationType" class="ng-cloak">
   <ontology-term-comment-transfer ng-show="getState() == 'commenting'"
                                   feature-type="<% $feature_type %>"
-                                  feature-display-name="<% $feature_display_name %>"
+                                  feature-display-name="<% $feature_display_name | h%>"
                                   annotation-details="annotationForServer"
                                   comment="data.comment"
                                   fig-or-table="data.figure"

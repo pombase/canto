@@ -14,7 +14,9 @@
 <p>
  Once you have found your paper, you can curate GO, phenotypes,
 interactions and protein modifications -- or reassign the paper to a
-colleague for curation. See the <a href="<% $c->uri_for('/docs/index') %>">help pages</a> for more information.
+ colleague for curation. See the
+ <a target="_blank" href="<% $help_url %>">help pages</a>
+ for more information.
 </p>
 </div>
 
@@ -89,5 +91,13 @@ if (defined $database_name) {
 }
 
 my $demo_url = $c->config()->{canto_demo_url};
+
+my $help_url;
+
+if ($c->config()->{use_external_help}) {
+  $help_url = $c->config()->{external_help_url};
+} else {
+  $help_url = $c->uri_for($c->config()->{help_path})
+}
 
 </%init>

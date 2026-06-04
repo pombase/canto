@@ -17,6 +17,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: pull base image
-      run: docker pull pombase/canto-base:v17
+      run: docker pull pombase/canto-base:v18
     - name: run make test inside a Docker container
       run: ./etc/docker-run-tests.sh

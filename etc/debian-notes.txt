@@ -27,6 +27,19 @@ sudo cpanm Module::Install
 sudo cpanm Module::Install::Catalyst
 sudo cpanm --notest Catalyst::View::Mason
 
+sudo cpanm Catalyst::Engine::PSGI
+sudo cpanm Catalyst::Plugin::PageCache
+sudo cpanm Catalyst::Plugin::Session::PerUser
+sudo cpanm Catalyst::TraitFor::Request::ProxyBase
+sudo cpanm CatalystX::RoleApplicator
+sudo cpanm Clone::PP
+sudo cpanm DBIx::Class::ResultSet::Data::Pageset
+sudo cpanm PomBase::Chobo
+sudo cpanm HTML::HTML5::Builder
+sudo cpanm Package::Alias
+sudo cpanm Plack::Middleware::InteractiveDebugger
+sudo cpanm Data::Dump::Streamer
+
 cd /tmp/canto
 
 echo yes | sudo cpan
