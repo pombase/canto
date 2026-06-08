@@ -3,7 +3,7 @@ package Canto::Config::ExtensionProcess;
 =head1 NAME
 
 Canto::Config::ExtensionProcess - Read the domains and ranges from the
-  extension configuration and use owltools to find the child terms.
+  extension configuration and use relation-graph to find the child terms.
 
 =head1 SYNOPSIS
 
@@ -44,7 +44,7 @@ has config => (is => 'ro', isa => 'Canto::Config',
 use File::Temp qw/ tempfile /;
 use List::MoreUtils qw(uniq);
 
-sub get_owltools_results
+sub get_relation_graph_results
 {
   my $self = shift;
   my @obo_file_names = @_;
@@ -55,18 +55,18 @@ sub get_owltools_results
 
   use autodie qw(system);
 
-  for my $filename (@obo_file_names) {
-    system ("owltools $filename --save-closure-for-chado $temp_filename");
+  for my $obo_filename (@obo_file_names) {
+    system ("relation-graph --ontology-file $obo_filename --output-file $temp_filename --mode tsv --output-subclasses true --reflexive-subclasses false --equivalence-as-subclass false");
 
-    open my $owltools_out, '<', $temp_filename
-      or die "can't open owltools output from $temp_filename: $!\n";
+    open my $relation_graph_out, '<', $temp_filename
+      or die "can't open relation_graph output from $temp_filename: $!\n";
 
-    while (defined (my $line = <$owltools_out>)) {
+    while (defined (my $line = <$relation_graph_out>)) {
       chomp $line;
       push @results, [split (/\t/, $line)];
     }
 
-    close $owltools_out;
+    close $relation_graph_out;
   }
 
   return @results;
@@ -78,8 +78,9 @@ sub get_owltools_results
            my $subset_process = Canto::Chado::SubsetProcess->new();
            $subset_process->process_subset_data($track_schema, $subset_data);
  Function: Read the domain and range ontology terms from extension_configuration
-           config, then use owtools to find the child terms.
- Args    : @obo_file_names - the OBO files to process with OWLtools
+           config, then use relation-graph to find the child terms.
+ Args    : @obo_file_names - the OBO files to process with relation-graph:
+                             https://github.com/INCATools/relation-graph
  Return  : A reference to a map from subject ID to object ID to relation.  eg.:
            {
              "GO:0000010" => {
@@ -197,13 +198,15 @@ eg. "is_a(GO:0055085)"];
   } (keys %domain_subsets_to_store, keys %range_subsets_to_store,
      keys %exclude_subsets_to_store, keys %extra_subsets_to_store);
 
-  my @owltools_results = $self->get_owltools_results(@obo_file_names);
+  my @relation_graph_results = $self->get_relation_graph_results(@obo_file_names);
 
   my @interesting_parent_ids =
     @{$config->{ontology_namespace_config}->{interesting_parent_ids} // []};
 
-  for my $result (@owltools_results) {
-    my ($subject, $rel_type, $depth, $object) = @$result;
+  for my $result (@relation_graph_results) {
+    my ($subject, $rel_type, $object) = @$result;
+
+    $rel_type =~ s/rdfs:subClassOf/is_a/;
 
     $rel_type =~ s/^OBO_REL://;
 
