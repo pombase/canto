@@ -43,6 +43,8 @@ RUN patch /usr/include/CLucene/store/FSDirectory.h < /tmp/canto/etc/clucene_comp
 
 RUN cpanm Lucene
 
+RUN cpanm https://cpan.metacpan.org/authors/id/K/KI/KIM/PomBase-Chobo-0.040.tar.gz
+
 RUN (cd /tmp/canto; export PERL_MM_USE_DEFAULT=1; perl Makefile.PL && make installdeps_notest); rm -rf /tmp/canto
 
 RUN rm -rf /root/.local /root/.cpan*
