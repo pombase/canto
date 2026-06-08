@@ -48,5 +48,11 @@ RUN (cd /tmp/canto; export PERL_MM_USE_DEFAULT=1; perl Makefile.PL && make insta
 RUN rm -rf /root/.local /root/.cpan*
 
 RUN (cd /usr/local/bin/; curl https://curation.pombase.org/software/owltools > owltools; chmod a+x owltools)
+RUN (cd /tmp; \
+     curl -L https://github.com/INCATools/relation-graph/releases/download/v2.3.4/relation-graph-cli-2.3.4.tgz > relation-graph-cli-2.3.4.tgz; \
+     tar xavf relation-graph-cli-2.3.4.tgz; \
+     mv relation-graph-cli-2.3.4 /usr/local/; \
+     rm relation-graph-cli-2.3.4.tgz; \
+     ln -s /usr/local/relation-graph-cli-2.3.4/bin/relation-graph /usr/local/bin)
 
 RUN apt-get remove -y gcc g++ && apt-get autoremove -y
