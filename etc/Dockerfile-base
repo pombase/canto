@@ -43,10 +43,19 @@ RUN patch /usr/include/CLucene/store/FSDirectory.h < /tmp/canto/etc/clucene_comp
 
 RUN cpanm Lucene
 
-RUN (cd /tmp/canto; export PERL_MM_USE_DEFAULT=1; perl Makefile.PL && make installdeps_notest); rm -rf /tmp/canto
+RUN cpanm https://cpan.metacpan.org/authors/id/K/KI/KIM/PomBase-Chobo-0.040.tar.gz
+
+RUN (cd /tmp/canto; export PERL_MM_USE_DEFAULT=1; perl Makefile.PL && make installdeps_notest); \
+     rm -rf /tmp/canto; rm -r /root/.local/share/.cpan/build/
 
 RUN rm -rf /root/.local /root/.cpan*
 
 RUN (cd /usr/local/bin/; curl https://curation.pombase.org/software/owltools > owltools; chmod a+x owltools)
+RUN (cd /tmp; \
+     curl -L https://github.com/INCATools/relation-graph/releases/download/v2.3.4/relation-graph-cli-2.3.4.tgz > relation-graph-cli-2.3.4.tgz; \
+     tar xavf relation-graph-cli-2.3.4.tgz; \
+     mv relation-graph-cli-2.3.4 /usr/local/; \
+     rm relation-graph-cli-2.3.4.tgz; \
+     ln -s /usr/local/relation-graph-cli-2.3.4/bin/relation-graph /usr/local/bin)
 
 RUN apt-get remove -y gcc g++ && apt-get autoremove -y
