@@ -63,6 +63,10 @@ sub get_relation_graph_results
 
     while (defined (my $line = <$relation_graph_out>)) {
       chomp $line;
+
+      # handle relation-graph bug: it changes "FYPO_EXT:000001" to "FYPO:EXT_000001"
+      $line =~ s/FYPO:EXT_/FYPO_EXT:/g;
+
       push @results, [split (/\t/, $line)];
     }
 
