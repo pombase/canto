@@ -6,7 +6,7 @@
 $db_creation_datetime
 </%args>
 
-<div style="float: left"><img src="<% $c->uri_for('/static/images/logos/pombase_logo_large.png') %>"/></div>
+<div style="float: left"><a href="https://www.pombase.org/"><img src="<% $c->uri_for('/static/images/logos/pombase_logo_large.png') %>"/></a></div>
 
 <div class="annotation-stats" ng-controller="AnnotationStatsCtrl">
 
