@@ -4310,7 +4310,9 @@ var alleleEditDialogCtrl =
 
       let description = $scope.alleleData.description;
 
-      if (description) {
+      // temporarily disabled, see:
+      // https://github.com/pombase/canto/issues/2912#issuecomment-5139013698
+      if (0 && description) {
         description = description.trim();
         const duplicate = $scope.data.existingDescriptions[description];
         if (duplicate) {
