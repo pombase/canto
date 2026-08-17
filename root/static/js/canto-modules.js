@@ -4312,7 +4312,7 @@ var alleleEditDialogCtrl =
 
       // temporarily disabled, see:
       // https://github.com/pombase/canto/issues/2912#issuecomment-5139013698
-      if (0 && description) {
+      if (description) {
         description = description.trim();
         const duplicate = $scope.data.existingDescriptions[description];
         if (duplicate) {
@@ -4449,9 +4449,9 @@ var alleleEditDialogCtrl =
         return 'Set the allele type to continue';
       }
 
-      if ($scope.descriptionIsDuplicate) {
-        return 'Fix the duplicate description to continue';
-      }
+//      if ($scope.descriptionIsDuplicate) {
+//        return 'Fix the duplicate description to continue';
+//      }
 
       if (!$scope.isValidDescription()) {
         return 'Set the allele description to continue';
@@ -4469,7 +4469,8 @@ var alleleEditDialogCtrl =
         (
           $scope.isExistingAllele() ||
             $scope.isValidType() && $scope.isValidName() &&
-            $scope.isValidDescription()
+            1
+//            $scope.isValidDescription()
         ) &&
         $scope.isValidStrain();
     };
