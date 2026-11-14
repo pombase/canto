@@ -47,7 +47,90 @@ $db_creation_datetime
 
 </div>
 
-
+% if ($is_admin) {
+<div class="curs-box">
+  <div class="curs-box-title" id="cursum">Canto curator summary</div>
+<div class="curs-box-body row">
+<div class="col-sm-7 col-md-7">
+  <p>
+    Number of papers curated by professional and community curators, and total
+    number of annotations created, per year. Any paper which is fully or
+    partially curated by a community curator is classified as a community
+    curated publication.
+  </p>
+  <p>
+    In this table, papers are counted towards the year in which they
+    are curated (as opposed to publication date). Annotations are also
+    individually date-stamped.
+  </p>
+  <p>
+    Note: The breakdown of annotations between professional and community
+    curators is only accurate from 2013 onwards. Until the end of 2012, all
+    annotations from a community curated paper were attributed to the
+    community curator, even those added by a professional curator during the
+    approval procedure.
+  </p>
+</div>
+<div class="col-sm-5 col-md-5">
+  <table style="font-size: 105%" class="list">
+    <thead>
+      <tr>
+        <th rowspan="2">
+          Year
+        </th>
+        <th style="text-align: center" colspan="3">
+          Publications curated
+        </th>
+        <th style="text-align: center" colspan="2">
+          Annotations
+        </th>
+      </tr>
+      <tr>
+        <th>
+          All
+        </th>
+        <th>
+          Curator
+        </th>
+        <th>
+          Community
+        </th>
+        <th>
+          Curator
+        </th>
+        <th>
+          Community
+        </th>
+      </tr>
+    </thead>
+% my @curator_summ_totals = (0,0,0,0,0,0);
+% for my $row (@annotation_stats) {
+%   pairwise { $a += $b } @curator_summ_totals, @$row;
+    <tr>
+      <td>
+        <% shift @$row %>
+      </td>
+      <td>
+        <% $row->[0] + $row->[1] %>
+      </td>
+%   for my $column (@$row) {
+      <td><% $column %></td>
+%   }
+    </tr>
+% }
+    <tr class="annotation-stats-table-totals">
+      <td>Totals:</td>
+      <td><% $curator_summ_totals[1] + $curator_summ_totals[2] %></td>
+      <td><% $curator_summ_totals[1] %></td>
+      <td><% $curator_summ_totals[2] %></td>
+      <td><% $curator_summ_totals[3] %></td>
+      <td><% $curator_summ_totals[4] %></td>
+    </tr>
+  </table>
+</div>
+</div>
+</div>
+% }
 
 <div class="curs-box">
   <div class="curs-box-title" id="community-progress">Community annotation response rate</div>
@@ -213,4 +296,7 @@ my $new_curators_total = 0;
 for my $row (@new_curator_stats) {
   $new_curators_total += $row->[0];
 }
+
+my $st = $c->stash();
+my $is_admin = $st->{is_admin_user};
 </%init>
