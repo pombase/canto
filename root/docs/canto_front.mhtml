@@ -110,7 +110,7 @@ Canto is a <a href="http://gmod.org/wiki/Canto">component</a> of <a href="http:/
     <div class="col-md-8">
       <h3>Acknowledgements</h3>
       <p>
-Canto is developed as part of the PomBase project, which provides a model
+Canto is developed as part of the <a href="https://www.pombase.org">PomBase project</a>, which provides a model
 organism database for the fission yeast
 <span class="organism-name">Schizosaccharomyces pombe</span>. PomBase is
 funded by the <a href="http://www.wellcome.ac.uk/">Wellcome Trust</a>,
